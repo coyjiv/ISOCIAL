@@ -57,4 +57,3 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-backend/.mvn/wrapper/maven-wrapper.jar
