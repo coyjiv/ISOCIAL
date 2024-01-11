@@ -1,4 +1,4 @@
-package com.coyjiv.isocial.facade;
+package com.coyjiv.isocial.transfer;
 
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;

@@ -1,7 +1,7 @@
 jwt:
   secret:
-    access: LejjnLZua6SlR7eZXByD2+9M5P+dYxK3IlfA6XgPksuXijiXMAcpulI03o2Vq+PjYENhgTJGXLNm7YS4f1+IMw==
-    refresh: cRO8f7Q/HaE/X1QjxAHYL8Dm5qkTI68WiNi9elE1NFqsL2up0RlZn/e7aD2R5i8cMvCksBEDhUAOZAhsypQaXw==
+    access: ${JWT_SECRET_ACCESS}
+    refresh: ${JWT_SECRET_REFRESH}
 server:
   port: 9000
 springdoc:
