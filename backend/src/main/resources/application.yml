@@ -1,0 +1,66 @@
+jwt:
+  secret:
+    access: LejjnLZua6SlR7eZXByD2+9M5P+dYxK3IlfA6XgPksuXijiXMAcpulI03o2Vq+PjYENhgTJGXLNm7YS4f1+IMw==
+    refresh: cRO8f7Q/HaE/X1QjxAHYL8Dm5qkTI68WiNi9elE1NFqsL2up0RlZn/e7aD2R5i8cMvCksBEDhUAOZAhsypQaXw==
+server:
+  port: 9000
+springdoc:
+  swagger-ui:
+    tags-sorter: alpha
+    operations-sorter: alpha
+spring:
+  h2:
+    console:
+      enabled: true
+      settings:
+        trace: false
+---
+spring:
+  profiles:
+    active: dev
+---
+spring:
+  sql:
+    init:
+      mode: always
+      data-locations: db/data-h2.sql
+      schema-locations: db/schema-h2.sql
+  datasource:
+    url: jdbc:h2:mem:isocial
+    username: admin
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: false
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+  config:
+    activate:
+      on-profile: dev
+---
+---
+spring:
+  flyway:
+    enabled: false
+  sql:
+    init:
+      mode: never
+  datasource:
+    #    TODO: Add datasource creds after database initialization
+    url: jdbc:postgresql
+    username: postgres
+    password: postgres
+  jpa:
+    open-in-view: false
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        generate_statistics: false
+    show-sql: false
+  config:
+    activate:
+      on-profile: prod
