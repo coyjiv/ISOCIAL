@@ -24,4 +24,5 @@ jobs:
           java-version: '17'
 
       - name: Validate Maven
-        run: mvn validate   
+        run: mvn validate
+        working-directory: backend        
