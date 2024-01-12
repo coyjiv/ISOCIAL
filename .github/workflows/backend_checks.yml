@@ -1,0 +1,24 @@
+name: Backend Checks
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+
+jobs:
+  check_backend:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+
+      - name: Validate Maven
+        run: mvn validate
