@@ -7,20 +7,20 @@ import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
 import java.util.Arrays;
 
 @Configuration
 public class SwaggerConfig {
-    @Bean
-    public OpenAPI springShopOpenApi(){
-        return new OpenAPI();
-        // TODO: Uncomment when Spring Security will be added
-
-//                .components(new Components().addSecuritySchemes("bearer-jwt",
-//                        new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")
-//                                .in(SecurityScheme.In.HEADER).name("Authorization")))
-//                .info(new Info().title("App API").version("snapshot"))
-//                .addSecurityItem(
-//                        new SecurityRequirement().addList("bearer-jwt", Arrays.asList("read", "write")));
-    }
+  @Bean
+  public OpenAPI springShopOpenApi() {
+    return new OpenAPI();
+           // TODO: Uncomment when Spring Security will be added
+           /* .components(new Components().addSecuritySchemes("bearer-jwt",
+                    new SecurityScheme().type(SecurityScheme.Type.HTTP).scheme("bearer").bearerFormat("JWT")
+                            .in(SecurityScheme.In.HEADER).name("Authorization")))
+            .info(new Info().title("App API").version("snapshot"))
+            .addSecurityItem(
+                    new SecurityRequirement().addList("bearer-jwt", Arrays.asList("read", "write")));*/
+  }
 }
