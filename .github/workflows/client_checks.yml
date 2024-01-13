@@ -1,0 +1,26 @@
+name: Client Checks
+
+on:
+  push:
+    branches:
+      - master
+      - dev
+
+jobs:
+  check_client:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install Dependencies
+        run: npm install --prefix client
+
+      - name: Run ESLint
+        run: npm run lint --prefix client
