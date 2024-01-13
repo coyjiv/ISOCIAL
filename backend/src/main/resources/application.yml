@@ -22,7 +22,7 @@ spring:
 spring:
   sql:
     init:
-      mode: always
+      mode: never
       data-locations: db/data-h2.sql
       schema-locations: db/schema-h2.sql
   datasource:
@@ -48,10 +48,9 @@ spring:
     init:
       mode: never
   datasource:
-    #    TODO: Add datasource creds after database initialization
-    url: jdbc:postgresql
-    username: postgres
-    password: postgres
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
   jpa:
     open-in-view: false
     defer-datasource-initialization: true
