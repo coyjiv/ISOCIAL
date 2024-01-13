@@ -22,7 +22,7 @@ spring:
 spring:
   sql:
     init:
-      mode: always
+      mode: never
       data-locations: db/data-h2.sql
       schema-locations: db/schema-h2.sql
   datasource:
