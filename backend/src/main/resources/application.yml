@@ -22,9 +22,9 @@ spring:
 spring:
   sql:
     init:
-      mode: never
-      data-locations: db/data-h2.sql
-      schema-locations: db/schema-h2.sql
+      mode: always
+      data-locations: classpath:db/data-h2.sql
+      schema-locations: classpath:db/schema-h2.sql
   datasource:
     url: jdbc:h2:mem:isocial
     username: admin
