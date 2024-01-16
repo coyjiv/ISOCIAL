@@ -9,6 +9,7 @@ import com.coyjiv.isocial.service.email.EmailServiceImpl;
 import com.coyjiv.isocial.transfer.user.UserRegistrationRequestMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,26 +21,31 @@ public class UserService implements IUserService {
   private final UserRegistrationRequestMapper userRegistrationRequestMapper;
   private final EmailServiceImpl emailService;
 
+  @Transactional(readOnly = true)
   @Override
   public List<User> findAll(int page, int quantity) {
     return null;
   }
 
+  @Transactional(readOnly = true)
   @Override
   public List<User> findAll() {
     return userRepository.findAll();
   }
 
+  @Transactional(readOnly = true)
   @Override
   public Optional<User> findById(Long id) {
     return userRepository.findById(id);
   }
 
+  @Transactional(readOnly = true)
   @Override
   public Optional<User> findByEmail(String email) {
     return userRepository.findByEmail(email);
   }
 
+  @Transactional
   @Override
   public User createUser(UserRegistrationRequestDto userRegistrationDto) throws PasswordMatchException {
     if (!userRegistrationDto.getPassword().equals(userRegistrationDto.getRepeatPassword())) {
@@ -58,11 +64,13 @@ public class UserService implements IUserService {
     return userRepository.save(user);
   }
 
+  @Transactional
   @Override
   public User updateUser(User user) {
     return userRepository.save(user);
   }
 
+  @Transactional
   @Override
   public void deleteUser(Long id) {
     userRepository.deleteById(id);
