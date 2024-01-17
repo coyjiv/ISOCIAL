@@ -1,8 +1,9 @@
 import PropTypes from 'prop-types';
+import { Button } from '@mui/material';
 import './styles.scss';
 
 const GrayButton = ({children}) => {
-    return <button className="gray-button">{children}</button>;
+    return <Button className="gray-button">{children}</Button>;
     };
 
 GrayButton.propTypes = {

@@ -27,26 +27,13 @@
     }
 }
 
-.profile-avatar{
-    position:relative;
-
-    & .avatar{
-        width: 168px;
-        height: 168px;
-        border-radius: 50%;
-        border: 5px solid #fff;
-        position: absolute;
-        object-fit: cover;
-    }
-}
-
-.profile-details{
-    z-index: 2;
-    translate: 0 -100px;
-    padding: 0 30px;
-    display: flex;
-    min-height: 160px;
-}
+// .profile-details{
+//     z-index: 2;
+//     translate: 0 -100px;
+//     padding: 0 30px;
+//     display: flex;
+//     min-height: 160px;
+// }
 
 .profile-name{
     margin-top: auto;

@@ -7,31 +7,31 @@ import Videos from "../views/Profile/tabs/Videos";
 export const profileTabs = [
     {
         id: 1,
-        title: 'Posts',
+        label: 'Posts',
         path: '/profile/posts',
         component: Posts,
     },
     {
         id: 2,
-        title: 'About',
+        label: 'About',
         path: '/profile/about',
         component: About,
     },
     {
         id: 3,
-        title: 'Friends',
+        label: 'Friends',
         path: '/profile/friends',
         component: Friends,
     },
     {
         id: 4,
-        title: 'Photos',
+        label: 'Photos',
         path: '/profile/photos',
         component: Photos,
     },
     {
         id: 5,
-        title: 'Videos',
+        label: 'Videos',
         path: '/profile/videos',
         component: Videos,
     },
