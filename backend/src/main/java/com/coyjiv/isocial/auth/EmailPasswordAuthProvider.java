@@ -36,12 +36,12 @@ public class EmailPasswordAuthProvider implements AuthenticationProvider {
     User user = optionalUser.orElseThrow(() ->
             new UsernameNotFoundException("User not found with email: " + username));
 
-    if (!user.isActive()){
+    if (!user.isActive()) {
       throw new UserNotActiveException("No active account with this details !");
     }
 
-    if (passwordEncoder.matches(password,user.getPassword())){
-      return new UsernamePasswordAuthenticationToken(username,password,getGrantedAuthorities(user.getRoles()));
+    if (passwordEncoder.matches(password, user.getPassword())) {
+      return new UsernamePasswordAuthenticationToken(username, password, getGrantedAuthorities(user.getRoles()));
     } else {
       throw new BadCredentialsException("Incorrect password for user: " + username);
     }

@@ -20,17 +20,17 @@ public class AuthService implements IAuthService {
 
   @Override
   public LoginResponseDto login(LoginRequestDto loginRequestDto) {
-    String access = tokenProvider.generateAccessToken(loginRequestDto.getEmail(),loginRequestDto.getPassword());
+    String access = tokenProvider.generateAccessToken(loginRequestDto.getEmail(), loginRequestDto.getPassword());
     String refresh = tokenProvider.generateRefreshToken();
-    return new LoginResponseDto(access,refresh);
+    return new LoginResponseDto(access, refresh);
   }
 
   @Override
   public LoginResponseDto refresh(RefreshRequestDto refreshRequestDto) throws Exception {
-    if (JwtTokenProvider.validateRefreshToken(refreshRequestDto.getRefresh())){
+    if (JwtTokenProvider.validateRefreshToken(refreshRequestDto.getRefresh())) {
       String access = tokenProvider.generateAccessToken();
       String refresh = tokenProvider.generateRefreshToken();
-      return new LoginResponseDto(access,refresh);
+      return new LoginResponseDto(access, refresh);
     } else {
       throw new AuthException("Token not valid !");
     }

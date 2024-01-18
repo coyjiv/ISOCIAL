@@ -50,19 +50,19 @@ public class AuthenticationController {
 
 
   @PostMapping("/access")
-  public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDto loginRequestDto){
+  public ResponseEntity<?> login(@Valid @RequestBody LoginRequestDto loginRequestDto) {
     try {
       return ResponseEntity.ok(authService.login(loginRequestDto));
-    } catch (Exception exception){
+    } catch (Exception exception) {
       return ResponseEntity.status(401).body(exception.getMessage());
     }
   }
 
   @PostMapping("/refresh")
-  public ResponseEntity<?> refresh(@Valid @RequestBody RefreshRequestDto refreshRequestDto){
+  public ResponseEntity<?> refresh(@Valid @RequestBody RefreshRequestDto refreshRequestDto) {
     try {
       return ResponseEntity.ok(authService.refresh(refreshRequestDto));
-    } catch (Exception exception){
+    } catch (Exception exception) {
       return ResponseEntity.status(401).body(exception.getMessage());
     }
   }

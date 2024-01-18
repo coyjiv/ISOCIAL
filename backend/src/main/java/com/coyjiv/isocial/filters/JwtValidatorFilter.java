@@ -19,23 +19,24 @@ public class JwtValidatorFilter extends OncePerRequestFilter {
   private static String AUTHORIZATION = "AUTHORIZATION";
 
   @Override
-  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-      String token = getRequestToken(request);
-    
-    if (token != null){
+  protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+          throws ServletException, IOException {
+    String token = getRequestToken(request);
+
+    if (token != null) {
       try {
         JwtTokenProvider.validateAccessToken(token);
       } catch (Exception e) {
-        response.sendError(401,"Token not valid !");
+        response.sendError(401, "Token not valid !");
       }
     }
-    filterChain.doFilter(request,response);
+    filterChain.doFilter(request, response);
   }
 
 
-  private String getRequestToken(HttpServletRequest request){
+  private String getRequestToken(HttpServletRequest request) {
     String header = request.getHeader(AUTHORIZATION);
-    if (StringUtils.hasText(header) && header.startsWith("Bearer ")){
+    if (StringUtils.hasText(header) && header.startsWith("Bearer ")) {
       return header.substring(7);
     }
     return null;

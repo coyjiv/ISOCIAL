@@ -1,7 +1,8 @@
 package com.coyjiv.isocial.auth;
 
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
@@ -17,8 +18,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
-import javax.crypto.SecretKey;
 import java.security.Key;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -45,7 +44,7 @@ public class JwtTokenProvider {
   private static String jwtRefreshSecret;
 
   @PostConstruct
-  private void initSecrets(){
+  private void initSecrets() {
     jwtAccessSecret = accessSecretLoader;
     jwtRefreshSecret = refreshSecretLoader;
   }
@@ -63,10 +62,10 @@ public class JwtTokenProvider {
             .signWith(getKey(jwtAccessSecret)).compact();
   }
 
-  public String generateAccessToken() throws AuthenticationException{
+  public String generateAccessToken() throws AuthenticationException {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-    if (authentication == null){
+    if (authentication == null) {
       throw new AuthenticationCredentialsNotFoundException("Authentication not found in security context");
     }
 
@@ -105,7 +104,7 @@ public class JwtTokenProvider {
               .parseClaimsJws(token)
               .getBody();
 
-      if (SecurityContextHolder.getContext().getAuthentication() == null){
+      if (SecurityContextHolder.getContext().getAuthentication() == null) {
         String email = String.valueOf(claims.get("email"));
         String authorities = String.valueOf(claims.get("authorities"));
         Authentication authentication = new UsernamePasswordAuthenticationToken(
@@ -115,7 +114,7 @@ public class JwtTokenProvider {
       }
 
       return true;
-    } catch (Exception e){
+    } catch (Exception e) {
       return false;
     }
   }
@@ -135,8 +134,8 @@ public class JwtTokenProvider {
     return Date.from(instant);
   }
 
-  private static Key getKey(String secret){
-      return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
+  private static Key getKey(String secret) {
+    return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
   }
 
 }

@@ -52,7 +52,7 @@ public class UserService implements IUserService {
     if (!userRegistrationDto.getPassword().equals(userRegistrationDto.getRepeatPassword())) {
       throw new PasswordMatchException("Repeat password should match original password");
     }
-    if (userRepository.existsUserByEmail(userRegistrationDto.getEmail())){
+    if (userRepository.existsUserByEmail(userRegistrationDto.getEmail())) {
       throw new BadCredentialsException("User with this email already exists");
     }
     User user = userRegistrationRequestMapper.convertToEntity(userRegistrationDto);
