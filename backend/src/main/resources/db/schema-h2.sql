@@ -12,8 +12,18 @@ CREATE TABLE public.users
     bio                VARCHAR,
     is_private         BOOLEAN  NOT NULL DEFAULT FALSE,
     last_seen          TIMESTAMP,
-    date_of_birth      TIMESTAMP NOT NULL,
+    date_of_birth      DATE NOT NULL,
     creation_date      TIMESTAMP,
     last_modified_date TIMESTAMP,
     is_active BOOLEAN NOT NULL DEFAULT FALSE
 );
+
+DROP TABLE IF EXISTS roles;
+CREATE TABLE public.roles
+(
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    name VARCHAR(50) NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id)
+);
+

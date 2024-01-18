@@ -8,12 +8,6 @@ springdoc:
   swagger-ui:
     tags-sorter: alpha
     operations-sorter: alpha
-spring:
-  h2:
-    console:
-      enabled: true
-      settings:
-        trace: false
 ---
 spring:
   profiles:
@@ -25,6 +19,9 @@ spring:
       mode: always
       data-locations: classpath:db/data-h2.sql
       schema-locations: classpath:db/schema-h2.sql
+  h2:
+    console:
+      enabled: true
   datasource:
     url: jdbc:h2:mem:isocial
     username: admin
@@ -36,6 +33,9 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
   mail:
     host: smtp.gmail.com
     port: 587

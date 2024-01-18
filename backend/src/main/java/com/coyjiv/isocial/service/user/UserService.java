@@ -8,6 +8,7 @@ import com.coyjiv.isocial.exceptions.PasswordMatchException;
 import com.coyjiv.isocial.service.email.EmailServiceImpl;
 import com.coyjiv.isocial.transfer.user.UserRegistrationRequestMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -50,6 +51,9 @@ public class UserService implements IUserService {
   public User createUser(UserRegistrationRequestDto userRegistrationDto) throws PasswordMatchException {
     if (!userRegistrationDto.getPassword().equals(userRegistrationDto.getRepeatPassword())) {
       throw new PasswordMatchException("Repeat password should match original password");
+    }
+    if (userRepository.existsUserByEmail(userRegistrationDto.getEmail())){
+      throw new BadCredentialsException("User with this email already exists");
     }
     User user = userRegistrationRequestMapper.convertToEntity(userRegistrationDto);
 
