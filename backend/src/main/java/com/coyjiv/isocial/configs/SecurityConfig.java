@@ -32,7 +32,7 @@ public class SecurityConfig {
   @Value("${SECURITY_PASSWORD}")
   String inMemoryUserPassword;
 
-  private final OAuthUserService oAuthUserService;
+  private final OAuthUserService googleAuthUserService;
   private final DefaultAuthenticationSuccessHandler defaultAuthenticationSuccessHandler;
 
   @Bean
@@ -57,7 +57,7 @@ public class SecurityConfig {
                     exceptionHandling.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
             .oauth2Login(oauth -> oauth
                     .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
-                            .userService(oAuthUserService)
+                            .userService(googleAuthUserService)
                     )
                     .successHandler(defaultAuthenticationSuccessHandler)
             )

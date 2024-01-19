@@ -49,7 +49,8 @@ public class DefaultAuthenticationSuccessHandler implements AuthenticationSucces
     String access = tokenProvider.generateAccessToken();
     String refresh = tokenProvider.generateRefreshToken();
 
+    String redirectUrl = String.format("/login?token=%s&%s", access, refresh);
 
-    response.sendRedirect("/login?token="+access+"&"+refresh);
+    response.sendRedirect(redirectUrl);
   }
 }

@@ -10,7 +10,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.security.auth.login.AccountNotFoundException;
 
@@ -36,7 +40,7 @@ public class AuthenticationController {
   public ResponseEntity<?> confirmUser(@RequestParam("id") String uuid) {
     String email = EmailRegistrationCache.getEmail(uuid);
 
-    if (email == null){
+    if (email == null) {
       return ResponseEntity.badRequest().body("Link expired");
     }
 

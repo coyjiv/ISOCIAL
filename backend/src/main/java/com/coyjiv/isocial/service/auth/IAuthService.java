@@ -8,5 +8,6 @@ import jakarta.validation.constraints.NotNull;
 
 public interface IAuthService {
   LoginResponseDto login(LoginRequestDto loginRequestDto);
+
   LoginResponseDto refresh(RefreshRequestDto refreshRequestDto) throws Exception;
 }

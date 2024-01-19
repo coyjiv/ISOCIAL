@@ -12,13 +12,13 @@ public class EmailRegistrationCache {
           .expireAfterWrite(24, TimeUnit.HOURS)
           .build();
 
-  public static String putEmail(String email){
+  public static String putEmail(String email) {
     String uuid = UUID.randomUUID().toString();
-    confirmationCache.put(uuid,email);
+    confirmationCache.put(uuid, email);
     return uuid;
   }
 
-  public static String getEmail(String uuid){
+  public static String getEmail(String uuid) {
     String email = confirmationCache.getIfPresent(uuid);
     confirmationCache.invalidate(uuid);
     return email;
