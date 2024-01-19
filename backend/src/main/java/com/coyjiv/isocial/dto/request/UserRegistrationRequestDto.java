@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegistrationRequestDto {
+public class UserRegistrationRequestDto {
   @NotBlank
   @Size(min = 2, max = 15)
   private String firstName;
@@ -26,6 +26,8 @@ public class RegistrationRequestDto {
   @NotBlank
   @Size(min = 8, max = 15)
   private String password;
+  @Size(min = 8, max = 15)
+  private String repeatPassword;
   @NotBlank
   private String city;
   @NotBlank
