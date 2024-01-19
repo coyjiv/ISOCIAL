@@ -3,7 +3,11 @@ name: Backend Checks
 on:
   push:
     branches:
-      - main
+      - master
+      - dev
+  pull_request:
+    branches:
+      - master
       - dev
 
 jobs:
