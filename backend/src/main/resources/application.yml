@@ -8,6 +8,15 @@ springdoc:
   swagger-ui:
     tags-sorter: alpha
     operations-sorter: alpha
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_OAUTH_CLIENT_ID}
+            client-secret: ${GOOGLE_OAUTH_SECRET_KEY}
+            scope: openid,profile,email
 ---
 spring:
   profiles:

@@ -33,7 +33,7 @@ public class JwtTokenProvider {
   public static final int ACCESS_LEAVE_HOURS = 6;
   public static final int REFRESH_LEAVE_HOURS = 168;
 
-  private final EmailPasswordAuthProvider authProvider;
+  private final EmailPasswordAuthProvider emailPasswordAuthProvider;
 
   @Value("${JWT_SECRET_ACCESS}")
   private String accessSecretLoader;
@@ -50,7 +50,7 @@ public class JwtTokenProvider {
   }
 
   public String generateAccessToken(@NotNull String email, @NotNull String password) throws AuthenticationException {
-    Authentication authentication = authProvider.authenticate(
+    Authentication authentication = emailPasswordAuthProvider.authenticate(
             new UsernamePasswordAuthenticationToken(email, password, null)
     );
 

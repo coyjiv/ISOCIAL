@@ -4,11 +4,8 @@ import com.coyjiv.isocial.auth.JwtTokenProvider;
 import com.coyjiv.isocial.dto.request.LoginRequestDto;
 import com.coyjiv.isocial.dto.request.RefreshRequestDto;
 import com.coyjiv.isocial.dto.respone.LoginResponseDto;
-import com.coyjiv.isocial.service.user.IUserService;
 import jakarta.security.auth.message.AuthException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,7 +13,6 @@ import org.springframework.stereotype.Service;
 public class AuthService implements IAuthService {
 
   private final JwtTokenProvider tokenProvider;
-
 
   @Override
   public LoginResponseDto login(LoginRequestDto loginRequestDto) {

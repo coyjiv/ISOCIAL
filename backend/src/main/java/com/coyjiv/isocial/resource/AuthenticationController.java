@@ -1,23 +1,18 @@
 package com.coyjiv.isocial.resource;
 
-import com.coyjiv.isocial.auth.JwtTokenProvider;
+import com.coyjiv.isocial.cache.EmailRegistrationCache;
 import com.coyjiv.isocial.dto.request.LoginRequestDto;
 import com.coyjiv.isocial.dto.request.RefreshRequestDto;
 import com.coyjiv.isocial.dto.request.UserRegistrationRequestDto;
-import com.coyjiv.isocial.dto.respone.LoginResponseDto;
-import com.coyjiv.isocial.exceptions.PasswordMatchException;
 import com.coyjiv.isocial.service.auth.IAuthService;
 import com.coyjiv.isocial.service.user.IUserService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.security.auth.login.AccountNotFoundException;
 
 
 @RestController
@@ -38,14 +33,19 @@ public class AuthenticationController {
   }
 
   @PostMapping("/confirmation")
-  public ResponseEntity<?> confirmUser(@RequestParam("email") String email) {
-    return userService.findByEmail(email)
-            .map(user -> {
-              user.setActive(true);
-              userService.updateUser(user);
-              return ResponseEntity.ok().build();
-            })
-            .orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).body("User with this email not found"));
+  public ResponseEntity<?> confirmUser(@RequestParam("id") String uuid) {
+    String email = EmailRegistrationCache.getEmail(uuid);
+
+    if (email == null){
+      return ResponseEntity.badRequest().body("Link expired");
+    }
+
+    try {
+      userService.confirmUser(email);
+      return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    } catch (AccountNotFoundException exception) {
+      return ResponseEntity.badRequest().body(exception.getMessage());
+    }
   }
 
 
