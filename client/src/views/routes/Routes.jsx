@@ -37,6 +37,10 @@ import Settings from "../Settings/Settings";
       path: "users/:id",
       element: <div>Users</div>,
     },
+    {
+    path:  "/confirmation"
+    element: <Confirmation />
+    },
   ]);
 
 export const App = () => (<RouterProvider router={router} />);
