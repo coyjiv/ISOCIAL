@@ -1,7 +1,9 @@
-import * as React from "react";
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
+import "./Confirmation.scss";
+import { GiBreakingChain } from "react-icons/gi";
+import { PiHandshakeDuotone } from "react-icons/pi";
 
 const Confirmation = () => {
   const [confirmed, setConfirmed] = useState(false);
@@ -28,14 +30,22 @@ const Confirmation = () => {
   }, []);
 
   return (
-    <div>
+    <div className="confirmationMain">
+      <div className="header"> iSOCIAL</div>
       {confirmed ? (
-        <h2>Your account is confirmed!</h2>
+        <>
+          <h1>Your account is confirmed!</h1>
+          <PiHandshakeDuotone className="chain" />
+        </>
       ) : (
-        <h2>Something went wrong. We can't confirm Your account</h2>
+        <>
+          <h1>Somethihg went wrong.</h1>
+          <GiBreakingChain className="chain" />
+          <h4>We can&apos;t confirme Your account at the moment.</h4>{" "}
+        </>
       )}
-      <h2>Click bellow</h2>
-      <button onClick={() => navigate("/")}>Main page</button>
+      <h4>Click bellow</h4>
+      <button className="button" onClick={() => navigate("/")}>Main page</button>
     </div>
   );
 };

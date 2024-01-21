@@ -158,7 +158,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${basedir}/src/main/resources/resources</outputDirectory>
+                            <outputDirectory>${basedir}/target/classes/resources</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>${basedir}/../client/dist</directory>

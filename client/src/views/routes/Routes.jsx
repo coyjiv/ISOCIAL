@@ -34,12 +34,8 @@ import Settings from "../Settings/Settings";
       element: <div>Users</div>,
     },
     {
-      path: "users/:id",
-      element: <div>Users</div>,
-    },
-    {
-    path:  "/confirmation"
-    element: <Confirmation />
+      path: "confirmation",
+      element: <Confirmation/>,
     },
   ]);
 
