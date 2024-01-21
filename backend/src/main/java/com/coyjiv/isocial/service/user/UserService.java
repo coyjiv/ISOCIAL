@@ -63,7 +63,7 @@ public class UserService implements IUserService {
 
 
 
-    String text = String.format("Open link to confirm your account ! Link: http://localhost:9000/confirmation?email=%s",
+    String text = String.format("Open link to confirm your account ! Link: http://localhost:9000/confirmation?id=%s",
             uuidForConfirmationLink);
 
     emailService.sendSimpleMessage(
