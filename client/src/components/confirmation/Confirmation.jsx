@@ -27,7 +27,7 @@ const Confirmation = () => {
       }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]);
+  }, []);
 
   return (
     <div className="confirmationMain">
