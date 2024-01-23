@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
-import "./Confirmation.scss";
+import styles from "./Confirmation.module.scss";
 import { GiBreakingChain } from "react-icons/gi";
 import { PiHandshakeDuotone } from "react-icons/pi";
+import { Typography } from "@mui/material";
 
 const Confirmation = () => {
   const [confirmed, setConfirmed] = useState(false);
@@ -15,7 +16,7 @@ const Confirmation = () => {
     (async () => {
       try {
         const { status } = await axios.post(
-          `http://localhost:9000/api/auth/confirmation?id=${id}`,
+          `${import.meta.env.VITE_API_URL}auth/confirmation?id=${id}`,
           undefined,
           { headers: { "Content-Type": "application/json" } }
         );
@@ -30,23 +31,22 @@ const Confirmation = () => {
   }, []);
 
   return (
-    <div className="confirmationMain">
-      <div className="header"> iSOCIAL</div>
+    <main className={styles.confirmationMain}>
       {confirmed ? (
         <>
-          <h1>Your account is confirmed!</h1>
-          <PiHandshakeDuotone className="chain" />
+          <Typography variant="h1" fontSize={22}>Your account is confirmed!</Typography>
+          <PiHandshakeDuotone className={styles.chain} />
         </>
       ) : (
-        <>
-          <h1>Somethihg went wrong.</h1>
-          <GiBreakingChain className="chain" />
-          <h4>We can&apos;t confirme Your account at the moment.</h4>{" "}
-        </>
+        <div className={styles.subwrapper}>
+          <Typography variant="h1" fontSize={22}>Something went wrong.</Typography>
+          <GiBreakingChain className={styles.chain} />
+          <Typography variant="h4" fontSize={16}>We can&apos;t confirm your account at the moment.</Typography>
+        </div>
       )}
-      <h4>Click bellow</h4>
-      <button className="button" onClick={() => navigate("/")}>Main page</button>
-    </div>
+      <Typography>Click bellow</Typography>
+      <button className={styles.button} onClick={() => navigate("/")}><Typography>Main page</Typography></button>
+    </main>
   );
 };
 export default Confirmation;

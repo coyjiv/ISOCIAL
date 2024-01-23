@@ -28,5 +28,4 @@ jobs:
           java-version: '17'
 
       - name: Validate Maven
-        run: mvn validate
-        working-directory: backend        
+        run: mvn clean package
