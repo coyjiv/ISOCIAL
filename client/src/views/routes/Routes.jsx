@@ -7,6 +7,7 @@ import Register from "../Register/Register";
 import Login from "../Login/Login";
 import Profile from "../Profile/Profile";
 import Settings from "../Settings/Settings";
+import Confirmation from "../../components/confirmation/Confirmation";
 
  const router = createBrowserRouter([
     {
@@ -34,8 +35,8 @@ import Settings from "../Settings/Settings";
       element: <div>Users</div>,
     },
     {
-      path: "users/:id",
-      element: <div>Users</div>,
+      path: "confirmation",
+      element: <Confirmation/>,
     },
   ]);
 
