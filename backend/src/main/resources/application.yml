@@ -9,11 +9,14 @@ springdoc:
     tags-sorter: alpha
     operations-sorter: alpha
 spring:
-  h2:
-    console:
-      enabled: true
-      settings:
-        trace: false
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_OAUTH_CLIENT_ID}
+            client-secret: ${GOOGLE_OAUTH_SECRET_KEY}
+            scope: openid,profile,email
 ---
 spring:
   profiles:
@@ -23,8 +26,11 @@ spring:
   sql:
     init:
       mode: always
-      data-locations: db/data-h2.sql
-      schema-locations: db/schema-h2.sql
+      data-locations: classpath:db/data-h2.sql
+      schema-locations: classpath:db/schema-h2.sql
+  h2:
+    console:
+      enabled: true
   datasource:
     url: jdbc:h2:mem:isocial
     username: admin
@@ -36,6 +42,21 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${EMAIL_ADDRESS}
+    password: ${EMAIL_PASSWORD}
+    protocol: smtp
+    tls: true
+    properties.mail.smtp:
+        auth: true
+        starttls.enable: true
+        ssl.trust: smtp.gmail.com
+
   config:
     activate:
       on-profile: dev
@@ -48,10 +69,9 @@ spring:
     init:
       mode: never
   datasource:
-    #    TODO: Add datasource creds after database initialization
-    url: jdbc:postgresql
-    username: postgres
-    password: postgres
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
   jpa:
     open-in-view: false
     defer-datasource-initialization: true
