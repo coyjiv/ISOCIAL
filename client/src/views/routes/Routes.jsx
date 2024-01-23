@@ -34,6 +34,18 @@ const router = createBrowserRouter([
     element: <Settings />,
   },
   {
+    path: "friends",
+    element: <Friends />,
+  },
+  {
+    path: "watch",
+    element: <Videos />,
+  },
+  {
+    path: "groups",
+    element: <Groups />,
+  },
+  {
     path: "feed",
     element: <div>Users</div>,
   },
