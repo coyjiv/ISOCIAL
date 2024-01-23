@@ -1,11 +1,6 @@
 package com.coyjiv.isocial.domain;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -53,13 +48,16 @@ public class User extends AbstractEntity {
   @Column(name = "last_seen")
   private Date lastSeen;
 
-  @OneToMany
-  private List<Chat> chats;
-
   @Column(name = "date_of_birth")
   private Date dateOfBirth;
 
-  @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
   private Set<Role> roles;
 
+  @ManyToMany(mappedBy = "users", cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
+  @JoinTable(name = "users_chats",
+          joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+          inverseJoinColumns = @JoinColumn(name = "chat_id", referencedColumnName = "id")
+  )
+  private List<Chat> chats;
 }

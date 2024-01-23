@@ -21,11 +21,11 @@ public interface IUserService {
 
   Optional<User> findByEmail(String email);
 
-  User createUser(UserRegistrationRequestDto userRegistrationRequestDto) throws PasswordMatchException;
+  User create(UserRegistrationRequestDto userRegistrationRequestDto) throws PasswordMatchException;
 
   void confirmUser(String email) throws AccountNotFoundException;
 
-  User updateUser(User user);
+  User update(User user);
 
-  void deleteUser(Long id);
+  void delete(Long id);
 }

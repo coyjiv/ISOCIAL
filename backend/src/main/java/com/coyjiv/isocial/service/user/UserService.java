@@ -50,7 +50,7 @@ public class UserService implements IUserService {
 
   @Transactional
   @Override
-  public User createUser(UserRegistrationRequestDto userRegistrationDto) throws PasswordMatchException {
+  public User create(UserRegistrationRequestDto userRegistrationDto) throws PasswordMatchException {
     if (!userRegistrationDto.getPassword().equals(userRegistrationDto.getRepeatPassword())) {
       throw new PasswordMatchException("Repeat password should match original password");
     }
@@ -88,13 +88,13 @@ public class UserService implements IUserService {
 
   @Transactional
   @Override
-  public User updateUser(User user) {
+  public User update(User user) {
     return userRepository.save(user);
   }
 
   @Transactional
   @Override
-  public void deleteUser(Long id) {
+  public void delete(Long id) {
     userRepository.deleteById(id);
   }
 }
