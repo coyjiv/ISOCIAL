@@ -10,6 +10,7 @@ import Settings from "../Settings/Settings";
 import Groups from "../Groups/Groups";
 import Videos from "../Videos/Videos";
 import Friends from "../Friends/Friends";
+import Confirmation from "../../components/confirmation/Confirmation";
 
 const router = createBrowserRouter([
   {
@@ -33,24 +34,16 @@ const router = createBrowserRouter([
     element: <Settings />,
   },
   {
-    path: 'groups',
-    element: <Groups />
-  },
-  {
-    path: 'watch',
-    element: <Videos />
-  },
-  {
-    path: 'friends',
-    element: <Friends />
-  },
-  {
     path: "feed",
     element: <div>Users</div>,
   },
   {
     path: "users/:id",
     element: <div>Users</div>,
+  },
+  {
+    path: "confirmation",
+    element: <Confirmation />,
   },
 ]);
 
