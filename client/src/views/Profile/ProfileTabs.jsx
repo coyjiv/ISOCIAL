@@ -5,6 +5,7 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import { profileTabs } from '../../data/profileTabs';
 import { profileTabsStyles } from './styles';
+import { Container } from '@mui/material';
 
 
 const ProfileTabs = () => {
@@ -16,11 +17,11 @@ const ProfileTabs = () => {
 
   return (
     <Box sx={{ width: '100%' }}>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+      <Container maxWidth={'lg'}>
         <Tabs sx={profileTabsStyles} value={value} onChange={handleChange} aria-label="profile tabs">
-          {profileTabs.map((tab, index) => <Tab sx={{textTransform: 'capitalize'}} key={index} label={tab.label} {...a11yProps(index)} />)}
+          {profileTabs.map((tab, index) => <Tab sx={{ textTransform: 'capitalize' }} key={index} label={tab.label} {...a11yProps(index)} />)}
         </Tabs>
-      </Box>
+      </Container>
       {profileTabs.map((tab, index) => (
         <TabPanel key={index} value={value} index={index}>
           <tab.component />
@@ -46,7 +47,7 @@ function TabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: 3 }}>
+        <Box>
           {children}
         </Box>
       )}
