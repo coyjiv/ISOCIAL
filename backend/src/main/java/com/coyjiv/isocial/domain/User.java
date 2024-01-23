@@ -53,6 +53,7 @@ public class User extends AbstractEntity {
   @Column(name = "last_seen")
   private Date lastSeen;
 
+
   @OneToMany
   private List<Chat> chats;
 

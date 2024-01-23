@@ -9,6 +9,10 @@ import com.coyjiv.isocial.exceptions.PasswordMatchException;
 import com.coyjiv.isocial.service.email.EmailServiceImpl;
 import com.coyjiv.isocial.transfer.user.UserRegistrationRequestMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,8 +30,11 @@ public class UserService implements IUserService {
 
   @Transactional(readOnly = true)
   @Override
-  public List<User> findAll(int page, int quantity) {
-    return null;
+  public List<User> findAll(int page, int size) {
+    Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "id"));
+    Pageable pageable = (Pageable) PageRequest.of(page - 1, size, sort);
+    Page<User> userPage = userRepository.findAll(pageable);
+    return userPage.toList();
   }
 
   @Transactional(readOnly = true)
@@ -62,7 +69,6 @@ public class UserService implements IUserService {
     String uuidForConfirmationLink = EmailRegistrationCache.putEmail(user.getEmail());
 
 
-
     String text = String.format("Open link to confirm your account ! Link: http://localhost:9000/confirmation?id=%s",
             uuidForConfirmationLink);
 
@@ -70,7 +76,6 @@ public class UserService implements IUserService {
             userRegistrationDto.getEmail(), "Account confirmation",
             text
     );
-
     return userRepository.save(user);
   }
 
@@ -89,7 +94,14 @@ public class UserService implements IUserService {
   @Transactional
   @Override
   public User updateUser(User user) {
-    return userRepository.save(user);
+    User user1 = userRepository.findById(user.getId()).get();
+
+    return userRepository.save(user1);
+  }
+
+  @Override
+  public Optional<User> findByName(String name) {
+    return userRepository.findByName(name);
   }
 
   @Transactional
