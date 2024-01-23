@@ -12,6 +12,7 @@ const initialState = {
   bio: '',
   lastSeen: '',
   status: 'idle',
+  friends: [],
 }
 
 export const profileSlice = createSlice({

@@ -1,0 +1,98 @@
+@use "../../../styles/variables/colors";
+@use "../../../styles/mixins/common";
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: colors.$white;
+  display: flex;
+  align-items: center;
+  padding: 5px 1rem;
+  @include common.shadow();
+}
+
+.activeLink {
+  color: colors.$primaryButtonBackground;
+  font-size: 24px;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    width: 100px;
+    height: 2px;
+    border-radius: 50px;
+    background-color: colors.$primaryButtonBackground;
+  }
+}
+
+.defaultLink {
+  color: #000;
+  font-size: 24px;
+}
+
+.navWrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.navLinkList {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+  height: 100%;
+
+  & li {
+    height: 100%;
+    & > a {
+      min-width: 112px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100%;
+      padding: 10px 0px;
+      border-radius: 10px;
+      @include common.transition(background-color);
+
+      &:hover {
+        background-color: colors.$lightGrey;
+      }
+    }
+  }
+}
+
+.actionList {
+  display: flex;
+}
+
+.messengerButton {
+  @include common.transition();
+  margin-right: 10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50px;
+  border: none;
+  @include common.transition(background-color);
+
+  & svg {
+    width: 88%;
+    height: 88%;
+    color: colors.$black;
+  }
+
+  &.messengerButtonActive {
+    background-color: rgba(colors.$primaryButtonBackground, 0.2);
+
+    & svg {
+      width: 88%;
+      height: 88%;
+      color: colors.$primaryButtonBackground;
+    }
+  }
+}
