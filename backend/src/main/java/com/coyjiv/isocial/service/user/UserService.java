@@ -100,8 +100,16 @@ public class UserService implements IUserService {
   }
 
   @Override
-  public Optional<User> findByName(String name) {
-    return userRepository.findByName(name);
+  public List<User> findByName(String name, int page, int size) {
+    String[] names = name.split(" ");
+
+    Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "id"));
+    Pageable pageable = (Pageable) PageRequest.of(page - 1, size, sort);
+    if (names.length > 1) {
+      return userRepository.findByFullName(names[0], names[1], pageable).toList();
+    } else {
+      return userRepository.findByName(names[0], pageable).toList();
+    }
   }
 
   @Transactional

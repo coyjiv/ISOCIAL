@@ -28,7 +28,7 @@ public interface IUserService {
 
   User updateUser(User user);
 
-  Optional<User> findByName(String name);
+  List<User> findByName(String name,int page, int size);
 
   void deleteUser(Long id);
 }

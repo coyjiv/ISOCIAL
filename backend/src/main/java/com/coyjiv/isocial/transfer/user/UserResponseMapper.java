@@ -21,5 +21,7 @@ public class UserResponseMapper extends DtoMapperFacade<User, UserResponseDto> {
     dto.setFirstName(entity.getFirstName());
     dto.setLastName(entity.getLastName());
     dto.setLastSeen(entity.getLastSeen());
+    dto.setBannerUrl(entity.getBannerUrl());
+    dto.setAvatarsUrl(entity.getAvatarsUrl());
   }
 }

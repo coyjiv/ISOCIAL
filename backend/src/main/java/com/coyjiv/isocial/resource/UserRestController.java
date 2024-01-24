@@ -1,7 +1,6 @@
 package com.coyjiv.isocial.resource;
 
 import com.coyjiv.isocial.domain.User;
-import com.coyjiv.isocial.dto.request.UserNameRequestDto;
 import com.coyjiv.isocial.dto.request.UserUpdateRequestDto;
 import com.coyjiv.isocial.dto.respone.UserResponseDto;
 import com.coyjiv.isocial.service.user.IUserService;
@@ -37,8 +36,8 @@ public class UserRestController {
   @GetMapping("/")
   public ResponseEntity<?> findAll(@RequestParam(defaultValue = "1") @Min(1) Integer page,
                                    @RequestParam(defaultValue = "10") @Min(0) Integer size) {
-    List<User> companies = userService.findAll(page, size);
-    List<UserResponseDto> dtos = companies.stream().map(userResponseMapper::convertToDto).toList();
+    List<User> users = userService.findAll(page, size);
+    List<UserResponseDto> dtos = users.stream().map(userResponseMapper::convertToDto).toList();
     return ResponseEntity.ok(dtos);
   }
 
@@ -54,15 +53,13 @@ public class UserRestController {
   }
 
   @GetMapping("/search")
-  public ResponseEntity<?> findByName(@RequestParam String name) {
-    Optional<User> user = userService.findByName(name);
-    if (user.isPresent()) {
-      UserResponseDto dto = userResponseMapper.convertToDto(user.get());
-      return ResponseEntity.ok(dto);
-    } else {
-      return ResponseEntity.notFound().build();
-    }
+  public ResponseEntity<?> findByName(@RequestParam String name, @RequestParam(defaultValue = "1") int page,
+                                      @RequestParam(defaultValue = "10") int size) {
+    List<User> users = userService.findByName(name, page, size);
+    List<UserResponseDto> dtos = users.stream().map(userResponseMapper::convertToDto).toList();
+    return ResponseEntity.ok(dtos);
   }
+
 
   @DeleteMapping("/{id}")
   public ResponseEntity<?> delete(@PathVariable("id") @Min(0) Long id) {
