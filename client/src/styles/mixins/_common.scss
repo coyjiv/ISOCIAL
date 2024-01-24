@@ -1,0 +1,14 @@
+@use "../../styles/variables/colors";
+
+@mixin transition(
+  $transition-property: all,
+  $transition-duration: 0.3s,
+  $transition-timing-function: ease-in-out
+) {
+  transition: $transition-property $transition-duration
+    $transition-timing-function;
+}
+
+@mixin shadow($shadow-color: rgba(colors.$black, 0.1)) {
+  box-shadow: 0 0 10px $shadow-color;
+}

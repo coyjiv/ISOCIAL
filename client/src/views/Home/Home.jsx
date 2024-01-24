@@ -1,7 +1,6 @@
-import "./Home.css";
+import { withLayout } from "../../hooks/withLayout"
 
-
-const Home = () => {
+const HomePage = () => {
   return (
     <div>
       
@@ -9,4 +8,6 @@ const Home = () => {
   )
 }
 
+
+const Home = withLayout(HomePage)
 export default Home
