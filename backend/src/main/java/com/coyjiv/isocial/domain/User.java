@@ -13,7 +13,7 @@ import java.util.Set;
 
 @Getter
 @Setter
-@ToString
+@ToString(exclude = "chats")
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
@@ -54,10 +54,6 @@ public class User extends AbstractEntity {
   @OneToMany(mappedBy = "user", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
   private Set<Role> roles;
 
-  @ManyToMany(mappedBy = "users", cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
-  @JoinTable(name = "users_chats",
-          joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
-          inverseJoinColumns = @JoinColumn(name = "chat_id", referencedColumnName = "id")
-  )
+  @ManyToMany(mappedBy = "users")
   private List<Chat> chats;
 }

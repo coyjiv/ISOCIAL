@@ -14,11 +14,17 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-  @Query("from User u where u.email = :email")
+  @Query("FROM User u WHERE u.email = :email")
   Optional<User> findByEmail(@Param("email") String email);
+
+  @Query("FROM User u WHERE u.email = :email AND u.isActive = true")
+  Optional<User> findActiveByEmail(@Param("email") String email);
+
+  @Query("FROM User u WHERE u.id = :id AND u.isActive = true")
+  Optional<User> findActiveById(@Param("id") Long id);
 
   boolean existsUserByEmail(String email);
 
-  @Query("select u.chats from User u where u.id = :id")
-  List<Chat> findAllChats(@Param("id") Long userId, Pageable pageable);
+  @Query("SELECT u.chats FROM User u WHERE u.id = :id AND u.isActive = true")
+  List<Chat> findAllActiveChats(@Param("id") Long userId, Pageable pageable);
 }

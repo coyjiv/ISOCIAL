@@ -1,7 +1,7 @@
 package com.coyjiv.isocial.dto.request;
 
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,12 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 public class CreateMessageRequestDto {
 
-  @NotBlank
-  private Long senderId;
-
-  @NotBlank
   private String text;
 
   private List<String> attachements;
-
 }

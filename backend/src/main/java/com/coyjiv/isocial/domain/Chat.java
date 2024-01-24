@@ -16,7 +16,11 @@ import java.util.List;
 @Table(name = "chats")
 public class Chat extends AbstractEntity {
 
-  @ManyToMany(mappedBy = "chats")
+  @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
+  @JoinTable(name = "users_chats",
+          joinColumns = @JoinColumn(name = "chat_id", referencedColumnName = "id"),
+          inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id")
+  )
   private List<User> users;
 
 }

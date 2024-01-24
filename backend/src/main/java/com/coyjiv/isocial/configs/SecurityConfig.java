@@ -1,6 +1,7 @@
 package com.coyjiv.isocial.configs;
 
 import com.coyjiv.isocial.auth.DefaultAuthenticationSuccessHandler;
+import com.coyjiv.isocial.auth.JwtTokenProvider;
 import com.coyjiv.isocial.filters.JwtValidatorFilter;
 import com.coyjiv.isocial.service.auth.OAuthUserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,6 +39,7 @@ public class SecurityConfig {
 
   private final OAuthUserService googleAuthUserService;
   private final DefaultAuthenticationSuccessHandler defaultAuthenticationSuccessHandler;
+  private final JwtTokenProvider jwtTokenProvider;
 
   @Bean
   SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http,
@@ -60,7 +62,7 @@ public class SecurityConfig {
               }
             }))
             .httpBasic(AbstractHttpConfigurer::disable)
-            .addFilterBefore(new JwtValidatorFilter(), UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(new JwtValidatorFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
             .authorizeHttpRequests(req ->
                     req
                             .requestMatchers(mvcMatcherBuilder.pattern("/api/auth/**")).permitAll()

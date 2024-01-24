@@ -33,7 +33,7 @@ public class AuthenticationController {
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(e.getMessage());
     }
-    return ResponseEntity.status(HttpStatus.CREATED).build();
+    return ResponseEntity.status(201).build();
   }
 
   @PostMapping("/confirmation")
@@ -46,9 +46,9 @@ public class AuthenticationController {
 
     try {
       userService.confirmUser(email);
-      return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+      return ResponseEntity.status(204).build();
     } catch (AccountNotFoundException exception) {
-      return ResponseEntity.badRequest().body(exception.getMessage());
+      return ResponseEntity.status(404).body(exception.getMessage());
     }
   }
 

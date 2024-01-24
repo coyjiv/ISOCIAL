@@ -3,19 +3,20 @@ package com.coyjiv.isocial.service.message;
 import com.coyjiv.isocial.domain.Message;
 import com.coyjiv.isocial.dto.request.CreateMessageRequestDto;
 import com.coyjiv.isocial.dto.request.UpdateMessageRequestDto;
+import com.coyjiv.isocial.exceptions.ChatNotFoundException;
+import com.coyjiv.isocial.exceptions.MessageNotFoundException;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface IMessageService {
 
-  List<Message> findAll(int page, int quantity, Long chatId);
+  List<Message> findAllActiveByChatId(int page, int quantity, Long chatId) throws ChatNotFoundException, IllegalAccessException;
 
-  Optional<Message> findById(Long id);
+  Message findActiveById(Long id) throws IllegalAccessException, MessageNotFoundException;
 
-  Message create(Long chatId, CreateMessageRequestDto createMessageRequestDto) throws Exception;
+  Message create(Long chatId, CreateMessageRequestDto createMessageRequestDto) throws ChatNotFoundException, IllegalAccessException;
 
-  Message update(Long messageId, UpdateMessageRequestDto updateMessageRequestDto) throws Exception;
+  Message update(Long messageId, UpdateMessageRequestDto updateMessageRequestDto) throws IllegalAccessException, MessageNotFoundException;
 
-  void delete(Long id);
+  void delete(Long id) throws IllegalAccessException;
 }

@@ -17,9 +17,10 @@ public interface IUserService {
 
   List<User> findAll();
 
-  Optional<User> findById(Long id);
+  Optional<User> findActiveById(Long id);
 
   Optional<User> findByEmail(String email);
+  Optional<User> findActiveByEmail(String email);
 
   User create(UserRegistrationRequestDto userRegistrationRequestDto) throws PasswordMatchException;
 

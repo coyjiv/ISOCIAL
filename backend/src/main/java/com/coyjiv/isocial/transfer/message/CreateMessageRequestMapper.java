@@ -1,5 +1,6 @@
 package com.coyjiv.isocial.transfer.message;
 
+import com.coyjiv.isocial.auth.EmailPasswordAuthProvider;
 import com.coyjiv.isocial.domain.Message;
 import com.coyjiv.isocial.domain.MessageStatus;
 import com.coyjiv.isocial.dto.request.CreateMessageRequestDto;
@@ -9,8 +10,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class CreateMessageRequestMapper extends DtoMapperFacade<Message, CreateMessageRequestDto> {
 
-  public CreateMessageRequestMapper(){
+  private final EmailPasswordAuthProvider authProvider;
+
+  public CreateMessageRequestMapper(EmailPasswordAuthProvider authProvider){
     super(Message.class, CreateMessageRequestDto.class);
+    this.authProvider = authProvider;
   }
 
   @Override
@@ -18,5 +22,6 @@ public class CreateMessageRequestMapper extends DtoMapperFacade<Message, CreateM
     entity.setStatus(MessageStatus.SENT);
     entity.setEditted(false);
     entity.setActive(true);
+    entity.setSenderId(authProvider.getAuthenticationPrincipal());
   }
 }

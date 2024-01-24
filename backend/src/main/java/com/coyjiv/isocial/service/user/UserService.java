@@ -38,14 +38,20 @@ public class UserService implements IUserService {
 
   @Transactional(readOnly = true)
   @Override
-  public Optional<User> findById(Long id) {
-    return userRepository.findById(id);
+  public Optional<User> findActiveById(Long id) {
+    return userRepository.findActiveById(id);
   }
 
   @Transactional(readOnly = true)
   @Override
   public Optional<User> findByEmail(String email) {
     return userRepository.findByEmail(email);
+  }
+
+  @Transactional(readOnly = true)
+  @Override
+  public Optional<User> findActiveByEmail(String email) {
+    return userRepository.findActiveByEmail(email);
   }
 
   @Transactional

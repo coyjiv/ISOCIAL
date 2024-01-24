@@ -13,5 +13,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdateMessageRequestDto {
+  @NotBlank
   private String text;
 }

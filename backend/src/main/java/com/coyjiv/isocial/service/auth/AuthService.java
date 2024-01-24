@@ -23,7 +23,7 @@ public class AuthService implements IAuthService {
 
   @Override
   public LoginResponseDto refresh(RefreshRequestDto refreshRequestDto) throws Exception {
-    if (JwtTokenProvider.validateRefreshToken(refreshRequestDto.getRefresh())) {
+    if (tokenProvider.validateRefreshToken(refreshRequestDto.getRefresh())) {
       String access = tokenProvider.generateAccessToken();
       String refresh = tokenProvider.generateRefreshToken();
       return new LoginResponseDto(access, refresh);
