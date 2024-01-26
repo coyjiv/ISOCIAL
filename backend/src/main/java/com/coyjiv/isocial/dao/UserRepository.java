@@ -14,23 +14,17 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-  @Override
-  Page<User> findAll(Pageable pageable);
+    @Query("SELECT u FROM User u WHERE u.isActive = true")
+    Page<User> findAll(Pageable pageable);
 
-  @Query("from User u where u.email = :email")
-  Optional<User> findByEmail(@Param("email") String email);
+    @Query("from User u where u.email = :email")
+    Optional<User> findByEmail(@Param("email") String email);
 
-  boolean existsUserByEmail(String email);
+    boolean existsUserByEmail(String email);
 
-  @Query("SELECT u FROM User u WHERE "
-          + "LOWER(u.firstName) LIKE LOWER(CONCAT(:name, '%')) "
-          + "OR LOWER(u.lastName) LIKE LOWER(CONCAT(:name, '%'))")
-  Page<User> findByName(@Param("name") String name, Pageable pageable);
-
-  @Query("SELECT u FROM User u WHERE LOWER(u.firstName) LIKE LOWER(CONCAT(:startsWithFirstName, '%'))"
-          + " AND LOWER(u.lastName) LIKE LOWER(CONCAT(:startsWithLastName, '%'))"
-          + " OR LOWER(u.firstName) LIKE LOWER(CONCAT(:startsWithLastName, '%'))"
-          + "AND LOWER(u.lastName) LIKE LOWER(CONCAT(:startsWithFirstName, '%'))")
-  Page<User> findByFullName(@Param("startsWithFirstName") String startsWithFirstName,
-                            @Param("startsWithLastName") String startsWithLastName, Pageable pageable);
+    @Query("SELECT u FROM User u WHERE u.firstName LIKE %:searchTerm% AND u.isActive = true "
+            + "OR u.lastName LIKE %:searchTerm% AND u.isActive = true "
+            +"OR CONCAT(u.firstName, ' ', u.lastName) LIKE %:searchTerm% "
+            +"AND u.isActive = true")
+    List<User> findByName(@Param("searchTerm") String searchTerm, Pageable pageable);
 }

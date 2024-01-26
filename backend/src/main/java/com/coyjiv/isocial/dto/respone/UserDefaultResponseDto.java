@@ -1,6 +1,5 @@
 package com.coyjiv.isocial.dto.respone;
 
-import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +12,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserResponseDto {
+public class UserDefaultResponseDto {
   private Long id;
   private String firstName;
   private String lastName;
