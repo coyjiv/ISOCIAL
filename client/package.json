@@ -16,8 +16,6 @@
     "@emotion/styled": "^11.11.0",
     "@mui/material": "^5.15.4",
     "@reduxjs/toolkit": "^2.0.1",
-    "classnames": "^2.5.1",
-    "axios": "^1.6.5",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.1",
     "prop-types": "^15.8.1",
@@ -27,8 +25,7 @@
     "react-redux": "^9.0.4",
     "react-router-dom": "^6.21.1",
     "sass": "^1.69.7",
-    "sort-by": "^1.2.0",
-    "usehooks-ts": "^2.9.5"
+    "sort-by": "^1.2.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.43",

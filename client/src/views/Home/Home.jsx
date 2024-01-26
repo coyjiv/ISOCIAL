@@ -2,7 +2,7 @@ import { withLayout } from "../../hooks/withLayout"
 
 const HomePage = () => {
   return (
-    <div>Home</div>
+    <a href="/login">магазин</a>
   )
 }
 
