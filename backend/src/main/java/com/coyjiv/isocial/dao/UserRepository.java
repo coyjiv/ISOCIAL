@@ -26,7 +26,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
   boolean existsUserByEmail(String email);
 
-  @Query("SELECT u FROM User u WHERE LOWER(u.firstName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
-          "LOWER(u.lastName) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
+  @Query("SELECT u FROM User u WHERE LOWER(u.firstName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR "
+          + "LOWER(u.lastName) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
   List<User> findByFirstNameOrLastName(@Param("searchTerm") String searchTerm, Pageable pageable);
 }

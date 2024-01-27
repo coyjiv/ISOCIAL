@@ -23,7 +23,11 @@ import org.springframework.util.ReflectionUtils;
 
 import javax.security.auth.login.AccountNotFoundException;
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -129,7 +133,7 @@ public class UserService implements IUserService {
     Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "id"));
     Pageable pageable = PageRequest.of(page, size, sort);
 
-    if (splittedNames.length > 1){
+    if (splittedNames.length > 1) {
       result.addAll(userRepository.findByFirstNameOrLastName(splittedNames[0],pageable));
       result.addAll(userRepository.findByFirstNameOrLastName(splittedNames[1],pageable));
     } else {
