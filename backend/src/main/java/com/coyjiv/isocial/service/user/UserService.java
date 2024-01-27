@@ -23,9 +23,7 @@ import org.springframework.util.ReflectionUtils;
 
 import javax.security.auth.login.AccountNotFoundException;
 import java.lang.reflect.Field;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -125,9 +123,20 @@ public class UserService implements IUserService {
   @Transactional(readOnly = true)
   @Override
   public List<UserSearchResponseDto> findByName(String name, int page, int size) {
+    Set<User> result = new HashSet<>();
+    String[] splittedNames = name.trim().split(" ");
+
     Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "id"));
     Pageable pageable = PageRequest.of(page, size, sort);
-    return userRepository.findByName(name, pageable).stream()
+
+    if (splittedNames.length > 1){
+      result.addAll(userRepository.findByFirstNameOrLastName(splittedNames[0],pageable));
+      result.addAll(userRepository.findByFirstNameOrLastName(splittedNames[1],pageable));
+    } else {
+      result.addAll(userRepository.findByFirstNameOrLastName(splittedNames[0],pageable));
+    }
+
+    return result.stream()
             .map(userSearchResponseMapper::convertToDto).toList();
   }
 
