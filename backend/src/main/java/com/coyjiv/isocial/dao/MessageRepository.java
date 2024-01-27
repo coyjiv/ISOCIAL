@@ -18,4 +18,7 @@ public interface MessageRepository extends JpaRepository<Message,Long> {
 
   @Query("FROM Message m WHERE m.id = :id AND m.isActive = true")
   Optional<Message> findActiveById(@Param("id") Long id);
+
+  @Query("FROM Message m where m.chatId= :chatId AND m.isActive = true")
+  Optional<Message> findLastActiveById(@Param("chatId") Long chatId);
 }

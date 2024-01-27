@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -15,6 +16,13 @@ import java.util.List;
 @Entity
 @Table(name = "chats")
 public class Chat extends AbstractEntity {
+
+  @Column(name = "last_message")
+  private String lastMessage;
+
+  @Column(name = "last_message_date")
+  private Date lastMessageDate;
+
 
   @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
   @JoinTable(name = "users_chats",

@@ -45,6 +45,9 @@ public class User extends AbstractEntity {
   @Column(name = "is_private")
   private boolean isPrivate;
 
+  @Column(name = "activity_status")
+  private UserActivityStatus activityStatus;
+
   @Column(name = "last_seen")
   private Date lastSeen;
 

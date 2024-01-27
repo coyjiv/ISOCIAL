@@ -15,21 +15,24 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 // TODO: Need to implement websocket logic
 @Service
 @RequiredArgsConstructor
-public class MessageService implements IMessageService {
+public class ChatMessageService implements IChatMessageService {
 
   private final MessageRepository messageRepository;
   private final IChatService chatService;
   private final CreateMessageRequestMapper createMessageRequestMapper;
   private final EmailPasswordAuthProvider authProvider;
+  private final SimpMessagingTemplate messagingTemplate;
 
   @Transactional(readOnly = true)
   @Override
@@ -73,6 +76,8 @@ public class MessageService implements IMessageService {
     Message message = createMessageRequestMapper.convertToEntity(createMessageRequestDto);
     message.setChatId(chat.getId());
 
+    chat.setLastMessage(message.getText() != null ? message.getText() : "ATTACHMENT");
+    chat.setLastMessageDate(new Date());
 
     return messageRepository.save(message);
   }
@@ -80,13 +85,13 @@ public class MessageService implements IMessageService {
   @Transactional
   @Override
   public Message update(Long messageId, UpdateMessageRequestDto updateMessageRequestDto)
-          throws IllegalAccessException, MessageNotFoundException {
+          throws IllegalAccessException, MessageNotFoundException, ChatNotFoundException {
     Long requestOwnerId = authProvider.getAuthenticationPrincipal();
 
     Optional<Message> messageOptional = messageRepository.findActiveById(messageId);
     if (messageOptional.isPresent() && isRequestOwnerSender(requestOwnerId, messageOptional.get())) {
       Message message = messageOptional.get();
-
+      chatService.updateLastMessage(message.getChatId(),updateMessageRequestDto.getText());
       message.setText(updateMessageRequestDto.getText());
       message.setEditted(true);
       return message;
@@ -97,7 +102,7 @@ public class MessageService implements IMessageService {
 
   @Transactional
   @Override
-  public void delete(Long id) throws IllegalAccessException {
+  public void delete(Long id) throws IllegalAccessException, ChatNotFoundException {
     Long requestOwnerId = authProvider.getAuthenticationPrincipal();
     Optional<Message> messageOptional = messageRepository.findActiveById(id);
 
@@ -105,6 +110,10 @@ public class MessageService implements IMessageService {
       Message message = messageOptional.get();
       message.setActive(false);
       messageRepository.save(message);
+
+      Optional<Message> prevMessage = messageRepository.findLastActiveById(message.getChatId());
+      String lastMessage = prevMessage.isPresent() ? prevMessage.get().getText() : "";
+      chatService.updateLastMessage(message.getChatId(),lastMessage);
     }
   }
 

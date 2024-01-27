@@ -4,7 +4,7 @@ import com.coyjiv.isocial.dto.request.CreateMessageRequestDto;
 import com.coyjiv.isocial.dto.request.UpdateMessageRequestDto;
 import com.coyjiv.isocial.exceptions.ChatNotFoundException;
 import com.coyjiv.isocial.exceptions.MessageNotFoundException;
-import com.coyjiv.isocial.service.message.IMessageService;
+import com.coyjiv.isocial.service.message.IChatMessageService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/messages")
 public class MessageController {
-  private final IMessageService messageService;
+  private final IChatMessageService messageService;
 
   @GetMapping
   public ResponseEntity<?> findAllActiveByChatId(@RequestParam(name = "page") Integer page,

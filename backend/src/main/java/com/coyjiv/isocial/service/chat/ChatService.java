@@ -8,20 +8,25 @@ import com.coyjiv.isocial.domain.Chat;
 import com.coyjiv.isocial.domain.Message;
 import com.coyjiv.isocial.domain.User;
 import com.coyjiv.isocial.dto.request.CreateMessageRequestDto;
+import com.coyjiv.isocial.dto.respone.ActiveChatDto;
+import com.coyjiv.isocial.dto.respone.ActiveChatListDto;
 import com.coyjiv.isocial.exceptions.ChatAlreadyExistException;
 import com.coyjiv.isocial.exceptions.ChatNotFoundException;
+import com.coyjiv.isocial.transfer.chat.ActiveChatDtoMapper;
+import com.coyjiv.isocial.transfer.chat.ActiveChatListDtoMapper;
 import com.coyjiv.isocial.transfer.message.CreateMessageRequestMapper;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.security.auth.login.AccountNotFoundException;
+import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 
@@ -34,16 +39,30 @@ public class ChatService implements IChatService {
   private final UserRepository userRepository;
   private final MessageRepository messageRepository;
   private final CreateMessageRequestMapper createMessageRequestMapper;
+  private final ActiveChatListDtoMapper activeChatListDtoMapper;
   private final EmailPasswordAuthProvider authProvider;
+  private final ActiveChatDtoMapper activeChatDtoMapper;
 
   @Transactional(readOnly = true)
   @Override
-  public List<Chat> findAllActive(int page, int quantity) {
+  public List<ActiveChatListDto> findAllActive(int page, int quantity) {
     Long requestOwnerId = authProvider.getAuthenticationPrincipal();
 
     Sort sort = Sort.by(Sort.Direction.DESC, "lastModifiedDate");
     Pageable pageable = PageRequest.of(page, quantity, sort);
-    return userRepository.findAllActiveChats(requestOwnerId, pageable);
+    return userRepository.findAllActiveChats(requestOwnerId, pageable)
+            .stream().map(activeChatListDtoMapper::convertToDto).toList();
+  }
+
+  @Transactional(readOnly = true)
+  @Override
+  public ActiveChatDto findActiveDtoById(Long id) throws IllegalAccessException, ChatNotFoundException {
+    Long requestOwnerId = authProvider.getAuthenticationPrincipal();
+    Chat chat = findActiveById(id);
+
+    isRequestOwnerInChat(requestOwnerId, chat);
+    return activeChatDtoMapper.convertToDto(chat);
+
   }
 
   @Transactional(readOnly = true)
@@ -61,7 +80,7 @@ public class ChatService implements IChatService {
 
   @Transactional
   @Override
-  public Chat create(CreateMessageRequestDto firstMessageDto, Long receiverId)
+  public ActiveChatDto create(CreateMessageRequestDto firstMessageDto, Long receiverId)
           throws AccountNotFoundException, IllegalAccessException, ChatAlreadyExistException {
 
     if (firstMessageDto.getText() == null && firstMessageDto.getAttachements() == null
@@ -72,46 +91,62 @@ public class ChatService implements IChatService {
 
     Long requestOwnerId = authProvider.getAuthenticationPrincipal();
     Message firstMessage = createMessageRequestMapper.convertToEntity(firstMessageDto);
-    Optional<Chat> chatOptional = chatRepository.findChatBetweenUsers(List.of(requestOwnerId,receiverId));
+    Optional<Chat> chatOptional = chatRepository.findChatBetweenUsers(List.of(requestOwnerId, receiverId));
     Chat chat;
 
-    if (chatOptional.isPresent() && chatOptional.get().isActive()){
+    if (chatOptional.isPresent() && chatOptional.get().isActive()) {
       throw new ChatAlreadyExistException("Chat already exist");
-    } else if (chatOptional.isPresent()){
-      Chat existingChat = chatOptional.get();
-      existingChat.setActive(true);
-      chatRepository.save(existingChat);
-      firstMessage.setChatId(existingChat.getId());
-      chat = existingChat;
+    } else if (chatOptional.isPresent()) {
+      chat = reCreateInactive(chatOptional.get(),firstMessage);
     } else {
+      //TODO: LATER USE user service
       User sender = userRepository.findActiveById(requestOwnerId)
               .orElseThrow(() -> new AccountNotFoundException("User not found"));
       User receiver = userRepository.findActiveById(receiverId)
               .orElseThrow(() -> new AccountNotFoundException("User not found"));
 
-      chat = create(List.of(sender,receiver), firstMessage);
+      chat = create(List.of(sender, receiver), firstMessage);
     }
 
+    firstMessage.setChatId(chat.getId());
     messageRepository.save(firstMessage);
-    return chat;
+    return activeChatDtoMapper.convertToDto(chat);
   }
 
-  private Chat create(List<User> users, Message firstMessage){
+
+  private Chat create(List<User> users, Message firstMessage) {
     Chat newChat = new Chat();
     newChat.setUsers(users);
     newChat.setActive(true);
+    newChat.setLastMessage(firstMessage.getText() != null ? firstMessage.getText() : "ATTACHMENT");
+    newChat.setLastMessageDate(new Date());
     chatRepository.save(newChat);
-    firstMessage.setChatId(newChat.getId());
 
     return newChat;
   }
+  private Chat reCreateInactive(Chat existingChat, Message firstMessage){
+    existingChat.setActive(true);
+    existingChat.setLastMessage(firstMessage.getText() != null ? firstMessage.getText() : "ATTACHMENT");
+    existingChat.setLastMessageDate(new Date());
+    chatRepository.save(existingChat);
+    return existingChat;
+  }
+
+  @Transactional
+  @Override
+  public Chat updateLastMessage(Long id, String lastMessageText) throws ChatNotFoundException, IllegalAccessException {
+    Chat chat = findActiveById(id);
+    chat.setLastMessage(lastMessageText);
+    chat.setLastMessageDate(new Date());
+    return chatRepository.save(chat);
+  }
+
 
   @Transactional
   @Override
   public void delete(Long id)
           throws IllegalAccessException, ChatNotFoundException {
     Long requestOwnerId = authProvider.getAuthenticationPrincipal();
-
     Optional<Chat> chatOptional = chatRepository.findActiveById(id);
 
     if (chatOptional.isPresent() && isRequestOwnerInChat(requestOwnerId, chatOptional.get())) {
@@ -120,7 +155,7 @@ public class ChatService implements IChatService {
       chatRepository.save(chat);
 
       List<Message> messages = messageRepository.findAllActiveByChatId(chat.getId(),
-              PageRequest.of(0,Integer.MAX_VALUE));
+              PageRequest.of(0, Integer.MAX_VALUE));
 
       messages.forEach(message -> message.setActive(false));
       messageRepository.saveAll(messages);
