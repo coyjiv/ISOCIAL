@@ -14,17 +14,21 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    @Query("SELECT u FROM User u WHERE u.isActive = true")
-    Page<User> findAll(Pageable pageable);
+  @Query("SELECT u FROM User u WHERE u.isActive = true")
+  Page<User> findAll(Pageable pageable);
 
-    @Query("from User u where u.email = :email")
-    Optional<User> findByEmail(@Param("email") String email);
+  @Query("from User u where u.email = :email")
+  Optional<User> findByEmail(@Param("email") String email);
 
-    boolean existsUserByEmail(String email);
+  @Override
+  @Query("from User u where u.id = :id AND u.isActive = true")
+  Optional<User> findById(@Param("id") Long id);
 
-    @Query("SELECT u FROM User u WHERE u.firstName LIKE %:searchTerm% AND u.isActive = true "
-            + "OR u.lastName LIKE %:searchTerm% AND u.isActive = true "
-            +"OR CONCAT(u.firstName, ' ', u.lastName) LIKE %:searchTerm% "
-            +"AND u.isActive = true")
-    List<User> findByName(@Param("searchTerm") String searchTerm, Pageable pageable);
+  boolean existsUserByEmail(String email);
+
+  @Query("SELECT u FROM User u WHERE LOWER(u.firstName) LIKE %:searchTerm% AND u.isActive = true "
+          + "OR LOWER(u.lastName) LIKE %:searchTerm% AND u.isActive = true "
+          + "OR CONCAT(LOWER(u.firstName), ' ', LOWER(u.lastName)) LIKE %:searchTerm% "
+          + "AND u.isActive = true")
+  List<User> findByName(@Param("searchTerm") String searchTerm, Pageable pageable);
 }

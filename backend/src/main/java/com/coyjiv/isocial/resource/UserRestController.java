@@ -1,19 +1,20 @@
 package com.coyjiv.isocial.resource;
 
-import com.coyjiv.isocial.domain.User;
-import com.coyjiv.isocial.dto.request.UserUpdateRequestDto;
 import com.coyjiv.isocial.dto.respone.UserDefaultResponseDto;
 import com.coyjiv.isocial.dto.respone.UserSearchResponseDto;
 import com.coyjiv.isocial.service.user.IUserService;
-import com.coyjiv.isocial.transfer.user.UserDefaultResponseMapper;
-import com.coyjiv.isocial.transfer.user.UserSearchResponseMapper;
-import com.coyjiv.isocial.transfer.user.UserUpdateRequestMapper;
 import jakarta.validation.constraints.Min;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
@@ -26,23 +27,18 @@ import java.util.Optional;
 @RequestMapping("/api/users")
 public class UserRestController {
   private final IUserService userService;
-  private final UserDefaultResponseMapper userDefaultResponseMapper;
-  private final UserUpdateRequestMapper userUpdateRequestMapper;
-  private final UserSearchResponseMapper userSearchResponseMapper;
 
   @GetMapping("/")
-  public ResponseEntity<?> findAll(@RequestParam(defaultValue = "1") @Min(1) Integer page,
+  public ResponseEntity<?> findAll(@RequestParam(defaultValue = "0") @Min(0) Integer page,
                                    @RequestParam(defaultValue = "10") @Min(0) Integer size) {
-    List<User> users = userService.findAll(page, size);
-    List<UserDefaultResponseDto> dtos = users.stream().map(userDefaultResponseMapper::convertToDto).toList();
+    List<UserDefaultResponseDto> dtos = userService.findAll(page, size);
     return ResponseEntity.ok(dtos);
   }
 
   @GetMapping("/{id}")
   public ResponseEntity<?> findById(@PathVariable("id") Long id) {
-    Optional<User> user = userService.findById(id);
-    if (user.isPresent()) {
-      UserDefaultResponseDto dto = userDefaultResponseMapper.convertToDto(user.get());
+    Optional<UserDefaultResponseDto> dto = userService.findById(id);
+    if (dto.isPresent()) {
       return ResponseEntity.ok(dto);
     } else {
       return ResponseEntity.notFound().build();
@@ -50,10 +46,9 @@ public class UserRestController {
   }
 
   @GetMapping("/search")
-  public ResponseEntity<?> findByName(@RequestParam String name, @RequestParam(defaultValue = "1") int page,
-                                      @RequestParam(defaultValue = "10") int size) {
-    List<User> users = userService.findByName(name, page, size);
-    List<UserSearchResponseDto> dtos = users.stream().map(userSearchResponseMapper::convertToDto).toList();
+  public ResponseEntity<?> findByName(@RequestParam String name, @RequestParam(defaultValue = "0") @Min(0) int page,
+                                      @RequestParam(defaultValue = "10") @Min(0) int size) {
+    List<UserSearchResponseDto> dtos = userService.findByName(name, page, size);
     return ResponseEntity.ok(dtos);
   }
 
@@ -66,8 +61,8 @@ public class UserRestController {
 
 
   @PatchMapping("/{id}")
-  public ResponseEntity<?> update(@PathVariable("id") Long id, @RequestBody Map<String,String> fields) {
-    userService.updateUser(id,fields);
+  public ResponseEntity<?> update(@PathVariable("id") @Min(0) Long id, @RequestBody Map<String, String> fields) {
+    userService.updateUser(id, fields);
     return ResponseEntity.ok().body("Updated successfully");
   }
 

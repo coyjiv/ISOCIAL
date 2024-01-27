@@ -5,7 +5,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
 import java.util.List;
 
 @Setter
@@ -13,8 +12,8 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserSearchResponseDto {
-    private Long id;
-    private String firstName;
-    private String lastName;
-    private List<String> avatarsUrl;
+  private Long id;
+  private String firstName;
+  private String lastName;
+  private List<String> avatarsUrl;
 }

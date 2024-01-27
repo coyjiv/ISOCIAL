@@ -2,9 +2,9 @@ package com.coyjiv.isocial.service.user;
 
 import com.coyjiv.isocial.domain.User;
 import com.coyjiv.isocial.dto.request.UserRegistrationRequestDto;
+import com.coyjiv.isocial.dto.respone.UserDefaultResponseDto;
+import com.coyjiv.isocial.dto.respone.UserSearchResponseDto;
 import com.coyjiv.isocial.exceptions.PasswordMatchException;
-import org.springframework.data.repository.query.Param;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.security.auth.login.AccountNotFoundException;
 import java.util.List;
@@ -13,24 +13,24 @@ import java.util.Optional;
 
 public interface IUserService {
 
-    /*
-     * Find all users with pagination
-     * */
-    List<User> findAll(int page, int quantity);
+  /*
+   * Find all users with pagination
+   * */
+  List<UserDefaultResponseDto> findAll(int page, int quantity);
 
-    List<User> findAll();
+  List<UserDefaultResponseDto> findAll();
 
-    Optional<User> findById(Long id);
+  Optional<UserDefaultResponseDto> findById(Long id);
 
-    Optional<User> findByEmail(String email);
+  Optional<User> findByEmail(String email);
 
-    User createUser(UserRegistrationRequestDto userRegistrationRequestDto) throws PasswordMatchException;
+  User createUser(UserRegistrationRequestDto userRegistrationRequestDto) throws PasswordMatchException;
 
-    void confirmUser(String email) throws AccountNotFoundException;
+  void confirmUser(String email) throws AccountNotFoundException;
 
-    void updateUser(Long id, Map<String, String> fields);
+  void updateUser(Long id, Map<String, String> fields);
 
-    List<User> findByName(String name, int page, int size);
+  List<UserSearchResponseDto> findByName(String name, int page, int size);
 
-    void deleteUser(Long id);
+  void deleteUser(Long id);
 }
