@@ -3,7 +3,7 @@ import {validationSchema} from "./validation.js"
 
 import "./Login.scss";
 
-const LoginForm = ({ onSubmit }) => {
+const LoginForm = () => {
   const initialValues = {
     username: '',
     password: '',
