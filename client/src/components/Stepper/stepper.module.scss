@@ -1,0 +1,13 @@
+.step {
+  display: none;
+}
+
+.visible {
+  display: block;
+}
+
+.buttonWrapper {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}

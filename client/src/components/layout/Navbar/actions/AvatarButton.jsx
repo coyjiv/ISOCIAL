@@ -8,6 +8,8 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { IoMdSettings } from "react-icons/io";
 import { ImExit } from "react-icons/im";
+import { useGetProfileByIdQuery } from "../../../../store/services/profileService";
+import { DEFAULT_USER_AVATAR } from "../../../../data/placeholders";
 
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -109,7 +111,7 @@ const AvatarButton = () => {
     const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
-    const profile = useSelector(state => state.profile)
+    const { data: profile, isLoading } = useGetProfileByIdQuery('3')
 
     const buttonClasses = classNames({
         'clicked': isProfileMenuOpen
@@ -129,6 +131,7 @@ const AvatarButton = () => {
 
     useOnClickOutside(ref, handleClickOutside)
     return (
+        profile &&
         <>
             <StyledButton ref={ref} className={buttonClasses} onClick={handleClickInside}>
                 <StyledBadge
@@ -136,7 +139,7 @@ const AvatarButton = () => {
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                     variant="dot"
                 >
-                    <Avatar alt="User profile avatar" src="https://avatar.iran.liara.run/public/7" />
+                    <Avatar alt="User profile avatar" src={DEFAULT_USER_AVATAR} />
                 </StyledBadge>
             </StyledButton>
             <StyledMenu

@@ -23,9 +23,13 @@ export const theme = createTheme({
       grey: "#75777a",
       black: "#050505",
       lightGrey: "#f0f2f5",
+      lightGrey2: "#f5f5f5",
       primaryButtonBackground: "#0866FF",
       white: "#fff",
-      shadow2: "rgba(0, 0, 0, 0.2)"
+      shadow2: "rgba(0, 0, 0, 0.2)",
+      disabledButtonBackground: "#e4e6eb",
+      disabledButtonColor: "#a7a9ab",
+      greyBorder: "#ccc",
     },
     components: {
       MuiButton: {
