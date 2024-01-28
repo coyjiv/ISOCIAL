@@ -1,5 +1,5 @@
 import ProfileTabs from './ProfileTabs'
-import { Box, Typography, Button, Stack, Container, Divider, Avatar, useTheme } from '@mui/material'
+import { Box, Typography, Button, Stack, Container, Divider, useTheme } from '@mui/material'
 import { GoPlus } from "react-icons/go";
 import { withLayout } from '../../hooks/withLayout'
 import ProfileSkeleton from './skeletons/ProfileSkeleton'

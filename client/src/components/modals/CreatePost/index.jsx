@@ -11,10 +11,10 @@ const CreatePostModal = (props) => {
   const handleClose = () => {
     onClose(selectedValue);
   };
-
-  const handleListItemClick = (value) => {
-    onClose(value);
-  };
+  // @TODO: Recheck this 
+  // const handleListItemClick = (value) => {
+  //   onClose(value);
+  // };
 
   const [postContent, setPostContent] = useSessionStorage('postContent', '');
 
@@ -52,6 +52,7 @@ const CreatePostModal = (props) => {
 CreatePostModal.propTypes = {
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
+  selectedValue: PropTypes.string.isRequired,
 };
 
 export default CreatePostModal

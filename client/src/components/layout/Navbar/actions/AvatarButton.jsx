@@ -4,7 +4,6 @@ import { useState, useRef } from "react";
 import { useOnClickOutside } from "usehooks-ts";
 import classNames from "classnames";
 import { Menu, MenuItem } from "@mui/material";
-import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { IoMdSettings } from "react-icons/io";
 import { ImExit } from "react-icons/im";
@@ -111,7 +110,7 @@ const AvatarButton = () => {
     const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
-    const { data: profile, isLoading } = useGetProfileByIdQuery('3')
+    const { data: profile } = useGetProfileByIdQuery('3')
 
     const buttonClasses = classNames({
         'clicked': isProfileMenuOpen

@@ -1,4 +1,5 @@
 import ReactCrop from 'react-image-crop'
+import PropTypes from 'prop-types'
 import styles from '../mediaUpload.module.scss'
 import 'react-image-crop/src/ReactCrop.scss'
 
@@ -21,5 +22,14 @@ const CropStep = ({ imgSrc, onImageLoad, imgRef, crop, setCrop, setCompletedCrop
             </ReactCrop>
         </div>
     )
+}
+
+CropStep.propTypes = {
+    imgSrc: PropTypes.string,
+    onImageLoad: PropTypes.func,
+    imgRef: PropTypes.object,
+    crop: PropTypes.object,
+    setCrop: PropTypes.func,
+    setCompletedCrop: PropTypes.func,
 }
 export default CropStep

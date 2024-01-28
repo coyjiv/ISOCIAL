@@ -14,4 +14,8 @@ GrayButton.propTypes = {
     children: PropTypes.node.isRequired,
 };
 
+BlueRoundedButton.propTypes = {
+    children: PropTypes.node.isRequired,
+};
+
 export { GrayButton, BlueRoundedButton }

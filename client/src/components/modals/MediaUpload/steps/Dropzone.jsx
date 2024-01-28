@@ -1,5 +1,6 @@
 import { Typography } from '@mui/material'
 import { useDropzone } from 'react-dropzone'
+import PropTypes from 'prop-types'
 import styles from '../mediaUpload.module.scss'
 
 const Dropzone = ({ onDrop, file }) => {
@@ -29,5 +30,11 @@ const Dropzone = ({ onDrop, file }) => {
         </>
     )
 }
+
+Dropzone.propTypes = {
+    onDrop: PropTypes.func.isRequired,
+    file: PropTypes.object,
+}
+
 
 export default Dropzone

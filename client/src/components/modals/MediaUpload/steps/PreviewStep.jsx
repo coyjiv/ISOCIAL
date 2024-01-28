@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types'
+
 const PreviewStep = ({ completedCrop, previewCanvasRef, onUploadCropAvatarClick }) => {
     return (
         !!completedCrop && (
@@ -19,6 +21,12 @@ const PreviewStep = ({ completedCrop, previewCanvasRef, onUploadCropAvatarClick 
             </>
         )
     )
+}
+
+PreviewStep.propTypes = {
+    completedCrop: PropTypes.object,
+    previewCanvasRef: PropTypes.object,
+    onUploadCropAvatarClick: PropTypes.func
 }
 
 export default PreviewStep

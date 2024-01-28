@@ -1,4 +1,5 @@
 import { useState } from "react"
+import PropTypes from "prop-types"
 import Step from "./Step"
 import styles from './stepper.module.scss'
 
@@ -23,6 +24,10 @@ const Stepper = ({ steps = [] }) => {
             </div>
         </div>
     )
+}
+
+Stepper.propTypes = {
+    steps: PropTypes.arrayOf(PropTypes.node)
 }
 
 export { Stepper }

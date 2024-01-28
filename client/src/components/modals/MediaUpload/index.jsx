@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { useState, useCallback, useRef } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 import { BlueRoundedButton } from "../../buttons";
@@ -10,7 +11,7 @@ import PreviewStep from "./steps/PreviewStep";
 import Dropzone from "./steps/Dropzone";
 
 const MediaUpload = ({ modalTitle, ...props }) => {
-    const { onClose, selectedValue, open } = props;
+    const { onClose, open } = props;
 
     const [file, setFile] = useState(null);
     const [imgSrc, setImgSrc] = useState("");
@@ -26,7 +27,7 @@ const MediaUpload = ({ modalTitle, ...props }) => {
     const [completedCrop, setCompletedCrop] = useState();
 
     const handleClose = () => {
-        onClose(selectedValue);
+        onClose();
     };
 
 
@@ -109,9 +110,9 @@ const MediaUpload = ({ modalTitle, ...props }) => {
                         break;
                 }
             },
-            (error) => {
-                // Handle unsuccessful uploads
-            },
+            // (error) => {
+            //     Handle unsuccessful uploads
+            // },
             () => {
                 getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
                     console.log('File available at', downloadURL);
@@ -140,9 +141,9 @@ const MediaUpload = ({ modalTitle, ...props }) => {
     );
 
     const avatarSteps = [
-        <Dropzone onDrop={onDrop} file={file} />,
-        <CropStep imgSrc={imgSrc} onImageLoad={onImageLoad} imgRef={imgRef} crop={crop} setCrop={setCrop} setCompletedCrop={setCompletedCrop} />,
-        <PreviewStep completedCrop={completedCrop} previewCanvasRef={previewCanvasRef} onUploadCropAvatarClick={onUploadCropAvatarClick} />
+        <Dropzone key={1} onDrop={onDrop} file={file} />,
+        <CropStep key={2} imgSrc={imgSrc} onImageLoad={onImageLoad} imgRef={imgRef} crop={crop} setCrop={setCrop} setCompletedCrop={setCompletedCrop} />,
+        <PreviewStep key={3} completedCrop={completedCrop} previewCanvasRef={previewCanvasRef} onUploadCropAvatarClick={onUploadCropAvatarClick} />
     ];
 
     return (
@@ -160,6 +161,13 @@ const MediaUpload = ({ modalTitle, ...props }) => {
             <BlueRoundedButton disabled={true}>Create a post</BlueRoundedButton>
         </Dialog>
     )
+}
+
+
+MediaUpload.propTypes = {
+    modalTitle: PropTypes.string,
+    onClose: PropTypes.func.isRequired,
+    open: PropTypes.bool.isRequired,
 }
 
 export default MediaUpload

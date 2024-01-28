@@ -1,4 +1,5 @@
 import { useState } from "react"
+import PropTypes from "prop-types"
 import { Avatar } from "@mui/material"
 import Menu from "./Menu"
 import MediaUpload from "../../../components/modals/MediaUpload";
@@ -59,6 +60,10 @@ const AvatarMenu = ({ avatarUrl }) => {
             <AvatarView onClose={handleAvatarViewModalClose} open={avatarViewModalOpen} />
         </>
     )
+}
+
+AvatarMenu.propTypes = {
+    avatarUrl: PropTypes.string
 }
 
 export default AvatarMenu

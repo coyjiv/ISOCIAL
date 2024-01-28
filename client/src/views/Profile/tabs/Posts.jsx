@@ -10,6 +10,7 @@ import CreatePostModal from '../../../components/modals/CreatePost';
 
 const Posts = () => {
   const { id } = useParams();
+  // eslint-disable-next-line no-unused-vars
   const { data: profile, error, isLoading } = useGetProfileByIdQuery(id)
 
   const [isCreatePostModalOpen, setIsCreatePostModalOpen] = useState(false)
