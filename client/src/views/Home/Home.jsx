@@ -1,8 +1,9 @@
 import { withLayout } from "../../hooks/withLayout"
+import {Link} from "react-router-dom";
 
 const HomePage = () => {
   return (
-    <a href="/login">магазин</a>
+    <Link to="/login">Log In</Link>
   )
 }
 

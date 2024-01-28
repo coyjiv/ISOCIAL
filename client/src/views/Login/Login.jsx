@@ -4,19 +4,17 @@ import GLink  from './google_icon.svg';
 
 
 import "./Login.scss";
-import "../../index.scss"
 
 const Login = () => {
 
   const handleLogin = (values) => {
-    // Implement login logic, e.g., call an API
     console.log('Login submitted with values:', values);
   };
 
 
   return (
     <div className="container">
-      <div className="login__container">
+      <div className="login-container">
         <div className="logo">ISocial</div>
         <LoginForm onSubmit={handleLogin} />
         <Link className="forgot-btn" to="/register">Forgot password</Link>

@@ -40,7 +40,7 @@ const LoginForm = () => {
       validationSchema={validationSchema}
       onSubmit={handleSubmit}
     >
-      <Form className="login__form">
+      <Form className="login-form">
           <Field type="text" id="username" name="username" placeholder="Username"/>
           <ErrorMessage name="username" component="div" />
           <Field type="password" id="password" name="password" placeholder="Password" />
