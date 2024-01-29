@@ -1,21 +1,31 @@
 package com.coyjiv.isocial.service.user;
 
 
+import com.coyjiv.isocial.auth.EmailPasswordAuthProvider;
 import com.coyjiv.isocial.cache.EmailRegistrationCache;
 import com.coyjiv.isocial.dao.UserRepository;
 import com.coyjiv.isocial.domain.User;
 import com.coyjiv.isocial.dto.request.UserRegistrationRequestDto;
+import com.coyjiv.isocial.dto.respone.UserDefaultResponseDto;
+import com.coyjiv.isocial.dto.respone.UserSearchResponseDto;
+import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.exceptions.PasswordMatchException;
 import com.coyjiv.isocial.service.email.EmailServiceImpl;
+import com.coyjiv.isocial.transfer.user.UserDefaultResponseMapper;
 import com.coyjiv.isocial.transfer.user.UserRegistrationRequestMapper;
+import com.coyjiv.isocial.transfer.user.UserSearchResponseMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ReflectionUtils;
 
 import javax.security.auth.login.AccountNotFoundException;
-import java.util.List;
-import java.util.Optional;
+import java.lang.reflect.Field;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -23,24 +33,39 @@ public class UserService implements IUserService {
   private final UserRepository userRepository;
   private final UserRegistrationRequestMapper userRegistrationRequestMapper;
   private final EmailServiceImpl emailService;
+  private final UserSearchResponseMapper userSearchResponseMapper;
+  private final UserDefaultResponseMapper userDefaultResponseMapper;
+  private final EmailPasswordAuthProvider authProvider;
+
 
   @Transactional(readOnly = true)
   @Override
-  public List<User> findAll(int page, int quantity) {
-    return null;
+  public List<UserDefaultResponseDto> findAllActive(int page, int size) {
+    Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "id"));
+    Pageable pageable = PageRequest.of(page, size, sort);
+    return userRepository.findAll(pageable).toList().stream()
+            .map(userDefaultResponseMapper::convertToDto).toList();
   }
 
   @Transactional(readOnly = true)
   @Override
-  public List<User> findAll() {
-    return userRepository.findAll();
+  public List<UserDefaultResponseDto> findAllActive() {
+    return userRepository.findAll().stream()
+            .map(userDefaultResponseMapper::convertToDto).toList();
   }
 
   @Transactional(readOnly = true)
   @Override
-  public Optional<User> findActiveById(Long id) {
-    return userRepository.findActiveById(id);
+  public UserDefaultResponseDto findActiveById(Long id) throws EntityNotFoundException {
+    Optional<User> userOptional = userRepository.findActiveById(id);
+
+    if (userOptional.isPresent()) {
+      return userDefaultResponseMapper.convertToDto(userOptional.get());
+    } else {
+      throw new EntityNotFoundException("User not found");
+    }
   }
+
 
   @Transactional(readOnly = true)
   @Override
@@ -52,6 +77,26 @@ public class UserService implements IUserService {
   @Override
   public Optional<User> findActiveByEmail(String email) {
     return userRepository.findActiveByEmail(email);
+  }
+
+  @Transactional(readOnly = true)
+  @Override
+  public List<UserSearchResponseDto> findByName(String name, int page, int size) {
+    Set<User> result = new HashSet<>();
+    String[] splittedNames = name.trim().split(" ");
+
+    Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "id"));
+    Pageable pageable = PageRequest.of(page, size, sort);
+
+    if (splittedNames.length > 1) {
+      result.addAll(userRepository.findByFirstNameOrLastName(splittedNames[0], pageable));
+      result.addAll(userRepository.findByFirstNameOrLastName(splittedNames[1], pageable));
+    } else {
+      result.addAll(userRepository.findByFirstNameOrLastName(splittedNames[0], pageable));
+    }
+
+    return result.stream()
+            .map(userSearchResponseMapper::convertToDto).toList();
   }
 
   @Transactional
@@ -95,13 +140,42 @@ public class UserService implements IUserService {
 
   @Transactional
   @Override
-  public User update(User user) {
-    return userRepository.save(user);
+  public void update(Long id, Map<String, String> fields)
+          throws IllegalAccessException, EntityNotFoundException {
+    Long requestOwnerId = authProvider.getAuthenticationPrincipal();
+    if (!Objects.equals(id,requestOwnerId)){
+      throw new IllegalAccessException("User have no authorities to do this request.");
+    }
+
+    Optional<User> user = userRepository.findById(id);
+    if (user.isPresent()) {
+      fields.forEach((key, value) -> {
+        Field field = ReflectionUtils.findField(User.class, key);
+        if (field != null) {
+          field.setAccessible(true);
+          ReflectionUtils.setField(field, user.get(), value);
+        }
+      });
+      userRepository.save(user.get());
+    } else {
+      throw new EntityNotFoundException("User not found.");
+    }
   }
+
 
   @Transactional
   @Override
-  public void delete(Long id) {
-    userRepository.deleteById(id);
+  public void delete(Long id) throws IllegalAccessException, EntityNotFoundException {
+    Long requestOwnerId = authProvider.getAuthenticationPrincipal();
+    if (!Objects.equals(id,requestOwnerId)){
+      throw new IllegalAccessException("User have no authorities to do this request.");
+    }
+
+    Optional<User> user = userRepository.findById(id);
+    if (user.isPresent()){
+      user.get().setActive(false);
+    } else {
+      throw new EntityNotFoundException("User not found.");
+    }
   }
 }

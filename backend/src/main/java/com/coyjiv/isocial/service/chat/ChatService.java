@@ -173,7 +173,7 @@ public class ChatService implements IChatService {
     }
   }
 
-  public boolean isRequestOwnerInChat(Long requestOwnerId, Chat chat) throws IllegalAccessException {
+  private boolean isRequestOwnerInChat(Long requestOwnerId, Chat chat) throws IllegalAccessException {
     if (chat.getUsers().stream().noneMatch(user -> user.getId().equals(requestOwnerId))) {
       throw new IllegalAccessException("User have no authorities to do this request.");
     }

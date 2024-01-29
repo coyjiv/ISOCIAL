@@ -1,0 +1,12 @@
+@mixin button-transition($transition-duration: 0.3s, $hover-color: #ff6347) {
+  background-color: $primaryButtonBackground;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  transition: background-color $transition-duration;
+
+  &:hover {
+    background-color: $hover-color;
+  }
+}
