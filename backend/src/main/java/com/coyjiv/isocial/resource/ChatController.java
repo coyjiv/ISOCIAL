@@ -1,16 +1,19 @@
 package com.coyjiv.isocial.resource;
 
 import com.coyjiv.isocial.dto.request.CreateMessageRequestDto;
-import com.coyjiv.isocial.exceptions.ChatAlreadyExistException;
 import com.coyjiv.isocial.exceptions.ChatNotFoundException;
 import com.coyjiv.isocial.service.chat.IChatService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.security.auth.login.AccountNotFoundException;
 
@@ -35,20 +38,23 @@ public class ChatController {
       return ResponseEntity.status(403).body(exception.getMessage());
     } catch (ChatNotFoundException exception) {
       return ResponseEntity.status(404).body(exception.getMessage());
+    } catch (Exception exception) {
+      return ResponseEntity.status(400).body(exception.getMessage());
     }
   }
 
-  @MessageMapping("/chat")
+  @PostMapping
   public ResponseEntity<?> create(@RequestParam(name = "receiverId") Long receiverId,
-                                  @Payload @Valid CreateMessageRequestDto firstMessage) {
+                                  @RequestBody @Valid CreateMessageRequestDto firstMessage) {
     try {
-      chatService.create(firstMessage, receiverId);
-      return ResponseEntity.status(201).build();
+
+      return ResponseEntity.status(201).body(chatService.create(firstMessage, receiverId));
     } catch (AccountNotFoundException exception) {
       return ResponseEntity.status(403).body(exception.getMessage());
     } catch (IllegalAccessException exception) {
       return ResponseEntity.status(404).body(exception.getMessage());
-    } catch (ChatAlreadyExistException exception) {
+    } catch (Exception exception) {
+      exception.printStackTrace();
       return ResponseEntity.status(400).body(exception.getMessage());
     }
   }
@@ -62,6 +68,8 @@ public class ChatController {
       return ResponseEntity.status(404).body(exception.getMessage());
     } catch (IllegalAccessException exception) {
       return ResponseEntity.status(403).body(exception.getMessage());
+    } catch (Exception exception) {
+      return ResponseEntity.status(400).body(exception.getMessage());
     }
   }
 

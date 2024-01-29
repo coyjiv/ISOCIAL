@@ -68,16 +68,17 @@ public class UserService implements IUserService {
     String uuidForConfirmationLink = EmailRegistrationCache.putEmail(user.getEmail());
 
 
-
     String text = String.format("Open link to confirm your account ! Link: http://localhost:9000/confirmation?id=%s",
             uuidForConfirmationLink);
+
+    userRepository.save(user);
 
     emailService.sendSimpleMessage(
             userRegistrationDto.getEmail(), "Account confirmation",
             text
     );
 
-    return userRepository.save(user);
+    return user;
   }
 
   @Transactional

@@ -3,7 +3,6 @@ package com.coyjiv.isocial.auth;
 import com.coyjiv.isocial.dao.UserRepository;
 import com.coyjiv.isocial.domain.Role;
 import com.coyjiv.isocial.domain.User;
-import com.coyjiv.isocial.exceptions.UserNotActiveException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -55,11 +54,11 @@ public class EmailPasswordAuthProvider implements AuthenticationProvider {
     return (UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication));
   }
 
-  public Authentication getSecurityContextAuthentication(){
+  public Authentication getSecurityContextAuthentication() {
     return SecurityContextHolder.getContext().getAuthentication();
   }
 
-  public Long getAuthenticationPrincipal(){
+  public Long getAuthenticationPrincipal() {
     return Long.valueOf((String) getSecurityContextAuthentication().getPrincipal());
   }
 }

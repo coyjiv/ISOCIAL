@@ -21,7 +21,7 @@ public class ActiveChatListDtoMapper extends DtoMapperFacade<Chat, ActiveChatLis
     Long senderId = authProvider.getAuthenticationPrincipal();
     User receiver = entity.getUsers().stream().filter(u -> !u.getId().equals(senderId)).toList().get(0);
     dto.setChatName(receiver.getFirstName() + " " + receiver.getLastName());
-    dto.setAvatarUrl(receiver.getAvatarsUrl().getLast());
+    dto.setAvatarUrl(receiver.getAvatarsUrl().get(0));
     dto.setReceiverStatus(receiver.getActivityStatus());
   }
 }

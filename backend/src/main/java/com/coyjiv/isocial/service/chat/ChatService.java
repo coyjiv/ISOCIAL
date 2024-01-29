@@ -4,6 +4,7 @@ import com.coyjiv.isocial.auth.EmailPasswordAuthProvider;
 import com.coyjiv.isocial.dao.ChatRepository;
 import com.coyjiv.isocial.dao.MessageRepository;
 import com.coyjiv.isocial.dao.UserRepository;
+import com.coyjiv.isocial.domain.AbstractEntity;
 import com.coyjiv.isocial.domain.Chat;
 import com.coyjiv.isocial.domain.Message;
 import com.coyjiv.isocial.domain.User;
@@ -12,15 +13,14 @@ import com.coyjiv.isocial.dto.respone.ActiveChatDto;
 import com.coyjiv.isocial.dto.respone.ActiveChatListDto;
 import com.coyjiv.isocial.exceptions.ChatAlreadyExistException;
 import com.coyjiv.isocial.exceptions.ChatNotFoundException;
+import com.coyjiv.isocial.service.message.IWebsocketMessageService;
 import com.coyjiv.isocial.transfer.chat.ActiveChatDtoMapper;
 import com.coyjiv.isocial.transfer.chat.ActiveChatListDtoMapper;
 import com.coyjiv.isocial.transfer.message.CreateMessageRequestMapper;
-import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.Optional;
 
 
-// TODO: Need to implement websocket logic
 @Service
 @RequiredArgsConstructor
 public class ChatService implements IChatService {
@@ -42,6 +41,7 @@ public class ChatService implements IChatService {
   private final ActiveChatListDtoMapper activeChatListDtoMapper;
   private final EmailPasswordAuthProvider authProvider;
   private final ActiveChatDtoMapper activeChatDtoMapper;
+  private final IWebsocketMessageService websocketChatMessageService;
 
   @Transactional(readOnly = true)
   @Override
@@ -51,7 +51,7 @@ public class ChatService implements IChatService {
     Sort sort = Sort.by(Sort.Direction.DESC, "lastModifiedDate");
     Pageable pageable = PageRequest.of(page, quantity, sort);
     return userRepository.findAllActiveChats(requestOwnerId, pageable)
-            .stream().map(activeChatListDtoMapper::convertToDto).toList();
+            .stream().filter(AbstractEntity::isActive).map(activeChatListDtoMapper::convertToDto).toList();
   }
 
   @Transactional(readOnly = true)
@@ -86,7 +86,7 @@ public class ChatService implements IChatService {
     if (firstMessageDto.getText() == null && firstMessageDto.getAttachements() == null
             || firstMessageDto.getAttachements() == null && firstMessageDto.getText().isBlank()
     ) {
-      throw new ValidationException("First message should have text or attachments");
+      throw new IllegalArgumentException("First message should have text or attachments");
     }
 
     Long requestOwnerId = authProvider.getAuthenticationPrincipal();
@@ -97,7 +97,7 @@ public class ChatService implements IChatService {
     if (chatOptional.isPresent() && chatOptional.get().isActive()) {
       throw new ChatAlreadyExistException("Chat already exist");
     } else if (chatOptional.isPresent()) {
-      chat = reCreateInactive(chatOptional.get(),firstMessage);
+      chat = reCreateInactive(chatOptional.get(), firstMessage);
     } else {
       //TODO: LATER USE user service
       User sender = userRepository.findActiveById(requestOwnerId)
@@ -110,6 +110,7 @@ public class ChatService implements IChatService {
 
     firstMessage.setChatId(chat.getId());
     messageRepository.save(firstMessage);
+    websocketChatMessageService.sendMessageNotificationToUser(chat.getUsers(), firstMessage);
     return activeChatDtoMapper.convertToDto(chat);
   }
 
@@ -118,26 +119,33 @@ public class ChatService implements IChatService {
     Chat newChat = new Chat();
     newChat.setUsers(users);
     newChat.setActive(true);
-    newChat.setLastMessage(firstMessage.getText() != null ? firstMessage.getText() : "ATTACHMENT");
-    newChat.setLastMessageDate(new Date());
+    setLastMessageData(newChat, firstMessage);
     chatRepository.save(newChat);
 
     return newChat;
   }
-  private Chat reCreateInactive(Chat existingChat, Message firstMessage){
+
+  private Chat reCreateInactive(Chat existingChat, Message firstMessage) {
     existingChat.setActive(true);
-    existingChat.setLastMessage(firstMessage.getText() != null ? firstMessage.getText() : "ATTACHMENT");
-    existingChat.setLastMessageDate(new Date());
+    setLastMessageData(existingChat, firstMessage);
     chatRepository.save(existingChat);
     return existingChat;
   }
 
+  private void setLastMessageData(Chat chat, Message firstMessage) {
+    chat.setLastMessage(firstMessage.getText() != null ? firstMessage.getText() : "ATTACHMENT");
+    chat.setLastMessageDate(new Date());
+    chat.setLastMessageBy(firstMessage.getSenderId());
+  }
+
   @Transactional
   @Override
-  public Chat updateLastMessage(Long id, String lastMessageText) throws ChatNotFoundException, IllegalAccessException {
+  public Chat updateLastMessage(Long id, String lastMessageText, Long lastMessageBy)
+          throws ChatNotFoundException, IllegalAccessException {
     Chat chat = findActiveById(id);
     chat.setLastMessage(lastMessageText);
     chat.setLastMessageDate(new Date());
+    chat.setLastMessageBy(lastMessageBy);
     return chatRepository.save(chat);
   }
 

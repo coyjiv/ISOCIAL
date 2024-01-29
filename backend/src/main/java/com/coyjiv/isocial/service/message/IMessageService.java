@@ -8,15 +8,18 @@ import com.coyjiv.isocial.exceptions.MessageNotFoundException;
 
 import java.util.List;
 
-public interface IChatMessageService {
+public interface IMessageService {
 
-  List<Message> findAllActiveByChatId(int page, int quantity, Long chatId) throws ChatNotFoundException, IllegalAccessException;
+  List<Message> findAllActiveByChatId(int page, int quantity, Long chatId)
+          throws ChatNotFoundException, IllegalAccessException;
 
   Message findActiveById(Long id) throws IllegalAccessException, MessageNotFoundException;
 
-  Message create(Long chatId, CreateMessageRequestDto createMessageRequestDto) throws ChatNotFoundException, IllegalAccessException;
+  Message create(Long chatId, CreateMessageRequestDto createMessageRequestDto)
+          throws ChatNotFoundException, IllegalAccessException;
 
-  Message update(Long messageId, UpdateMessageRequestDto updateMessageRequestDto) throws IllegalAccessException, MessageNotFoundException, ChatNotFoundException;
+  Message update(Long messageId, UpdateMessageRequestDto updateMessageRequestDto)
+          throws IllegalAccessException, MessageNotFoundException, ChatNotFoundException;
 
   void delete(Long id) throws IllegalAccessException, ChatNotFoundException;
 }

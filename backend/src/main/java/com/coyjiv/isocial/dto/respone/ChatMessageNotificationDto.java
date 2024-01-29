@@ -13,5 +13,6 @@ public class ChatMessageNotificationDto {
   private Long messageId;
   private Long chatId;
   private String senderName;
+  private String senderAvatarUrl;
   private String text;
 }

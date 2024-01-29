@@ -1,6 +1,12 @@
 package com.coyjiv.isocial.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,6 +29,8 @@ public class Chat extends AbstractEntity {
   @Column(name = "last_message_date")
   private Date lastMessageDate;
 
+  @Column(name = "last_message_by")
+  private Long lastMessageBy;
 
   @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REFRESH})
   @JoinTable(name = "users_chats",

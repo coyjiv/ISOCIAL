@@ -12,7 +12,7 @@ CREATE TABLE public.users
     bio                VARCHAR,
     is_private         BOOLEAN      NOT NULL DEFAULT FALSE,
     last_seen          TIMESTAMP,
-    activity_status    VARCHAR(50)  NOT NULL DEFAULT FALSE,
+    activity_status    INT  NOT NULL DEFAULT 1,
     date_of_birth      DATE,
     creation_date      TIMESTAMP,
     last_modified_date TIMESTAMP,
@@ -33,6 +33,7 @@ CREATE TABLE public.chats
 (
     id                 INT AUTO_INCREMENT PRIMARY KEY,
     last_message       VARCHAR(1000),
+    last_message_by    INT,
     last_message_date  TIMESTAMP,
     creation_date      TIMESTAMP,
     last_modified_date TIMESTAMP,

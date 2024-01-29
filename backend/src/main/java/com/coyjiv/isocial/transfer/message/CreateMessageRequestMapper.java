@@ -12,7 +12,7 @@ public class CreateMessageRequestMapper extends DtoMapperFacade<Message, CreateM
 
   private final EmailPasswordAuthProvider authProvider;
 
-  public CreateMessageRequestMapper(EmailPasswordAuthProvider authProvider){
+  public CreateMessageRequestMapper(EmailPasswordAuthProvider authProvider) {
     super(Message.class, CreateMessageRequestDto.class);
     this.authProvider = authProvider;
   }

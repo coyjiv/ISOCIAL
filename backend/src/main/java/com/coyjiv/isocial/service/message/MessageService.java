@@ -19,26 +19,25 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-// TODO: Need to implement websocket logic
 @Service
 @RequiredArgsConstructor
-public class ChatMessageService implements IChatMessageService {
+public class MessageService implements IMessageService {
 
   private final MessageRepository messageRepository;
   private final IChatService chatService;
   private final CreateMessageRequestMapper createMessageRequestMapper;
   private final EmailPasswordAuthProvider authProvider;
   private final SimpMessagingTemplate messagingTemplate;
+  private final IWebsocketMessageService websocketChatMessageService;
 
   @Transactional(readOnly = true)
   @Override
   public List<Message> findAllActiveByChatId(int page, int quantity, Long chatId)
           throws ChatNotFoundException, IllegalAccessException {
-    Sort sort = Sort.by(Sort.Direction.DESC, "creationDate");
+    Sort sort = Sort.by(Sort.Direction.ASC, "creationDate");
     Pageable pageable = PageRequest.of(page, quantity, sort);
 
     Chat chat = chatService.findActiveById(chatId);
@@ -48,7 +47,8 @@ public class ChatMessageService implements IChatMessageService {
 
   @Transactional(readOnly = true)
   @Override
-  public Message findActiveById(Long id) throws IllegalAccessException, MessageNotFoundException {
+  public Message findActiveById(Long id)
+          throws IllegalAccessException, MessageNotFoundException {
     Long requestOwnerId = authProvider.getAuthenticationPrincipal();
     Optional<Message> messageOptional = messageRepository.findActiveById(id);
 
@@ -72,14 +72,18 @@ public class ChatMessageService implements IChatMessageService {
     }
 
 
-    Chat chat = chatService.findActiveById(chatId);
     Message message = createMessageRequestMapper.convertToEntity(createMessageRequestDto);
-    message.setChatId(chat.getId());
+    message.setChatId(chatId);
 
-    chat.setLastMessage(message.getText() != null ? message.getText() : "ATTACHMENT");
-    chat.setLastMessageDate(new Date());
+    Chat chat = chatService.updateLastMessage(chatId,
+            message.getText() != null ? message.getText() : "ATTACHMENT",
+            message.getSenderId()
+    );
 
-    return messageRepository.save(message);
+    messageRepository.save(message);
+    websocketChatMessageService.sendMessageNotificationToUser(chat.getUsers(), message);
+
+    return message;
   }
 
   @Transactional
@@ -91,9 +95,11 @@ public class ChatMessageService implements IChatMessageService {
     Optional<Message> messageOptional = messageRepository.findActiveById(messageId);
     if (messageOptional.isPresent() && isRequestOwnerSender(requestOwnerId, messageOptional.get())) {
       Message message = messageOptional.get();
-      chatService.updateLastMessage(message.getChatId(),updateMessageRequestDto.getText());
       message.setText(updateMessageRequestDto.getText());
       message.setEditted(true);
+      chatService.updateLastMessage(message.getChatId(),
+              updateMessageRequestDto.getText(),
+              message.getSenderId());
       return message;
     } else {
       throw new MessageNotFoundException("Message not found");
@@ -112,8 +118,9 @@ public class ChatMessageService implements IChatMessageService {
       messageRepository.save(message);
 
       Optional<Message> prevMessage = messageRepository.findLastActiveById(message.getChatId());
-      String lastMessage = prevMessage.isPresent() ? prevMessage.get().getText() : "";
-      chatService.updateLastMessage(message.getChatId(),lastMessage);
+      String lastMessage = prevMessage.map(Message::getText).orElse(null);
+      Long lastMessageBy = prevMessage.map(Message::getSenderId).orElse(null);
+      chatService.updateLastMessage(message.getChatId(), lastMessage, lastMessageBy);
     }
   }
 

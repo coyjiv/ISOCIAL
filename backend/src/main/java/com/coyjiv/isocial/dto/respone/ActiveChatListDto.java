@@ -18,6 +18,7 @@ public class ActiveChatListDto {
   private Long id;
   private String chatName;
   private String lastMessage;
+  private Long lastMessageBy;
   private Date lastMessageDate;
   private String avatarUrl;
   private UserActivityStatus receiverStatus;

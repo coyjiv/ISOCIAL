@@ -15,12 +15,14 @@ public interface IChatService {
   List<ActiveChatListDto> findAllActive(int page, int quantity);
 
   Chat findActiveById(Long id) throws IllegalAccessException, ChatNotFoundException;
+
   ActiveChatDto findActiveDtoById(Long id) throws IllegalAccessException, ChatNotFoundException;
 
   ActiveChatDto create(CreateMessageRequestDto firstMessageDto, Long receiverId)
           throws AccountNotFoundException, IllegalAccessException, ChatAlreadyExistException;
 
-  Chat updateLastMessage(Long id, String lastMessageText) throws ChatNotFoundException, IllegalAccessException;
+  Chat updateLastMessage(Long id, String lastMessageText,Long lastMessageBy)
+          throws ChatNotFoundException, IllegalAccessException;
 
   void delete(Long id)
           throws IllegalAccessException, ChatNotFoundException;
