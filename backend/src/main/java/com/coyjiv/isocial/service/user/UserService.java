@@ -5,21 +5,29 @@ import com.coyjiv.isocial.cache.EmailRegistrationCache;
 import com.coyjiv.isocial.dao.UserRepository;
 import com.coyjiv.isocial.domain.User;
 import com.coyjiv.isocial.dto.request.UserRegistrationRequestDto;
+import com.coyjiv.isocial.dto.respone.UserDefaultResponseDto;
+import com.coyjiv.isocial.dto.respone.UserSearchResponseDto;
 import com.coyjiv.isocial.exceptions.PasswordMatchException;
 import com.coyjiv.isocial.service.email.EmailServiceImpl;
+import com.coyjiv.isocial.transfer.user.UserDefaultResponseMapper;
 import com.coyjiv.isocial.transfer.user.UserRegistrationRequestMapper;
+import com.coyjiv.isocial.transfer.user.UserSearchResponseMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.ReflectionUtils;
 
 import javax.security.auth.login.AccountNotFoundException;
+import java.lang.reflect.Field;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -27,26 +35,35 @@ public class UserService implements IUserService {
   private final UserRepository userRepository;
   private final UserRegistrationRequestMapper userRegistrationRequestMapper;
   private final EmailServiceImpl emailService;
+  private final UserSearchResponseMapper userSearchResponseMapper;
+  private final UserDefaultResponseMapper userDefaultResponseMapper;
+
 
   @Transactional(readOnly = true)
   @Override
-  public List<User> findAll(int page, int size) {
+  public List<UserDefaultResponseDto> findAll(int page, int size) {
     Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "id"));
-    Pageable pageable = (Pageable) PageRequest.of(page - 1, size, sort);
-    Page<User> userPage = userRepository.findAll(pageable);
-    return userPage.toList();
+    Pageable pageable = PageRequest.of(page, size, sort);
+    return userRepository.findAll(pageable).toList().stream()
+            .map(userDefaultResponseMapper::convertToDto).toList();
   }
 
   @Transactional(readOnly = true)
   @Override
-  public List<User> findAll() {
-    return userRepository.findAll();
+  public List<UserDefaultResponseDto> findAll() {
+    return userRepository.findAll().stream()
+            .map(userDefaultResponseMapper::convertToDto).toList();
   }
 
   @Transactional(readOnly = true)
   @Override
-  public Optional<User> findById(Long id) {
-    return userRepository.findById(id);
+  public Optional<UserDefaultResponseDto> findById(Long id) {
+    User user = null;
+    if (userRepository.findById(id).isPresent()) {
+      user = userRepository.findById(id).get();
+      return Optional.ofNullable(userDefaultResponseMapper.convertToDto(user));
+    }
+    return Optional.empty();
   }
 
   @Transactional(readOnly = true)
@@ -93,15 +110,38 @@ public class UserService implements IUserService {
 
   @Transactional
   @Override
-  public User updateUser(User user) {
-    User user1 = userRepository.findById(user.getId()).get();
-
-    return userRepository.save(user1);
+  public void updateUser(Long id, Map<String, String> fields) {
+    Optional<User> user = userRepository.findById(id);
+    if (user.isPresent()) {
+      fields.forEach((key, value) -> {
+        Field field = ReflectionUtils.findField(User.class, key);
+        if (field != null) {
+          field.setAccessible(true);
+          ReflectionUtils.setField(field, user.get(), value);
+        }
+      });
+      userRepository.save(user.get());
+    }
   }
 
+  @Transactional(readOnly = true)
   @Override
-  public Optional<User> findByName(String name) {
-    return userRepository.findByName(name);
+  public List<UserSearchResponseDto> findByName(String name, int page, int size) {
+    Set<User> result = new HashSet<>();
+    String[] splittedNames = name.trim().split(" ");
+
+    Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "id"));
+    Pageable pageable = PageRequest.of(page, size, sort);
+
+    if (splittedNames.length > 1) {
+      result.addAll(userRepository.findByFirstNameOrLastName(splittedNames[0],pageable));
+      result.addAll(userRepository.findByFirstNameOrLastName(splittedNames[1],pageable));
+    } else {
+      result.addAll(userRepository.findByFirstNameOrLastName(splittedNames[0],pageable));
+    }
+
+    return result.stream()
+            .map(userSearchResponseMapper::convertToDto).toList();
   }
 
   @Transactional

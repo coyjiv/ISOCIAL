@@ -1,27 +1,23 @@
 package com.coyjiv.isocial.resource;
 
-import com.coyjiv.isocial.domain.User;
-import com.coyjiv.isocial.dto.request.UserNameRequestDto;
-import com.coyjiv.isocial.dto.request.UserUpdateRequestDto;
-import com.coyjiv.isocial.dto.respone.UserResponseDto;
+import com.coyjiv.isocial.dto.respone.UserDefaultResponseDto;
+import com.coyjiv.isocial.dto.respone.UserSearchResponseDto;
 import com.coyjiv.isocial.service.user.IUserService;
-import com.coyjiv.isocial.transfer.user.UserResponseMapper;
-import com.coyjiv.isocial.transfer.user.UserUpdateRequestMapper;
 import jakarta.validation.constraints.Min;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 
@@ -31,22 +27,18 @@ import java.util.Optional;
 @RequestMapping("/api/users")
 public class UserRestController {
   private final IUserService userService;
-  private final UserResponseMapper userResponseMapper;
-  private final UserUpdateRequestMapper userUpdateRequestMapper;
 
   @GetMapping("/")
-  public ResponseEntity<?> findAll(@RequestParam(defaultValue = "1") @Min(1) Integer page,
+  public ResponseEntity<?> findAll(@RequestParam(defaultValue = "0") @Min(0) Integer page,
                                    @RequestParam(defaultValue = "10") @Min(0) Integer size) {
-    List<User> companies = userService.findAll(page, size);
-    List<UserResponseDto> dtos = companies.stream().map(userResponseMapper::convertToDto).toList();
+    List<UserDefaultResponseDto> dtos = userService.findAll(page, size);
     return ResponseEntity.ok(dtos);
   }
 
   @GetMapping("/{id}")
   public ResponseEntity<?> findById(@PathVariable("id") Long id) {
-    Optional<User> user = userService.findById(id);
-    if (user.isPresent()) {
-      UserResponseDto dto = userResponseMapper.convertToDto(user.get());
+    Optional<UserDefaultResponseDto> dto = userService.findById(id);
+    if (dto.isPresent()) {
       return ResponseEntity.ok(dto);
     } else {
       return ResponseEntity.notFound().build();
@@ -54,15 +46,12 @@ public class UserRestController {
   }
 
   @GetMapping("/search")
-  public ResponseEntity<?> findByName(@RequestParam String name) {
-    Optional<User> user = userService.findByName(name);
-    if (user.isPresent()) {
-      UserResponseDto dto = userResponseMapper.convertToDto(user.get());
-      return ResponseEntity.ok(dto);
-    } else {
-      return ResponseEntity.notFound().build();
-    }
+  public ResponseEntity<?> findByName(@RequestParam String name, @RequestParam(defaultValue = "0") @Min(0) int page,
+                                      @RequestParam(defaultValue = "10") @Min(0) int size) {
+    List<UserSearchResponseDto> dtos = userService.findByName(name, page, size);
+    return ResponseEntity.ok(dtos);
   }
+
 
   @DeleteMapping("/{id}")
   public ResponseEntity<?> delete(@PathVariable("id") @Min(0) Long id) {
@@ -71,11 +60,10 @@ public class UserRestController {
   }
 
 
-  @PutMapping("/update")
-  public ResponseEntity<?> update(@RequestBody @Validated UserUpdateRequestDto dto) {
-    User user = userUpdateRequestMapper.convertToEntity(dto);
-    userService.updateUser(user);
-    return ResponseEntity.ok().body(user);
+  @PatchMapping("/{id}")
+  public ResponseEntity<?> update(@PathVariable("id") @Min(0) Long id, @RequestBody Map<String, String> fields) {
+    userService.updateUser(id, fields);
+    return ResponseEntity.ok().body("Updated successfully");
   }
 
 }
