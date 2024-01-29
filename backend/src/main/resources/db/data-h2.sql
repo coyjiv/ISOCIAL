@@ -40,3 +40,16 @@ VALUES ('Sophia', 'Lee', 'sophia.lee@example.com', 'Seattle', 'strongpassword456
         'avatar12.jpg'], 'banner6.jpg',
         'Sophias bio information', FALSE, CURRENT_TIMESTAMP,
         '1995-09-10', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
+
+-- John Doe sends friend requests to Alice Johnson and Bob Smith
+INSERT INTO friends (requester_id, addresser_id, status) VALUES (1, 2, 'PENDING');
+INSERT INTO friends (requester_id, addresser_id, status) VALUES (1, 3, 'PENDING');
+
+-- Alice Johnson sends a friend request to Eva Martinez
+INSERT INTO friends (requester_id, addresser_id, status) VALUES (2, 4, 'PENDING');
+
+-- Bob Smith and Michael Williams are already friends
+INSERT INTO friends (requester_id, addresser_id, status) VALUES (3, 5, 'ACCEPTED');
+
+-- Sophia Lee sends a friend request to John Doe
+INSERT INTO friends (requester_id, addresser_id, status) VALUES (6, 1, 'PENDING');
