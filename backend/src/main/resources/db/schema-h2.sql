@@ -18,6 +18,18 @@ CREATE TABLE public.users
     is_active BOOLEAN NOT NULL DEFAULT FALSE
 );
 
+DROP TABLE IF EXISTS posts;
+CREATE TABLE public.posts
+(
+    id                 INT AUTO_INCREMENT PRIMARY KEY,
+    text_content       VARCHAR(1000) NOT NULL,
+    attachments        VARCHAR ARRAY,
+    is_edited          BOOLEAN NOT NULL DEFAULT FALSE,
+    is_reposted        BOOLEAN NOT NULL DEFAULT FALSE,
+    original_post_id   INT NOT NULL DEFAULT 0,
+    user_id            INTEGER REFERENCES users (id)
+);
+
 DROP TABLE IF EXISTS roles;
 CREATE TABLE public.roles
 (
