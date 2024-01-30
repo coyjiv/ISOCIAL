@@ -1,4 +1,4 @@
-package com.coyjiv.isocial.dto.respone;
+package com.coyjiv.isocial.dto.respone.chat;
 
 import com.coyjiv.isocial.domain.UserActivityStatus;
 import lombok.AllArgsConstructor;

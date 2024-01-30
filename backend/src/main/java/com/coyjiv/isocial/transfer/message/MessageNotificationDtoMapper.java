@@ -1,26 +1,23 @@
 package com.coyjiv.isocial.transfer.message;
 
 import com.coyjiv.isocial.domain.Message;
-import com.coyjiv.isocial.domain.User;
-import com.coyjiv.isocial.dto.respone.ChatMessageNotificationDto;
-import com.coyjiv.isocial.dto.respone.UserDefaultResponseDto;
+import com.coyjiv.isocial.dto.respone.message.MessageNotificationDto;
+import com.coyjiv.isocial.dto.respone.user.UserDefaultResponseDto;
 import com.coyjiv.isocial.service.user.IUserService;
 import com.coyjiv.isocial.transfer.DtoMapperFacade;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
-public class MessageNotificationDtoMapper extends DtoMapperFacade<Message, ChatMessageNotificationDto> {
+public class MessageNotificationDtoMapper extends DtoMapperFacade<Message, MessageNotificationDto> {
   private final IUserService userService;
 
   public MessageNotificationDtoMapper(IUserService userService) {
-    super(Message.class, ChatMessageNotificationDto.class);
+    super(Message.class, MessageNotificationDto.class);
     this.userService = userService;
   }
 
   @Override
-  protected void decorateDto(ChatMessageNotificationDto dto, Message entity) {
+  protected void decorateDto(MessageNotificationDto dto, Message entity) {
     dto.setMessageId(entity.getId());
     try {
       UserDefaultResponseDto sender = userService.findActiveById(entity.getSenderId());

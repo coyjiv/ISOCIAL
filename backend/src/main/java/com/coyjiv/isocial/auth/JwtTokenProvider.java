@@ -92,15 +92,15 @@ public class JwtTokenProvider {
             .signWith(getKey(jwtRefreshSecret)).compact();
   }
 
-  public void validateAccessToken(@NonNull String token) throws Exception {
+  public void validateAccessToken(@NonNull String token) {
     validateToken(token, getKey(jwtAccessSecret));
   }
 
-  public boolean validateRefreshToken(@NonNull String token) throws Exception {
+  public boolean validateRefreshToken(@NonNull String token) {
     return validateToken(token, getKey(jwtRefreshSecret));
   }
 
-  private boolean validateToken(@NonNull String token, @NonNull Key secret) throws Exception {
+  private boolean validateToken(@NonNull String token, @NonNull Key secret) {
     try {
       Claims claims = Jwts.parserBuilder()
               .setSigningKey(secret)

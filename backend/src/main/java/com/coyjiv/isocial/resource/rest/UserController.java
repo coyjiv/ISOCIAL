@@ -1,13 +1,14 @@
-package com.coyjiv.isocial.resource;
+package com.coyjiv.isocial.resource.rest;
 
-import com.coyjiv.isocial.dto.respone.UserDefaultResponseDto;
-import com.coyjiv.isocial.dto.respone.UserSearchResponseDto;
+import com.coyjiv.isocial.dto.respone.user.UserSearchResponseDto;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.service.user.IUserService;
 import jakarta.validation.constraints.Min;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -19,14 +20,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 
 @RequiredArgsConstructor
 
 @RestController
 @RequestMapping("/api/users")
-public class UserRestController {
+public class UserController {
   private final IUserService userService;
 
   @GetMapping("/")
@@ -36,12 +36,8 @@ public class UserRestController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<?> findById(@PathVariable("id") Long id) {
-    try {
-      return ResponseEntity.ok(userService.findActiveById(id));
-    } catch (EntityNotFoundException exception) {
-      return ResponseEntity.status(404).body(exception.getMessage());
-    }
+  public ResponseEntity<?> findById(@PathVariable("id") Long id) throws EntityNotFoundException {
+    return ResponseEntity.ok(userService.findActiveById(id));
   }
 
   @GetMapping("/search")
@@ -52,28 +48,29 @@ public class UserRestController {
   }
 
   @PatchMapping("/{id}")
-  public ResponseEntity<?> update(@PathVariable("id") @Min(0) Long id, @RequestBody Map<String, String> fields) {
-    try {
-      userService.update(id, fields);
-      return ResponseEntity.ok().body("Updated successfully");
-    } catch (IllegalAccessException exception) {
-      return ResponseEntity.status(403).body(exception.getMessage());
-    } catch (EntityNotFoundException exception) {
-      return ResponseEntity.status(404).body(exception.getMessage());
-    }
+  public ResponseEntity<?> update(@PathVariable("id") @Min(0) Long id, @RequestBody Map<String, String> fields)
+          throws EntityNotFoundException, IllegalAccessException {
+    userService.update(id, fields);
+    return ResponseEntity.status(204).build();
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<?> delete(@PathVariable("id") @Min(0) Long id) {
-    try {
-      userService.delete(id);
-      return ResponseEntity.status(204).build();
-    } catch (IllegalAccessException exception) {
-      return ResponseEntity.status(403).body(exception.getMessage());
-    } catch (EntityNotFoundException exception) {
-      return ResponseEntity.status(404).body(exception.getMessage());
-    }
-
+  public ResponseEntity<?> delete(@PathVariable("id") @Min(0) Long id)
+          throws EntityNotFoundException, IllegalAccessException {
+    userService.delete(id);
+    return ResponseEntity.status(204).build();
   }
 
+
+  @MessageMapping("/connect")
+  public void handleConnectUser(StompHeaderAccessor accessor) {
+    String token = accessor.getFirstNativeHeader("Authorization");
+    userService.handleConnect(token);
+  }
+
+  @MessageMapping("/disconnect")
+  public void handleDisconnectUser(StompHeaderAccessor accessor) {
+    String token = accessor.getFirstNativeHeader("Authorization");
+    userService.handleDisconnect(token);
+  }
 }

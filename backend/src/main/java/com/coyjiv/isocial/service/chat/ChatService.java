@@ -8,11 +8,12 @@ import com.coyjiv.isocial.domain.AbstractEntity;
 import com.coyjiv.isocial.domain.Chat;
 import com.coyjiv.isocial.domain.Message;
 import com.coyjiv.isocial.domain.User;
-import com.coyjiv.isocial.dto.request.CreateMessageRequestDto;
-import com.coyjiv.isocial.dto.respone.ActiveChatDto;
-import com.coyjiv.isocial.dto.respone.ActiveChatListDto;
+import com.coyjiv.isocial.dto.request.message.CreateMessageRequestDto;
+import com.coyjiv.isocial.dto.respone.chat.ActiveChatDto;
+import com.coyjiv.isocial.dto.respone.chat.ActiveChatListDto;
 import com.coyjiv.isocial.exceptions.ChatAlreadyExistException;
-import com.coyjiv.isocial.exceptions.ChatNotFoundException;
+import com.coyjiv.isocial.exceptions.EntityNotFoundException;
+import com.coyjiv.isocial.exceptions.RequestValidationException;
 import com.coyjiv.isocial.service.message.IWebsocketMessageService;
 import com.coyjiv.isocial.transfer.chat.ActiveChatDtoMapper;
 import com.coyjiv.isocial.transfer.chat.ActiveChatListDtoMapper;
@@ -24,7 +25,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.security.auth.login.AccountNotFoundException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -56,7 +56,8 @@ public class ChatService implements IChatService {
 
   @Transactional(readOnly = true)
   @Override
-  public ActiveChatDto findActiveDtoById(Long id) throws IllegalAccessException, ChatNotFoundException {
+  public ActiveChatDto findActiveDtoById(Long id)
+          throws IllegalAccessException, EntityNotFoundException {
     Long requestOwnerId = authProvider.getAuthenticationPrincipal();
     Chat chat = findActiveById(id);
 
@@ -67,26 +68,28 @@ public class ChatService implements IChatService {
 
   @Transactional(readOnly = true)
   @Override
-  public Chat findActiveById(Long id) throws IllegalAccessException, ChatNotFoundException {
+  public Chat findActiveById(Long id)
+          throws IllegalAccessException, EntityNotFoundException {
     Long requestOwnerId = authProvider.getAuthenticationPrincipal();
     Optional<Chat> chatOptional = chatRepository.findActiveById(id);
 
     if (chatOptional.isPresent() && isRequestOwnerInChat(requestOwnerId, chatOptional.get())) {
       return chatOptional.get();
     } else {
-      throw new ChatNotFoundException("Chat not found");
+      throw new EntityNotFoundException("Chat not found");
     }
   }
 
   @Transactional
   @Override
   public ActiveChatDto create(CreateMessageRequestDto firstMessageDto, Long receiverId)
-          throws AccountNotFoundException, IllegalAccessException, ChatAlreadyExistException {
+          throws EntityNotFoundException, IllegalAccessException,
+          ChatAlreadyExistException, RequestValidationException {
 
     if (firstMessageDto.getText() == null && firstMessageDto.getAttachements() == null
             || firstMessageDto.getAttachements() == null && firstMessageDto.getText().isBlank()
     ) {
-      throw new IllegalArgumentException("First message should have text or attachments");
+      throw new RequestValidationException("First message should have text or attachments");
     }
 
     Long requestOwnerId = authProvider.getAuthenticationPrincipal();
@@ -101,9 +104,9 @@ public class ChatService implements IChatService {
     } else {
       //TODO: LATER USE user service
       User sender = userRepository.findActiveById(requestOwnerId)
-              .orElseThrow(() -> new AccountNotFoundException("User not found"));
+              .orElseThrow(() -> new EntityNotFoundException("User not found"));
       User receiver = userRepository.findActiveById(receiverId)
-              .orElseThrow(() -> new AccountNotFoundException("User not found"));
+              .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
       chat = create(List.of(sender, receiver), firstMessage);
     }
@@ -141,7 +144,7 @@ public class ChatService implements IChatService {
   @Transactional
   @Override
   public Chat updateLastMessage(Long id, String lastMessageText, Long lastMessageBy)
-          throws ChatNotFoundException, IllegalAccessException {
+          throws IllegalAccessException, EntityNotFoundException {
     Chat chat = findActiveById(id);
     chat.setLastMessage(lastMessageText);
     chat.setLastMessageDate(new Date());
@@ -153,7 +156,7 @@ public class ChatService implements IChatService {
   @Transactional
   @Override
   public void delete(Long id)
-          throws IllegalAccessException, ChatNotFoundException {
+          throws IllegalAccessException, EntityNotFoundException {
     Long requestOwnerId = authProvider.getAuthenticationPrincipal();
     Optional<Chat> chatOptional = chatRepository.findActiveById(id);
 
@@ -169,7 +172,7 @@ public class ChatService implements IChatService {
       messageRepository.saveAll(messages);
 
     } else {
-      throw new ChatNotFoundException("Chat not found");
+      throw new EntityNotFoundException("Chat not found");
     }
   }
 

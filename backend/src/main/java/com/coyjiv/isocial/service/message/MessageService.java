@@ -4,13 +4,12 @@ import com.coyjiv.isocial.auth.EmailPasswordAuthProvider;
 import com.coyjiv.isocial.dao.MessageRepository;
 import com.coyjiv.isocial.domain.Chat;
 import com.coyjiv.isocial.domain.Message;
-import com.coyjiv.isocial.dto.request.CreateMessageRequestDto;
-import com.coyjiv.isocial.dto.request.UpdateMessageRequestDto;
-import com.coyjiv.isocial.exceptions.ChatNotFoundException;
-import com.coyjiv.isocial.exceptions.MessageNotFoundException;
+import com.coyjiv.isocial.dto.request.message.CreateMessageRequestDto;
+import com.coyjiv.isocial.dto.request.message.UpdateMessageRequestDto;
+import com.coyjiv.isocial.exceptions.EntityNotFoundException;
+import com.coyjiv.isocial.exceptions.RequestValidationException;
 import com.coyjiv.isocial.service.chat.IChatService;
 import com.coyjiv.isocial.transfer.message.CreateMessageRequestMapper;
-import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -36,7 +35,7 @@ public class MessageService implements IMessageService {
   @Transactional(readOnly = true)
   @Override
   public List<Message> findAllActiveByChatId(int page, int quantity, Long chatId)
-          throws ChatNotFoundException, IllegalAccessException {
+          throws EntityNotFoundException, IllegalAccessException {
     Sort sort = Sort.by(Sort.Direction.ASC, "creationDate");
     Pageable pageable = PageRequest.of(page, quantity, sort);
 
@@ -48,14 +47,14 @@ public class MessageService implements IMessageService {
   @Transactional(readOnly = true)
   @Override
   public Message findActiveById(Long id)
-          throws IllegalAccessException, MessageNotFoundException {
+          throws IllegalAccessException, EntityNotFoundException {
     Long requestOwnerId = authProvider.getAuthenticationPrincipal();
     Optional<Message> messageOptional = messageRepository.findActiveById(id);
 
     if (messageOptional.isPresent() && isRequestOwnerSender(requestOwnerId, messageOptional.get())) {
       return messageOptional.get();
     } else {
-      throw new MessageNotFoundException("Message not found");
+      throw new EntityNotFoundException("Message not found");
     }
 
   }
@@ -63,12 +62,12 @@ public class MessageService implements IMessageService {
   @Transactional
   @Override
   public Message create(Long chatId, CreateMessageRequestDto createMessageRequestDto)
-          throws ChatNotFoundException, IllegalAccessException {
+          throws EntityNotFoundException, IllegalAccessException, RequestValidationException {
 
     if (createMessageRequestDto.getText() == null && createMessageRequestDto.getAttachements() == null
             || createMessageRequestDto.getAttachements() == null && createMessageRequestDto.getText().isEmpty()
     ) {
-      throw new ValidationException("First message should have text or attachments");
+      throw new RequestValidationException("First message should have text or attachments");
     }
 
 
@@ -89,7 +88,7 @@ public class MessageService implements IMessageService {
   @Transactional
   @Override
   public Message update(Long messageId, UpdateMessageRequestDto updateMessageRequestDto)
-          throws IllegalAccessException, MessageNotFoundException, ChatNotFoundException {
+          throws IllegalAccessException, EntityNotFoundException {
     Long requestOwnerId = authProvider.getAuthenticationPrincipal();
 
     Optional<Message> messageOptional = messageRepository.findActiveById(messageId);
@@ -102,13 +101,13 @@ public class MessageService implements IMessageService {
               message.getSenderId());
       return message;
     } else {
-      throw new MessageNotFoundException("Message not found");
+      throw new EntityNotFoundException("Message not found");
     }
   }
 
   @Transactional
   @Override
-  public void delete(Long id) throws IllegalAccessException, ChatNotFoundException {
+  public void delete(Long id) throws IllegalAccessException, EntityNotFoundException {
     Long requestOwnerId = authProvider.getAuthenticationPrincipal();
     Optional<Message> messageOptional = messageRepository.findActiveById(id);
 

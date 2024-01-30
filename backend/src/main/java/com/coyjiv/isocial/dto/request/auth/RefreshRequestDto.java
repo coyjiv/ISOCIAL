@@ -1,4 +1,4 @@
-package com.coyjiv.isocial.dto.request;
+package com.coyjiv.isocial.dto.request.auth;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -6,13 +6,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateMessageRequestDto {
+public class RefreshRequestDto {
   @NotBlank
-  private String text;
+  private String refresh;
 }

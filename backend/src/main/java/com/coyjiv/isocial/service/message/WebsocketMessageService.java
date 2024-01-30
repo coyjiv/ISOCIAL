@@ -2,7 +2,7 @@ package com.coyjiv.isocial.service.message;
 
 import com.coyjiv.isocial.domain.Message;
 import com.coyjiv.isocial.domain.User;
-import com.coyjiv.isocial.dto.respone.ChatMessageNotificationDto;
+import com.coyjiv.isocial.dto.respone.message.MessageNotificationDto;
 import com.coyjiv.isocial.transfer.message.MessageNotificationDtoMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -22,7 +22,7 @@ public class WebsocketMessageService implements IWebsocketMessageService {
   @Override
   @Transactional
   public void sendMessageNotificationToUser(List<User> users, Message message) {
-    ChatMessageNotificationDto messageNotificationDto = messageNotificationDtoMapper.convertToDto(message);
+    MessageNotificationDto messageNotificationDto = messageNotificationDtoMapper.convertToDto(message);
 
     users.forEach((user -> {
       if (!Objects.equals(user.getId(), message.getSenderId())) {

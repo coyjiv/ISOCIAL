@@ -1,9 +1,9 @@
 package com.coyjiv.isocial.service.user;
 
 import com.coyjiv.isocial.domain.User;
-import com.coyjiv.isocial.dto.request.UserRegistrationRequestDto;
-import com.coyjiv.isocial.dto.respone.UserDefaultResponseDto;
-import com.coyjiv.isocial.dto.respone.UserSearchResponseDto;
+import com.coyjiv.isocial.dto.request.user.UserRegistrationRequestDto;
+import com.coyjiv.isocial.dto.respone.user.UserDefaultResponseDto;
+import com.coyjiv.isocial.dto.respone.user.UserSearchResponseDto;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.exceptions.PasswordMatchException;
 
@@ -28,6 +28,7 @@ public interface IUserService {
   Optional<User> findActiveByEmail(String email);
 
   User create(UserRegistrationRequestDto userRegistrationRequestDto) throws PasswordMatchException;
+
   void update(Long id, Map<String, String> fields) throws IllegalAccessException, EntityNotFoundException;
 
   void confirmUser(String email) throws AccountNotFoundException;
@@ -35,4 +36,8 @@ public interface IUserService {
   List<UserSearchResponseDto> findByName(String name, int page, int size);
 
   void delete(Long id) throws IllegalAccessException, EntityNotFoundException;
+
+  void handleConnect(String token);
+
+  void handleDisconnect(String token);
 }

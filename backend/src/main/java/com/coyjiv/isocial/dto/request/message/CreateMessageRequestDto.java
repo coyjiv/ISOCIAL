@@ -1,4 +1,4 @@
-package com.coyjiv.isocial.dto.request;
+package com.coyjiv.isocial.dto.request.message;
 
 
 import jakarta.validation.constraints.NotNull;

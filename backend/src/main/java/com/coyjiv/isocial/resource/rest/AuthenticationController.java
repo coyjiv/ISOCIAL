@@ -1,14 +1,13 @@
-package com.coyjiv.isocial.resource;
+package com.coyjiv.isocial.resource.rest;
 
 import com.coyjiv.isocial.cache.EmailRegistrationCache;
-import com.coyjiv.isocial.dto.request.LoginRequestDto;
-import com.coyjiv.isocial.dto.request.RefreshRequestDto;
-import com.coyjiv.isocial.dto.request.UserRegistrationRequestDto;
+import com.coyjiv.isocial.dto.request.auth.LoginRequestDto;
+import com.coyjiv.isocial.dto.request.auth.RefreshRequestDto;
+import com.coyjiv.isocial.dto.request.user.UserRegistrationRequestDto;
 import com.coyjiv.isocial.service.auth.IAuthService;
 import com.coyjiv.isocial.service.user.IUserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

@@ -1,4 +1,4 @@
-package com.coyjiv.isocial.dto.respone;
+package com.coyjiv.isocial.dto.respone.message;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ChatMessageNotificationDto {
+public class MessageNotificationDto {
   private Long messageId;
   private Long chatId;
   private String senderName;

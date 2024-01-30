@@ -3,7 +3,7 @@ package com.coyjiv.isocial.transfer.message;
 import com.coyjiv.isocial.auth.EmailPasswordAuthProvider;
 import com.coyjiv.isocial.domain.Message;
 import com.coyjiv.isocial.domain.MessageStatus;
-import com.coyjiv.isocial.dto.request.CreateMessageRequestDto;
+import com.coyjiv.isocial.dto.request.message.CreateMessageRequestDto;
 import com.coyjiv.isocial.transfer.DtoMapperFacade;
 import org.springframework.stereotype.Service;
 

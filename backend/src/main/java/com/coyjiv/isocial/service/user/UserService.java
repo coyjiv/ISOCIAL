@@ -2,12 +2,14 @@ package com.coyjiv.isocial.service.user;
 
 
 import com.coyjiv.isocial.auth.EmailPasswordAuthProvider;
+import com.coyjiv.isocial.auth.JwtTokenProvider;
 import com.coyjiv.isocial.cache.EmailRegistrationCache;
 import com.coyjiv.isocial.dao.UserRepository;
 import com.coyjiv.isocial.domain.User;
-import com.coyjiv.isocial.dto.request.UserRegistrationRequestDto;
-import com.coyjiv.isocial.dto.respone.UserDefaultResponseDto;
-import com.coyjiv.isocial.dto.respone.UserSearchResponseDto;
+import com.coyjiv.isocial.domain.UserActivityStatus;
+import com.coyjiv.isocial.dto.request.user.UserRegistrationRequestDto;
+import com.coyjiv.isocial.dto.respone.user.UserDefaultResponseDto;
+import com.coyjiv.isocial.dto.respone.user.UserSearchResponseDto;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.exceptions.PasswordMatchException;
 import com.coyjiv.isocial.service.email.EmailServiceImpl;
@@ -25,7 +27,13 @@ import org.springframework.util.ReflectionUtils;
 
 import javax.security.auth.login.AccountNotFoundException;
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +44,7 @@ public class UserService implements IUserService {
   private final UserSearchResponseMapper userSearchResponseMapper;
   private final UserDefaultResponseMapper userDefaultResponseMapper;
   private final EmailPasswordAuthProvider authProvider;
+  private final JwtTokenProvider jwtTokenProvider;
 
 
   @Transactional(readOnly = true)
@@ -143,13 +152,17 @@ public class UserService implements IUserService {
   public void update(Long id, Map<String, String> fields)
           throws IllegalAccessException, EntityNotFoundException {
     Long requestOwnerId = authProvider.getAuthenticationPrincipal();
-    if (!Objects.equals(id,requestOwnerId)){
+    if (!Objects.equals(id, requestOwnerId)) {
       throw new IllegalAccessException("User have no authorities to do this request.");
     }
 
     Optional<User> user = userRepository.findById(id);
     if (user.isPresent()) {
       fields.forEach((key, value) -> {
+        if (Objects.equals(key, "email") || Objects.equals(key, "password")
+                || Objects.equals(key, "activity_status") || Objects.equals(key, "last_seen")) {
+          return;
+        }
         Field field = ReflectionUtils.findField(User.class, key);
         if (field != null) {
           field.setAccessible(true);
@@ -167,15 +180,46 @@ public class UserService implements IUserService {
   @Override
   public void delete(Long id) throws IllegalAccessException, EntityNotFoundException {
     Long requestOwnerId = authProvider.getAuthenticationPrincipal();
-    if (!Objects.equals(id,requestOwnerId)){
+    if (!Objects.equals(id, requestOwnerId)) {
       throw new IllegalAccessException("User have no authorities to do this request.");
     }
 
     Optional<User> user = userRepository.findById(id);
-    if (user.isPresent()){
+    if (user.isPresent()) {
       user.get().setActive(false);
     } else {
       throw new EntityNotFoundException("User not found.");
+    }
+  }
+
+  @Transactional
+  @Override
+  public void handleConnect(String token) {
+    jwtTokenProvider.validateAccessToken(token);
+    Long userId = authProvider.getAuthenticationPrincipal();
+    if (userId != null) {
+      Optional<User> userOptional = userRepository.findActiveById(userId);
+      if (userOptional.isPresent()) {
+        User user = userOptional.get();
+        user.setActivityStatus(UserActivityStatus.ONLINE);
+        userRepository.save(user);
+      }
+    }
+  }
+
+  @Transactional
+  @Override
+  public void handleDisconnect(String token) {
+    jwtTokenProvider.validateAccessToken(token);
+    Long userId = authProvider.getAuthenticationPrincipal();
+    if (userId != null) {
+      Optional<User> userOptional = userRepository.findActiveById(userId);
+      if (userOptional.isPresent()) {
+        User user = userOptional.get();
+        user.setActivityStatus(UserActivityStatus.OFFLINE);
+        user.setLastSeen(new Date());
+        userRepository.save(user);
+      }
     }
   }
 }

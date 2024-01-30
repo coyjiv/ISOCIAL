@@ -1,9 +1,9 @@
 package com.coyjiv.isocial.service.auth;
 
 import com.coyjiv.isocial.auth.JwtTokenProvider;
-import com.coyjiv.isocial.dto.request.LoginRequestDto;
-import com.coyjiv.isocial.dto.request.RefreshRequestDto;
-import com.coyjiv.isocial.dto.respone.LoginResponseDto;
+import com.coyjiv.isocial.dto.request.auth.LoginRequestDto;
+import com.coyjiv.isocial.dto.request.auth.RefreshRequestDto;
+import com.coyjiv.isocial.dto.respone.auth.LoginResponseDto;
 import jakarta.security.auth.message.AuthException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

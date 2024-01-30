@@ -1,4 +1,4 @@
-package com.coyjiv.isocial.configs;
+package com.coyjiv.isocial.configs.swagger;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;

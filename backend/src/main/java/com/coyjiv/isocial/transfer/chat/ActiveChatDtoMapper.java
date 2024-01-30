@@ -3,8 +3,7 @@ package com.coyjiv.isocial.transfer.chat;
 import com.coyjiv.isocial.auth.EmailPasswordAuthProvider;
 import com.coyjiv.isocial.domain.Chat;
 import com.coyjiv.isocial.domain.User;
-import com.coyjiv.isocial.dto.respone.ActiveChatDto;
-import com.coyjiv.isocial.dto.respone.ActiveChatListDto;
+import com.coyjiv.isocial.dto.respone.chat.ActiveChatDto;
 import com.coyjiv.isocial.transfer.DtoMapperFacade;
 import org.springframework.stereotype.Service;
 

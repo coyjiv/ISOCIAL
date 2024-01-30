@@ -1,4 +1,4 @@
-package com.coyjiv.isocial.configs;
+package com.coyjiv.isocial.configs.ws;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Configuration;

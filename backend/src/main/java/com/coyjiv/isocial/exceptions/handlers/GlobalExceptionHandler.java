@@ -1,8 +1,12 @@
 package com.coyjiv.isocial.exceptions.handlers;
 
 
+import com.coyjiv.isocial.exceptions.ChatAlreadyExistException;
+import com.coyjiv.isocial.exceptions.EntityNotFoundException;
+import com.coyjiv.isocial.exceptions.RequestValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -25,6 +29,26 @@ public class GlobalExceptionHandler {
             .filter(error -> error.getDefaultMessage() != null)
             .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage));
     return ResponseEntity.status(400).body(errors);
+  }
+
+  @ExceptionHandler(EntityNotFoundException.class)
+  public ResponseEntity<?> handleEntityNotFoundException(EntityNotFoundException exception) {
+    return ResponseEntity.status(404).body(exception.getMessage());
+  }
+
+  @ExceptionHandler(IllegalAccessException.class)
+  public ResponseEntity<?> handleIllegalAccessException(IllegalAccessException exception) {
+    return ResponseEntity.status(403).body(exception.getMessage());
+  }
+
+  @ExceptionHandler(HttpMessageNotReadableException.class)
+  public ResponseEntity<?> handleHttpMessageNotReadableException(HttpMessageNotReadableException exception) {
+    return ResponseEntity.status(403).body(exception.getMessage());
+  }
+
+  @ExceptionHandler(RequestValidationException.class)
+  public ResponseEntity<?> handleRequestValidationException(RequestValidationException exception) {
+    return ResponseEntity.status(400).body(exception.getMessage());
   }
 
 }
