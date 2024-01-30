@@ -25,9 +25,11 @@ CREATE TABLE public.posts
     text_content       VARCHAR(1000) NOT NULL,
     attachments        VARCHAR ARRAY,
     is_edited          BOOLEAN NOT NULL DEFAULT FALSE,
-    is_reposted        BOOLEAN NOT NULL DEFAULT FALSE,
     original_post_id   INT NOT NULL DEFAULT 0,
-    user_id            INTEGER REFERENCES users (id)
+    user_id            INTEGER REFERENCES users (id),
+    creation_date      TIMESTAMP,
+    last_modified_date TIMESTAMP,
+    is_active BOOLEAN  NOT NULL DEFAULT FALSE
 );
 
 DROP TABLE IF EXISTS roles;

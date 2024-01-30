@@ -2,6 +2,7 @@ package com.coyjiv.isocial.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.util.List;
 
 @Entity
@@ -10,7 +11,7 @@ import java.util.List;
 @Setter
 @ToString
 @NoArgsConstructor
-public class Post extends AbstractEntity{
+public class Post extends AbstractEntity {
     @Column(name = "text_content")
     private String textContent;
 
@@ -20,13 +21,10 @@ public class Post extends AbstractEntity{
     @Column(name = "is_edited")
     private boolean isEdited;
 
-    @Column(name = "is_reposted")
-    private boolean isReposted;
-
     @Column(name = "original_post_id")
     private Long originalPostId;
 
-    @ManyToOne
-    private User author;
+    @Column(name = "user_id")
+    private Long authorId;
 
 }

@@ -1,4 +1,5 @@
 package com.coyjiv.isocial.dto.respone;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
