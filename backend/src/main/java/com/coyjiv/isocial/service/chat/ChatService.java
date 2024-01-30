@@ -18,6 +18,7 @@ import com.coyjiv.isocial.service.message.IWebsocketMessageService;
 import com.coyjiv.isocial.transfer.chat.ActiveChatDtoMapper;
 import com.coyjiv.isocial.transfer.chat.ActiveChatListDtoMapper;
 import com.coyjiv.isocial.transfer.message.CreateMessageRequestMapper;
+import com.coyjiv.isocial.utils.MessagesUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 
@@ -86,30 +88,28 @@ public class ChatService implements IChatService {
           throws EntityNotFoundException, IllegalAccessException,
           ChatAlreadyExistException, RequestValidationException {
 
-    if (firstMessageDto.getText() == null && firstMessageDto.getAttachements() == null
-            || firstMessageDto.getAttachements() == null && firstMessageDto.getText().isBlank()
-    ) {
-      throw new RequestValidationException("First message should have text or attachments");
-    }
+    MessagesUtils.validateFirstMessage(firstMessageDto);
 
     Long requestOwnerId = authProvider.getAuthenticationPrincipal();
+    if (Objects.equals(requestOwnerId, receiverId)){
+      throw new RequestValidationException("User cant create chat with himself");
+    }
+
     Message firstMessage = createMessageRequestMapper.convertToEntity(firstMessageDto);
-    Optional<Chat> chatOptional = chatRepository.findChatBetweenUsers(List.of(requestOwnerId, receiverId));
+
+    //TODO: LATER USE user service
+    User sender = userRepository.findActiveById(requestOwnerId)
+            .orElseThrow(() -> new EntityNotFoundException("User not found"));
+    User receiver = userRepository.findActiveById(receiverId)
+            .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+    Optional<Chat> chatOptional = chatRepository.findChatBetweenUsers(sender, receiver);
     Chat chat;
 
     if (chatOptional.isPresent() && chatOptional.get().isActive()) {
       throw new ChatAlreadyExistException("Chat already exist");
-    } else if (chatOptional.isPresent()) {
-      chat = reCreateInactive(chatOptional.get(), firstMessage);
-    } else {
-      //TODO: LATER USE user service
-      User sender = userRepository.findActiveById(requestOwnerId)
-              .orElseThrow(() -> new EntityNotFoundException("User not found"));
-      User receiver = userRepository.findActiveById(receiverId)
-              .orElseThrow(() -> new EntityNotFoundException("User not found"));
-
-      chat = create(List.of(sender, receiver), firstMessage);
-    }
+    } else chat = chatOptional.map(value -> reCreateInactive(value, firstMessage))
+            .orElseGet(() -> create(List.of(sender, receiver), firstMessage));
 
     firstMessage.setChatId(chat.getId());
     messageRepository.save(firstMessage);
@@ -183,5 +183,6 @@ public class ChatService implements IChatService {
 
     return true;
   }
+
 
 }

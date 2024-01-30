@@ -38,12 +38,18 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(HttpMessageNotReadableException.class)
   public ResponseEntity<?> handleHttpMessageNotReadableException(HttpMessageNotReadableException exception) {
-    return ResponseEntity.status(403).body(exception.getMessage());
+    return ResponseEntity.status(400).body(exception.getMessage());
   }
 
   @ExceptionHandler(RequestValidationException.class)
   public ResponseEntity<?> handleRequestValidationException(RequestValidationException exception) {
     return ResponseEntity.status(400).body(exception.getMessage());
   }
+
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<?> handleUncheckedExceptions(Exception exception){
+    return ResponseEntity.status(500).build();
+  }
+
 
 }

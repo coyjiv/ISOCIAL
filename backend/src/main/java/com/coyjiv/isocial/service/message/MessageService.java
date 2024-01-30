@@ -10,6 +10,7 @@ import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.exceptions.RequestValidationException;
 import com.coyjiv.isocial.service.chat.IChatService;
 import com.coyjiv.isocial.transfer.message.CreateMessageRequestMapper;
+import com.coyjiv.isocial.utils.MessagesUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -64,12 +65,7 @@ public class MessageService implements IMessageService {
   public Message create(Long chatId, CreateMessageRequestDto createMessageRequestDto)
           throws EntityNotFoundException, IllegalAccessException, RequestValidationException {
 
-    if (createMessageRequestDto.getText() == null && createMessageRequestDto.getAttachements() == null
-            || createMessageRequestDto.getAttachements() == null && createMessageRequestDto.getText().isEmpty()
-    ) {
-      throw new RequestValidationException("First message should have text or attachments");
-    }
-
+    MessagesUtils.validateFirstMessage(createMessageRequestDto);
 
     Message message = createMessageRequestMapper.convertToEntity(createMessageRequestDto);
     message.setChatId(chatId);

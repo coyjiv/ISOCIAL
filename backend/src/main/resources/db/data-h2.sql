@@ -1,6 +1,6 @@
 INSERT INTO public.users (first_name, last_name, email, city, password, avatars_url, banner_url, bio,
                           is_private, last_seen, date_of_birth, creation_date, last_modified_date, is_active, activity_status)
-    VALUES ('John', 'Doe', 'john.doe@example.com', 'New York', 'securepassword', ARRAY['avatar1.jpg',
+    VALUES ('John', 'Doe', 'test@example.com', 'New York', '$2a$10$5OPwzIZ2N8CIeWUA2q9t0OzoI1kB7cvf1qDGwyxeiBFEAR3h2Psmu', ARRAY['avatar1.jpg',
         'avatar2.jpg'], 'banner.jpg',
         'A short bio about John Doe', FALSE, CURRENT_TIMESTAMP,
         '1990-01-15', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, 1);

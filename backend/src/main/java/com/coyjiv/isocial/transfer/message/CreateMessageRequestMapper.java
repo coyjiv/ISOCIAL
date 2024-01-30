@@ -7,6 +7,8 @@ import com.coyjiv.isocial.dto.request.message.CreateMessageRequestDto;
 import com.coyjiv.isocial.transfer.DtoMapperFacade;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CreateMessageRequestMapper extends DtoMapperFacade<Message, CreateMessageRequestDto> {
 
@@ -23,5 +25,8 @@ public class CreateMessageRequestMapper extends DtoMapperFacade<Message, CreateM
     entity.setEditted(false);
     entity.setActive(true);
     entity.setSenderId(authProvider.getAuthenticationPrincipal());
+    if (dto.getAttachements() == null){
+      entity.setAttachements(List.of());
+    }
   }
 }
