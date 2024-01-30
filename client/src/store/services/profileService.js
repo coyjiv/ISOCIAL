@@ -6,10 +6,19 @@ export const profileApi = createApi({
   endpoints: (builder) => ({
     getProfileById: builder.query({
       query: (id) => `users/${id}`,
+      providesTags: (result, error, id) => [{ type: 'Profile', id }],
     }),
-    
+    updateProfile: builder.mutation({
+      query: ({ body, id }) => {
+        return {
+          url: `users/${id}`,
+          method: 'PATCH',
+          body,
+        }
+      },
+      invalidatesTags: (result, error, { id }) => [{ type: 'Profile', id }],
+    }),
   }),
 })
 
-
-export const { useGetProfileByIdQuery } = profileApi
+export const { useGetProfileByIdQuery, useUpdateProfileMutation } = profileApi

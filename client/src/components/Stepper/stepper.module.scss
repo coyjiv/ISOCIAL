@@ -11,3 +11,13 @@
   justify-content: space-between;
   margin-top: 20px;
 }
+
+.button {
+  background-color: transparent;
+  border-radius: 5px;
+  padding: 5px 15px;
+
+  &.soloButton {
+    width: 100%;
+  }
+}

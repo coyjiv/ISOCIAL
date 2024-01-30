@@ -6,10 +6,10 @@ import styles from './createPost.module.scss'
 import { useSessionStorage } from "usehooks-ts";
 
 const CreatePostModal = (props) => {
-  const { onClose, selectedValue, open } = props;
+  const { onClose, open } = props;
 
   const handleClose = () => {
-    onClose(selectedValue);
+    onClose();
   };
   // @TODO: Recheck this 
   // const handleListItemClick = (value) => {
@@ -52,7 +52,7 @@ const CreatePostModal = (props) => {
 CreatePostModal.propTypes = {
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
-  selectedValue: PropTypes.string.isRequired,
+  // selectedValue: PropTypes.string.isRequired,
 };
 
 export default CreatePostModal

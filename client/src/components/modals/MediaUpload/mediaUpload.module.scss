@@ -23,3 +23,18 @@
   border-radius: 10px;
   overflow: hidden;
 }
+
+.previewCanvas {
+  border: 1px solid colors.$greyBorder;
+  object-fit: contain;
+  border-radius: 10px;
+}
+
+.uploadWrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  & > button {
+    width: 100%;
+  }
+}

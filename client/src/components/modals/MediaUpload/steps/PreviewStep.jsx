@@ -1,4 +1,6 @@
 import PropTypes from 'prop-types'
+import { BlueRoundedButton } from '../../../buttons'
+import styles from '../mediaUpload.module.scss'
 
 const PreviewStep = ({ completedCrop, previewCanvasRef, onUploadCropAvatarClick }) => {
     return (
@@ -7,16 +9,15 @@ const PreviewStep = ({ completedCrop, previewCanvasRef, onUploadCropAvatarClick 
                 <div>
                     <canvas
                         ref={previewCanvasRef}
+                        className={styles.previewCanvas}
                         style={{
-                            border: "1px solid black",
-                            objectFit: "contain",
                             width: completedCrop.width,
                             height: completedCrop.height,
                         }}
                     />
                 </div>
-                <div>
-                    <button onClick={onUploadCropAvatarClick}>Save changes</button>
+                <div className={styles.uploadWrapper}>
+                    <BlueRoundedButton onClick={onUploadCropAvatarClick}>Save changes</BlueRoundedButton>
                 </div>
             </>
         )

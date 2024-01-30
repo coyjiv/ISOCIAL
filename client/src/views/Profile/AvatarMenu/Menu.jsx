@@ -1,4 +1,5 @@
 import { Menu as MUIMenu, MenuItem } from "@mui/material"
+import { isPersonalProfile } from "../Profile";
 import PropTypes from 'prop-types'
 
 const Menu = ({ onClose, open, anchorEl }) => {
@@ -25,11 +26,11 @@ const Menu = ({ onClose, open, anchorEl }) => {
 
         }} anchorEl={anchorEl} open={open} onClose={onClose}>
             <MenuItem onClick={() => handleClose('view')}>
-                View your profile avatar
+                View {isPersonalProfile && 'your'} profile avatar
             </MenuItem>
-            <MenuItem onClick={() => handleClose('upload')}>
+            {isPersonalProfile && <MenuItem onClick={() => handleClose('upload')}>
                 Select a new avatar
-            </MenuItem>
+            </MenuItem>}
         </MUIMenu>
     )
 }

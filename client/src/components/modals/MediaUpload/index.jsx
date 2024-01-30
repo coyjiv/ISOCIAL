@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useState, useCallback, useRef } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@mui/material";
-import { BlueRoundedButton } from "../../buttons";
+// import { BlueRoundedButton } from "../../buttons";
 import { useDebounceEffect } from "../../../hooks/useDebounceEffect";
 import { canvasPreview } from "./canvasPreview";
 import { Stepper } from "../../Stepper";
@@ -141,7 +141,7 @@ const MediaUpload = ({ modalTitle, ...props }) => {
     );
 
     const avatarSteps = [
-        <Dropzone key={1} onDrop={onDrop} file={file} />,
+        <Dropzone key={1} onDrop={onDrop} file={file} resetFile={() => setFile(null)} />,
         <CropStep key={2} imgSrc={imgSrc} onImageLoad={onImageLoad} imgRef={imgRef} crop={crop} setCrop={setCrop} setCompletedCrop={setCompletedCrop} />,
         <PreviewStep key={3} completedCrop={completedCrop} previewCanvasRef={previewCanvasRef} onUploadCropAvatarClick={onUploadCropAvatarClick} />
     ];
@@ -156,9 +156,9 @@ const MediaUpload = ({ modalTitle, ...props }) => {
         }} onClose={handleClose} open={open}>
             <DialogTitle fontSize={20} fontWeight={900} >{modalTitle}</DialogTitle>
             <DialogContent>
-                <Stepper steps={avatarSteps} />
+                <Stepper onComplete={() => console.log('finish')} disabledButtons={{ prev: false, next: !file }} steps={avatarSteps} />
             </DialogContent>
-            <BlueRoundedButton disabled={true}>Create a post</BlueRoundedButton>
+            {/* <BlueRoundedButton disabled={true}>Create a post</BlueRoundedButton> */}
         </Dialog>
     )
 }
