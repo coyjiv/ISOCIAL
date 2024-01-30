@@ -20,12 +20,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 import java.util.Collections;
-import java.util.List;
-
 import static org.springframework.boot.autoconfigure.security.servlet.PathRequest.toH2Console;
 
 @Configuration
@@ -50,16 +47,13 @@ public class SecurityConfig {
             .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
             .csrf(AbstractHttpConfigurer::disable)
             // TODO: REMOVE IN PRODUCTION
-            .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
-              @Override
-              public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
-                CorsConfiguration config = new CorsConfiguration();
-                config.setAllowedOrigins(Collections.singletonList("*"));
-                config.setAllowedMethods(Collections.singletonList("*"));
-                config.setAllowedHeaders(Collections.singletonList("*"));
-                config.setMaxAge(3600L);
-                return config;
-              }
+            .cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
+              CorsConfiguration config = new CorsConfiguration();
+              config.setAllowedOrigins(Collections.singletonList("*"));
+              config.setAllowedMethods(Collections.singletonList("*"));
+              config.setAllowedHeaders(Collections.singletonList("*"));
+              config.setMaxAge(3600L);
+              return config;
             }))
             .httpBasic(AbstractHttpConfigurer::disable)
             .addFilterBefore(new JwtValidatorFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)

@@ -29,7 +29,7 @@ public class MessageService implements IMessageService {
   private final IChatService chatService;
   private final CreateMessageRequestMapper createMessageRequestMapper;
   private final EmailPasswordAuthProvider authProvider;
-  private final SimpMessagingTemplate messagingTemplate;
+
   private final IWebsocketMessageService websocketChatMessageService;
 
   @Transactional(readOnly = true)

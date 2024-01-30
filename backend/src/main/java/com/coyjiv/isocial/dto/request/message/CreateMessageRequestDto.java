@@ -1,7 +1,6 @@
 package com.coyjiv.isocial.dto.request.message;
 
 
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

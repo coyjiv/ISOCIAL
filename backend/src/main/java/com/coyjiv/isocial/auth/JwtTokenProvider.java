@@ -36,7 +36,6 @@ public class JwtTokenProvider {
   public static final int REFRESH_LEAVE_HOURS = 168;
 
   private final EmailPasswordAuthProvider emailPasswordAuthProvider;
-  private final IUserService userService;
 
   @Value("${JWT_SECRET_ACCESS}")
   private String accessSecretLoader;

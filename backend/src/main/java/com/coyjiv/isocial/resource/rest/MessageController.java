@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/messages")
+@RequestMapping("/api/messages")
 public class MessageController {
   private final IMessageService messageService;
 
