@@ -1,9 +1,9 @@
 package com.coyjiv.isocial.service.auth;
 
 import com.coyjiv.isocial.auth.JwtTokenProvider;
-import com.coyjiv.isocial.dto.request.LoginRequestDto;
-import com.coyjiv.isocial.dto.request.RefreshRequestDto;
-import com.coyjiv.isocial.dto.respone.LoginResponseDto;
+import com.coyjiv.isocial.dto.request.auth.LoginRequestDto;
+import com.coyjiv.isocial.dto.request.auth.RefreshRequestDto;
+import com.coyjiv.isocial.dto.respone.auth.LoginResponseDto;
 import jakarta.security.auth.message.AuthException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,7 @@ public class AuthService implements IAuthService {
 
   @Override
   public LoginResponseDto refresh(RefreshRequestDto refreshRequestDto) throws Exception {
-    if (JwtTokenProvider.validateRefreshToken(refreshRequestDto.getRefresh())) {
+    if (tokenProvider.validateRefreshToken(refreshRequestDto.getRefresh())) {
       String access = tokenProvider.generateAccessToken();
       String refresh = tokenProvider.generateRefreshToken();
       return new LoginResponseDto(access, refresh);

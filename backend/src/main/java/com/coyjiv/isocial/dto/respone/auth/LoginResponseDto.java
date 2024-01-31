@@ -1,4 +1,4 @@
-package com.coyjiv.isocial.dto.respone;
+package com.coyjiv.isocial.dto.respone.auth;
 
 
 import lombok.AllArgsConstructor;
