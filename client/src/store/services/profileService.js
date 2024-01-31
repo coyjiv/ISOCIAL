@@ -1,8 +1,16 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
+import { createApi } from '@reduxjs/toolkit/query/react'
+import { instance } from '../../api/config'
 
 export const profileApi = createApi({
   reducerPath: 'profileApi',
-  baseQuery: fetchBaseQuery({ baseUrl: import.meta.env.VITE_API_URL }),
+  baseQuery: async (args) => {
+    try {
+      const response = await instance(args)
+      return { data: response.data }
+    } catch (error) {
+      return { error }
+    }
+  },
   endpoints: (builder) => ({
     getProfileById: builder.query({
       query: (id) => `users/${id}`,

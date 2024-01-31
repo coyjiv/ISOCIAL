@@ -10,7 +10,7 @@ import AvatarMenu from './AvatarMenu';
 import { DEFAULT_USER_AVATAR } from '../../data/placeholders';
 import { EditProfile } from '../../components/modals/EditProfile';
 
-export const isPersonalProfile = false
+export const isPersonalProfile = true
 
 const ProfilePage = () => {
   const { id } = useParams();
