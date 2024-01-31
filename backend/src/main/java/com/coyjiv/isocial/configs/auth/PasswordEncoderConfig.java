@@ -1,4 +1,4 @@
-package com.coyjiv.isocial.configs;
+package com.coyjiv.isocial.configs.auth;
 
 
 import org.springframework.context.annotation.Bean;

@@ -1,14 +1,13 @@
-package com.coyjiv.isocial.resource;
+package com.coyjiv.isocial.resource.rest;
 
 import com.coyjiv.isocial.cache.EmailRegistrationCache;
-import com.coyjiv.isocial.dto.request.LoginRequestDto;
-import com.coyjiv.isocial.dto.request.RefreshRequestDto;
-import com.coyjiv.isocial.dto.request.UserRegistrationRequestDto;
+import com.coyjiv.isocial.dto.request.auth.LoginRequestDto;
+import com.coyjiv.isocial.dto.request.auth.RefreshRequestDto;
+import com.coyjiv.isocial.dto.request.user.UserRegistrationRequestDto;
 import com.coyjiv.isocial.service.auth.IAuthService;
 import com.coyjiv.isocial.service.user.IUserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,11 +28,11 @@ public class AuthenticationController {
   @PostMapping("/registration")
   public ResponseEntity<?> createUser(@RequestBody @Valid UserRegistrationRequestDto requestDto) {
     try {
-      userService.createUser(requestDto);
+      userService.create(requestDto);
     } catch (Exception e) {
       return ResponseEntity.badRequest().body(e.getMessage());
     }
-    return ResponseEntity.status(HttpStatus.CREATED).build();
+    return ResponseEntity.status(201).build();
   }
 
   @PostMapping("/confirmation")
@@ -46,9 +45,9 @@ public class AuthenticationController {
 
     try {
       userService.confirmUser(email);
-      return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+      return ResponseEntity.status(204).build();
     } catch (AccountNotFoundException exception) {
-      return ResponseEntity.badRequest().body(exception.getMessage());
+      return ResponseEntity.status(404).body(exception.getMessage());
     }
   }
 

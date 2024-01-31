@@ -1,4 +1,4 @@
-package com.coyjiv.isocial.configs;
+package com.coyjiv.isocial.configs.mail;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
