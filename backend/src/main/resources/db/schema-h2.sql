@@ -1,5 +1,4 @@
 DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS friends;
 CREATE TABLE public.users
 (
     id                 INT AUTO_INCREMENT PRIMARY KEY,
@@ -11,13 +10,14 @@ CREATE TABLE public.users
     avatars_url        VARCHAR ARRAY,
     banner_url         VARCHAR,
     bio                VARCHAR,
-    is_private         BOOLEAN      NOT NULL DEFAULT FALSE,
+    is_private         BOOLEAN  NOT NULL DEFAULT FALSE,
     last_seen          TIMESTAMP,
-    date_of_birth      TIMESTAMP    NOT NULL,
+    date_of_birth      TIMESTAMP NOT NULL,
     creation_date      TIMESTAMP,
     last_modified_date TIMESTAMP,
-    is_active          BOOLEAN      NOT NULL DEFAULT FALSE
+    is_active BOOLEAN NOT NULL DEFAULT FALSE
 );
+DROP TABLE IF EXISTS friends;
 CREATE TABLE friends
 (
     id           INT AUTO_INCREMENT PRIMARY KEY,
@@ -28,5 +28,5 @@ CREATE TABLE friends
     FOREIGN KEY (addresser_id) REFERENCES public.users (id),
     creation_date      TIMESTAMP,
     last_modified_date TIMESTAMP,
-    is_active          BOOLEAN      NOT NULL DEFAULT FALSE
+    is_active BOOLEAN NOT NULL DEFAULT FALSE
 );

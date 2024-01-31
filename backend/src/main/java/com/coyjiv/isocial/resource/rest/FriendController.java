@@ -1,8 +1,8 @@
-package com.coyjiv.isocial.resource;
+package com.coyjiv.isocial.resource.rest;
 
 
 
-import com.coyjiv.isocial.dto.respone.FriendResponseDto;
+import com.coyjiv.isocial.dto.respone.friend.FriendResponseDto;
 import com.coyjiv.isocial.service.friend.FriendService;
 
 import jakarta.validation.constraints.Min;
@@ -26,9 +26,9 @@ public class FriendController {
   private final FriendService friendService;
 
 
-  @PostMapping("/request")
-  public ResponseEntity<String> sendFriendRequest(@RequestParam Long requesterId, @RequestParam Long addresserId) {
-    boolean result = friendService.sendFriendRequest(requesterId, addresserId);
+  @PostMapping()
+  public ResponseEntity<String> sendFriendRequest(@RequestParam Long addresserId) {
+    boolean result = friendService.sendFriendRequest(addresserId);
     if (result) {
       return ResponseEntity.ok("Request sent successfully");
     }
@@ -36,7 +36,7 @@ public class FriendController {
   }
 
   @PostMapping("/accept")
-  public ResponseEntity<String> acceptFriendRequest(@RequestParam Long userId, @RequestParam Long friendId) {
+  public ResponseEntity<String> acceptFriendRequest(@RequestParam Long userId, @RequestParam Long friendId) throws IllegalAccessException {
     boolean result = friendService.acceptFriendRequest(userId, friendId);
     if (result) {
       return ResponseEntity.ok("Accepted");
@@ -45,7 +45,7 @@ public class FriendController {
   }
 
   @PostMapping("/decline")
-  public ResponseEntity<String> declineFriendRequest(@RequestParam Long userId, @RequestParam Long friendId) {
+  public ResponseEntity<String> declineFriendRequest(@RequestParam Long userId, @RequestParam Long friendId) throws IllegalAccessException {
     boolean result = friendService.declineFriendRequest(userId, friendId);
     if (result) {
       return ResponseEntity.ok("Declined");
@@ -53,8 +53,8 @@ public class FriendController {
     return ResponseEntity.status(400).body("Friend request not found");
   }
 
-  @DeleteMapping("/delete")
-  public ResponseEntity<String> deleteFriend(@RequestParam Long userId, @RequestParam Long friendId) {
+  @DeleteMapping()
+  public ResponseEntity<String> deleteFriend(@RequestParam Long userId, @RequestParam Long friendId) throws IllegalAccessException {
     boolean result = friendService.deleteFriend(userId, friendId);
     if (result) {
       return ResponseEntity.ok("Deleted");

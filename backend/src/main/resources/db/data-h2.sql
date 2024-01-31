@@ -41,10 +41,9 @@ VALUES ('Sophia', 'Lee', 'sophia.lee@example.com', 'Seattle', 'strongpassword456
         'Sophias bio information', FALSE, CURRENT_TIMESTAMP,
         '1995-09-10', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
 
--- John Doe sends friend requests to Alice Johnson and Bob Smith
+- John Doe sends friend requests to Alice Johnson and Bob Smith
 INSERT INTO friends (requester_id, addresser_id, status, creation_date, last_modified_date, is_active)
 VALUES (1, 2, 'PENDING', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
-
 INSERT INTO friends (requester_id, addresser_id, status, creation_date, last_modified_date, is_active)
 VALUES (1, 3, 'PENDING', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
 
@@ -56,3 +55,6 @@ VALUES (2, 4, 'PENDING', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
 INSERT INTO friends (requester_id, addresser_id, status, creation_date, last_modified_date, is_active)
 VALUES (3, 5, 'ACCEPTED', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
 
+-- Sophia Lee sends a friend request to John Doe
+INSERT INTO friends (requester_id, addresser_id, status, creation_date, last_modified_date, is_active)
+VALUES (6, 1, 'PENDING', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
