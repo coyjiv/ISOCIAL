@@ -1,3 +1,11 @@
+* {
+  box-sizing: border-box;
+
+  &:focus {
+    outline: none;
+  }
+}
+
 html,
 body,
 div,
@@ -87,6 +95,11 @@ video {
   vertical-align: baseline;
 }
 
+button {
+  border: none;
+  outline: none;
+}
+
 a {
   text-decoration: none;
   color: inherit;
@@ -107,9 +120,6 @@ section {
   display: block;
 }
 
-body {
-  line-height: 1;
-}
 
 ol,
 ul {
@@ -137,7 +147,7 @@ table {
 @font-face {
   font-family: 'Segoe UI';
   src: url('assets/fonts/SegoeUI.woff2') format('woff2'),
-    url('assets/fonts/SegoeUI.woff') format('woff');
+  url('assets/fonts/SegoeUI.woff') format('woff');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -146,7 +156,7 @@ table {
 @font-face {
   font-family: 'Segoe UI';
   src: url('assets/fonts/SegoeUI-BoldItalic.woff2') format('woff2'),
-    url('assets/fonts/SegoeUI-BoldItalic.woff') format('woff');
+  url('assets/fonts/SegoeUI-BoldItalic.woff') format('woff');
   font-weight: bold;
   font-style: italic;
   font-display: swap;
@@ -155,7 +165,7 @@ table {
 @font-face {
   font-family: 'Segoe UI';
   src: url('assets/fonts/SegoeUI-Italic.woff2') format('woff2'),
-    url('assets/fonts/SegoeUI-Italic.woff') format('woff');
+  url('assets/fonts/SegoeUI-Italic.woff') format('woff');
   font-weight: normal;
   font-style: italic;
   font-display: swap;
@@ -164,8 +174,14 @@ table {
 @font-face {
   font-family: 'Segoe UI';
   src: url('assets/fonts/SegoeUI-Bold.woff2') format('woff2'),
-    url('assets/fonts/SegoeUI-Bold.woff') format('woff');
+  url('assets/fonts/SegoeUI-Bold.woff') format('woff');
   font-weight: bold;
   font-style: normal;
   font-display: swap;
+}
+
+body {
+  font-family: "Segoe UI", sans-serif;
+  font-style: normal;
+  line-height: 1;
 }
