@@ -1,8 +1,8 @@
 package com.coyjiv.isocial.service.post;
 
 import com.coyjiv.isocial.domain.Post;
-import com.coyjiv.isocial.dto.request.PostRequestDto;
-import com.coyjiv.isocial.dto.request.UpdatePostRequestDto;
+import com.coyjiv.isocial.dto.request.post.PostRequestDto;
+import com.coyjiv.isocial.dto.request.post.UpdatePostRequestDto;
 import com.coyjiv.isocial.dto.respone.PostResponseDto;
 
 import java.util.List;
@@ -14,8 +14,8 @@ public interface IPostService {
     Optional<Post> findActiveById(Long id);
     List<PostResponseDto> findActiveByAuthorId(int page, int size, Long id);
     Post create(PostRequestDto postRequestDto);
-    void update(Long id, UpdatePostRequestDto updatePostRequestDto);
-    void delete(Long id);
+    void update(Long id, UpdatePostRequestDto updatePostRequestDto) throws IllegalAccessException;
+    void delete(Long id) throws IllegalAccessException;
 
 
 

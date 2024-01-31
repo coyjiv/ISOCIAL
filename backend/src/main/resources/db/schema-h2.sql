@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS posts;
 CREATE TABLE public.posts
 (
     id                 INT AUTO_INCREMENT PRIMARY KEY,
-    text_content       VARCHAR(1000) NOT NULL,
+    text_content       VARCHAR(1000),
     attachments        VARCHAR ARRAY,
     is_edited          BOOLEAN NOT NULL DEFAULT FALSE,
     original_post_id   INT NOT NULL DEFAULT 0,

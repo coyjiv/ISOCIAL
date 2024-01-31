@@ -1,9 +1,10 @@
 package com.coyjiv.isocial.service.post;
 
+import com.coyjiv.isocial.auth.EmailPasswordAuthProvider;
 import com.coyjiv.isocial.dao.PostRepository;
 import com.coyjiv.isocial.domain.Post;
-import com.coyjiv.isocial.dto.request.PostRequestDto;
-import com.coyjiv.isocial.dto.request.UpdatePostRequestDto;
+import com.coyjiv.isocial.dto.request.post.PostRequestDto;
+import com.coyjiv.isocial.dto.request.post.UpdatePostRequestDto;
 import com.coyjiv.isocial.dto.respone.PostResponseDto;
 import com.coyjiv.isocial.transfer.post.PostRequestMapper;
 import com.coyjiv.isocial.transfer.post.PostResponseMapper;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -22,6 +24,7 @@ public class PostService implements IPostService {
     private final PostRepository postRepository;
     private final PostRequestMapper postRequestMapper;
     private final PostResponseMapper postResponseMapper;
+    private final EmailPasswordAuthProvider emailPasswordAuthProvider;
 
     @Transactional(readOnly = true)
     @Override
@@ -49,18 +52,19 @@ public class PostService implements IPostService {
     @Override
     @Transactional
     public Post create(PostRequestDto postRequestDto) {
-//        TODO Later find user ID who create the post
+        Long requestOwner = emailPasswordAuthProvider.getAuthenticationPrincipal();
         Post post = postRequestMapper.convertToEntity(postRequestDto);
+        post.setAuthorId(requestOwner);
         return postRepository.save(post);
     }
 
     @Override
     @Transactional
-    public void update(Long id, UpdatePostRequestDto updatePostRequestDto) {
-//        TODO Later check the user who create the post is trying to
+    public void update(Long id, UpdatePostRequestDto updatePostRequestDto) throws IllegalAccessException {
         Optional<Post> postOptional = postRepository.findById(id);
         if (postOptional.isPresent()) {
             Post post = postOptional.get();
+            validateRequestOwner(post.getAuthorId());
             post.setTextContent(updatePostRequestDto.getTextContent());
             post.setEdited(true);
             postRepository.save(post);
@@ -69,12 +73,20 @@ public class PostService implements IPostService {
 
     @Override
     @Transactional
-    public void delete(Long id) {
+    public void delete(Long id) throws IllegalAccessException {
         Optional<Post> postToDeactivate = postRepository.findActiveById(id);
         if (postToDeactivate.isPresent()) {
             Post post = postToDeactivate.get();
+            validateRequestOwner(post.getAuthorId());
             post.setActive(false);
             postRepository.save(post);
+        }
+    }
+
+    private void validateRequestOwner (Long authorId) throws IllegalAccessException {
+        Long requestOwner = emailPasswordAuthProvider.getAuthenticationPrincipal();
+        if(Objects.equals(authorId,requestOwner)){
+            throw new IllegalAccessException("User have no authorities to do this request.");
         }
     }
 }

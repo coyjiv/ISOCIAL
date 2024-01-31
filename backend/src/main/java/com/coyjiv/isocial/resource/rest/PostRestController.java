@@ -1,7 +1,7 @@
-package com.coyjiv.isocial.resource;
+package com.coyjiv.isocial.resource.rest;
 
 import com.coyjiv.isocial.domain.Post;
-import com.coyjiv.isocial.dto.request.UpdatePostRequestDto;
+import com.coyjiv.isocial.dto.request.post.UpdatePostRequestDto;
 import com.coyjiv.isocial.dto.respone.PostResponseDto;
 import com.coyjiv.isocial.service.post.IPostService;
 import com.coyjiv.isocial.transfer.post.PostResponseMapper;
@@ -47,14 +47,14 @@ public class PostRestController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") @Min(0) Long id) {
+    public ResponseEntity<?> delete(@PathVariable("id") @Min(0) Long id) throws IllegalAccessException {
         postService.delete(id);
         return ResponseEntity.status(204).build();
     }
 
     @PatchMapping("/update/{id}")
     public ResponseEntity<?> update(@PathVariable("id") @Min(0) Long id,
-                                    @RequestBody @Valid UpdatePostRequestDto dto) {
+                                    @RequestBody @Valid UpdatePostRequestDto dto) throws IllegalAccessException {
         postService.update(id, dto);
         return ResponseEntity.status(204).build();
     }

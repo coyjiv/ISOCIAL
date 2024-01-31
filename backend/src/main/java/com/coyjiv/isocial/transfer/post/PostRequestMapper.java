@@ -2,7 +2,7 @@ package com.coyjiv.isocial.transfer.post;
 
 import com.coyjiv.isocial.dao.PostRepository;
 import com.coyjiv.isocial.domain.Post;
-import com.coyjiv.isocial.dto.request.PostRequestDto;
+import com.coyjiv.isocial.dto.request.post.PostRequestDto;
 import com.coyjiv.isocial.transfer.DtoMapperFacade;
 import org.springframework.stereotype.Service;
 
