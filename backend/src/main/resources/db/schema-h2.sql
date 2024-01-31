@@ -10,12 +10,13 @@ CREATE TABLE public.users
     avatars_url        VARCHAR ARRAY,
     banner_url         VARCHAR,
     bio                VARCHAR,
-    is_private         BOOLEAN  NOT NULL DEFAULT FALSE,
+    is_private         BOOLEAN      NOT NULL DEFAULT FALSE,
     last_seen          TIMESTAMP,
+    activity_status    INT  NOT NULL DEFAULT 1,
     date_of_birth      DATE,
     creation_date      TIMESTAMP,
     last_modified_date TIMESTAMP,
-    is_active BOOLEAN NOT NULL DEFAULT FALSE
+    is_active          BOOLEAN      NOT NULL DEFAULT FALSE
 );
 
 DROP TABLE IF EXISTS posts;
@@ -35,9 +36,47 @@ CREATE TABLE public.posts
 DROP TABLE IF EXISTS roles;
 CREATE TABLE public.roles
 (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    name VARCHAR(50) NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(id)
+    id      INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT         NOT NULL,
+    name    VARCHAR(50) NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users (id)
 );
 
+DROP TABLE IF EXISTS chats;
+CREATE TABLE public.chats
+(
+    id                 INT AUTO_INCREMENT PRIMARY KEY,
+    last_message       VARCHAR(1000),
+    last_message_by    INT,
+    last_message_date  TIMESTAMP,
+    creation_date      TIMESTAMP,
+    last_modified_date TIMESTAMP,
+    is_active          BOOLEAN NOT NULL DEFAULT FALSE
+);
+
+DROP TABLE IF EXISTS messages;
+CREATE TABLE public.messages
+(
+    id                 INT AUTO_INCREMENT PRIMARY KEY,
+    chat_id            INT,
+    sender_id          INT,
+    status             VARCHAR(50) NOT NULL DEFAULT 'SENT',
+    text               VARCHAR(1000),
+    attachements       VARCHAR ARRAY,
+    is_editted         BOOLEAN,
+    creation_date      TIMESTAMP,
+    last_modified_date TIMESTAMP,
+    is_active          BOOLEAN     NOT NULL DEFAULT FALSE,
+    FOREIGN KEY (chat_id) REFERENCES chats (id),
+    FOREIGN KEY (sender_id) REFERENCES users (id)
+);
+
+DROP TABLE IF EXISTS users_chats;
+CREATE TABLE public.users_chats
+(
+    id      INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT,
+    chat_id INT,
+    FOREIGN KEY (user_id) REFERENCES users (id),
+    FOREIGN KEY (chat_id) REFERENCES chats (id)
+);

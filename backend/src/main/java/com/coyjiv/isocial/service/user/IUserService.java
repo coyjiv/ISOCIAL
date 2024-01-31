@@ -1,9 +1,10 @@
 package com.coyjiv.isocial.service.user;
 
 import com.coyjiv.isocial.domain.User;
-import com.coyjiv.isocial.dto.request.UserRegistrationRequestDto;
-import com.coyjiv.isocial.dto.respone.UserDefaultResponseDto;
-import com.coyjiv.isocial.dto.respone.UserSearchResponseDto;
+import com.coyjiv.isocial.dto.request.user.UserRegistrationRequestDto;
+import com.coyjiv.isocial.dto.respone.user.UserDefaultResponseDto;
+import com.coyjiv.isocial.dto.respone.user.UserSearchResponseDto;
+import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.exceptions.PasswordMatchException;
 
 import javax.security.auth.login.AccountNotFoundException;
@@ -16,21 +17,27 @@ public interface IUserService {
   /*
    * Find all users with pagination
    * */
-  List<UserDefaultResponseDto> findAll(int page, int quantity);
+  List<UserDefaultResponseDto> findAllActive(int page, int quantity);
 
-  List<UserDefaultResponseDto> findAll();
+  List<UserDefaultResponseDto> findAllActive();
 
-  Optional<UserDefaultResponseDto> findById(Long id);
+  UserDefaultResponseDto findActiveById(Long id) throws EntityNotFoundException;
 
   Optional<User> findByEmail(String email);
 
-  User createUser(UserRegistrationRequestDto userRegistrationRequestDto) throws PasswordMatchException;
+  Optional<User> findActiveByEmail(String email);
+
+  User create(UserRegistrationRequestDto userRegistrationRequestDto) throws PasswordMatchException;
+
+  void update(Long id, Map<String, String> fields) throws IllegalAccessException, EntityNotFoundException;
 
   void confirmUser(String email) throws AccountNotFoundException;
 
-  void updateUser(Long id, Map<String, String> fields);
-
   List<UserSearchResponseDto> findByName(String name, int page, int size);
 
-  void deleteUser(Long id);
+  void delete(Long id) throws IllegalAccessException, EntityNotFoundException;
+
+  void handleConnect(String token);
+
+  void handleDisconnect(String token);
 }

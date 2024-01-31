@@ -2,7 +2,8 @@ package com.coyjiv.isocial.transfer.user;
 
 import com.coyjiv.isocial.domain.Role;
 import com.coyjiv.isocial.domain.User;
-import com.coyjiv.isocial.dto.request.UserRegistrationRequestDto;
+import com.coyjiv.isocial.domain.UserActivityStatus;
+import com.coyjiv.isocial.dto.request.user.UserRegistrationRequestDto;
 import com.coyjiv.isocial.transfer.DtoMapperFacade;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,5 +28,6 @@ public class UserRegistrationRequestMapper extends DtoMapperFacade<User, UserReg
     userRole.setName("ROLE_USER");
     userRole.setUser(entity);
     entity.setRoles(Set.of(userRole));
+    entity.setActivityStatus(UserActivityStatus.OFFLINE);
   }
 }
