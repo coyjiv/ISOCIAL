@@ -1,7 +1,7 @@
 package com.coyjiv.isocial.transfer.user;
 
 import com.coyjiv.isocial.domain.User;
-import com.coyjiv.isocial.dto.respone.UserSearchResponseDto;
+import com.coyjiv.isocial.dto.respone.user.UserSearchResponseDto;
 import com.coyjiv.isocial.transfer.DtoMapperFacade;
 import org.springframework.stereotype.Service;
 

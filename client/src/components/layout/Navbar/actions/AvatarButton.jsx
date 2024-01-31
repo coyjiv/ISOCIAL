@@ -1,12 +1,12 @@
-import { Avatar, Badge, Card, Typography } from "@mui/material"
+import {Avatar, Badge, Card, Typography} from "@mui/material"
 import styled from "@emotion/styled";
-import { useState, useRef } from "react";
-import { useOnClickOutside } from "usehooks-ts";
+import {useState, useRef} from "react";
+import {useOnClickOutside} from "usehooks-ts";
 import classNames from "classnames";
-import { Menu, MenuItem } from "@mui/material";
-import { Link } from "react-router-dom";
-import { IoMdSettings } from "react-icons/io";
-import { ImExit } from "react-icons/im";
+import {Menu, MenuItem} from "@mui/material";
+import {Link, useNavigate} from "react-router-dom";
+import {IoMdSettings} from "react-icons/io";
+import {ImExit} from "react-icons/im";
 import { useGetProfileByIdQuery } from "../../../../store/services/profileService";
 import { DEFAULT_USER_AVATAR } from "../../../../data/placeholders";
 
@@ -57,11 +57,12 @@ const StyledButton = styled.button`
     outline: none;
     transition-property: color, filter;
     transition: .2s ease-in-out;
+
     &.clicked {
         scale: 0.9;
         filter: brightness(0.8);
     }
-    `
+`
 
 const StyledCard = styled(Card)(({ theme }) => ({
     "&.MuiCard-root": {
@@ -111,6 +112,7 @@ const AvatarButton = () => {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const { data: profile } = useGetProfileByIdQuery('3')
+    const navigate = useNavigate()
 
     const buttonClasses = classNames({
         'clicked': isProfileMenuOpen
@@ -127,6 +129,12 @@ const AvatarButton = () => {
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    const handleLogout = () => {
+        localStorage.removeItem("access");
+        localStorage.removeItem("refresh");
+        navigate("/login");
+    }
 
     useOnClickOutside(ref, handleClickOutside)
     return (
@@ -156,8 +164,12 @@ const AvatarButton = () => {
                         <Typography fontWeight='900'>{profile.firstName + " " + profile.lastName}</Typography>
                     </StyledCard>
                 </Link>
-                <StyledMenuItem onClick={handleClose}><div><IoMdSettings /></div>Settings</StyledMenuItem>
-                <StyledMenuItem onClick={handleClose}><div><ImExit /></div> Logout</StyledMenuItem>
+                <StyledMenuItem onClick={handleClose}>
+                    <div><IoMdSettings/></div>
+                    Settings</StyledMenuItem>
+                <StyledMenuItem onClick={handleLogout}>
+                    <div><ImExit/></div>
+                    Logout</StyledMenuItem>
             </StyledMenu>
         </>
     )
