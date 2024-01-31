@@ -12,10 +12,4 @@ public class FriendResponseMapper extends DtoMapperFacade<User, FriendResponseDt
     super(User.class, FriendResponseDto.class);
   }
 
-  @Override
-  protected void decorateEntity(User entity, FriendResponseDto dto) {
-    dto.setLastName(entity.getLastName());
-    dto.setFirstName(entity.getFirstName());
-    dto.setAvatarsUrl(entity.getAvatarsUrl());
-  }
 }

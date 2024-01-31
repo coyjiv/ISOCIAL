@@ -12,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FriendResponseDto {
+  private Long id;
   private String firstName;
   private String lastName;
   private List<String> avatarsUrl;

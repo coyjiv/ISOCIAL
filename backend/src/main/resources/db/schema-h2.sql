@@ -25,5 +25,8 @@ CREATE TABLE friends
     addresser_id INT,
     status       VARCHAR(255),
     FOREIGN KEY (requester_id) REFERENCES public.users (id),
-    FOREIGN KEY (addresser_id) REFERENCES public.users (id)
+    FOREIGN KEY (addresser_id) REFERENCES public.users (id),
+    creation_date      TIMESTAMP,
+    last_modified_date TIMESTAMP,
+    is_active          BOOLEAN      NOT NULL DEFAULT FALSE
 );

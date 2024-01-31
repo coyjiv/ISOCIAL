@@ -1,7 +1,7 @@
 package com.coyjiv.isocial.resource;
 
 
-import com.coyjiv.isocial.domain.User;
+
 import com.coyjiv.isocial.dto.respone.FriendResponseDto;
 import com.coyjiv.isocial.service.friend.FriendService;
 
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,25 +32,25 @@ public class FriendController {
     if (result) {
       return ResponseEntity.ok("Request sent successfully");
     }
-    return ResponseEntity.ok("You already sent request");
+    return ResponseEntity.status(400).body("You already sent request");
   }
 
-  @PutMapping("/accept")
+  @PostMapping("/accept")
   public ResponseEntity<String> acceptFriendRequest(@RequestParam Long userId, @RequestParam Long friendId) {
     boolean result = friendService.acceptFriendRequest(userId, friendId);
     if (result) {
       return ResponseEntity.ok("Accepted");
     }
-    return ResponseEntity.ok("You are already friends");
+    return ResponseEntity.status(400).body("You are already friends");
   }
 
-  @PutMapping("/decline")
+  @PostMapping("/decline")
   public ResponseEntity<String> declineFriendRequest(@RequestParam Long userId, @RequestParam Long friendId) {
     boolean result = friendService.declineFriendRequest(userId, friendId);
     if (result) {
       return ResponseEntity.ok("Declined");
     }
-    return ResponseEntity.ok("Friend request not found");
+    return ResponseEntity.status(400).body("Friend request not found");
   }
 
   @DeleteMapping("/delete")
@@ -60,10 +59,10 @@ public class FriendController {
     if (result) {
       return ResponseEntity.ok("Deleted");
     }
-    return ResponseEntity.ok("You are not friends");
+    return ResponseEntity.status(400).body("You are not friends");
   }
 
-  @GetMapping("/all/{userId}")
+  @GetMapping("/{userId}")
   public ResponseEntity<List<FriendResponseDto>> getAllFriends(@PathVariable Long userId,
                                                                @RequestParam(defaultValue = "1") @Min(1) Integer page,
                                                                @RequestParam(defaultValue = "10") @Min(0) Integer size) {

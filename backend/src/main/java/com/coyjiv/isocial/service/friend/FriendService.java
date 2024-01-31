@@ -54,16 +54,22 @@ public class FriendService implements IFriendService {
     Optional<User> user = userRepository.findById(userId);
     Optional<Friend> friend = friendRepository.findById(friendId);
 
-    if (user.isEmpty()
-            || friend.isEmpty()
-            || (!user.get().equals(friend.get().getRequester()) && !user.get().equals(friend.get().getAddresser()))) {
+    if (user.isEmpty() || friend.isEmpty() || !user.get().equals(friend.get().getAddresser())) {
       return false;
     }
 
-    friend.get().accept();
-    friendRepository.save(friend.get());
-    return true;
+
+    if ("PENDING".equals(friend.get().getStatus())) {
+      friend.get().accept();
+      friendRepository.save(friend.get());
+      return true;
+    }
+
+    return false;
   }
+
+
+
 
   @Transactional
   @Override
@@ -82,22 +88,26 @@ public class FriendService implements IFriendService {
     return true;
   }
 
+
+
   @Transactional
   @Override
   public boolean deleteFriend(Long userId, Long friendId) {
     Optional<User> user = userRepository.findById(userId);
     Optional<Friend> friend = friendRepository.findById(friendId);
 
-    if (user.isEmpty()
-            || friend.isEmpty()
-            || (!user.get().equals(friend.get().getRequester()) && !user.get().equals(friend.get().getAddresser()))
-            || !"ACCEPTED".equals(friend.get().getStatus())) {
+    if (user.isEmpty() || friend.isEmpty() || !"ACCEPTED".equals(friend.get().getStatus())) {
       return false;
     }
+    if (user.get().equals(friend.get().getRequester()) || user.get().equals(friend.get().getAddresser())) {
+      friendRepository.delete(friend.get());
+      return true;
+    }
 
-    friendRepository.delete(friend.get());
-    return true;
+    return false;
   }
+
+
 
   @Transactional(readOnly = true)
   @Override
@@ -114,10 +124,12 @@ public class FriendService implements IFriendService {
             user.get(), "ACCEPTED", pageable);
 
     return friendsPage.getContent().stream()
+            .filter(friend -> "ACCEPTED".equals(friend.getStatus()))
             .map(friend -> user.get().equals(friend.getRequester()) ? friend.getAddresser() : friend.getRequester())
             .map(friendResponseMapper::convertToDto)
             .toList();
   }
+
 
 
 }
