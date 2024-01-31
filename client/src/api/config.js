@@ -29,7 +29,7 @@ instance.interceptors.response.use(
       try {
         if (localStorage.getItem('refresh')) {
           const response = await axios.post(
-            `${API_URL}/auth/refresh/`,
+            `${API_URL}/auth/refresh`,
             JSON.stringify({ refresh: localStorage.getItem('refresh') }),
             { headers: { 'Content-Type': 'application/json' } }
           )
