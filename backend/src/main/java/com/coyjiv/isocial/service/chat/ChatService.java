@@ -91,7 +91,7 @@ public class ChatService implements IChatService {
     MessagesUtils.validateFirstMessage(firstMessageDto);
 
     Long requestOwnerId = authProvider.getAuthenticationPrincipal();
-    if (Objects.equals(requestOwnerId, receiverId)){
+    if (Objects.equals(requestOwnerId, receiverId)) {
       throw new RequestValidationException("User cant create chat with himself");
     }
 
@@ -108,8 +108,10 @@ public class ChatService implements IChatService {
 
     if (chatOptional.isPresent() && chatOptional.get().isActive()) {
       throw new ChatAlreadyExistException("Chat already exist");
-    } else chat = chatOptional.map(value -> reCreateInactive(value, firstMessage))
-            .orElseGet(() -> create(List.of(sender, receiver), firstMessage));
+    } else {
+      chat = chatOptional.map(value -> reCreateInactive(value, firstMessage))
+              .orElseGet(() -> create(List.of(sender, receiver), firstMessage));
+    }
 
     firstMessage.setChatId(chat.getId());
     messageRepository.save(firstMessage);

@@ -47,7 +47,7 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler(Exception.class)
-  public ResponseEntity<?> handleUncheckedExceptions(Exception exception){
+  public ResponseEntity<?> handleUncheckedExceptions(Exception exception) {
     return ResponseEntity.status(500).build();
   }
 
