@@ -6,6 +6,7 @@ import com.coyjiv.isocial.domain.Post;
 import com.coyjiv.isocial.dto.request.post.PostRequestDto;
 import com.coyjiv.isocial.dto.request.post.UpdatePostRequestDto;
 import com.coyjiv.isocial.dto.respone.PostResponseDto;
+import com.coyjiv.isocial.exceptions.RequestValidationException;
 import com.coyjiv.isocial.transfer.post.PostRequestMapper;
 import com.coyjiv.isocial.transfer.post.PostResponseMapper;
 import lombok.RequiredArgsConstructor;
@@ -51,7 +52,8 @@ public class PostService implements IPostService {
 
     @Override
     @Transactional
-    public Post create(PostRequestDto postRequestDto) {
+    public Post create(PostRequestDto postRequestDto) throws RequestValidationException {
+        validateCreationPostDto(postRequestDto);
         Long requestOwner = emailPasswordAuthProvider.getAuthenticationPrincipal();
         Post post = postRequestMapper.convertToEntity(postRequestDto);
         post.setAuthorId(requestOwner);
@@ -85,8 +87,28 @@ public class PostService implements IPostService {
 
     private void validateRequestOwner (Long authorId) throws IllegalAccessException {
         Long requestOwner = emailPasswordAuthProvider.getAuthenticationPrincipal();
-        if(Objects.equals(authorId,requestOwner)){
+        if(!Objects.equals(authorId,requestOwner)){
             throw new IllegalAccessException("User have no authorities to do this request.");
+        }
+    }
+    private void validateCreationPostDto(PostRequestDto postRequestDto) throws RequestValidationException {
+        if (postRequestDto.getAttachments() != null && !postRequestDto.getAttachments().isEmpty()) {
+            if (postRequestDto.getAttachments().stream().anyMatch(Objects::isNull)
+                    ||
+                    postRequestDto.getAttachments().stream().anyMatch(String::isBlank)
+            ) {
+                throw new RequestValidationException(
+                        "Post should have text or attachments, attachments should not have empty strings or nulls"
+                );
+            }
+        }
+
+        if (postRequestDto.getTextContent() == null || postRequestDto.getTextContent().isBlank()) {
+            if (postRequestDto.getAttachments() == null || postRequestDto.getAttachments().isEmpty()) {
+                throw new RequestValidationException(
+                        "Post should have text or attachments, attachments should not have empty strings or nulls"
+                );
+            }
         }
     }
 }

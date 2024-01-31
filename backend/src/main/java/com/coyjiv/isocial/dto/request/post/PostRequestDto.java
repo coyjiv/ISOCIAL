@@ -14,7 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostRequestDto {
-    @NotBlank
     @Size(max = 1000)
     private String textContent;
 

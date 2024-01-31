@@ -4,6 +4,7 @@ import com.coyjiv.isocial.domain.Post;
 import com.coyjiv.isocial.dto.request.post.PostRequestDto;
 import com.coyjiv.isocial.dto.request.post.UpdatePostRequestDto;
 import com.coyjiv.isocial.dto.respone.PostResponseDto;
+import com.coyjiv.isocial.exceptions.RequestValidationException;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,7 +14,7 @@ public interface IPostService {
     List<Post> findAllActive(int page, int size);
     Optional<Post> findActiveById(Long id);
     List<PostResponseDto> findActiveByAuthorId(int page, int size, Long id);
-    Post create(PostRequestDto postRequestDto);
+    Post create(PostRequestDto postRequestDto) throws RequestValidationException;
     void update(Long id, UpdatePostRequestDto updatePostRequestDto) throws IllegalAccessException;
     void delete(Long id) throws IllegalAccessException;
 

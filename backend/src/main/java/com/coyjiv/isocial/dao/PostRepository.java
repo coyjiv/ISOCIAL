@@ -16,12 +16,12 @@ import java.util.List;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    @Query("from Post p where p.is_active = true")
+    @Query("FROM Post p WHERE p.isActive = true")
     List<Post> findAllActive(Pageable pageable);
 
-    @Query("from Post p where p.user_id = :id and p.is_active = true")
+    @Query("FROM Post p WHERE p.authorId = :id AND p.isActive = true")
     List<Post> findActiveByAuthorId(@Param("id") Long id, Pageable pageable);
 
-    @Query("from Post p where p.id = :id and p.is_active = true")
+    @Query("FROM Post p WHERE p.id = :id AND p.isActive = true")
     Optional<Post> findActiveById(@Param("id") Long id);
 }

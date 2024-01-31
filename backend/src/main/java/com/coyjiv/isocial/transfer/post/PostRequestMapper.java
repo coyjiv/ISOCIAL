@@ -14,6 +14,8 @@ public class PostRequestMapper extends DtoMapperFacade<Post, PostRequestDto> {
 
     @Override
     protected void decorateEntity(Post entity, PostRequestDto dto) {
+        entity.setActive(true);
         entity.setEdited(false);
     }
+
 }
