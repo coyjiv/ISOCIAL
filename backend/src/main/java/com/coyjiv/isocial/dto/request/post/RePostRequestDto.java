@@ -1,4 +1,5 @@
 package com.coyjiv.isocial.dto.request.post;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -11,9 +12,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RePostRequestDto {
-    @NotBlank
-    @Size(max = 1000)
-    private String textContent;
+  @NotBlank
+  @Size(max = 1000)
+  private String textContent;
 
-    private Long originalPostId;
+  private Long originalPostId;
 }

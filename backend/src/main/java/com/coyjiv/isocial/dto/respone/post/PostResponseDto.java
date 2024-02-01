@@ -1,7 +1,5 @@
-package com.coyjiv.isocial.dto.request.post;
+package com.coyjiv.isocial.dto.respone.post;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,13 +7,20 @@ import lombok.Setter;
 
 import java.util.List;
 
-@Getter
 @Setter
-@NoArgsConstructor
+@Getter
 @AllArgsConstructor
-public class PostRequestDto {
-  @Size(max = 1000)
+@NoArgsConstructor
+public class PostResponseDto {
+  private Long id;
+
   private String textContent;
 
   private List<String> attachments;
+
+  private boolean isEdited;
+
+  private Long originalPostId;
+
+  private Long authorId;
 }

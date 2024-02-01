@@ -12,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdatePostRequestDto {
-    @NotBlank
-    @Size(max = 1000)
-    private String textContent;
+  @NotBlank
+  @Size(max = 1000)
+  private String textContent;
 }
