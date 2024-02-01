@@ -20,7 +20,7 @@ public class PostResponseDto {
 
     private boolean isEdited;
 
-    private boolean isReposted;
+//    private boolean isReposted;
 
     private Long originalPostId;
 

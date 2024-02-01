@@ -2,6 +2,7 @@ package com.coyjiv.isocial.resource.rest;
 
 import com.coyjiv.isocial.domain.Post;
 import com.coyjiv.isocial.dto.request.post.PostRequestDto;
+import com.coyjiv.isocial.dto.request.post.RePostRequestDto;
 import com.coyjiv.isocial.dto.request.post.UpdatePostRequestDto;
 import com.coyjiv.isocial.dto.respone.PostResponseDto;
 import com.coyjiv.isocial.exceptions.RequestValidationException;
@@ -52,7 +53,10 @@ public class PostRestController {
     public ResponseEntity<?> create( @RequestBody @Valid PostRequestDto dto) throws RequestValidationException {
         return ResponseEntity.ok(postService.create(dto));
     }
-
+    @PostMapping("/repost")
+    public ResponseEntity<?> repost( @RequestBody @Valid RePostRequestDto dto) throws RequestValidationException {
+        return ResponseEntity.ok(postService.repost(dto));
+    }
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") @Min(0) Long id) throws IllegalAccessException {
         postService.delete(id);
