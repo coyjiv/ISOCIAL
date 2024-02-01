@@ -21,6 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
@@ -45,6 +46,7 @@ public class UserService implements IUserService {
   private final UserDefaultResponseMapper userDefaultResponseMapper;
   private final EmailPasswordAuthProvider authProvider;
   private final JwtTokenProvider jwtTokenProvider;
+  private final BCryptPasswordEncoder passwordEncoder;
 
 
   @Transactional(readOnly = true)
@@ -220,6 +222,16 @@ public class UserService implements IUserService {
         user.setLastSeen(new Date());
         userRepository.save(user);
       }
+    }
+  }
+  @Transactional
+  @Override
+  public void resetPassword(String email, String newPassword) {
+    Optional<User> optionalUser = userRepository.findByEmail(email);
+    if(optionalUser.isPresent()) {
+      User user = optionalUser.get();
+      user.setPassword(passwordEncoder.encode(newPassword));
+      userRepository.save(user);
     }
   }
 }

@@ -40,4 +40,5 @@ public interface IUserService {
   void handleConnect(String token);
 
   void handleDisconnect(String token);
+  void resetPassword(String email, String newPassword);
 }

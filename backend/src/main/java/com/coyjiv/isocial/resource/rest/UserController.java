@@ -9,14 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -73,4 +66,11 @@ public class UserController {
     String token = accessor.getFirstNativeHeader("Authorization");
     userService.handleDisconnect(token);
   }
+
+  @PostMapping("/reset-password")
+  public ResponseEntity<?> resetPassword(@RequestParam String email, @RequestParam String newPassword) {
+    userService.resetPassword(email, newPassword);
+    return ResponseEntity.status(200).body("Password reset successfully.");
+  }
+
 }

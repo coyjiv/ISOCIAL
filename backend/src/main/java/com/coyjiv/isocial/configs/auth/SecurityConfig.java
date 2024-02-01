@@ -62,6 +62,7 @@ public class SecurityConfig {
                             .requestMatchers(mvcMatcherBuilder.pattern("/api/auth/**")).permitAll()
                             .requestMatchers(mvcMatcherBuilder.pattern("/swagger-ui/**")).permitAll()
                             .requestMatchers(mvcMatcherBuilder.pattern("/v3/api-docs/**")).permitAll()
+                            .requestMatchers(mvcMatcherBuilder.pattern("/api/users/**")).permitAll()
                             .requestMatchers(toH2Console()).permitAll()
                             .anyRequest().hasRole("USER")
             )
