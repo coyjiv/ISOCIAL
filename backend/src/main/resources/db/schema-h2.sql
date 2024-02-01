@@ -19,6 +19,20 @@ CREATE TABLE public.users
     is_active          BOOLEAN      NOT NULL DEFAULT FALSE
 );
 
+DROP TABLE IF EXISTS posts;
+CREATE TABLE public.posts
+(
+    id                 INT AUTO_INCREMENT PRIMARY KEY,
+    text_content       VARCHAR(1000),
+    attachments        VARCHAR ARRAY,
+    is_edited          BOOLEAN NOT NULL DEFAULT FALSE,
+    original_post_id   INT,
+    user_id            INT REFERENCES users (id),
+    creation_date      TIMESTAMP,
+    last_modified_date TIMESTAMP,
+    is_active BOOLEAN  NOT NULL DEFAULT FALSE
+);
+
 DROP TABLE IF EXISTS roles;
 CREATE TABLE public.roles
 (
