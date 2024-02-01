@@ -1,0 +1,22 @@
+package com.coyjiv.isocial.resource.rest;
+
+import com.coyjiv.isocial.dto.request.subscription.SubscriptionUpdateResponseDto;
+import com.coyjiv.isocial.exceptions.EntityNotFoundException;
+import com.coyjiv.isocial.service.subscription.ISubscriptionService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+@RequiredArgsConstructor
+@RestController
+@RequestMapping("/api/subscriptions")
+public class SubscriptionController {
+  private final ISubscriptionService subscriptionService;
+  @PatchMapping("/")
+  public ResponseEntity<?> update(@Validated  @RequestBody SubscriptionUpdateResponseDto dto)
+          throws EntityNotFoundException, IllegalAccessException {
+    subscriptionService.updateSubscription(dto.getUserId(), dto.getSubscriberId());
+    return ResponseEntity.status(204).build();
+  }
+}
