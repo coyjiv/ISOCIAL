@@ -69,7 +69,7 @@ public class PostService implements IPostService {
 
     @Override
     @Transactional
-    public Post repost (RePostRequestDto rePostRequestDto) throws RequestValidationException {
+    public Post repost (RePostRequestDto rePostRequestDto) throws IllegalAccessException {
         Long requestOwner = emailPasswordAuthProvider.getAuthenticationPrincipal();
         Post post = rePostRequestMapper.convertToEntity(rePostRequestDto);
         Post originalPost = findActiveById(post.getOriginalPostId()).get();
@@ -109,18 +109,10 @@ public class PostService implements IPostService {
         List<Post> repostedToDeactivate =postRepository.findAllActiveReposts(id);
         if (!repostedToDeactivate.isEmpty()){
             repostedToDeactivate.forEach(entry ->{
-                Long idReposted = entry.getId();
-                Optional<Post> repostToDeactivate = postRepository.findActiveById(idReposted);
-                if (repostToDeactivate.isPresent()) {
-                    Post repost = repostToDeactivate.get();
-                    try {
-                        validateRequestOwner(repost.getAuthorId());
-                    } catch (IllegalAccessException e) {
-                        throw new RuntimeException(e);
-                    }
-                    repost.setActive(false);
-                    postRepository.save(repost);
-                }
+
+                    entry.setActive(false);
+                    postRepository.save(entry);
+
             });
         }
 
@@ -134,9 +126,9 @@ public class PostService implements IPostService {
         }
     }
 
-    private void validateRePostDto(Post originalPost) throws RequestValidationException {
+    private void validateRePostDto(Post originalPost) throws IllegalAccessException {
        if( userRepository.findActiveById(originalPost.getAuthorId()).get().isPrivate()){
-           throw new RequestValidationException(
+           throw new IllegalAccessException(
                    "User have no authorities to do this request."
            );
        }

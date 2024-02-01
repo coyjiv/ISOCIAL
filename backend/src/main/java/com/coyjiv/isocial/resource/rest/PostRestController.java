@@ -54,7 +54,7 @@ public class PostRestController {
         return ResponseEntity.ok(postService.create(dto));
     }
     @PostMapping("/repost")
-    public ResponseEntity<?> repost( @RequestBody @Valid RePostRequestDto dto) throws RequestValidationException {
+    public ResponseEntity<?> repost( @RequestBody @Valid RePostRequestDto dto) throws IllegalAccessException {
         return ResponseEntity.ok(postService.repost(dto));
     }
     @DeleteMapping("/{id}")
