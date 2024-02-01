@@ -9,7 +9,6 @@ import lombok.*;
 @Setter
 @ToString
 @NoArgsConstructor
-@AllArgsConstructor
 @Entity
 @Table(name = "subscriptions")
 public class Subscription extends AbstractEntity{
@@ -19,6 +18,9 @@ public class Subscription extends AbstractEntity{
   @Column(name = "subscriber_id")
   private Long subscriberId;
 
-  @Column(name = "is_subscribed")
-  private boolean isSubscribed;
+  public Subscription(Long userId, Long subscriberId, boolean isActive) {
+    super(isActive);
+    this.userId = userId;
+    this.subscriberId = subscriberId;
+  }
 }

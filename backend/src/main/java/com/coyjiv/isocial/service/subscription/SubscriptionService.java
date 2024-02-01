@@ -28,12 +28,23 @@ public class SubscriptionService implements ISubscriptionService {
 
   @Transactional
   @Override
-  public void updateSubscription(Long userId, Long subscriberId) {
+  public void subscribe(Long userId, Long subscriberId) {
     Optional<Subscription> subscription = findByUserIdAndSubscriberId(userId, subscriberId);
     if (subscription.isPresent()) {
-      subscription.get().setSubscribed(!subscription.get().isSubscribed());
+      subscription.get().setActive(true);
     } else {
       subscriptionRepository.save(new Subscription(userId, subscriberId, true));
+    }
+  }
+
+  @Transactional
+  @Override
+  public void unsubscribe(Long userId, Long subscriberId) {
+    Optional<Subscription> subscription = findByUserIdAndSubscriberId(userId, subscriberId);
+    if (subscription.isPresent()) {
+      subscription.get().setActive(false);
+    } else {
+      subscriptionRepository.save(new Subscription(userId, subscriberId, false));
     }
   }
 }

@@ -13,10 +13,18 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/subscriptions")
 public class SubscriptionController {
   private final ISubscriptionService subscriptionService;
-  @PatchMapping("/")
-  public ResponseEntity<?> update(@Validated  @RequestBody SubscriptionUpdateResponseDto dto)
+
+  @PostMapping("/subscribe")
+  public ResponseEntity<?> subscribe(@Validated @RequestBody SubscriptionUpdateResponseDto dto)
           throws EntityNotFoundException, IllegalAccessException {
-    subscriptionService.updateSubscription(dto.getUserId(), dto.getSubscriberId());
+    subscriptionService.subscribe(dto.getUserId(), dto.getSubscriberId());
+    return ResponseEntity.status(204).build();
+  }
+
+  @PostMapping("/unsubscribe")
+  public ResponseEntity<?> unsubscribe(@Validated @RequestBody SubscriptionUpdateResponseDto dto)
+          throws EntityNotFoundException, IllegalAccessException {
+    subscriptionService.unsubscribe(dto.getUserId(), dto.getSubscriberId());
     return ResponseEntity.status(204).build();
   }
 }

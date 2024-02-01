@@ -7,12 +7,14 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ISubscriptionService {
-  @Transactional(readOnly = true)
+
   List<Subscription> findAllBySubscriberId(Long subscriberId);
 
-  @Transactional(readOnly = true)
+
   Optional<Subscription> findByUserIdAndSubscriberId(Long userId, Long subscriberId);
 
-  @Transactional
-  void updateSubscription(Long userId, Long subscriberId);
+
+  void subscribe(Long userId, Long subscriberId);
+
+  void unsubscribe(Long userId, Long subscriberId);
 }

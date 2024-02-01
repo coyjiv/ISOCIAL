@@ -74,7 +74,7 @@ CREATE TABLE public.subscriptions
     id                 INT AUTO_INCREMENT PRIMARY KEY,
     user_id            INT,
     subscriber_id          INT,
-    is_subscribed          BOOLEAN     NOT NULL DEFAULT FALSE,
-    FOREIGN KEY (user_id) REFERENCES users (id),
-    FOREIGN KEY (subscriber_id) REFERENCES users (id)
+    creation_date      TIMESTAMP,
+    last_modified_date TIMESTAMP,
+    is_active          BOOLEAN NOT NULL DEFAULT FALSE
 );
