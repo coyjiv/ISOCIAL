@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class EmailServiceImpl {
   private final JavaMailSender emailSender;
 
-  @Transactional
+
   public void sendSimpleMessage(String to, String subject, String text) {
     SimpleMailMessage message = new SimpleMailMessage();
 
