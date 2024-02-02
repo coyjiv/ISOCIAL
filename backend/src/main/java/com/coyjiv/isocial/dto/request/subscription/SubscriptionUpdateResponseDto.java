@@ -14,6 +14,4 @@ import lombok.Setter;
 public class SubscriptionUpdateResponseDto {
   @Min(value = 1, message = "User ID must be greater than or equal to 1")
   private Long userId;
-  @Min(value = 1, message = "Subscriber ID must be greater than or equal to 1")
-  private Long subscriberId;
 }
