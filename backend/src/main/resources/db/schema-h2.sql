@@ -80,3 +80,15 @@ CREATE TABLE public.users_chats
     FOREIGN KEY (user_id) REFERENCES users (id),
     FOREIGN KEY (chat_id) REFERENCES chats (id)
 );
+
+
+DROP TABLE IF EXISTS subscriptions;
+CREATE TABLE public.subscriptions
+(
+    id                 INT AUTO_INCREMENT PRIMARY KEY,
+    user_id            INT,
+    subscriber_id          INT,
+    creation_date      TIMESTAMP,
+    last_modified_date TIMESTAMP,
+    is_active          BOOLEAN NOT NULL DEFAULT FALSE
+);

@@ -9,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Temporal;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -21,6 +22,7 @@ import static jakarta.persistence.TemporalType.TIMESTAMP;
 @Getter
 @Setter
 @MappedSuperclass
+@NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 @EqualsAndHashCode(of = "id")
 public abstract class AbstractEntity {
@@ -41,4 +43,8 @@ public abstract class AbstractEntity {
 
   @Column(name = "is_active")
   private boolean isActive;
+
+  public AbstractEntity(boolean isActive) {
+    this.isActive = isActive;
+  }
 }
