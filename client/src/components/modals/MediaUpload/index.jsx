@@ -1,16 +1,19 @@
 import PropTypes from 'prop-types';
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 // import { BlueRoundedButton } from "../../buttons";
 import { useDebounceEffect } from "../../../hooks/useDebounceEffect";
 import { canvasPreview } from "./canvasPreview";
 import { Stepper } from "../../Stepper";
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
+import { useUpdateProfileMutation, useGetProfileByIdQuery } from '../../../store/services/profileService';
 import CropStep from "./steps/CropStep";
 import PreviewStep from "./steps/PreviewStep";
 import Dropzone from "./steps/Dropzone";
 
 const MediaUpload = ({ modalTitle, ...props }) => {
+    const id = localStorage.getItem('userId');
+
     const { onClose, open } = props;
 
     const [file, setFile] = useState(null);
@@ -25,6 +28,18 @@ const MediaUpload = ({ modalTitle, ...props }) => {
         y: 25
     });
     const [completedCrop, setCompletedCrop] = useState();
+    const { data: profile, isLoading } = useGetProfileByIdQuery(id);
+    const [updateProfile] = useUpdateProfileMutation(id);
+
+    const updateProfileAvatar = (url, id) => updateProfile({ body: JSON.stringify({ avatarsUrl: [url, ...(profile.avatarsUrl)] }), id: id });
+
+
+    // test before integration in onUploadCropAvatarClick
+    useEffect(() => {
+        if (!isLoading && id && confirm("yes or no")) {
+            updateProfileAvatar('https://images.unsplash.com/photo-1575936123452-b67c3203c357?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D', id);
+        }
+    }, [id, isLoading])
 
     const handleClose = () => {
         onClose();
@@ -91,8 +106,7 @@ const MediaUpload = ({ modalTitle, ...props }) => {
 
 
         const storage = getStorage();
-        // const storageRef = ref(storage, `user_avatar/${user.uid}`);
-        const storageRef = ref(storage, `user_avatar${Math.round(Math.random() * 100)}/test${Math.round(Math.random() * 100)}`);
+        const storageRef = ref(storage, `${import.meta.env.MODE}/user_avatar/${id}`);
 
         const uploadTask = uploadBytesResumable(storageRef, blob);
 

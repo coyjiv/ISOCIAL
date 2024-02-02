@@ -21,7 +21,7 @@ export const profileApi = createApi({
         return {
           url: `users/${id}`,
           method: 'PATCH',
-          body,
+          data: body,
         }
       },
       invalidatesTags: (result, error, { id }) => [{ type: 'Profile', id }],

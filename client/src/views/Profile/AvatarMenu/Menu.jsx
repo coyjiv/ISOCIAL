@@ -1,8 +1,12 @@
 import { Menu as MUIMenu, MenuItem } from "@mui/material"
-import { isPersonalProfile } from "../Profile";
+import { useParams } from "react-router-dom";
 import PropTypes from 'prop-types'
 
 const Menu = ({ onClose, open, anchorEl }) => {
+    const { id } = useParams();
+
+    const isPersonalProfile = !id;
+
     const handleClose = (actionType) => {
         onClose(null, actionType);
     };

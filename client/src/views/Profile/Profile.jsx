@@ -10,11 +10,14 @@ import AvatarMenu from './AvatarMenu';
 import { DEFAULT_USER_AVATAR } from '../../data/placeholders';
 import { EditProfile } from '../../components/modals/EditProfile';
 
-export const isPersonalProfile = true
-
 const ProfilePage = () => {
   const { id } = useParams();
-  const { data: profile, error, isLoading } = useGetProfileByIdQuery(id)
+
+  const isPersonalProfile = !id;
+
+  const { data: profile, error, isLoading } = useGetProfileByIdQuery(id ?? localStorage.getItem('userId'));
+
+
   const [isProfileEditOpen, setIsProfileEditOpen] = useState(false)
   const theme = useTheme()
   const isFriend = false

@@ -5,19 +5,20 @@ import { AiFillHome } from "react-icons/ai";
 import { useGetProfileByIdQuery } from '../../../store/services/profileService';
 import { useParams } from 'react-router-dom'
 import styles from '../profile.module.scss'
-import { DEFAULT_USER_AVATAR } from '../../../data/placeholders';
 import CreatePostModal from '../../../components/modals/CreatePost';
 
 const Posts = () => {
   const { id } = useParams();
   // eslint-disable-next-line no-unused-vars
-  const { data: profile, error, isLoading } = useGetProfileByIdQuery(id)
+  const { data: profile, error, isLoading } = useGetProfileByIdQuery(id ?? localStorage.getItem('userId'));
+  const { data: loggedUserProfile, isLoading: isLoggedUserLoading } = useGetProfileByIdQuery(localStorage.getItem('userId'))
 
   const [isCreatePostModalOpen, setIsCreatePostModalOpen] = useState(false)
   const onClose = () => setIsCreatePostModalOpen(false)
   const triggerPostModal = () => setIsCreatePostModalOpen(true)
 
   return (
+    profile &&
     <>
       <Box sx={{ backgroundColor: (theme) => theme.palette.wash }}>
         <Container maxWidth={'lg'} sx={{ p: 2 }}>
@@ -49,14 +50,14 @@ const Posts = () => {
               </div>
             </Grid>
             <Grid item xs={12} sm={6} md={7}>
-              <div className={styles.card}>
+              {!isLoggedUserLoading && <div className={styles.card}>
                 <div onClick={triggerPostModal}>
                   <Stack width={'100%'} gap={2} direction={'row'}>
-                    <Avatar src={DEFAULT_USER_AVATAR} sx={{ width: 40, height: 'auto' }} />
+                    <Avatar src={loggedUserProfile.avatarsUrl[0]} sx={{ width: 40, height: 'auto' }} />
                     <Input sx={{ width: '100%', borderRadius: '50px', "MuiInput-input": { cursor: 'pointer' } }} disableUnderline placeholder={'What\'s on your mind?'} />
                   </Stack>
                 </div>
-              </div>
+              </div>}
             </Grid>
           </Grid>
         </Container>

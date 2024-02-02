@@ -12,10 +12,12 @@ const BlueRoundedButton = ({ children, ...props }) => {
 
 GrayButton.propTypes = {
     children: PropTypes.node.isRequired,
+    props: PropTypes.object,
 };
 
 BlueRoundedButton.propTypes = {
     children: PropTypes.node.isRequired,
+    props: PropTypes.object,
 };
 
 export { GrayButton, BlueRoundedButton }

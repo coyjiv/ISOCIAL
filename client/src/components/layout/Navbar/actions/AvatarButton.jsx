@@ -1,14 +1,13 @@
-import {Avatar, Badge, Card, Typography} from "@mui/material"
+import { Avatar, Badge, Card, Typography } from "@mui/material"
 import styled from "@emotion/styled";
-import {useState, useRef} from "react";
-import {useOnClickOutside} from "usehooks-ts";
+import { useState, useRef } from "react";
+import { useOnClickOutside } from "usehooks-ts";
 import classNames from "classnames";
-import {Menu, MenuItem} from "@mui/material";
-import {Link, useNavigate} from "react-router-dom";
-import {IoMdSettings} from "react-icons/io";
-import {ImExit} from "react-icons/im";
+import { Menu, MenuItem } from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
+import { IoMdSettings } from "react-icons/io";
+import { ImExit } from "react-icons/im";
 import { useGetProfileByIdQuery } from "../../../../store/services/profileService";
-import { DEFAULT_USER_AVATAR } from "../../../../data/placeholders";
 
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -108,10 +107,11 @@ const StyledMenuItem = styled(MenuItem)(() => ({
 
 const AvatarButton = () => {
     const ref = useRef(null)
+    const { data: profile, isLoading } = useGetProfileByIdQuery(localStorage.getItem("userId"))
     const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
-    const { data: profile } = useGetProfileByIdQuery('3')
+
     const navigate = useNavigate()
 
     const buttonClasses = classNames({
@@ -138,7 +138,7 @@ const AvatarButton = () => {
 
     useOnClickOutside(ref, handleClickOutside)
     return (
-        profile &&
+        !isLoading &&
         <>
             <StyledButton ref={ref} className={buttonClasses} onClick={handleClickInside}>
                 <StyledBadge
@@ -146,7 +146,7 @@ const AvatarButton = () => {
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                     variant="dot"
                 >
-                    <Avatar alt="User profile avatar" src={DEFAULT_USER_AVATAR} />
+                    <Avatar alt="User profile avatar" src={profile.avatarsUrl[0]} />
                 </StyledBadge>
             </StyledButton>
             <StyledMenu
@@ -160,15 +160,15 @@ const AvatarButton = () => {
             >
                 <Link to='/profile'>
                     <StyledCard>
-                        <Avatar alt="User profile avatar" src="https://avatar.iran.liara.run/public/7" />
+                        <Avatar alt="User profile avatar" src={profile.avatarsUrl[0]} />
                         <Typography fontWeight='900'>{profile.firstName + " " + profile.lastName}</Typography>
                     </StyledCard>
                 </Link>
                 <StyledMenuItem onClick={handleClose}>
-                    <div><IoMdSettings/></div>
+                    <div><IoMdSettings /></div>
                     Settings</StyledMenuItem>
                 <StyledMenuItem onClick={handleLogout}>
-                    <div><ImExit/></div>
+                    <div><ImExit /></div>
                     Logout</StyledMenuItem>
             </StyledMenu>
         </>
