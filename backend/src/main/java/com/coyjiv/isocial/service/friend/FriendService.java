@@ -32,7 +32,7 @@ public class FriendService implements IFriendService {
 
   @Transactional
   @Override
-  public boolean sendFriendRequest(Long addresserId){
+  public boolean sendFriendRequest(Long addresserId) {
     Long requesterId = emailPasswordAuthProvider.getAuthenticationPrincipal();
     if (requesterId.equals(addresserId)) {
       return false;
@@ -133,13 +133,14 @@ public class FriendService implements IFriendService {
             .map(friendResponseMapper::convertToDto)
             .toList();
   }
-private void  validateRequestOwner(Long userId) throws IllegalAccessException {
-  Long requestOwner = emailPasswordAuthProvider.getAuthenticationPrincipal();
-  if (!Objects.equals(userId, requestOwner)) {
-    throw new IllegalAccessException("User have no authorities to do this request.");
-  }
 
-}
+  private void validateRequestOwner(Long userId) throws IllegalAccessException {
+    Long requestOwner = emailPasswordAuthProvider.getAuthenticationPrincipal();
+    if (!Objects.equals(userId, requestOwner)) {
+      throw new IllegalAccessException("User have no authorities to do this request.");
+    }
+
+  }
 
 }
 

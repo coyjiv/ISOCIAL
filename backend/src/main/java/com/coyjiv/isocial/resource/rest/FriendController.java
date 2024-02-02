@@ -36,7 +36,8 @@ public class FriendController {
   }
 
   @PostMapping("/accept")
-  public ResponseEntity<String> acceptFriendRequest(@RequestParam Long userId, @RequestParam Long friendId) throws IllegalAccessException {
+  public ResponseEntity<String> acceptFriendRequest(@RequestParam Long userId,
+                                                    @RequestParam Long friendId) throws IllegalAccessException {
     boolean result = friendService.acceptFriendRequest(userId, friendId);
     if (result) {
       return ResponseEntity.ok("Accepted");
@@ -45,7 +46,8 @@ public class FriendController {
   }
 
   @PostMapping("/decline")
-  public ResponseEntity<String> declineFriendRequest(@RequestParam Long userId, @RequestParam Long friendId) throws IllegalAccessException {
+  public ResponseEntity<String> declineFriendRequest(@RequestParam Long userId,
+                                                     @RequestParam Long friendId) throws IllegalAccessException {
     boolean result = friendService.declineFriendRequest(userId, friendId);
     if (result) {
       return ResponseEntity.ok("Declined");
@@ -54,7 +56,8 @@ public class FriendController {
   }
 
   @DeleteMapping()
-  public ResponseEntity<String> deleteFriend(@RequestParam Long userId, @RequestParam Long friendId) throws IllegalAccessException {
+  public ResponseEntity<String> deleteFriend(@RequestParam Long userId,
+                                             @RequestParam Long friendId) throws IllegalAccessException {
     boolean result = friendService.deleteFriend(userId, friendId);
     if (result) {
       return ResponseEntity.ok("Deleted");
