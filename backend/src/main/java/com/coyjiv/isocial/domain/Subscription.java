@@ -3,7 +3,10 @@ package com.coyjiv.isocial.domain;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
@@ -11,7 +14,7 @@ import lombok.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "subscriptions")
-public class Subscription extends AbstractEntity{
+public class Subscription extends AbstractEntity {
   @Column(name = "user_id")
   private Long userId;
 

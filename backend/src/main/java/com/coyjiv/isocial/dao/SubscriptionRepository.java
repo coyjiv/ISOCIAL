@@ -13,6 +13,7 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Long
 
   @Query("SELECT s FROM Subscription s WHERE s.subscriberId = :id")
   List<Subscription> findAllBySubscriberId(Long id);
+
   @Query("SELECT s FROM Subscription s WHERE s.subscriberId = :subscriberId AND s.userId = :userId")
   Optional<Subscription> findByUserIdAndSubscriberId(Long userId, Long subscriberId);
 }
