@@ -92,3 +92,14 @@ CREATE TABLE public.subscriptions
     last_modified_date TIMESTAMP,
     is_active          BOOLEAN NOT NULL DEFAULT FALSE
 );
+
+DROP TABLE IF EXISTS favorites;
+CREATE TABLE public.favorites
+(
+    id                 INT AUTO_INCREMENT PRIMARY KEY,
+    selected_post_id   INT,
+    user_selector_id   INT REFERENCES users (id),
+    creation_date      TIMESTAMP,
+    last_modified_date TIMESTAMP,
+    is_active BOOLEAN  NOT NULL DEFAULT FALSE
+);
