@@ -33,6 +33,7 @@ public class Friend extends AbstractEntity {
     this.requester = requester;
     this.addresser = addresser;
     this.status = "PENDING";
+    this.setActive(true);
   }
 
   public void accept() {

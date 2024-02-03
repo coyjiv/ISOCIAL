@@ -7,7 +7,7 @@ import java.util.List;
 public interface IFriendService {
   boolean sendFriendRequest(Long addresserId);
 
-  boolean acceptFriendRequest(Long userId, Long friendId) throws IllegalAccessException;
+  boolean acceptFriendRequest(Long friendId) throws IllegalAccessException;
 
   boolean declineFriendRequest(Long userId, Long friendId) throws IllegalAccessException;
 

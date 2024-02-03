@@ -36,9 +36,8 @@ public class FriendController {
   }
 
   @PostMapping("/accept")
-  public ResponseEntity<String> acceptFriendRequest(@RequestParam Long userId,
-                                                    @RequestParam Long friendId) throws IllegalAccessException {
-    boolean result = friendService.acceptFriendRequest(userId, friendId);
+  public ResponseEntity<String> acceptFriendRequest(@RequestParam Long friendId) throws IllegalAccessException {
+    boolean result = friendService.acceptFriendRequest(friendId);
     if (result) {
       return ResponseEntity.ok("Accepted");
     }

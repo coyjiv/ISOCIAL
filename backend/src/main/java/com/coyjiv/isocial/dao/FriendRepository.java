@@ -10,11 +10,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface FriendRepository extends JpaRepository<Friend, Long> {
   boolean existsByRequesterAndAddresser(User requester, User addresser);
+
+  Optional<Friend> findByRequesterAndAddresserAndIsActive(User requester, User addresser, boolean isActive);
 
   Page<Friend> findAllByRequesterOrAddresserAndStatus(User requester, User addresser, String status, Pageable pageable);
 

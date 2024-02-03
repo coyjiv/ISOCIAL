@@ -41,9 +41,18 @@ public class FriendService implements IFriendService {
     Optional<User> requester = userRepository.findById(requesterId);
     Optional<User> addresser = userRepository.findById(addresserId);
 
-    if (requester.isEmpty()
-            || addresser.isEmpty()
-            || friendRepository.existsByRequesterAndAddresser(requester.get(), addresser.get())) {
+    Optional<Friend> existingFriendship = friendRepository.findByRequesterAndAddresserAndIsActive(requester.get(),
+            addresser.get(), false);
+    if (existingFriendship.isPresent()) {
+      Friend friend = existingFriendship.get();
+      friend.setActive(true);
+      friend.setStatus("PENDING");
+      friendRepository.save(friend);
+      return true;
+    }
+
+    if (friendRepository.existsByRequesterAndAddresser(requester.get(), addresser.get())
+            || friendRepository.existsByRequesterAndAddresser(addresser.get(), requester.get())) {
       return false;
     }
 
@@ -52,9 +61,11 @@ public class FriendService implements IFriendService {
     return true;
   }
 
+
   @Transactional
   @Override
-  public boolean acceptFriendRequest(Long userId, Long friendId) throws IllegalAccessException {
+  public boolean acceptFriendRequest(Long friendId) throws IllegalAccessException {
+    Long userId = emailPasswordAuthProvider.getAuthenticationPrincipal();
     Optional<User> user = userRepository.findById(userId);
     Optional<Friend> friend = friendRepository.findById(friendId);
     validateRequestOwner(userId);
@@ -87,8 +98,11 @@ public class FriendService implements IFriendService {
       return false;
     }
 
-    friend.get().decline();
-    friendRepository.save(friend.get());
+    if ("ACCEPTED".equals(friend.get().getStatus())) {
+      throw new IllegalStateException("You cannot decline a friend request that has already been accepted");
+    }
+
+    friendRepository.delete(friend.get());
     return true;
   }
 
@@ -104,7 +118,8 @@ public class FriendService implements IFriendService {
       return false;
     }
     if (user.get().equals(friend.get().getRequester()) || user.get().equals(friend.get().getAddresser())) {
-      friendRepository.delete(friend.get());
+      friend.get().setActive(false);
+      friendRepository.save(friend.get());
       return true;
     }
 
