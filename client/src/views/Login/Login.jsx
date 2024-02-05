@@ -41,7 +41,7 @@ const Login = () => {
                     <Link to={'/forgot-password'} className={styles.forgot_password}>Forgot Password</Link>
                 </div>
                 <div className={styles.footer}>
-                    <Link to={'/registration'} className={styles.registation_btn}>Create new account</Link>
+                    <Link to={'/register'} className={styles.registation_btn}>Create new account</Link>
                     <span>OR</span>
                     <a href="http://localhost:9000/oauth2/authorization/google">
                         <img src={GLink} alt="google icon" className={styles.google}/>

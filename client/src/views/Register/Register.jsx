@@ -28,7 +28,7 @@ const Register = () => {
     if (data) {
       setOpenModal(true)
     }
-    //
+    //TODO change after added RTK Query
     // try {
     //   const response = await fetch(
     //     'http://localhost:9000/api/auth/registration',

@@ -31,18 +31,6 @@ const RegistrationForm = ({ initialValues, validationSchema, onSubmit }) => {
               </Form>
             </Formik>
           </Stack>
-          <Typography variant="subtitle2" fontSize="11px">
-            People who use our service may have uploaded your contact
-            information to Facebook.
-            <Link href={LINK_EXTRA_INFO} ml={1}>
-              Learn more.
-            </Link>
-          </Typography>
-          <Typography variant="subtitle2" fontSize="11px">
-            By clicking Sign Up, you agree to our Terms, Privacy Policy and
-            Cookies Policy. You may receive SMS Notifications from us and can
-            opt out any time.
-          </Typography>
         </Stack>
       </Stack>
     </Box>
