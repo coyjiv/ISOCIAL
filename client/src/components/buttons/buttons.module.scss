@@ -30,3 +30,27 @@
     color: colors.$disabledButtonColor;
   }
 }
+
+.whiteButton {
+  background-color: colors.$white;
+  color: colors.$black;
+  border-radius: 5px;
+  font-size: 15px;
+  font-weight: 600;
+  padding: 9px 20px;
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  align-items: center;
+  cursor: pointer;
+  @include common.transition(filter, 0.2s);
+
+  &:hover {
+    filter: brightness(0.95);
+  }
+
+  &:disabled {
+    background-color: colors.$disabledButtonBackground;
+    color: colors.$disabledButtonColor;
+  }
+}
