@@ -1,12 +1,10 @@
 import PropTypes from 'prop-types'
-import { Typography, Divider, Stack, Box, Link } from '@mui/material'
+import { Typography, Divider, Stack, Box } from '@mui/material'
 import { Formik, Form } from 'formik'
 
 import { RegisterFormContent } from './RegisterFormContent'
-import { LINK_EXTRA_INFO } from './RegistrationForm.utils.js'
 import s from './RegistrationForm.module.scss'
 
-// TODO додати лінки до Terms, Privacy Policy and Cookies Policy.
 
 const RegistrationForm = ({ initialValues, validationSchema, onSubmit }) => {
   return (

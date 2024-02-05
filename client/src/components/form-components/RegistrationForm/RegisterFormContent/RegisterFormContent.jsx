@@ -86,7 +86,7 @@ const RegisterFormContent = () => {
           labelDescription="Choose your birthday"
         />
       </Stack>
-      <Button type="submit" size="large" color="#00a400" mt={1} fullWidth>
+      <Button type="submit" size="large" mt={1} fullWidth>
         Contained
       </Button>
     </>

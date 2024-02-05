@@ -8,8 +8,8 @@ import s from './InputPasswordIcon.module.scss'
 const InputPasswordIcon = ({ type, onClick }) => {
   return (
     <Box className={s.iconContainer} onClick={onClick}>
-      {type === 'password' && <VisibilityOffIcon />}
-      {type === 'text' && <VisibilityIcon />}
+      {type === 'password' && <VisibilityOffIcon color='action' />}
+      {type === 'text' && <VisibilityIcon color='action' />}
     </Box>
   )
 }
