@@ -50,3 +50,8 @@ export const multiSelectFields = [
     options: daysOptions,
   },
 ]
+
+export const isValidEmailFormat = (str) => {
+  const pattern = /@[a-zA-Z]+\.+[a-zA-Z]+/
+  return pattern.test(str)
+}

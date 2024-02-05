@@ -4,7 +4,7 @@ import Box from '@mui/material/Box'
 
 const Button = ({ variant, children, type, size, fullWidth, ...props }) => {
   return (
-    <Box {...props} width="100%">
+    <Box {...props} width={fullWidth && '100%'}>
       <MuiButton
         variant={variant}
         type={type}

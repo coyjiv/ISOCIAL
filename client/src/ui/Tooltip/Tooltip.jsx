@@ -19,7 +19,7 @@ const Tooltip = ({ className, title, arrow, children, trigger, ...props }) => {
     : ''
 
   return (
-    <Box onClick={() => setIsOpen(true)} width="100%">
+    <Box onClick={() => setIsOpen(true)} width="fit-content">
       <ClickAwayListener onClickAway={() => setIsOpen(false)}>
         <MuiTooltip
           title={title}

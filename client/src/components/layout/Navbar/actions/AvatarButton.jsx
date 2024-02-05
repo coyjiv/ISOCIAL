@@ -1,16 +1,16 @@
-import { Avatar, Badge, Card, Typography } from "@mui/material"
+import {Avatar, Badge, Card, Typography} from "@mui/material"
 import styled from "@emotion/styled";
-import { useState, useRef } from "react";
-import { useOnClickOutside } from "usehooks-ts";
+import {useState, useRef} from "react";
+import {useOnClickOutside} from "usehooks-ts";
 import classNames from "classnames";
-import { Menu, MenuItem } from "@mui/material";
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import { IoMdSettings } from "react-icons/io";
-import { ImExit } from "react-icons/im";
+import {Menu, MenuItem} from "@mui/material";
+import {useSelector} from "react-redux";
+import {Link, useNavigate} from "react-router-dom";
+import {IoMdSettings} from "react-icons/io";
+import {ImExit} from "react-icons/im";
 
 
-const StyledBadge = styled(Badge)(({ theme }) => ({
+const StyledBadge = styled(Badge)(({theme}) => ({
     '& .MuiBadge-badge': {
         backgroundColor: '#44b700',
         color: '#44b700',
@@ -44,8 +44,8 @@ const StyledMenu = styled(Menu)(() => ({
         minWidth: '320px',
         // minHeight: '636px',
         // translate: '-20px 10px',
-        backgroundColor: `${({ theme }) => theme.palette.background.paper}`,
-        color: `${({ theme }) => theme.palette.text.primary}`,
+        backgroundColor: `${({theme}) => theme.palette.background.paper}`,
+        color: `${({theme}) => theme.palette.text.primary}`,
     }
 }))
 
@@ -56,13 +56,14 @@ const StyledButton = styled.button`
     outline: none;
     transition-property: color, filter;
     transition: .2s ease-in-out;
+
     &.clicked {
         scale: 0.9;
         filter: brightness(0.8);
     }
-    `
+`
 
-const StyledCard = styled(Card)(({ theme }) => ({
+const StyledCard = styled(Card)(({theme}) => ({
     "&.MuiCard-root": {
         minHeight: '20px',
         minWidth: '80%',
@@ -110,6 +111,7 @@ const AvatarButton = () => {
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const profile = useSelector(state => state.profile)
+    const navigate = useNavigate()
 
     const buttonClasses = classNames({
         'clicked': isProfileMenuOpen
@@ -127,16 +129,22 @@ const AvatarButton = () => {
         setAnchorEl(null);
     };
 
+    const handleLogout = () => {
+        localStorage.removeItem("access");
+        localStorage.removeItem("refresh");
+        navigate("/login");
+    }
+
     useOnClickOutside(ref, handleClickOutside)
     return (
         <>
             <StyledButton ref={ref} className={buttonClasses} onClick={handleClickInside}>
                 <StyledBadge
                     overlap="circular"
-                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                    anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
                     variant="dot"
                 >
-                    <Avatar alt="User profile avatar" src="https://avatar.iran.liara.run/public/7" />
+                    <Avatar alt="User profile avatar" src="https://avatar.iran.liara.run/public/7"/>
                 </StyledBadge>
             </StyledButton>
             <StyledMenu
@@ -150,12 +158,16 @@ const AvatarButton = () => {
             >
                 <Link to='/profile'>
                     <StyledCard>
-                        <Avatar alt="User profile avatar" src="https://avatar.iran.liara.run/public/7" />
+                        <Avatar alt="User profile avatar" src="https://avatar.iran.liara.run/public/7"/>
                         <Typography fontWeight='900'>{profile.firstName + " " + profile.lastName}</Typography>
                     </StyledCard>
                 </Link>
-                <StyledMenuItem onClick={handleClose}><div><IoMdSettings /></div>Settings</StyledMenuItem>
-                <StyledMenuItem onClick={handleClose}><div><ImExit /></div> Logout</StyledMenuItem>
+                <StyledMenuItem onClick={handleClose}>
+                    <div><IoMdSettings/></div>
+                    Settings</StyledMenuItem>
+                <StyledMenuItem onClick={handleLogout}>
+                    <div><ImExit/></div>
+                    Logout</StyledMenuItem>
             </StyledMenu>
         </>
     )
