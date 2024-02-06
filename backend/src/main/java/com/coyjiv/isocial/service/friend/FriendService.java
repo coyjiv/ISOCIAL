@@ -74,7 +74,6 @@ public class FriendService implements IFriendService {
     Long userId = emailPasswordAuthProvider.getAuthenticationPrincipal();
     Optional<User> user = userRepository.findById(userId);
     Optional<Friend> friend = friendRepository.findById(friendId);
-    validateRequestOwner();
 
     if (user.isEmpty() || friend.isEmpty() || !user.get().equals(friend.get().getAddresser())) {
       return false;
@@ -93,10 +92,11 @@ public class FriendService implements IFriendService {
 
   @Transactional
   @Override
-  public boolean declineFriendRequest(Long userId, Long friendId) throws IllegalAccessException {
+  public boolean declineFriendRequest(Long friendId) throws IllegalAccessException {
+    Long userId = emailPasswordAuthProvider.getAuthenticationPrincipal();
     Optional<User> user = userRepository.findById(userId);
     Optional<Friend> friend = friendRepository.findById(friendId);
-    validateRequestOwner();
+
 
     if (user.isEmpty()
             || friend.isEmpty()
@@ -119,7 +119,7 @@ public class FriendService implements IFriendService {
     Long userId = emailPasswordAuthProvider.getAuthenticationPrincipal();
     Optional<User> user = userRepository.findById(userId);
     Optional<Friend> friend = friendRepository.findById(friendId);
-    validateRequestOwner();
+
 
     if (user.isEmpty() || friend.isEmpty() || !"ACCEPTED".equals(friend.get().getStatus())) {
       return false;
@@ -138,7 +138,7 @@ public class FriendService implements IFriendService {
   @Override
   public List<FriendResponseDto> findAllFriends(Long userId, int page, int size) {
     Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "id"));
-    Pageable pageable = PageRequest.of(page - 1, size, sort);
+    Pageable pageable = PageRequest.of(page, size, sort);
     Optional<User> user = userRepository.findById(userId);
 
 
@@ -156,13 +156,6 @@ public class FriendService implements IFriendService {
             .toList();
   }
 
-  private void validateRequestOwner() throws IllegalAccessException {
-    Long requestOwner = emailPasswordAuthProvider.getAuthenticationPrincipal();
-    if (requestOwner == null) {
-      throw new IllegalAccessException("User have no authorities to do this request.");
-    }
-
-  }
 
 }
 

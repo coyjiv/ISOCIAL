@@ -11,7 +11,7 @@ public interface IFriendService {
 
   boolean acceptFriendRequest(Long friendId) throws IllegalAccessException;
 
-  boolean declineFriendRequest(Long userId, Long friendId) throws IllegalAccessException;
+  boolean declineFriendRequest(Long friendId) throws IllegalAccessException;
 
   boolean deleteFriend(Long friendId) throws IllegalAccessException;
 

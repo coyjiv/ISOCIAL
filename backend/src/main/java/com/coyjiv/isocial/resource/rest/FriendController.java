@@ -46,9 +46,8 @@ public class FriendController {
   }
 
   @PostMapping("/decline")
-  public ResponseEntity<String> declineFriendRequest(@RequestParam Long userId,
-                                                     @RequestParam Long friendId) throws IllegalAccessException {
-    boolean result = friendService.declineFriendRequest(userId, friendId);
+  public ResponseEntity<String> declineFriendRequest(@RequestParam Long friendId) throws IllegalAccessException {
+    boolean result = friendService.declineFriendRequest(friendId);
     if (result) {
       return ResponseEntity.ok("Declined");
     }
