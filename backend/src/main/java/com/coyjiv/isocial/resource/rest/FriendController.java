@@ -3,6 +3,7 @@ package com.coyjiv.isocial.resource.rest;
 
 
 import com.coyjiv.isocial.dto.respone.friend.FriendResponseDto;
+import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.service.friend.FriendService;
 
 import jakarta.validation.constraints.Min;
@@ -27,7 +28,7 @@ public class FriendController {
 
 
   @PostMapping()
-  public ResponseEntity<String> sendFriendRequest(@RequestParam Long addresserId) {
+  public ResponseEntity<String> sendFriendRequest(@RequestParam Long addresserId) throws EntityNotFoundException {
     boolean result = friendService.sendFriendRequest(addresserId);
     if (result) {
       return ResponseEntity.ok("Request sent successfully");
@@ -55,9 +56,8 @@ public class FriendController {
   }
 
   @DeleteMapping()
-  public ResponseEntity<String> deleteFriend(@RequestParam Long userId,
-                                             @RequestParam Long friendId) throws IllegalAccessException {
-    boolean result = friendService.deleteFriend(userId, friendId);
+  public ResponseEntity<String> deleteFriend(@RequestParam Long friendId) throws IllegalAccessException {
+    boolean result = friendService.deleteFriend(friendId);
     if (result) {
       return ResponseEntity.ok("Deleted");
     }
@@ -66,7 +66,7 @@ public class FriendController {
 
   @GetMapping("/{userId}")
   public ResponseEntity<List<FriendResponseDto>> getAllFriends(@PathVariable Long userId,
-                                                               @RequestParam(defaultValue = "0") @Min(1) Integer page,
+                                                               @RequestParam(defaultValue = "0") @Min(0) Integer page,
                                                                @RequestParam(defaultValue = "10") @Min(0) Integer size) {
     List<FriendResponseDto> friends = friendService.findAllFriends(userId, page, size);
     return ResponseEntity.ok(friends);

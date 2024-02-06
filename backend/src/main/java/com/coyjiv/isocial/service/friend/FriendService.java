@@ -6,6 +6,7 @@ import com.coyjiv.isocial.dao.UserRepository;
 import com.coyjiv.isocial.domain.Friend;
 import com.coyjiv.isocial.domain.User;
 import com.coyjiv.isocial.dto.respone.friend.FriendResponseDto;
+import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.transfer.friend.FriendResponseMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -15,10 +16,9 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 
@@ -33,7 +33,7 @@ public class FriendService implements IFriendService {
 
   @Transactional
   @Override
-  public boolean sendFriendRequest(Long addresserId) throws IOException {
+  public boolean sendFriendRequest(Long addresserId) throws EntityNotFoundException {
     Long requesterId = emailPasswordAuthProvider.getAuthenticationPrincipal();
     if (requesterId.equals(addresserId)) {
       return false;
@@ -43,7 +43,7 @@ public class FriendService implements IFriendService {
     Optional<User> addresser = userRepository.findById(addresserId);
 
     if (!requester.isPresent() || !addresser.isPresent()) {
-      throw new IOException("User not found");
+      throw new EntityNotFoundException("User not found");
     }
 
     Optional<Friend> existingFriendship = friendRepository.findByRequesterAndAddresserAndIsActive(requester.get(),
@@ -74,7 +74,7 @@ public class FriendService implements IFriendService {
     Long userId = emailPasswordAuthProvider.getAuthenticationPrincipal();
     Optional<User> user = userRepository.findById(userId);
     Optional<Friend> friend = friendRepository.findById(friendId);
-    validateRequestOwner(userId);
+    validateRequestOwner();
 
     if (user.isEmpty() || friend.isEmpty() || !user.get().equals(friend.get().getAddresser())) {
       return false;
@@ -96,7 +96,7 @@ public class FriendService implements IFriendService {
   public boolean declineFriendRequest(Long userId, Long friendId) throws IllegalAccessException {
     Optional<User> user = userRepository.findById(userId);
     Optional<Friend> friend = friendRepository.findById(friendId);
-    validateRequestOwner(userId);
+    validateRequestOwner();
 
     if (user.isEmpty()
             || friend.isEmpty()
@@ -115,10 +115,11 @@ public class FriendService implements IFriendService {
 
   @Transactional
   @Override
-  public boolean deleteFriend(Long userId, Long friendId) throws IllegalAccessException {
+  public boolean deleteFriend(Long friendId) throws IllegalAccessException {
+    Long userId = emailPasswordAuthProvider.getAuthenticationPrincipal();
     Optional<User> user = userRepository.findById(userId);
     Optional<Friend> friend = friendRepository.findById(friendId);
-    validateRequestOwner(userId);
+    validateRequestOwner();
 
     if (user.isEmpty() || friend.isEmpty() || !"ACCEPTED".equals(friend.get().getStatus())) {
       return false;
@@ -155,9 +156,9 @@ public class FriendService implements IFriendService {
             .toList();
   }
 
-  private void validateRequestOwner(Long userId) throws IllegalAccessException {
+  private void validateRequestOwner() throws IllegalAccessException {
     Long requestOwner = emailPasswordAuthProvider.getAuthenticationPrincipal();
-    if (!Objects.equals(userId, requestOwner)) {
+    if (requestOwner == null) {
       throw new IllegalAccessException("User have no authorities to do this request.");
     }
 
