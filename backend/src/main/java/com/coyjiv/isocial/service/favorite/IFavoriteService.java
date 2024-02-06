@@ -15,7 +15,7 @@ import java.util.Optional;
 public interface IFavoriteService {
     List<FavoriteResponseDto> findAllActive(int page, int size);
     Optional<Favorite> findActiveById(Long id);
-    boolean findActiveBySelectorIdPostId (Long postId);
+//    boolean findActiveBySelectorIdPostId (Long postId);
     List<FavoriteResponseDto> findActiveBySelectorId(int page, int size, Long id);
     List<FavoriteResponseDto> findActiveByPostId(int page, int size, Long id);
     Favorite create(FavoriteRequestDto favoriteRequestDto) throws EntityNotFoundException, IllegalAccessException;

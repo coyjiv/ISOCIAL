@@ -72,18 +72,25 @@ public class FavoriteService implements IFavoriteService{
                 .map(favoriteResponseMapper::convertToDto).toList();
     }
 
-    @Override
+//    @Override
     @Transactional(readOnly = true)
-    public boolean findActiveBySelectorIdPostId (Long postId){
+    public Optional<Favorite> findActiveBySelectorIdPostId (Long postId){
         Long requestOwner = emailPasswordAuthProvider.getAuthenticationPrincipal();
-        return favoriteRepository.findActiveBySelectorIdPostId(requestOwner, postId).isPresent();
+        return favoriteRepository.findActiveBySelectorIdPostId(requestOwner, postId);
     }
 
     @Override
     @Transactional
     public Favorite create(FavoriteRequestDto favoriteRequestDto) throws EntityNotFoundException, IllegalAccessException {
-        if(findActiveBySelectorIdPostId (favoriteRequestDto.getSelectedPostId())){
+        if(findActiveBySelectorIdPostId (favoriteRequestDto.getSelectedPostId()).isPresent()
+                && findActiveBySelectorIdPostId (favoriteRequestDto.getSelectedPostId()).get().isActive()){
             throw new IllegalAccessException("User have no authorities to do this request.");
+        }
+        if(findActiveBySelectorIdPostId (favoriteRequestDto.getSelectedPostId()).isPresent()
+                && !findActiveBySelectorIdPostId (favoriteRequestDto.getSelectedPostId()).get().isActive()){
+            Favorite favorite = findActiveBySelectorIdPostId (favoriteRequestDto.getSelectedPostId()).get();
+            favorite.setActive(true);
+            return favoriteRepository.save(favorite);
         }
         validatePost(favoriteRequestDto.getSelectedPostId());
         Long requestOwner = emailPasswordAuthProvider.getAuthenticationPrincipal();
