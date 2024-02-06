@@ -38,7 +38,7 @@ public class FavoriteRestController {
     private final IFavoriteService favoriteService;
     private final FavoriteResponseMapper favoriteResponseMapper;
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<?> findAll(@RequestParam(defaultValue = "0") @Min(0) Integer page,
                                      @RequestParam(defaultValue = "10") @Min(0) Integer size) {
         return ResponseEntity.ok(favoriteService.findAllActive(page, size));
@@ -66,9 +66,9 @@ public class FavoriteRestController {
                                                   @RequestParam(defaultValue = "10") @Min(0) Integer size) {
         return ResponseEntity.ok(favoriteService.findActiveBySelectorId(page, size, id));
     }
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<?> create(@RequestBody @Valid FavoriteRequestDto dto) throws EntityNotFoundException, IllegalAccessException {
-        return ResponseEntity.ok(favoriteService.create(dto));
+        return ResponseEntity.status(201).body(favoriteService.create(dto));
     }
 
     @DeleteMapping("/{id}")
