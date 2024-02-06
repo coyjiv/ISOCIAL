@@ -57,7 +57,6 @@ public class FriendService implements IFriendService {
     if (inactiveFriendship.isPresent()) {
       Friend friend = inactiveFriendship.get();
       friend.setActive(true);
-      friend.setStatus("PENDING");
       friendRepository.save(friend);
       return true;
     }
@@ -134,6 +133,7 @@ public class FriendService implements IFriendService {
     }
     if (user.get().equals(friend.get().getRequester()) || user.get().equals(friend.get().getAddresser())) {
       friend.get().setActive(false);
+      friend.get().setStatus("PENDING");
       friendRepository.save(friend.get());
       return true;
     }
