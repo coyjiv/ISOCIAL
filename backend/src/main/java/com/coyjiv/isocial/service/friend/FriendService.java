@@ -47,24 +47,27 @@ public class FriendService implements IFriendService {
     }
 
     Optional<Friend> existingFriendship = friendRepository.findByRequesterAndAddresserAndIsActive(requester.get(),
-            addresser.get(), false);
+            addresser.get(), true);
     if (existingFriendship.isPresent()) {
-      Friend friend = existingFriendship.get();
+      return false;
+    }
+
+    Optional<Friend> inactiveFriendship = friendRepository.findByRequesterAndAddresserAndIsActive(requester.get(),
+            addresser.get(), false);
+    if (inactiveFriendship.isPresent()) {
+      Friend friend = inactiveFriendship.get();
       friend.setActive(true);
       friend.setStatus("PENDING");
       friendRepository.save(friend);
       return true;
     }
 
-    if (friendRepository.existsByRequesterAndAddresser(requester.get(), addresser.get())
-            || friendRepository.existsByRequesterAndAddresser(addresser.get(), requester.get())) {
-      return false;
-    }
 
     Friend friend = new Friend(requester.get(), addresser.get());
     friendRepository.save(friend);
     return true;
   }
+
 
 
 

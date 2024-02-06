@@ -14,7 +14,6 @@ import java.util.Optional;
 
 @Repository
 public interface FriendRepository extends JpaRepository<Friend, Long> {
-  boolean existsByRequesterAndAddresser(User requester, User addresser);
 
   Optional<Friend> findByRequesterAndAddresserAndIsActive(User requester, User addresser, boolean isActive);
 
