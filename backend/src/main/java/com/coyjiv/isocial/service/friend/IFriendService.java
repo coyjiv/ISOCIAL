@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.List;
 
 public interface IFriendService {
-  boolean sendFriendRequest(Long addresserId) throws IOException, EntityNotFoundException;
+  boolean sendFriendRequest(Long addresserId) throws IOException, EntityNotFoundException, IllegalAccessException;
 
   boolean acceptFriendRequest(Long friendId) throws IllegalAccessException;
 

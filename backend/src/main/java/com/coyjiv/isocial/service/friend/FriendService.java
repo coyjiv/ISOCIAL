@@ -33,10 +33,10 @@ public class FriendService implements IFriendService {
 
   @Transactional
   @Override
-  public boolean sendFriendRequest(Long addresserId) throws EntityNotFoundException {
+  public boolean sendFriendRequest(Long addresserId) throws EntityNotFoundException, IllegalAccessException {
     Long requesterId = emailPasswordAuthProvider.getAuthenticationPrincipal();
     if (requesterId.equals(addresserId)) {
-      return false;
+      throw new IllegalAccessException("You cannot sent request yourself");
     }
 
     Optional<User> requester = userRepository.findById(requesterId);
@@ -62,7 +62,7 @@ public class FriendService implements IFriendService {
     }
     if (friendRepository.existsByRequesterAndAddresser(requester.get(), addresser.get())
             || friendRepository.existsByRequesterAndAddresser(addresser.get(), requester.get())) {
-      return false;
+      throw new IllegalAccessException("You need to accept existing request");
     }
 
 
