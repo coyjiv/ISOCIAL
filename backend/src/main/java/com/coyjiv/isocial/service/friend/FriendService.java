@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -32,7 +33,7 @@ public class FriendService implements IFriendService {
 
   @Transactional
   @Override
-  public boolean sendFriendRequest(Long addresserId) {
+  public boolean sendFriendRequest(Long addresserId) throws IOException {
     Long requesterId = emailPasswordAuthProvider.getAuthenticationPrincipal();
     if (requesterId.equals(addresserId)) {
       return false;
@@ -40,6 +41,10 @@ public class FriendService implements IFriendService {
 
     Optional<User> requester = userRepository.findById(requesterId);
     Optional<User> addresser = userRepository.findById(addresserId);
+
+    if (!requester.isPresent() || !addresser.isPresent()) {
+      throw new IOException("User not found");
+    }
 
     Optional<Friend> existingFriendship = friendRepository.findByRequesterAndAddresserAndIsActive(requester.get(),
             addresser.get(), false);
@@ -60,6 +65,7 @@ public class FriendService implements IFriendService {
     friendRepository.save(friend);
     return true;
   }
+
 
 
   @Transactional
@@ -99,7 +105,7 @@ public class FriendService implements IFriendService {
     }
 
     if ("ACCEPTED".equals(friend.get().getStatus())) {
-      throw new IllegalStateException("You cannot decline a friend request that has already been accepted");
+      throw new IllegalAccessException("You cannot decline a friend request that has already been accepted");
     }
 
     friendRepository.delete(friend.get());
