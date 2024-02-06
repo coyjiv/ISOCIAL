@@ -61,6 +61,11 @@ public class FriendService implements IFriendService {
       friendRepository.save(friend);
       return true;
     }
+    if (friendRepository.existsByRequesterAndAddresser(requester.get(), addresser.get())
+            || friendRepository.existsByRequesterAndAddresser(addresser.get(), requester.get())) {
+      return false;
+    }
+
 
 
     Friend friend = new Friend(requester.get(), addresser.get());
