@@ -22,9 +22,11 @@ public interface FavoriteRepository extends JpaRepository<Favorite, Long>  {
     List<Favorite> findAllActive(Pageable pageable);
 
     @Query("FROM Favorite f WHERE f.selectorId = :id AND f.isActive = true")
-    List<Favorite> findActiveBySelectorId(@Param("id") Long id, Pageable pageable);
+    List<Favorite> findAllActiveBySelectorId(@Param("id") Long id, Pageable pageable);
+    @Query("FROM Favorite f WHERE f.selectorId = :idu AND f.selectedPostId = :idp AND f.isActive = true")
+    Optional <Favorite> findActiveBySelectorIdPostId(@Param("idu") Long idUser, @Param("idp") Long idPost);
 
     @Query("FROM Favorite f WHERE f.selectedPostId = :id AND f.isActive = true")
-    List<Favorite> findActiveByPostId(@Param("id") Long id, Pageable pageable);
+    List<Favorite> findAllActiveByPostId(@Param("id") Long id, Pageable pageable);
 
 }

@@ -13,11 +13,12 @@ import com.coyjiv.isocial.exceptions.RequestValidationException;
 import java.util.List;
 import java.util.Optional;
 public interface IFavoriteService {
-    public List<Favorite> findAllActive(int page, int size);
-    public Optional<Favorite> findActiveById(Long id);
-    public List<Favorite> findActiveBySelectorId(int page, int size, Long id);
-    public List<Favorite> findActiveByPostId(int page, int size, Long id);
-    public Favorite create(FavoriteRequestDto favoriteRequestDto) throws RequestValidationException;
-    public void delete(Long id) throws IllegalAccessException, RequestValidationException;
+    List<FavoriteResponseDto> findAllActive(int page, int size);
+    Optional<Favorite> findActiveById(Long id);
+    boolean findActiveBySelectorIdPostId (Long postId);
+    List<FavoriteResponseDto> findActiveBySelectorId(int page, int size, Long id);
+    List<FavoriteResponseDto> findActiveByPostId(int page, int size, Long id);
+    Favorite create(FavoriteRequestDto favoriteRequestDto) throws EntityNotFoundException, IllegalAccessException;
+    void delete(Long id) throws IllegalAccessException, RequestValidationException;
 
 }

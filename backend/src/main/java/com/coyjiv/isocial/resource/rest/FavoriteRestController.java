@@ -41,9 +41,7 @@ public class FavoriteRestController {
     @GetMapping("/")
     public ResponseEntity<?> findAll(@RequestParam(defaultValue = "0") @Min(0) Integer page,
                                      @RequestParam(defaultValue = "10") @Min(0) Integer size) {
-        List<Favorite> favorites = favoriteService.findAllActive(page, size);
-        List<FavoriteResponseDto> dtos = favorites.stream().map(favoriteResponseMapper::convertToDto).toList();
-        return ResponseEntity.ok(dtos);
+        return ResponseEntity.ok(favoriteService.findAllActive(page, size));
     }
     @GetMapping("/{id}")
     public ResponseEntity<?> findFavoriteById(@PathVariable("id") Long id) {
@@ -59,22 +57,17 @@ public class FavoriteRestController {
     public ResponseEntity<?> findFavoritesByPostId(@PathVariable("id") Long id,
                                                   @RequestParam(defaultValue = "0") @Min(0) Integer page,
                                                   @RequestParam(defaultValue = "10") @Min(0) Integer size) {
-        List<Favorite> favorites = favoriteService.findActiveByPostId(page, size, id);
-        List<FavoriteResponseDto> dtos = favorites.stream().map(favoriteResponseMapper::convertToDto).toList();
-        return ResponseEntity.ok(dtos);
+        return ResponseEntity.ok(favoriteService.findActiveByPostId(page, size, id));
     }
 
     @GetMapping("/selector/{id}")
     public ResponseEntity<?> findFavoritesBySelectorId(@PathVariable("id") Long id,
                                                   @RequestParam(defaultValue = "0") @Min(0) Integer page,
                                                   @RequestParam(defaultValue = "10") @Min(0) Integer size) {
-        List<Favorite> favorites = favoriteService.findActiveBySelectorId(page, size, id);
-        List<FavoriteResponseDto> dtos = favorites.stream().map(favoriteResponseMapper::convertToDto).toList();
-        return ResponseEntity.ok(dtos);
+        return ResponseEntity.ok(favoriteService.findActiveBySelectorId(page, size, id));
     }
     @PostMapping("/")
-    public ResponseEntity<?> create(@RequestBody @Valid FavoriteRequestDto dto)
-            throws RequestValidationException {
+    public ResponseEntity<?> create(@RequestBody @Valid FavoriteRequestDto dto) throws EntityNotFoundException, IllegalAccessException {
         return ResponseEntity.ok(favoriteService.create(dto));
     }
 

@@ -27,6 +27,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -42,12 +43,12 @@ public class FavoriteService implements IFavoriteService{
 
     @Transactional(readOnly = true)
     @Override
-    public List<Favorite> findAllActive(int page, int size) {
+    public List<FavoriteResponseDto> findAllActive(int page, int size) {
         Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "creationDate"));
         Pageable pageable = PageRequest.of(page, size, sort);
-        return favoriteRepository.findAllActive(pageable);
+        return favoriteRepository.findAllActive(pageable).stream()
+                .map(favoriteResponseMapper::convertToDto).toList();
     }
-
     @Override
     @Transactional(readOnly = true)
     public Optional<Favorite> findActiveById(Long id) {
@@ -55,23 +56,35 @@ public class FavoriteService implements IFavoriteService{
     }
     @Override
     @Transactional(readOnly = true)
-    public List<Favorite> findActiveBySelectorId(int page, int size, Long id) {
+    public List<FavoriteResponseDto> findActiveBySelectorId(int page, int size, Long id) {
         Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "creationDate"));
         Pageable pageable = PageRequest.of(page, size, sort);
-        return favoriteRepository.findActiveBySelectorId(id, pageable);
+        return favoriteRepository.findAllActiveBySelectorId(id, pageable).stream()
+                .map(favoriteResponseMapper::convertToDto).toList();
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<Favorite> findActiveByPostId(int page, int size, Long id) {
+    public List<FavoriteResponseDto> findActiveByPostId(int page, int size, Long id) {
         Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "creationDate"));
         Pageable pageable = PageRequest.of(page, size, sort);
-        return favoriteRepository.findActiveByPostId(id, pageable);
+        return favoriteRepository.findAllActiveByPostId(id, pageable).stream()
+                .map(favoriteResponseMapper::convertToDto).toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public boolean findActiveBySelectorIdPostId (Long postId){
+        Long requestOwner = emailPasswordAuthProvider.getAuthenticationPrincipal();
+        return favoriteRepository.findActiveBySelectorIdPostId(requestOwner, postId).isPresent();
     }
 
     @Override
     @Transactional
-    public Favorite create(FavoriteRequestDto favoriteRequestDto) throws RequestValidationException {
+    public Favorite create(FavoriteRequestDto favoriteRequestDto) throws EntityNotFoundException, IllegalAccessException {
+        if(findActiveBySelectorIdPostId (favoriteRequestDto.getSelectedPostId())){
+            throw new IllegalAccessException("User have no authorities to do this request.");
+        }
         validatePost(favoriteRequestDto.getSelectedPostId());
         Long requestOwner = emailPasswordAuthProvider.getAuthenticationPrincipal();
         Favorite favorite = favoriteRequestMapper.convertToEntity(favoriteRequestDto);
@@ -98,10 +111,10 @@ public class FavoriteService implements IFavoriteService{
             throw new IllegalAccessException("User have no authorities to do this request.");
         }
     }
-    private void validatePost(Long id) throws RequestValidationException {
+    private void validatePost(Long id) throws EntityNotFoundException {
         Optional <Post> selectedPost = postService.findActiveById(id);
         if(selectedPost.isEmpty()){
-            throw new RequestValidationException(
+            throw new EntityNotFoundException(
                     "Post is not exist"
             );
         }
