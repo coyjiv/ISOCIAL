@@ -60,8 +60,8 @@ public class FriendService implements IFriendService {
       friendRepository.save(friend);
       return true;
     }
-    if (friendRepository.existsByRequesterAndAddresser(requester.get(), addresser.get())
-            || friendRepository.existsByRequesterAndAddresser(addresser.get(), requester.get())) {
+    if (friendRepository.existsByRequesterAndAddresserAndIsActive(requester.get(), addresser.get(), true)
+            || friendRepository.existsByRequesterAndAddresserAndIsActive(addresser.get(), requester.get(), true)) {
       throw new IllegalAccessException("You need to accept existing request");
     }
 

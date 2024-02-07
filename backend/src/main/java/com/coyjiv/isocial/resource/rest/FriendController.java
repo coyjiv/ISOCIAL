@@ -28,7 +28,7 @@ public class FriendController {
 
 
   @PostMapping()
-  public ResponseEntity<String> sendFriendRequest(@RequestParam Long addresserId) throws EntityNotFoundException {
+  public ResponseEntity<String> sendFriendRequest(@RequestParam Long addresserId) throws EntityNotFoundException, IllegalAccessException {
     boolean result = friendService.sendFriendRequest(addresserId);
     if (result) {
       return ResponseEntity.ok("Request sent successfully");
