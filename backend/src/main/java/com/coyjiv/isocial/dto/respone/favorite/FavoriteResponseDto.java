@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FavoriteResponseDto {
-    private Long id;
-    private Long selectedPostId;
-    private Long selectorId;
+  private Long id;
+  private Long selectedPostId;
+  private Long selectorId;
 }

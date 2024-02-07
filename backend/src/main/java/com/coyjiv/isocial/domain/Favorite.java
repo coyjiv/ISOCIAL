@@ -1,4 +1,5 @@
 package com.coyjiv.isocial.domain;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
@@ -16,9 +17,9 @@ import java.util.List;
 @ToString
 @NoArgsConstructor
 public class Favorite extends AbstractEntity {
-    @Column(name = "selected_post_id")
-    private Long selectedPostId;
+  @Column(name = "selected_post_id")
+  private Long selectedPostId;
 
-    @Column(name = "user_selector_id")
-    private Long selectorId;
+  @Column(name = "user_selector_id")
+  private Long selectorId;
 }

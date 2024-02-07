@@ -12,9 +12,12 @@ import java.util.List;
 
 @Service
 public class FavoriteRequestMapper extends DtoMapperFacade<Favorite, FavoriteRequestDto> {
-    public FavoriteRequestMapper() {super(Favorite.class, FavoriteRequestDto.class);}
-    @Override
-    protected void decorateEntity(Favorite entity, FavoriteRequestDto dto) {
-        entity.setActive(true);
-    }
+  public FavoriteRequestMapper() {
+    super(Favorite.class, FavoriteRequestDto.class);
+  }
+
+  @Override
+  protected void decorateEntity(Favorite entity, FavoriteRequestDto dto) {
+    entity.setActive(true);
+  }
 }

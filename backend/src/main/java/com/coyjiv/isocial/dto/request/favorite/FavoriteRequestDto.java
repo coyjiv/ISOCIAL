@@ -16,5 +16,5 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FavoriteRequestDto {
-    private Long selectedPostId;
+  private Long selectedPostId;
 }

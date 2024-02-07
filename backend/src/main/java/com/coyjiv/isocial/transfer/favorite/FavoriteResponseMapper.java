@@ -10,6 +10,8 @@ import com.coyjiv.isocial.transfer.DtoMapperFacade;
 import org.springframework.stereotype.Service;
 
 @Service
-public class FavoriteResponseMapper extends DtoMapperFacade<Favorite, FavoriteResponseDto>{
-    public FavoriteResponseMapper() {super(Favorite.class, FavoriteResponseDto.class);}
+public class FavoriteResponseMapper extends DtoMapperFacade<Favorite, FavoriteResponseDto> {
+  public FavoriteResponseMapper() {
+    super(Favorite.class, FavoriteResponseDto.class);
+  }
 }
