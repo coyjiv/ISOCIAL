@@ -39,7 +39,7 @@ public class FavoriteService implements IFavoriteService {
   private final FavoriteResponseMapper favoriteResponseMapper;
   private final FavoriteRequestMapper favoriteRequestMapper;
   private final EmailPasswordAuthProvider emailPasswordAuthProvider;
-  private final IPostService postService;
+  private final PostRepository postRepository;
 
   @Transactional(readOnly = true)
   @Override
@@ -67,10 +67,9 @@ public class FavoriteService implements IFavoriteService {
 
   @Override
   @Transactional(readOnly = true)
-  public List<FavoriteResponseDto> findActiveByPostId(int page, int size, Long id) {
-    Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "creationDate"));
-    Pageable pageable = PageRequest.of(page, size, sort);
-    return favoriteRepository.findAllActiveByPostId(id, pageable).stream()
+  public List<FavoriteResponseDto> findActiveByPostId( Long id) {
+
+    return favoriteRepository.findAllActiveByPostId(id).stream()
             .map(favoriteResponseMapper::convertToDto).toList();
   }
 
@@ -122,7 +121,7 @@ public class FavoriteService implements IFavoriteService {
   }
 
   private void validatePost(Long id) throws EntityNotFoundException {
-    Optional<Post> selectedPost = postService.findActiveById(id);
+    Optional<Post> selectedPost = postRepository.findActiveById(id);
     if (selectedPost.isEmpty()) {
       throw new EntityNotFoundException(
               "Post is not exist"

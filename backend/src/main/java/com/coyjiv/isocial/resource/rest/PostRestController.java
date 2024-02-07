@@ -73,7 +73,7 @@ public class PostRestController {
 
   @DeleteMapping("/{id}")
   public ResponseEntity<?> delete(@PathVariable("id") @Min(0) Long id)
-          throws IllegalAccessException {
+          throws IllegalAccessException, RequestValidationException {
     postService.delete(id);
     return ResponseEntity.status(204).build();
   }

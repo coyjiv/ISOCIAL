@@ -23,7 +23,7 @@ public interface IFavoriteService {
 
   List<FavoriteResponseDto> findActiveBySelectorId(int page, int size, Long id);
 
-  List<FavoriteResponseDto> findActiveByPostId(int page, int size, Long id);
+  List<FavoriteResponseDto> findActiveByPostId( Long id);
 
   Favorite create(FavoriteRequestDto favoriteRequestDto) throws EntityNotFoundException, IllegalAccessException;
 

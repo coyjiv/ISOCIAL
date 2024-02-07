@@ -1,9 +1,6 @@
 package com.coyjiv.isocial.dao;
 
 import com.coyjiv.isocial.domain.Favorite;
-import com.coyjiv.isocial.domain.Post;
-import com.coyjiv.isocial.domain.User;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -28,6 +25,6 @@ public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
   Optional<Favorite> findActiveBySelectorIdPostId(@Param("idu") Long idUser, @Param("idp") Long idPost);
 
   @Query("FROM Favorite f WHERE f.selectedPostId = :id AND f.isActive = true")
-  List<Favorite> findAllActiveByPostId(@Param("id") Long id, Pageable pageable);
+  List<Favorite> findAllActiveByPostId(@Param("id") Long id);
 
 }

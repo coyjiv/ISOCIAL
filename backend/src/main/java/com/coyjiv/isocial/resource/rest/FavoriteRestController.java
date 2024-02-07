@@ -56,10 +56,8 @@ public class FavoriteRestController {
   }
 
   @GetMapping("/post/{id}")
-  public ResponseEntity<?> findFavoritesByPostId(@PathVariable("id") Long id,
-                                                 @RequestParam(defaultValue = "0") @Min(0) Integer page,
-                                                 @RequestParam(defaultValue = "10") @Min(0) Integer size) {
-    return ResponseEntity.ok(favoriteService.findActiveByPostId(page, size, id));
+  public ResponseEntity<?> findFavoritesByPostId(@PathVariable("id") Long id) {
+    return ResponseEntity.ok(favoriteService.findActiveByPostId(id));
   }
 
   @GetMapping("/selector/{id}")
