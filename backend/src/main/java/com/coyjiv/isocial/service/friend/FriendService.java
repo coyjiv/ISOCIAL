@@ -54,23 +54,30 @@ public class FriendService implements IFriendService {
 
     Optional<Friend> inactiveFriendship = friendRepository.findByRequesterAndAddresserAndIsActive(requester.get(),
             addresser.get(), false);
+    if (!inactiveFriendship.isPresent()) {
+      inactiveFriendship = friendRepository.findByRequesterAndAddresserAndIsActive(addresser.get(),
+              requester.get(), false);
+    }
     if (inactiveFriendship.isPresent()) {
       Friend friend = inactiveFriendship.get();
       friend.setActive(true);
+      friend.setRequester(requester.get());
+      friend.setAddresser(addresser.get());
       friendRepository.save(friend);
       return true;
     }
+
     if (friendRepository.existsByRequesterAndAddresserAndIsActive(requester.get(), addresser.get(), true)
             || friendRepository.existsByRequesterAndAddresserAndIsActive(addresser.get(), requester.get(), true)) {
       throw new IllegalAccessException("You need to accept existing request");
     }
 
-
-
     Friend friend = new Friend(requester.get(), addresser.get());
     friendRepository.save(friend);
     return true;
   }
+
+
 
 
 
