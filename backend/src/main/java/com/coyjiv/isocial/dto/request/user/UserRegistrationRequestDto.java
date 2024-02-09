@@ -3,10 +3,7 @@ package com.coyjiv.isocial.dto.request.user;
 import com.coyjiv.isocial.domain.UserGender;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -37,6 +34,6 @@ public class UserRegistrationRequestDto {
   @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "must be longer then YYYY-MM-DD")
   private String dateOfBirth;
   @Enumerated(EnumType.STRING)
-  @NotBlank
+  @NotNull
   private UserGender gender;
 }
