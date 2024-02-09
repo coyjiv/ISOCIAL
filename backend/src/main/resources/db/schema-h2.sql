@@ -13,6 +13,7 @@ CREATE TABLE public.users
     is_private         BOOLEAN      NOT NULL DEFAULT FALSE,
     last_seen          TIMESTAMP,
     activity_status    INT  NOT NULL DEFAULT 1,
+    gender             VARCHAR(6) NOT NULL ,
     date_of_birth      DATE,
     creation_date      TIMESTAMP,
     last_modified_date TIMESTAMP,

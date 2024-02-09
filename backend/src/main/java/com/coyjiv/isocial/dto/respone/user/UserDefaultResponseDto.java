@@ -1,5 +1,7 @@
 package com.coyjiv.isocial.dto.respone.user;
 
+import com.coyjiv.isocial.domain.UserGender;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,4 +23,5 @@ public class UserDefaultResponseDto {
   private Date lastSeen;
   private List<String> avatarsUrl;
   private String bannerUrl;
+  private UserGender gender;
 }

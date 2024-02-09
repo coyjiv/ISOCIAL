@@ -1,5 +1,8 @@
 package com.coyjiv.isocial.dto.request.user;
 
+import com.coyjiv.isocial.domain.UserGender;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -33,4 +36,7 @@ public class UserRegistrationRequestDto {
   @NotBlank
   @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "must be longer then YYYY-MM-DD")
   private String dateOfBirth;
+  @Enumerated(EnumType.STRING)
+  @NotBlank
+  private UserGender gender;
 }

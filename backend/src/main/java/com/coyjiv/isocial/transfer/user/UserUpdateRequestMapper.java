@@ -26,5 +26,6 @@ public class UserUpdateRequestMapper extends DtoMapperFacade<User, UserUpdateReq
     entity.setLastName(dto.getLastName());
     entity.setBannerUrl(dto.getBannerUrl());
     entity.setDateOfBirth(dto.getDateOfBirth());
+    entity.setGender(dto.getGender());
   }
 }
