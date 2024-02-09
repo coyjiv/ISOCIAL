@@ -38,6 +38,5 @@ public class UserUpdateRequestDto {
 
   private Date dateOfBirth;
 
-  @Enumerated(EnumType.STRING)
   private UserGender gender;
 }

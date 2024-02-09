@@ -7,6 +7,7 @@ import com.coyjiv.isocial.cache.EmailRegistrationCache;
 import com.coyjiv.isocial.dao.UserRepository;
 import com.coyjiv.isocial.domain.User;
 import com.coyjiv.isocial.domain.UserActivityStatus;
+import com.coyjiv.isocial.domain.UserGender;
 import com.coyjiv.isocial.dto.request.user.UserRegistrationRequestDto;
 import com.coyjiv.isocial.dto.respone.user.UserDefaultResponseDto;
 import com.coyjiv.isocial.dto.respone.user.UserSearchResponseDto;
@@ -163,10 +164,17 @@ public class UserService implements IUserService {
                 || Objects.equals(key, "activity_status") || Objects.equals(key, "last_seen")) {
           return;
         }
-        Field field = ReflectionUtils.findField(User.class, key);
-        if (field != null) {
-          field.setAccessible(true);
-          ReflectionUtils.setField(field, user.get(), value);
+        if (Objects.equals(key, "gender")){
+          User genderUser = user.get();
+          genderUser.setGender(UserGender.valueOf((String) value));
+          userRepository.save(genderUser);
+        }else {
+          Field field = ReflectionUtils.findField(User.class, key);
+          System.out.println(field);
+          if (field != null) {
+            field.setAccessible(true);
+            ReflectionUtils.setField(field, user.get(), value);
+          }
         }
       });
       userRepository.save(user.get());

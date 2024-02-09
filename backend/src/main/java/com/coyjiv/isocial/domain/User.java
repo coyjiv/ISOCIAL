@@ -42,7 +42,7 @@ public class User extends AbstractEntity {
   @Column(name = "bio")
   private String bio;
 
-  @Enumerated(EnumType.STRING)
+
   @Column(name = "gender")
   private UserGender gender;
 
