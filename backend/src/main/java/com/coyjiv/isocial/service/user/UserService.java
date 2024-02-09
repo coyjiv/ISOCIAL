@@ -164,11 +164,11 @@ public class UserService implements IUserService {
                 || Objects.equals(key, "activity_status") || Objects.equals(key, "last_seen")) {
           return;
         }
-        if (Objects.equals(key, "gender")){
+        if (Objects.equals(key, "gender")) {
           User genderUser = user.get();
           genderUser.setGender(UserGender.valueOf((String) value));
           userRepository.save(genderUser);
-        }else {
+        } else {
           Field field = ReflectionUtils.findField(User.class, key);
           System.out.println(field);
           if (field != null) {
