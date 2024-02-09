@@ -21,7 +21,7 @@
   color: $primaryButtonBackground;
   text-align: center;
 }
-.form_wrapper{
+.form-wrapper{
   width: 396px;
   position: absolute;
   top: 40%;
@@ -36,7 +36,7 @@
   padding-bottom: 24px;
   border-bottom: 1px solid $lightGrey;
 }
-.forgot_password{
+.forgot-password{
   display: block;
   text-align: center;
   margin-top: 24px;
@@ -55,7 +55,7 @@
     text-align: center;
   }
 }
-.registation_btn{
+.registation-btn{
   display: block;
   width: fit-content;
   margin: 0 auto;
@@ -103,7 +103,7 @@
 .error{
   border-color: rgba(255, 0, 0, 0.5);
 }
-.wrong_pass{
+.wrong-pass{
   color: rgb(254, 101, 101);
   font-size: 17px;
   line-height: 16px;
@@ -116,7 +116,7 @@
 .error{
 
 }
-.submit_btn{
+.submit-btn{
   padding: 12px 32px;
   color: white;
   background-color: $primaryButtonBackground;

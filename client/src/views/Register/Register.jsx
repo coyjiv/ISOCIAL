@@ -1,6 +1,8 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box'
 
+import { API_URL } from '../../api/config'
 import { RegistrationForm } from '../../components/form-components'
 import { RegisterConfirmModal } from '../../components/modals'
 import { initialValues, validationSchema } from './Register.utils'
@@ -10,7 +12,7 @@ const Register = () => {
   const [isError] = useState(false)
   const [openModal, setOpenModal] = useState(false)
 
-  // const navigate = useNavigate()
+  const navigate = useNavigate()
 
   const handleSubmit = async (values) => {
     const { year, month, day, ...rest } = values
@@ -28,26 +30,26 @@ const Register = () => {
     if (data) {
       setOpenModal(true)
     }
-    //TODO change after added RTK Query
-    // try {
-    //   const response = await fetch(
-    //     'http://localhost:9000/api/auth/registration',
-    //     {
-    //       method: 'POST',
-    //       headers: {
-    //         'Content-Type': 'application/json',
-    //       },
-    //       body: JSON.stringify(data),
-    //     },
-    //   )
-    //   if (response.status != 201) {
-    //     setIsError(true)
-    //   } else {
-    //     navigate('/login')
-    //   }
-    // } catch (error) {
-    //   console.error('Registration error:', error.message)
-    // }
+    try {
+      const response = await fetch(
+        `${API_URL}/api/auth/registration`,
+        // 'http://localhost:9000/api/auth/registration',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        },
+      )
+      if (response.status != 201) {
+        setIsError(true)
+      } else {
+        navigate('/login')
+      }
+    } catch (error) {
+      console.error('Registration error:', error.message)
+    }
   }
 
   return (

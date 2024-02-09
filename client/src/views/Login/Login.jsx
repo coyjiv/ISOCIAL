@@ -35,13 +35,13 @@ const Login = () => {
     return (
         <div className={styles.container}>
             <h1 className={styles.logo}>ISOCIAL</h1>
-            <div className={styles.form_wrapper}>
+            <div className={styles.formWrapper}>
                 <div className={styles.body}>
                     <LoginForm/>
-                    <Link to={'/forgot-password'} className={styles.forgot_password}>Forgot Password</Link>
+                    <Link to={'/forgot-password'} className={styles.forgotPassword}>Forgot Password</Link>
                 </div>
                 <div className={styles.footer}>
-                    <Link to={'/register'} className={styles.registation_btn}>Create new account</Link>
+                    <Link to={'/register'} className={styles.registationBtn}>Create new account</Link>
                     <span>OR</span>
                     <a href="http://localhost:9000/oauth2/authorization/google">
                         <img src={GLink} alt="google icon" className={styles.google}/>
