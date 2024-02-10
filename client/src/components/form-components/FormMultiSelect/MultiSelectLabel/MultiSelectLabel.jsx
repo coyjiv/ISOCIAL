@@ -17,7 +17,7 @@ const MultiSelectLabel = ({ label, description, trigger }) => {
         {label}
       </Typography>
       <Tooltip title={description} trigger={trigger}>
-        <HelpIcon fontSize="7px" cursor="pointer" />
+        <HelpIcon fontSize="7px" cursor="pointer" color='action'/>
       </Tooltip>
     </Stack>
   )

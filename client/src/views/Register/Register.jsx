@@ -2,14 +2,14 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box'
 
-import { API_URL } from '../../api/config'
+// import { API_URL } from '../../api/config'
 import { RegistrationForm } from '../../components/form-components'
 import { RegisterConfirmModal } from '../../components/modals'
 import { initialValues, validationSchema } from './Register.utils'
 import s from './Register.module.scss'
 
 const Register = () => {
-  const [isError] = useState(false)
+  const [isError, setIsError] = useState(false)
   const [openModal, setOpenModal] = useState(false)
 
   const navigate = useNavigate()
@@ -18,10 +18,11 @@ const Register = () => {
     const { year, month, day, ...rest } = values
 
     delete rest.confirmEmail
-    delete rest.confirmPassword
+    // delete rest.confirmPassword
 
     const data = {
-      ...rest,
+			...rest,
+			// repeatPassword: rest.confirmPassword,
       dateOfBirth: `${year}-${month}-${day}`,
     }
 
@@ -32,8 +33,7 @@ const Register = () => {
     }
     try {
       const response = await fetch(
-        `${API_URL}/api/auth/registration`,
-        // 'http://localhost:9000/api/auth/registration',
+        `${import.meta.env.VITE_API_URL}auth/registration`,
         {
           method: 'POST',
           headers: {

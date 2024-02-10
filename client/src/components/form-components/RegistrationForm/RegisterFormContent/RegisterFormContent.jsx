@@ -62,9 +62,9 @@ const RegisterFormContent = () => {
 
         {showConfirmPassword && (
           <FormInput
-            name="confirmPassword"
-            id="confirmPassword"
-            placeholder="Confirm Password"
+            name="repeatPassword"
+            id="repeatPassword"
+            placeholder="Repeat Password"
             size="small"
             type="password"
             fullWidth
@@ -87,7 +87,7 @@ const RegisterFormContent = () => {
         />
       </Stack>
       <Button type="submit" size="large" mt={1} fullWidth>
-        Contained
+        Register
       </Button>
     </>
   )
