@@ -8,11 +8,11 @@ import ForgotPassword from "../Forgot-password/ForgotPassword";
 import Groups from "../Groups/Groups";
 import Videos from "../Videos/Videos";
 import Friends from "../Friends/Friends";
-import ChatList from "../Chat/ChatList";
 import Confirmation from "../Confirmation/Confirmation";
 import UpdatePassword from "../UpdatePassword";
 import { ErrorFallback } from "../../components/ErrorFallback/ErrorFallback";
-
+import Chat from "../Chat/Chat";
+import ChatList from "../Chat/ChatList";
 
 const router = createBrowserRouter([
   {
@@ -41,10 +41,6 @@ const router = createBrowserRouter([
     errorElement: <ErrorFallback />,
   },
   {
-    path: "profile/:id",
-    element: <Profile />
-  },
-  {
     path: "settings",
     element: <Settings />,
     errorElement: <ErrorFallback />,
@@ -71,6 +67,10 @@ const router = createBrowserRouter([
   {
     path: "chats",
     element: <ChatList />,
+  },
+  {
+    path: "chats/:id",
+    element: <Chat />,
   },
   {
     path: "confirmation",
