@@ -8,6 +8,7 @@ import ForgotPassword from "../Forgot-password/ForgotPassword";
 import Groups from "../Groups/Groups";
 import Videos from "../Videos/Videos";
 import Friends from "../Friends/Friends";
+import ChatList from "../Chat/ChatList";
 import Confirmation from "../Confirmation/Confirmation";
 import UpdatePassword from "../UpdatePassword";
 import { ErrorFallback } from "../../components/ErrorFallback/ErrorFallback";
@@ -66,6 +67,10 @@ const router = createBrowserRouter([
   {
     path: "feed",
     element: <div>Users</div>,
+  },
+  {
+    path: "chats",
+    element: <ChatList />,
   },
   {
     path: "confirmation",

@@ -12,3 +12,26 @@
 @mixin shadow($shadow-color: rgba(colors.$black, 0.1)) {
   box-shadow: 0 0 10px $shadow-color;
 }
+
+@mixin messageOption {
+  width: 30px;
+  height: 30px;
+  border-radius: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: color .5s linear;
+
+  &:hover {
+      background-color: #d0d0d0;
+  }
+
+}
+
+@mixin messageAvatar {
+display: block;
+width: 36px;
+height: 36px;
+border-radius: 18px;
+background-color: #0f0;
+}

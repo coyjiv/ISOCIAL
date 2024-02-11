@@ -1,0 +1,157 @@
+@import "../../styles/variables/colors";
+@import "../../styles/mixins/common";
+@import "../../index.scss";
+
+
+
+/* ---   Chat   --- */
+
+.App {
+    text-align: center;
+  }
+  
+  .chat-container {
+    max-width: 90%;
+    height: 100vh;
+    margin: 50px auto;
+    border: 1px solid #ccc;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+  }
+  
+  .chat-messages {
+    
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    font-size: 16px;
+  }
+
+  .message-item {
+    max-width: 50%;
+    display: flex;
+    justify-content: flex-start;
+    position: relative;
+  }
+
+  .user {
+    align-self: flex-end;
+    text-align: right;
+    
+    .message-text {
+        margin: 5px;
+        padding: 10px 10px;
+        border-radius: 20px;
+        background-color: #0084ff;
+        color: #fff;
+        font-family: 'Segoe UI',sans-serif;
+        
+      }
+
+      .message-avatar {
+        display: none;
+      }
+
+      .message-options {
+        position: absolute;
+        top: 25%;
+        left: -30px;
+        display: none;
+
+        .message-options_option {
+            @include messageOption;    
+        }
+      }
+
+      &:hover .message-options {
+        display: block;
+      }
+  }
+  
+  .bot {
+    align-self: flex-start;
+    text-align: left;
+    margin-left: 50px;
+    
+    .message-text {
+        margin: 5px;
+        padding: 10px 10px;
+        border-radius: 20px;
+        background-color: #f0f0f0;
+        color: #000;
+        font-family: 'Segoe UI',sans-serif;
+      }
+
+      .message-avatar {
+        @include messageAvatar;
+        position: absolute;
+        left: -36px;
+        top: 10px;
+      }
+
+      .message-options {
+        position: absolute;
+        top: 25%;
+        left: 100%;
+        display: none;
+
+        .message-options_option {
+            @include messageOption;    
+        }
+
+      }
+
+      &:hover .message-options {
+        display: block;
+      }
+  } 
+  
+  .chat-input input {
+    width: 70%;
+    padding: 5px 10px;
+    margin-top: 10px;  
+    background-color: #f1f2f6;
+    border: none;
+    height: 2em;
+    border-radius: 1.5em;
+    font-size: 16px;
+
+    &:focus {
+        outline: none;
+    }
+  }
+
+
+  /* ---   ChatList   --- */
+  
+.chat-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  margin: 10px;
+  width: 90%;
+}
+
+.chat-item {
+  width: 100%;
+  margin-bottom: 5px;
+  padding: 5px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  .message-avatar {
+    @include messageAvatar;
+  }
+
+  h3 {
+    font-size: 20px;
+    font-weight: 600;
+    margin: 5px 10px;
+    font-family: 'Segoe UI',sans-serif;
+
+  }
+
+}
