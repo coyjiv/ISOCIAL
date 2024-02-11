@@ -64,9 +64,9 @@ const LoginForm = () => {
                     {isSubmitting ?
                         <img src={spinner} alt="spinner" className={styles.spinner}/>
                         :
-                        <button type="submit" className={styles.submit_btn}>Sign in</button>
+                        <button type="submit" className={styles.submitBtn}>Sign in</button>
                     }
-                    {isFailed && <p className={styles.wrong_pass}>You entered an incorrect login or password.</p>}
+                    {isFailed && <p className={styles.wrongPass}>You entered an incorrect login or password.</p>}
                 </Form>
             )}
         </Formik>

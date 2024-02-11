@@ -10,7 +10,7 @@ export const initialValues = {
   lastName: '',
   email: '',
   password: '',
-  confirmPassword: '',
+  repeatPassword: '',
   city: '',
   year: yearNow,
   month: monthNow,
@@ -31,7 +31,7 @@ export const validationSchema = object({
     .required('Required field')
     .min(PASSWORD_MIN_LENGTH, 'Must be at least 8 characters')
     .max(15, 'Must be 15 characters at most'),
-  confirmPassword: string().test(
+  repeatPassword: string().test(
     'password',
     'Passwords do not match',
     (value, context) => value === context.parent.password

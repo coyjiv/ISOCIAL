@@ -1,6 +1,6 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box'
-
 import { RegistrationForm } from '../../components/form-components'
 import { RegisterConfirmModal } from '../../components/modals'
 import { initialValues, validationSchema } from './Register.utils'
@@ -9,7 +9,7 @@ import { API_URL } from '../../api'
 import s from './Register.module.scss'
 
 const Register = () => {
-  const [isError] = useState(false)
+  const [isError, setIsError] = useState(false)
   const [openModal, setOpenModal] = useState(false)
 
   const navigate = useNavigate()
@@ -18,6 +18,7 @@ const Register = () => {
     const { year, month, day, ...rest } = values
 
     delete rest.confirmEmail
+    delete rest.confirmPassword
 
     const data = {
       ...rest,
