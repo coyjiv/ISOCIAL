@@ -113,7 +113,7 @@ public class PostService implements IPostService {
       postRepository.save(post);
       favoriteService.findActiveByPostId(id).forEach(entry -> {
         try {
-          favoriteService.delete(entry.getId());
+          favoriteService.delete(entry.getId(), false);
         } catch (IllegalAccessException | RequestValidationException e) {
           throw new RuntimeException(e);
         }
@@ -126,7 +126,7 @@ public class PostService implements IPostService {
         postRepository.save(entry);
         favoriteService.findActiveByPostId(entry.getId()).forEach(en -> {
           try {
-            favoriteService.delete(en.getId());
+            favoriteService.delete(en.getId(), false);
           } catch (IllegalAccessException | RequestValidationException e) {
             throw new RuntimeException(e);
           }

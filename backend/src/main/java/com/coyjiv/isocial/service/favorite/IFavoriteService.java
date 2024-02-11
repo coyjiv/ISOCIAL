@@ -27,6 +27,6 @@ public interface IFavoriteService {
 
   Favorite create(FavoriteRequestDto favoriteRequestDto) throws EntityNotFoundException, IllegalAccessException;
 
-  void delete(Long id) throws IllegalAccessException, RequestValidationException;
+  void delete(Long id,boolean noPermission) throws IllegalAccessException, RequestValidationException;
 
 }

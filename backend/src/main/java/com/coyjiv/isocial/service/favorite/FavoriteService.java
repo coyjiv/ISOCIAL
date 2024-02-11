@@ -102,27 +102,27 @@ public class FavoriteService implements IFavoriteService {
 
   @Override
   @Transactional
-  public void delete(Long id) throws IllegalAccessException {
+  public void delete(Long id, boolean noPermission) throws IllegalAccessException {
     Optional<Favorite> favoriteToDeactivate = favoriteRepository.findActiveById(id);
     if (favoriteToDeactivate.isPresent()) {
       Favorite favorite = favoriteToDeactivate.get();
-      validateFavoriteOwner(favorite.getSelectorId());
+      validateFavoriteOwner(favorite.getSelectorId(), noPermission);
       favorite.setActive(false);
       favoriteRepository.save(favorite);
     }
   }
 
 
-  private void validateFavoriteOwner(Long selectorId) throws IllegalAccessException {
+  private void validateFavoriteOwner(Long selectorId, boolean noPermission) throws IllegalAccessException {
     Long requestOwner = emailPasswordAuthProvider.getAuthenticationPrincipal();
-    if (!Objects.equals(selectorId, requestOwner)) {
+    if (!Objects.equals(selectorId, requestOwner) && noPermission) {
       throw new IllegalAccessException("User have no authorities to do this request.");
     }
   }
 
   private void validatePost(Long id) throws EntityNotFoundException {
     Optional<Post> selectedPost = postRepository.findActiveById(id);
-    if (selectedPost.isEmpty()) {
+    if (selectedPost.isEmpty() ) {
       throw new EntityNotFoundException(
               "Post is not exist"
       );
