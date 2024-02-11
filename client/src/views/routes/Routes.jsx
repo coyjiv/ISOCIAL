@@ -30,6 +30,10 @@ const router = createBrowserRouter([
     element: <Profile />,
   },
   {
+    path: "profile/:id",
+    element: <Profile />
+  },
+  {
     path: "settings",
     element: <Settings />,
   },
@@ -47,10 +51,6 @@ const router = createBrowserRouter([
   },
   {
     path: "feed",
-    element: <div>Users</div>,
-  },
-  {
-    path: "users/:id",
     element: <div>Users</div>,
   },
   {

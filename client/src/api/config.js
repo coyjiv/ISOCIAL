@@ -21,32 +21,33 @@ instance.interceptors.response.use(
   async function (error) {
     if (401 === error.response.status) {
       const originalRequest = error.config
-
       if (!originalRequest._retry) {
         originalRequest._retry = true
       }
 
-      try {
-        if (localStorage.getItem('refresh')) {
+      if (localStorage.getItem('refresh')) {
+        const refresh = localStorage.getItem('refresh')
+
+        try {
           const response = await axios.post(
-            `${API_URL}/api/auth/refresh/`,
-            JSON.stringify({ refresh: localStorage.getItem('refresh') }),
+            `${API_URL}/auth/refresh`,
+            JSON.stringify({ refresh: refresh }),
             { headers: { 'Content-Type': 'application/json' } }
           )
-
           if (response.status === 200) {
             localStorage.setItem('access', response.data.access)
             originalRequest.headers.Authorization =
               'Bearer ' + response.data.access
             return axios(originalRequest)
           }
+        } catch (exception) {
+          localStorage.removeItem('access')
+          localStorage.removeItem('refresh')
+          window.location.href = '/login'
         }
-        return Promise.reject()
-      } catch (refreshError) {
-        return Promise.reject(refreshError)
       }
+      return Promise.reject()
     } else {
       return Promise.reject(error)
     }
-  }
-)
+});

@@ -1,0 +1,1 @@
+export const DEFAULT_USER_AVATAR = 'https://avatar.iran.liara.run/public/7'
