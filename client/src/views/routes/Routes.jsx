@@ -12,6 +12,7 @@ import Videos from "../Videos/Videos";
 import Friends from "../Friends/Friends";
 import Confirmation from "../../components/confirmation/Confirmation";
 import ChatList from "../Chat/ChatList";
+import Chat from "../Chat/Chat";
 
 const router = createBrowserRouter([
   {
@@ -53,6 +54,10 @@ const router = createBrowserRouter([
   {
     path: "chats",
     element: <ChatList />,
+  },
+  {
+    path: "chats/:id",
+    element: <Chat />,
   },
   {
     path: "users/:id",
