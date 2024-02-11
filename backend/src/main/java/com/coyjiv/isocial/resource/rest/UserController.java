@@ -23,7 +23,6 @@ import java.util.Map;
 
 
 @RequiredArgsConstructor
-
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
