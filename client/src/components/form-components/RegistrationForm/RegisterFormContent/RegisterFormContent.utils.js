@@ -38,16 +38,19 @@ export const multiSelectFields = [
     id: 'year',
     name: 'year',
     options: yearOptions,
+    autoComplete: 'bday-year',
   },
   {
     id: 'month',
     name: 'month',
     options: monthOptions,
+    autoComplete: 'bday-month',
   },
   {
     id: 'day',
     name: 'day',
     options: daysOptions,
+    autoComplete: 'bday-day',
   },
 ]
 

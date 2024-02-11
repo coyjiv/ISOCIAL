@@ -2,10 +2,11 @@ import PropTypes from 'prop-types'
 import { Button as MuiButton } from '@mui/material'
 import Box from '@mui/material/Box'
 
-const Button = ({ variant, children, type, size, fullWidth, ...props }) => {
+const Button = ({ variant, children, type, size, fullWidth, boxProps, ...props }) => {
   return (
-    <Box {...props} width={fullWidth && '100%'}>
+    <Box {...boxProps} width={fullWidth && '100%'}>
       <MuiButton
+        {...props}
         variant={variant}
         type={type}
         size={size}
@@ -26,6 +27,7 @@ Button.propTypes = {
   type: PropTypes.oneOf(['button', 'submit', 'reset']),
   variant: PropTypes.oneOf(['contained', 'outlined', 'text']),
   children: PropTypes.any,
+  boxProps: PropTypes.object,
 }
 
 Button.defaultProps = {

@@ -4,7 +4,8 @@ import { Stack, TextField } from '@mui/material'
 import { useField } from 'formik'
 import ErrorIcon from '@mui/icons-material/Error'
 
-import { Tooltip, InputPasswordIcon } from '../../../ui'
+import Tooltip from '../../Tooltip/Tooltip'
+import InputPasswordIcon from '../../icons/InputPasswordIcon/InputPasswordIcon'
 import s from './FormInput.module.scss'
 
 const FormInput = ({

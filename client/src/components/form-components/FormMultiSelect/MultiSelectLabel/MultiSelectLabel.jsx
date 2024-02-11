@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 import { Stack, Typography } from '@mui/material'
 import HelpIcon from '@mui/icons-material/Help'
 
-import { Tooltip } from '../../../../ui'
+import Tooltip from '../../../Tooltip/Tooltip'
 import s from './MultiSelectLabel.module.scss'
 
 const MultiSelectLabel = ({ label, description, trigger }) => {

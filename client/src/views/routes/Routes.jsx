@@ -10,7 +10,7 @@ import Settings from "../Settings/Settings";
 import Groups from "../Groups/Groups";
 import Videos from "../Videos/Videos";
 import Friends from "../Friends/Friends";
-import Confirmation from "../../components/confirmation/Confirmation";
+import Confirmation from "../Confirmation/Confirmation";
 
 const router = createBrowserRouter([
   {
