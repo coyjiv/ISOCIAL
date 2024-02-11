@@ -7,6 +7,7 @@ import LoginForm from './LoginForm';
 import styles from './styles.module.scss'
 //images
 import GLink from './icons/google_icon.svg';
+import { API_URL } from "../../api/config";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -37,6 +38,7 @@ const Login = () => {
             <h1 className={styles.logo}>ISOCIAL</h1>
             <div className={styles.form_wrapper}>
                 <div className={styles.body}>
+                    {API_URL}
                     <LoginForm/>
                     <Link to={'/forgot-password'} className={styles.forgot_password}>Forgot Password</Link>
                 </div>

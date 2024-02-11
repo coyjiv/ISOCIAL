@@ -11,6 +11,7 @@ import Groups from "../Groups/Groups";
 import Videos from "../Videos/Videos";
 import Friends from "../Friends/Friends";
 import Confirmation from "../../components/confirmation/Confirmation";
+import ChatList from "../Chat/ChatList";
 
 const router = createBrowserRouter([
   {
@@ -48,6 +49,10 @@ const router = createBrowserRouter([
   {
     path: "feed",
     element: <div>Users</div>,
+  },
+  {
+    path: "chats",
+    element: <ChatList />,
   },
   {
     path: "users/:id",
