@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box'
 
-// import { API_URL } from '../../api/config'
 import { RegistrationForm } from '../../components/form-components'
 import { RegisterConfirmModal } from '../../components/modals'
 import { initialValues, validationSchema } from './Register.utils'
@@ -18,11 +17,9 @@ const Register = () => {
     const { year, month, day, ...rest } = values
 
     delete rest.confirmEmail
-    // delete rest.confirmPassword
 
     const data = {
 			...rest,
-			// repeatPassword: rest.confirmPassword,
       dateOfBirth: `${year}-${month}-${day}`,
     }
 
