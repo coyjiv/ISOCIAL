@@ -19,20 +19,6 @@ CREATE TABLE public.users
     is_active          BOOLEAN      NOT NULL DEFAULT FALSE
 );
 
-DROP TABLE IF EXISTS posts;
-CREATE TABLE public.posts
-(
-    id                 INT AUTO_INCREMENT PRIMARY KEY,
-    text_content       VARCHAR(1000),
-    attachments        VARCHAR ARRAY,
-    is_edited          BOOLEAN NOT NULL DEFAULT FALSE,
-    original_post_id   INT,
-    user_id            INT REFERENCES users (id),
-    creation_date      TIMESTAMP,
-    last_modified_date TIMESTAMP,
-    is_active BOOLEAN  NOT NULL DEFAULT FALSE
-);
-
 DROP TABLE IF EXISTS roles;
 CREATE TABLE public.roles
 (
@@ -80,26 +66,16 @@ CREATE TABLE public.users_chats
     FOREIGN KEY (user_id) REFERENCES users (id),
     FOREIGN KEY (chat_id) REFERENCES chats (id)
 );
-
-
-DROP TABLE IF EXISTS subscriptions;
-CREATE TABLE public.subscriptions
+DROP TABLE IF EXISTS friends;
+CREATE TABLE friends
 (
-    id                 INT AUTO_INCREMENT PRIMARY KEY,
-    user_id            INT,
-    subscriber_id          INT,
+    id           INT AUTO_INCREMENT PRIMARY KEY,
+    requester_id INT,
+    addresser_id INT,
+    status       VARCHAR(255),
+    FOREIGN KEY (requester_id) REFERENCES public.users (id),
+    FOREIGN KEY (addresser_id) REFERENCES public.users (id),
     creation_date      TIMESTAMP,
     last_modified_date TIMESTAMP,
-    is_active          BOOLEAN NOT NULL DEFAULT FALSE
-);
-
-DROP TABLE IF EXISTS favorites;
-CREATE TABLE public.favorites
-(
-    id                 INT AUTO_INCREMENT PRIMARY KEY,
-    selected_post_id   INT,
-    user_selector_id   INT REFERENCES users (id),
-    creation_date      TIMESTAMP,
-    last_modified_date TIMESTAMP,
-    is_active BOOLEAN  NOT NULL DEFAULT FALSE
+    is_active BOOLEAN NOT NULL DEFAULT FALSE
 );
