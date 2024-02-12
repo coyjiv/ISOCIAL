@@ -1,15 +1,20 @@
 import Layout from '../components/layout';
+import { useGetUserProfile } from "../hooks";
 
 const withLayout = (WrappedComponent) => {
-    const WithLayout = (props) => (
-        <Layout>
-            <WrappedComponent {...props} />
-        </Layout>
-    );
+	const WithLayout = (props) => {
+		useGetUserProfile();
+		
+	return (
+		<Layout>
+			<WrappedComponent {...props} />
+		</Layout>
+	)	
+};
 
-    WithLayout.displayName = `withLayout(${WrappedComponent.displayName || WrappedComponent.name || 'Component'})`;
+WithLayout.displayName = `withLayout(${WrappedComponent.displayName || WrappedComponent.name || 'Component'})`;
 
-    return WithLayout;
+return WithLayout;
 };
 
 export { withLayout };

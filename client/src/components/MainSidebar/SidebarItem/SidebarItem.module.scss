@@ -1,0 +1,17 @@
+.item-wrapper {
+  display: flex;
+  max-width: 450px;
+  height: 55px;
+  padding: 0 16px;
+  width: 100%;
+  align-items: center;
+  gap: 12px;
+  border-radius: 4px;
+  background-color: inherit;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  &:hover {
+    background-color: #e4e6eb;
+    color: #0765ff;
+  }
+}

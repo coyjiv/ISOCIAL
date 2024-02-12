@@ -25,7 +25,13 @@ export const theme = createTheme({
       lightGrey: "#f0f2f5",
       primaryButtonBackground: "#0866FF",
       white: "#fff",
-      shadow2: "rgba(0, 0, 0, 0.2)"
+			shadow2: "rgba(0, 0, 0, 0.2)",
+			background: {
+				secondary: "#eff2f5",
+			},
+			text: {
+				grey: "#6a6d71",
+			},	
     },
     components: {
       MuiButton: {
@@ -35,6 +41,5 @@ export const theme = createTheme({
           },
         },
       },
-    },
-    
-  });
+    },   
+});
