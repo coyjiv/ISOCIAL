@@ -55,7 +55,9 @@ const router = createBrowserRouter([
     path: "confirmation",
     element: <Confirmation />,
   },
-  { path: "forgotPassword", element: <ForgotPassword /> },
+  { path: "forgotPassword", 
+    element: <ForgotPassword /> 
+  },
 ]);
 
 export const App = () => <RouterProvider router={router} />;
