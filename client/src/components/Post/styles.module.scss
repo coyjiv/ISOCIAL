@@ -1,4 +1,5 @@
 @import "../../styles/variables/colors";
+
 .container {
   max-width: 530px;
   padding-top: 16px;
@@ -22,12 +23,14 @@
   justify-content: space-between;
   margin-bottom: 10px;
 }
-.actions{
-  img{
+
+.actions {
+  img {
     cursor: pointer;
   }
 }
-.actionModal{
+
+.actionModal {
   position: absolute;
   top: 40px;
   right: 0px;
@@ -37,18 +40,19 @@
   gap: 12px;
   background-color: white;
 
-  span{
+  span {
     padding: 14px;
     cursor: pointer;
     display: block;
     color: $grey;
 
-    &:hover{
+    &:hover {
       background-color: rgba(117, 119, 122, 0.1);
       color: black;
     }
   }
 }
+
 .user {
   display: flex;
   gap: 8px;
@@ -99,10 +103,12 @@
 .images {
   display: flex;
 }
-.mainImageWrapper{
+
+.mainImageWrapper {
   width: 65%;
   overflow: hidden;
 }
+
 .mainImage {
   width: 100%;
   height: 100%;
@@ -115,7 +121,8 @@
   display: flex;
   flex-direction: column;
 }
-.restImageWrapper{
+
+.restImageWrapper {
   flex: 1;
   overflow: hidden;
 }
@@ -126,7 +133,7 @@
   object-fit: cover;
 }
 
-.stats{
+.stats {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -137,26 +144,29 @@
   padding-bottom: 10px;
   border-bottom: 1px solid $grey;
 }
-.likes{
+
+.likes {
   display: flex;
   gap: 4px;
   align-items: center;
   cursor: pointer;
-  p{
+
+  p {
     font-size: 15px;
     font-weight: 400;
     line-height: 20px;
     color: $grey;
   }
 }
-.comments{
+
+.commentsCount {
   display: flex;
   align-items: center;
   gap: 4px;
   cursor: pointer;
 }
 
-.reactions{
+.reactions {
   display: flex;
   align-items: center;
   padding-top: 10px;
@@ -165,7 +175,8 @@
   padding-bottom: 10px;
   border-bottom: 1px solid $grey;
 }
-.raction{
+
+.raction {
   flex-grow: 1;
   display: flex;
   align-items: center;
@@ -173,10 +184,29 @@
   gap: 8px;
   cursor: pointer;
 
-  span{
+  span {
     font-size: 15px;
     font-weight: 600;
     line-height: 20px;
     color: $grey;
   }
+}
+
+.footer {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin-right: 16px;
+  margin-left: 16px;
+}
+
+.comments {
+  height: 45px;
+}
+
+.commentInput {
+  border-radius: 18px;
+  border: none;
+  padding: 8px 12px;
+  background-color: $wash;
+  width: 100%;
 }

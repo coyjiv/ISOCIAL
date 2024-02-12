@@ -11,9 +11,21 @@ import comment from './icons/comment.svg'
 import commentIcon from './icons/commentIcon.svg'
 import likeIcon from './icons/likeIcon.svg'
 import repost from './icons/repost.svg'
+import {API_URL, instance} from "../../api/config.js";
+import {Link} from "react-router-dom";
 
 
-const Post = ({postId, authorId,avatarUrl, username,creationDate,textContent,images}) => {
+const Post = ({
+                  postId,
+                  authorId,
+                  avatarUrl,
+                  username,
+                  creationDate,
+                  textContent,
+                  images,
+                  likesCount,
+                  commentsCount
+              }) => {
     const loggedUser = localStorage.getItem('userId');
     const isPostOwner = parseInt(loggedUser) === authorId;
 
@@ -22,23 +34,36 @@ const Post = ({postId, authorId,avatarUrl, username,creationDate,textContent,ima
 
     useEffect(() => {
         const handleClickOutside = (e) => {
-            if (isModalAction && actionRef.current && !actionRef.current.contains(e.target)){
+            if (isModalAction && actionRef.current && !actionRef.current.contains(e.target)) {
                 setIsModalAction(false);
             }
         }
-        document.addEventListener('click',handleClickOutside);
+        document.addEventListener('click', handleClickOutside);
 
-        return () => document.removeEventListener('click',handleClickOutside);
-    }, [actionRef,isModalAction]);
+        return () => document.removeEventListener('click', handleClickOutside);
+    }, [actionRef, isModalAction]);
+
+
+    const handleLikePost = async () =>{
+        //TODO: Implement like logic
+    }
+    const handleDeletePost = async () => {
+        await instance.delete(`${API_URL}/api/posts/${postId}`);
+        // TODO: REMOVE FROM POSTS LIST
+    }
 
 
     return (
         <div className={styles.container}>
             <div className={styles.header}>
                 <div className={styles.user}>
-                    <img src={avatarUrl} alt="" className={styles.userImage}/>
+                    <Link to={`/profile/${authorId}`}>
+                        <img src={avatarUrl} alt="" className={styles.userImage}/>
+                    </Link>
                     <div className={styles.userData}>
-                        <p className={styles.username}>{username}</p>
+                        <Link to={`/profile/${authorId}`}>
+                            <p className={styles.username}>{username}</p>
+                        </Link>
                         <p className={styles.creationDate}>
                             {moment(creationDate).format('DD MMMM YYYY [р.]')}
                         </p>
@@ -48,7 +73,7 @@ const Post = ({postId, authorId,avatarUrl, username,creationDate,textContent,ima
                     <img src={action} alt="action btn"/>
                     {isModalAction && <div className={styles.actionModal}>
                         <span>Edit</span>
-                        <span>Delete</span>
+                        <span onClick={() => handleDeletePost()}>Delete</span>
                     </div>}
                 </div>}
             </div>
@@ -74,14 +99,14 @@ const Post = ({postId, authorId,avatarUrl, username,creationDate,textContent,ima
             <div className={styles.stats}>
                 <div className={styles.likes}>
                     <img src={heart} alt="icon"/>
-                    <p>Світлана Ускова, Вячеслав Гмиря та ще 1</p>
+                    <p>{likesCount}</p>
                 </div>
-                <div className={styles.comments}>
-                    <span>1</span> <img src={comment} alt="comment icon"/>
+                <div className={styles.commentsCount}>
+                    <span>{commentsCount}</span> <img src={comment} alt="comment icon"/>
                 </div>
             </div>
             <div className={styles.reactions}>
-                <div className={styles.raction}>
+                <div className={styles.raction} onClick={() => handleLikePost()}>
                     <img src={likeIcon} alt="like"/>
                     <span>Like</span>
                 </div>
@@ -94,6 +119,14 @@ const Post = ({postId, authorId,avatarUrl, username,creationDate,textContent,ima
                     <span>Share</span>
                 </div>
             </div>
+            <div className={styles.footer}>
+                <div className={styles.comments}>
+
+                </div>
+                <div>
+                    <input type="text" placeholder={"Comment..."} className={styles.commentInput}/>
+                </div>
+            </div>
         </div>
     );
 };
@@ -101,6 +134,8 @@ const Post = ({postId, authorId,avatarUrl, username,creationDate,textContent,ima
 Post.propTypes = {
     postId: PropTypes.number.isRequired,
     authorId: PropTypes.number.isRequired,
+    likesCount: PropTypes.string.isRequired,
+    commentsCount: PropTypes.number.isRequired,
     avatarUrl: PropTypes.string.isRequired,
     username: PropTypes.string.isRequired,
     creationDate: PropTypes.instanceOf(Date).isRequired,

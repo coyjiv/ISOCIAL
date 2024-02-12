@@ -13,8 +13,11 @@ const HomePage = () => {
       creationDate={new Date()}
       textContent={'Oohhh, sci-fi satisfaction'}
       images={[
-        'https://s.ill.in.ua/i/news/570x380/291/291360.jpg'
-      ]} />
+        'https://s.ill.in.ua/i/news/570x380/291/291360.jpg',
+      ]}
+      likesCount={"Світлана Ускова, Вячеслав Гмиря та ще 1"}
+      commentsCount={14}
+    />
   )
 }
 
