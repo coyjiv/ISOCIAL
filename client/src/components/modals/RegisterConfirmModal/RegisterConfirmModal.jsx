@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { Divider, Modal, Stack, Typography } from '@mui/material'
 import { Paper } from '@mui/material'
 
-import { Button } from '../../../ui'
+import Button from '../../buttons/Button/Button'
 import s from './RegisterConfirmModal.module.scss'
 
 const RegisterConfirmModal = ({ open, onClose }) => {

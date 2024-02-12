@@ -29,6 +29,7 @@ const FormMultiSelect = ({
           label={field.label}
           options={field.options}
           size={size}
+          autoComplete={field.autoComplete}
         />
       ))}
     </Stack>

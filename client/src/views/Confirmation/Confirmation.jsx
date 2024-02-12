@@ -16,7 +16,7 @@ const Confirmation = () => {
     (async () => {
       try {
         const { status } = await axios.post(
-          `${import.meta.env.VITE_API_URL}auth/confirmation?id=${id}`,
+          `${import.meta.env.VITE_API_URL}/auth/confirmation?id=${id}`,
           undefined,
           { headers: { "Content-Type": "application/json" } }
         );

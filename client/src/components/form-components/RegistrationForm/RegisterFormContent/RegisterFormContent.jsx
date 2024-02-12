@@ -2,18 +2,18 @@ import { Stack } from '@mui/material'
 import { useFormikContext } from 'formik'
 
 import { FormInput, FormMultiSelect, FormSelect } from '../../index'
-import { Button } from '../../../../ui'
+import Button from '../../../buttons/Button'
 import { PASSWORD_MIN_LENGTH } from '../../../../views/Register'
 import {
   multiSelectFields,
   registerSelectOptions,
-  isValidEmailFormat,
 } from './RegisterFormContent.utils'
 
 const RegisterFormContent = () => {
-  const { values } = useFormikContext()
-  const showConfirmEmail = isValidEmailFormat(values.email)
+  const { values, isValid } = useFormikContext()
   const showConfirmPassword = values.password.length > PASSWORD_MIN_LENGTH - 1
+
+  console.log(multiSelectFields);
 
   return (
     <>
@@ -24,12 +24,14 @@ const RegisterFormContent = () => {
           placeholder="First Name"
           size="small"
           fullWidth
+          autoComplete="given-name"
         />
         <FormInput
           name="lastName"
           id="lastName"
           placeholder="Last Name"
           size="small"
+          autoComplete="family-name"
           fullWidth
         />
       </Stack>
@@ -39,22 +41,15 @@ const RegisterFormContent = () => {
           id="email"
           placeholder="Email"
           size="small"
+          autoComplete="email"
           fullWidth
         />
-        {showConfirmEmail && (
-          <FormInput
-            name="confirmEmail"
-            id="confirmEmail"
-            placeholder="Confirm Email"
-            size="small"
-            fullWidth
-          />
-        )}
         <FormInput
           name="password"
           id="password"
           placeholder="Password"
           size="small"
+          autoComplete="new-password"
           type="password"
           fullWidth
           withIcon
@@ -62,9 +57,10 @@ const RegisterFormContent = () => {
 
         {showConfirmPassword && (
           <FormInput
-            name="repeatPassword"
-            id="repeatPassword"
-            placeholder="Repeat Password"
+            name="confirmPassword"
+            id="confirmPassword"
+            placeholder="Confirm Password"
+            autoComplete="new-password"
             size="small"
             type="password"
             fullWidth
@@ -86,7 +82,7 @@ const RegisterFormContent = () => {
           labelDescription="Choose your birthday"
         />
       </Stack>
-      <Button type="submit" size="large" mt={1} fullWidth>
+      <Button disabled={!isValid} type="submit" size="large" mt={1} fullWidth>
         Register
       </Button>
     </>

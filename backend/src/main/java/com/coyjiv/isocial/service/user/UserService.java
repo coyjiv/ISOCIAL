@@ -149,7 +149,7 @@ public class UserService implements IUserService {
 
   @Transactional
   @Override
-  public void update(Long id, Map<String, String> fields)
+  public void update(Long id, Map<Object, Object> fields)
           throws IllegalAccessException, EntityNotFoundException {
     Long requestOwnerId = authProvider.getAuthenticationPrincipal();
     if (!Objects.equals(id, requestOwnerId)) {
@@ -159,11 +159,12 @@ public class UserService implements IUserService {
     Optional<User> user = userRepository.findById(id);
     if (user.isPresent()) {
       fields.forEach((key, value) -> {
-        if (Objects.equals(key, "email") || Objects.equals(key, "password")
-                || Objects.equals(key, "activity_status") || Objects.equals(key, "last_seen")) {
+        String stringKey = (String) key;
+        if (Objects.equals(stringKey, "email") || Objects.equals(stringKey, "password")
+                || Objects.equals(stringKey, "activity_status") || Objects.equals(stringKey, "last_seen")) {
           return;
         }
-        Field field = ReflectionUtils.findField(User.class, key);
+        Field field = ReflectionUtils.findField(User.class, stringKey);
         if (field != null) {
           field.setAccessible(true);
           ReflectionUtils.setField(field, user.get(), value);
