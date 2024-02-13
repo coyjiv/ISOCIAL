@@ -1,5 +1,6 @@
 package com.coyjiv.isocial.dto.respone.user;
 
+import com.coyjiv.isocial.domain.UserActivityStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,4 +17,5 @@ public class UserSearchResponseDto {
   private String firstName;
   private String lastName;
   private List<String> avatarsUrl;
+  private UserActivityStatus activityStatus;
 }
