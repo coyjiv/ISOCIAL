@@ -20,21 +20,23 @@ import java.util.List;
 @Service
 public class FavoriteResponseMapper extends DtoMapperFacade<Favorite, FavoriteResponseDto> {
   private final PostRepository postRepository;
+
   public FavoriteResponseMapper (PostRepository postRepository) {
     super(Favorite.class, FavoriteResponseDto.class);
     this.postRepository = postRepository;
   }
+
   protected void decorateDto (FavoriteResponseDto dto, Favorite entity) {
     dto.setId(entity.getId());
     dto.setSelectedPostId(entity.getSelectedPostId());
     dto.setSelectorId(entity.getSelectorId());
     try {
-       Post post = postRepository.findActiveById(entity.getSelectedPostId()).get();
-       dto.setTextContent(post.getTextContent());
-       dto.setEdited(post.isEdited());
-       dto.setOriginalPostId(post.getOriginalPostId());
-       dto.setAuthorId(post.getAuthorId());
-       dto.setAttachments(post.getAttachments());
+      Post post = postRepository.findActiveById(entity.getSelectedPostId()).get();
+      dto.setTextContent(post.getTextContent());
+      dto.setEdited(post.isEdited());
+      dto.setOriginalPostId(post.getOriginalPostId());
+      dto.setAuthorId(post.getAuthorId());
+      dto.setAttachments(post.getAttachments());
     } catch (Exception exception) {
       exception.printStackTrace();
     }
