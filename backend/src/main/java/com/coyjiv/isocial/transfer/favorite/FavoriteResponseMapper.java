@@ -21,12 +21,12 @@ import java.util.List;
 public class FavoriteResponseMapper extends DtoMapperFacade<Favorite, FavoriteResponseDto> {
   private final PostRepository postRepository;
 
-  public FavoriteResponseMapper (PostRepository postRepository) {
+  public FavoriteResponseMapper(PostRepository postRepository) {
     super(Favorite.class, FavoriteResponseDto.class);
     this.postRepository = postRepository;
   }
 
-  protected void decorateDto (FavoriteResponseDto dto, Favorite entity) {
+  protected void decorateDto(FavoriteResponseDto dto, Favorite entity) {
     dto.setId(entity.getId());
     dto.setSelectedPostId(entity.getSelectedPostId());
     dto.setSelectorId(entity.getSelectorId());
