@@ -17,6 +17,9 @@ CREATE TABLE public.users
     date_of_birth      DATE,
     creation_date      TIMESTAMP,
     last_modified_date TIMESTAMP,
+    is_premium         BOOLEAN      NOT NULL DEFAULT FALSE,
+    premium_nickname   VARCHAR(250),
+    premium_emoji      VARCHAR(250),
     is_active          BOOLEAN      NOT NULL DEFAULT FALSE
 );
 

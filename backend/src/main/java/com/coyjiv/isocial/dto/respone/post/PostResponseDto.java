@@ -23,4 +23,6 @@ public class PostResponseDto {
   private Long originalPostId;
 
   private Long authorId;
+
+  private List<String> likes;
 }
