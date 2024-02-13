@@ -1,12 +1,6 @@
 package com.coyjiv.isocial.domain;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -48,13 +42,14 @@ public class User extends AbstractEntity {
   @Column(name = "bio")
   private String bio;
 
-
+  @Enumerated(EnumType.STRING)
   @Column(name = "gender")
   private UserGender gender;
 
   @Column(name = "is_private")
   private boolean isPrivate;
 
+  @Enumerated(EnumType.STRING)
   @Column(name = "activity_status")
   private UserActivityStatus activityStatus;
 
