@@ -88,6 +88,11 @@ public class UserService implements IUserService {
     return userRepository.findActiveByEmail(email);
   }
 
+  @Override
+  public boolean isUserActive(String email) {
+    return userRepository.existsActiveUserByEmail(email);
+  }
+
   @Transactional(readOnly = true)
   @Override
   public List<UserSearchResponseDto> findByName(String name, int page, int size) {
@@ -146,6 +151,8 @@ public class UserService implements IUserService {
       throw new AccountNotFoundException("User with this email not found");
     }
   }
+
+
 
   @Transactional
   @Override

@@ -6,9 +6,13 @@ import {
   Select as MuiSelect,
 } from '@mui/material'
 import { useField } from 'formik'
+import Tooltip from '../../Tooltip/Tooltip'
+import ErrorIcon from '@mui/icons-material/Error'
 
 const FormSelect = ({ id, label, name, options, size }) => {
-  const [field] = useField(name)
+  const [field, meta] = useField(name)
+
+  const isError = !!meta.error && meta.touched
 
   const value = field.value === '' ? options[0].value : field.value
 
@@ -22,6 +26,7 @@ const FormSelect = ({ id, label, name, options, size }) => {
         size={size}
         {...field}
         value={value}
+        error={isError}
       >
         {options?.map((option) => (
           <MenuItem key={option.value} value={option.value}>
@@ -29,6 +34,13 @@ const FormSelect = ({ id, label, name, options, size }) => {
           </MenuItem>
         ))}
       </MuiSelect>
+      <div style={{ position: 'absolute', right: '30px', top: '10px' }}>
+        {isError && (
+          <Tooltip width="20px" arrow title={meta.error}>
+            <ErrorIcon fontSize="small" cursor="pointer" color="error" />
+          </Tooltip>
+        )}
+      </div>
     </FormControl>
   )
 }

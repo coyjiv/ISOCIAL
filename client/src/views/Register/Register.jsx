@@ -1,16 +1,16 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom';
-import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
 import { RegistrationForm } from '../../components/form-components'
 import { RegisterConfirmModal } from '../../components/modals'
 import { initialValues, validationSchema } from './Register.utils'
 import { useNavigate } from 'react-router-dom'
 import { API_URL } from '../../api'
-import s from './Register.module.scss'
+import styles from '../Login/styles.module.scss'
 
 const Register = () => {
   const [isError, setIsError] = useState(false)
   const [openModal, setOpenModal] = useState(false)
+  const [email, setEmail] = useState('')
 
   const navigate = useNavigate()
 
@@ -18,18 +18,14 @@ const Register = () => {
     const { year, month, day, ...rest } = values
 
     delete rest.confirmEmail
-    delete rest.confirmPassword
 
     const data = {
       ...rest,
-      repeatPassword: rest.confirmPassword,
       dateOfBirth: `${year}-${month}-${day}`,
     }
-    delete data.confirmPassword
 
     console.log(data)
 
-    //TODO change after added RTK Query
     try {
       const response = await fetch(
         `${API_URL}/auth/registration`,
@@ -42,9 +38,10 @@ const Register = () => {
         },
       )
       if (response.status != 201 && !response.ok) {
-        // setIsError(true)
+        setIsError(true)
         console.log('Error');
       } else {
+        setEmail(data.email)
         setOpenModal(true)
       }
     } catch (error) {
@@ -58,18 +55,24 @@ const Register = () => {
   }
 
   return (
-    <Box className={s.pageWrapper}>
+    <div className={styles.container}>
+      <div className={styles.logoWrapper}>
+        <h1 className={styles.logo}>iSocial</h1>
+        <Typography className={styles.slogan}>iSpeak. iLike. iSocial.</Typography>
+      </div>
       <RegistrationForm
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       />
+      {/* @TODO: send toast with error message */}
       {isError && <div>Error</div>}
       <RegisterConfirmModal
         open={openModal}
         onClose={handleModalClose}
+        email={email}
       />
-    </Box>
+    </div>
   )
 }
 

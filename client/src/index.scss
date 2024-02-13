@@ -1,3 +1,18 @@
+@use './styles/variables/colors';
+
+* {
+  box-sizing: border-box;
+  font-family: 'Segoe UI', 'Segoe UI Historic', -apple-system,
+  BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji',
+  'Segoe UI Emoji', 'Segoe UI Symbol';
+  font-style: normal;
+  line-height: 1;
+
+  &:focus {
+    outline: none;
+  }
+}
+
 html,
 body,
 div,
@@ -112,6 +127,7 @@ section {
   display: block;
 }
 
+
 ol,
 ul {
   list-style: none;
@@ -171,11 +187,9 @@ table {
   font-display: swap;
 }
 
-* {
-  font-family: 'Segoe UI', 'Segoe UI Historic', -apple-system,
-    BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji',
-    'Segoe UI Emoji', 'Segoe UI Symbol';
+body {
+  font-family: 'Segoe UI', sans-serif;
   font-style: normal;
   line-height: 1;
-  box-sizing: border-box;
+  background-color: colors.$wash;
 }

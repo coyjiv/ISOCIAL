@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types'
-import { Button as MuiButton } from '@mui/material'
-import Box from '@mui/material/Box'
+import { Button as MuiButton, Box } from '@mui/material'
 
 const Button = ({ variant, children, type, size, fullWidth, boxProps, ...props }) => {
   return (

@@ -1,17 +1,36 @@
+@use '../../../styles/variables/colors';
+@use '../../../styles/mixins/breakpoints';
+
 .form-wrapper {
-  width: 450px;
-  height: fit-content;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.2);
-  border-radius: 5px;
+  width: 92%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1);
+  background-color: colors.$white;
+  padding: 24px 10px;
+  border-radius: 10px;
+  @include breakpoints.media('sm') {
+    width: 389px;
+    padding: 24px 32px;
+  }
+  @include breakpoints.media('md') {
+    width: 420px;
+    padding: 24px 10px;
+    padding-top: 0;
+  }
 }
 
 .heading-wrapper {
-  padding: 10px 20px;
+  padding: 10px 0px;
+  @include breakpoints.media('sm') {
+    padding: 10px 20px;
+  }
 }
 
 .form-content {
-  padding: 10px 20px;
+  padding: 10px 0px;
   flex-grow: 1;
+  @include breakpoints.media('sm') {
+    padding: 10px 20px;
+  }
 }
 
 .form {
@@ -19,4 +38,17 @@
   flex-direction: column;
   gap: 10px;
   align-items: center;
+}
+
+.submitButton {
+  width: 100%;
+  padding: 12px 32px;
+  font-size: 17px;
+  margin-top: 20px;
+}
+
+.link {
+  margin-top: 20px;
+  text-align: center;
+  color: colors.$primaryButtonBackground;
 }

@@ -1,5 +1,6 @@
 //libs
-import { Formik, Field, Form } from 'formik';
+import { Formik, Form } from 'formik';
+import { FormInput } from '../../components/form-components';
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
@@ -10,16 +11,14 @@ import { validationSchema } from "./validation.js"
 import styles from './styles.module.scss'
 //icon
 import spinner from '../../assets/icons/spinner.svg'
-import open from './icons/open.svg'
-import closed from './icons/closed.svg'
 //api
 import { API_URL } from '../../api/config.js';
+import { BlueRoundedButton } from '../../components/buttons';
 
 const LoginForm = () => {
     const [userId, setUserId] = useLocalStorage('userId', null)
     const [isFailed, setFailed] = useState(false);
 
-    const [isPasswordHidden, setIsPasswordHidden] = useState(true);
     const navigate = useNavigate();
     const initialValues = {
         email: '',
@@ -45,11 +44,12 @@ const LoginForm = () => {
 
             localStorage.setItem("access", res.access);
             localStorage.setItem("refresh", res.refresh);
+            navigate("/")
+
         } else {
             setFailed(true);
         }
         setSubmitting(false);
-        navigate("/")
     };
 
 
@@ -58,26 +58,34 @@ const LoginForm = () => {
             initialValues={initialValues}
             validationSchema={validationSchema}
             onSubmit={handleSubmit}
-            validateOnChange={false}
-            validateOnBlur={false}
+            validateOnChange={true}
+            validateOnBlur={true}
         >
-            {({ errors, isSubmitting }) => (
+            {({ isSubmitting, isValid }) => (
                 <Form className={styles.form}>
-                    <Field className={`${styles.field} ${errors.email && styles.error}`} type="text" id="email"
-                        name="email" placeholder="Email" />
-                    <div className={styles.password}>
-                        <Field className={`${styles.field} ${errors.password && styles.error}`}
-                            type={isPasswordHidden ? 'password' : 'text'}
-                            id="password" name="password" placeholder="Password" />
-                        <img onClick={() => setIsPasswordHidden(prev => !prev)}
-                            src={isPasswordHidden ? closed : open}
-                            alt="eye" className={styles.eye} />
-                    </div>
+                    <FormInput
+                        name="email"
+                        id="email"
+                        placeholder="Email"
+                        size="small"
+                        autoComplete="email"
+                        fullWidth
+                    />
+                    <FormInput
+                        name="password"
+                        id="password"
+                        placeholder="Password"
+                        size="small"
+                        autoComplete="new-password"
+                        type="password"
+                        fullWidth
+                        withIcon
+                    />
 
                     {isSubmitting ?
                         <img src={spinner} alt="spinner" className={styles.spinner} />
                         :
-                        <button type="submit" className={styles.submitBtn}>Sign in</button>
+                        <BlueRoundedButton disabled={!isValid} type="submit" className={styles.submitBtn}>Sign in</BlueRoundedButton>
                     }
                     {isFailed && <p className={styles.wrongPass}>You entered an incorrect login or password.</p>}
                 </Form>

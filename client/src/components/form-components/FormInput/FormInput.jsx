@@ -19,6 +19,7 @@ const FormInput = ({
   withIcon,
   ...props
 }) => {
+
   const [inputType, setInputType] = useState(type)
   const [field, meta] = useField(name)
 
@@ -47,7 +48,7 @@ const FormInput = ({
             <InputPasswordIcon type={inputType} onClick={showPassword} />
           )}
           {isError && (
-            <Tooltip wight="fit-content" arrow title={meta.error}>
+            <Tooltip width="20px" arrow title={meta.error}>
               <ErrorIcon fontSize="small" cursor="pointer" color="error" />
             </Tooltip>
           )}

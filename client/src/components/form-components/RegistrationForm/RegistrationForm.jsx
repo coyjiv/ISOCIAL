@@ -11,7 +11,7 @@ const RegistrationForm = ({ initialValues, validationSchema, onSubmit }) => {
     <Box className={s.formWrapper}>
       <Stack height="100%">
         <Stack className={s.headingWrapper}>
-          <Typography variant="h4" fontSize="32px">
+          <Typography variant="h4" fontSize="32px" fontWeight={900}>
             Sign Up
           </Typography>
           <Typography variant="subtitle1">It’s quick and easy.</Typography>
@@ -23,6 +23,8 @@ const RegistrationForm = ({ initialValues, validationSchema, onSubmit }) => {
               initialValues={initialValues}
               validationSchema={validationSchema}
               onSubmit={onSubmit}
+              validateOnChange={true}
+              validateOnBlur={true}
             >
               <Form className={s.form}>
                 <RegisterFormContent />

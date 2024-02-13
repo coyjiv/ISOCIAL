@@ -9,13 +9,13 @@ const Tooltip = ({ className, title, arrow, children, trigger, ...props }) => {
 
   const tooltipConfig = !isHover
     ? {
-        disableHoverListener: true,
-        PopperProps: {
-          disablePortal: true,
-        },
-        open: isOpen,
-        onClose: () => setIsOpen(false),
-      }
+      disableHoverListener: true,
+      PopperProps: {
+        disablePortal: true,
+      },
+      open: isOpen,
+      onClose: () => setIsOpen(false),
+    }
     : ''
 
   return (

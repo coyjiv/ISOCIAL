@@ -2,22 +2,27 @@ import { Stack } from '@mui/material'
 import { useFormikContext } from 'formik'
 
 import { FormInput, FormMultiSelect, FormSelect } from '../../index'
-import Button from '../../../buttons/Button'
+import { BlueRoundedButton } from '../../../buttons'
 import { PASSWORD_MIN_LENGTH } from '../../../../views/Register'
 import {
   multiSelectFields,
   registerSelectOptions,
 } from './RegisterFormContent.utils'
 
-const RegisterFormContent = () => {
-  const { values, isValid } = useFormikContext()
-  const showConfirmPassword = values.password.length > PASSWORD_MIN_LENGTH - 1
+import s from '../RegistrationForm.module.scss'
+import styles from '../../../../views/Login/styles.module.scss'
 
-  console.log(multiSelectFields);
+import spinner from '../../../../assets/icons/spinner.svg'
+import { Link } from 'react-router-dom'
+
+const RegisterFormContent = () => {
+  const { values, isValid, isSubmitting, isFailed } = useFormikContext()
+  const showConfirmPassword = values.password.length > PASSWORD_MIN_LENGTH - 1
 
   return (
     <>
       <Stack width="100%" flexDirection="row" justifyContent="center" gap={2}>
+        <input hidden type="text" autoComplete="username"></input>
         <FormInput
           name="firstName"
           id="firstName"
@@ -25,7 +30,7 @@ const RegisterFormContent = () => {
           size="small"
           fullWidth
           autoComplete="given-name"
-        />
+          type='text' />
         <FormInput
           name="lastName"
           id="lastName"
@@ -33,6 +38,7 @@ const RegisterFormContent = () => {
           size="small"
           autoComplete="family-name"
           fullWidth
+          type='text'
         />
       </Stack>
       <Stack width="100%" gap={2}>
@@ -43,6 +49,7 @@ const RegisterFormContent = () => {
           size="small"
           autoComplete="email"
           fullWidth
+          type='email'
         />
         <FormInput
           name="password"
@@ -57,8 +64,8 @@ const RegisterFormContent = () => {
 
         {showConfirmPassword && (
           <FormInput
-            name="confirmPassword"
-            id="confirmPassword"
+            name="repeatPassword"
+            id="repeatPassword"
             placeholder="Confirm Password"
             autoComplete="new-password"
             size="small"
@@ -82,9 +89,15 @@ const RegisterFormContent = () => {
           labelDescription="Choose your birthday"
         />
       </Stack>
-      <Button disabled={!isValid} type="submit" size="large" mt={1} fullWidth>
-        Register
-      </Button>
+      {isSubmitting ?
+        <img src={spinner} alt="spinner" className={styles.spinner} />
+        :
+        <BlueRoundedButton className={s.submitButton} disabled={!isValid} type="submit" size="large" mt={1}>
+          Register
+        </BlueRoundedButton>
+      }
+      {isFailed && <p className={styles.wrongPass}>Probably there is an account, associated with this email</p>}
+      <Link to="/login" className={s.link}>Already have an account? Sign in</Link>
     </>
   )
 }
