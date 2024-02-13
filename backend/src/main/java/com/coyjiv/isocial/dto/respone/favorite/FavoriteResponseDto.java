@@ -13,6 +13,12 @@ import java.util.List;
 @NoArgsConstructor
 public class FavoriteResponseDto {
   private Long id;
-  private Long selectedPostId;
   private Long selectorId;
+  private Long selectedPostId;
+  private String textContent;
+  private List<String> attachments;
+  private boolean isEdited;
+  private Long originalPostId;
+  private Long authorId;
+
 }
