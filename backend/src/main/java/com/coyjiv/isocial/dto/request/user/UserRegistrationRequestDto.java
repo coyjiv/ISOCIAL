@@ -34,6 +34,7 @@ public class UserRegistrationRequestDto {
   @Size(min = 8, max = 15)
   private String password;
 
+  @NotBlank(message = "Password must be confirmed")
   @Size(min = 8, max = 15)
   private String repeatPassword;
 

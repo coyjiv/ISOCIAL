@@ -27,9 +27,11 @@ public interface IUserService {
 
   Optional<User> findActiveByEmail(String email);
 
+  boolean isUserActive(String email);
+
   User create(UserRegistrationRequestDto userRegistrationRequestDto) throws PasswordMatchException;
 
-  void update(Long id, Map<String, String> fields) throws IllegalAccessException, EntityNotFoundException;
+  void update(Long id, Map<Object, Object> fields) throws IllegalAccessException, EntityNotFoundException;
 
   void confirmUser(String email) throws AccountNotFoundException;
 
