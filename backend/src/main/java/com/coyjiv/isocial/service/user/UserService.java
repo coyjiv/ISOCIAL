@@ -180,7 +180,8 @@ public class UserService implements IUserService {
           if ((boolean) value) {
             premiumUser.setPremium(true);
           } else {
-            premiumUser.setPremium(false);}
+            premiumUser.setPremium(false);
+          }
           userRepository.save(premiumUser);
         } else {
           Field field = ReflectionUtils.findField(User.class, (String) key);
