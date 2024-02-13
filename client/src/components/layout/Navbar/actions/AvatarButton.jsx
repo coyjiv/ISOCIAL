@@ -1,16 +1,16 @@
-import {Avatar, Badge, Card, Typography} from "@mui/material"
+import { Avatar, Badge, Card, Typography } from "@mui/material"
 import styled from "@emotion/styled";
-import {useState, useRef} from "react";
-import {useOnClickOutside} from "usehooks-ts";
+import { useState, useRef } from "react";
+import { useOnClickOutside } from "usehooks-ts";
 import classNames from "classnames";
-import {Menu, MenuItem} from "@mui/material";
-import {useSelector} from "react-redux";
-import {Link, useNavigate} from "react-router-dom";
-import {IoMdSettings} from "react-icons/io";
-import {ImExit} from "react-icons/im";
+import { Menu, MenuItem } from "@mui/material";
+import { Link, useNavigate } from "react-router-dom";
+import { IoMdSettings } from "react-icons/io";
+import { ImExit } from "react-icons/im";
+import { useGetProfileByIdQuery } from "../../../../store/services/profileService";
 
 
-const StyledBadge = styled(Badge)(({theme}) => ({
+const StyledBadge = styled(Badge)(({ theme }) => ({
     '& .MuiBadge-badge': {
         backgroundColor: '#44b700',
         color: '#44b700',
@@ -44,8 +44,8 @@ const StyledMenu = styled(Menu)(() => ({
         minWidth: '320px',
         // minHeight: '636px',
         // translate: '-20px 10px',
-        backgroundColor: `${({theme}) => theme.palette.background.paper}`,
-        color: `${({theme}) => theme.palette.text.primary}`,
+        backgroundColor: `${({ theme }) => theme.palette.background.paper}`,
+        color: `${({ theme }) => theme.palette.text.primary}`,
     }
 }))
 
@@ -63,7 +63,7 @@ const StyledButton = styled.button`
     }
 `
 
-const StyledCard = styled(Card)(({theme}) => ({
+const StyledCard = styled(Card)(({ theme }) => ({
     "&.MuiCard-root": {
         minHeight: '20px',
         minWidth: '80%',
@@ -107,10 +107,11 @@ const StyledMenuItem = styled(MenuItem)(() => ({
 
 const AvatarButton = () => {
     const ref = useRef(null)
+    const { data: profile, isLoading } = useGetProfileByIdQuery(localStorage.getItem("userId"))
     const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
-    const profile = useSelector(state => state.profile)
+
     const navigate = useNavigate()
 
     const buttonClasses = classNames({
@@ -137,14 +138,15 @@ const AvatarButton = () => {
 
     useOnClickOutside(ref, handleClickOutside)
     return (
+        !isLoading &&
         <>
             <StyledButton ref={ref} className={buttonClasses} onClick={handleClickInside}>
                 <StyledBadge
                     overlap="circular"
-                    anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                     variant="dot"
                 >
-                    <Avatar alt="User profile avatar" src="https://avatar.iran.liara.run/public/7"/>
+                    <Avatar alt="User profile avatar" src={profile.avatarsUrl[0]} />
                 </StyledBadge>
             </StyledButton>
             <StyledMenu
@@ -158,15 +160,15 @@ const AvatarButton = () => {
             >
                 <Link to='/profile'>
                     <StyledCard>
-                        <Avatar alt="User profile avatar" src="https://avatar.iran.liara.run/public/7"/>
+                        <Avatar alt="User profile avatar" src={profile.avatarsUrl[0]} />
                         <Typography fontWeight='900'>{profile.firstName + " " + profile.lastName}</Typography>
                     </StyledCard>
                 </Link>
                 <StyledMenuItem onClick={handleClose}>
-                    <div><IoMdSettings/></div>
+                    <div><IoMdSettings /></div>
                     Settings</StyledMenuItem>
                 <StyledMenuItem onClick={handleLogout}>
-                    <div><ImExit/></div>
+                    <div><ImExit /></div>
                     Logout</StyledMenuItem>
             </StyledMenu>
         </>
