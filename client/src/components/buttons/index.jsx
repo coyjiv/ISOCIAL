@@ -15,6 +15,15 @@ const WhiteButton = ({ children, ...props }) => {
     return <Button {...props} className={classNames(styles.whiteButton, props.className)}>{children}</Button>;
 }
 
+const RedRoundedButton = ({ children, ...props }) => {
+    return <Button {...props} className={classNames(styles.redRoundedButton, props.className)}>{children}</Button>;
+}
+
+const GreenRoundedButton = ({ children, ...props }) => {
+    return <Button {...props} className={classNames(styles.greenRoundedButton, props.className)}>{children}</Button>;
+}
+
+
 GrayButton.propTypes = {
     children: PropTypes.node.isRequired,
     props: PropTypes.object,
@@ -33,4 +42,16 @@ WhiteButton.propTypes = {
     className: PropTypes.string
 };
 
-export { GrayButton, BlueRoundedButton, WhiteButton }
+RedRoundedButton.propTypes = {
+    children: PropTypes.node.isRequired,
+    props: PropTypes.object,
+    className: PropTypes.string
+};
+
+GreenRoundedButton.propTypes = {
+    children: PropTypes.node.isRequired,
+    props: PropTypes.object,
+    className: PropTypes.string
+};
+
+export { GrayButton, BlueRoundedButton, WhiteButton, RedRoundedButton, GreenRoundedButton }

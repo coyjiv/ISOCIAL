@@ -58,7 +58,7 @@ const ProfilePage = () => {
             <Typography variant='h4' sx={{ fontWeight: 900, color: theme.palette.black, fontSize: 32 }}>
               {profile?.firstName + " " + profile?.lastName}
             </Typography>
-            <Typography variant='h5' sx={{ fontWeight: 500, color: theme.palette.grey, fontSize: 15, textAlign: isMobile ? 'center' : 'left' }} style={{ marginTop: '8px' }}>
+            <Typography variant='h5' sx={{ fontWeight: 500, color: theme.palette.greyColor, fontSize: 15, textAlign: isMobile ? 'center' : 'left' }} style={{ marginTop: '8px' }}>
               friends : {profile?.friends?.length}
             </Typography>
           </Stack>

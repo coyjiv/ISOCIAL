@@ -1,4 +1,4 @@
-import { createTheme } from '@mui/material'
+import { createTheme } from '@mui/material/styles'
 
 // keep palette in sync with colors.scss
 
@@ -20,7 +20,7 @@ export const theme = createTheme({
   },
   palette: {
     wash: '#F0F2F5',
-    grey: '#75777a',
+    greyColor: '#75777a',
     black: '#050505',
     lightGrey: '#f0f2f5',
     lightGrey2: '#f5f5f5',
@@ -83,6 +83,11 @@ export const theme = createTheme({
         root: {
           textTransform: 'capitalize',
         },
+      },
+    },
+    MuiTypography: {
+      defaultProps: {
+        color: 'text.base',
       },
     },
   },
