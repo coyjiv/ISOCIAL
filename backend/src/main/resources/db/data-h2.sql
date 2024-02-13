@@ -47,3 +47,20 @@ VALUES ('Sophia', 'Lee', 'sophia.lee@example.com', 'Seattle', 'strongpassword456
         'Sophias bio information', FALSE, CURRENT_TIMESTAMP,
         '1995-09-10', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, 1);
 INSERT INTO public.roles (user_id,name) VALUES ( 6, 'ROLE_USER' );
+
+INSERT INTO public.comments (commenter_id, post_id, text, creation_date, last_modified_date, is_active)
+VALUES (1, 1, '11111111', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, false);
+
+INSERT INTO public.comments (commenter_id, post_id, text, creation_date, last_modified_date, is_active)
+VALUES (2, 2, '2222222222', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, false);
+
+INSERT INTO public.comments (commenter_id, post_id, text, creation_date, last_modified_date, is_active)
+VALUES (3, 3, '3333333333', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, false);
+
+INSERT INTO public.comments (commenter_id, post_id, text, creation_date, last_modified_date, is_active)
+VALUES (4, 4, '44444444', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, false);
+
+INSERT INTO public.comments (commenter_id, post_id, text, creation_date, last_modified_date, is_active)
+VALUES (5, 5, '55555555', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, false);
+
+

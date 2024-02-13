@@ -12,7 +12,7 @@ CREATE TABLE public.users
     bio                VARCHAR,
     is_private         BOOLEAN      NOT NULL DEFAULT FALSE,
     last_seen          TIMESTAMP,
-    activity_status    INT  NOT NULL DEFAULT 1,
+    activity_status    INT          NOT NULL DEFAULT 1,
     date_of_birth      DATE,
     creation_date      TIMESTAMP,
     last_modified_date TIMESTAMP,
@@ -30,7 +30,7 @@ CREATE TABLE public.posts
     user_id            INT REFERENCES users (id),
     creation_date      TIMESTAMP,
     last_modified_date TIMESTAMP,
-    is_active BOOLEAN  NOT NULL DEFAULT FALSE
+    is_active          BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 DROP TABLE IF EXISTS roles;
@@ -87,7 +87,19 @@ CREATE TABLE public.subscriptions
 (
     id                 INT AUTO_INCREMENT PRIMARY KEY,
     user_id            INT,
-    subscriber_id          INT,
+    subscriber_id      INT,
+    creation_date      TIMESTAMP,
+    last_modified_date TIMESTAMP,
+    is_active          BOOLEAN NOT NULL DEFAULT FALSE
+);
+
+DROP TABLE IF EXISTS comments;
+CREATE TABLE public.comments
+(
+    id                 INT AUTO_INCREMENT PRIMARY KEY,
+    commenter_id       INT NOT NULL,
+    post_id            INT NOT NULL ,
+    text               VARCHAR(1000),
     creation_date      TIMESTAMP,
     last_modified_date TIMESTAMP,
     is_active          BOOLEAN NOT NULL DEFAULT FALSE
