@@ -30,7 +30,7 @@ public class UserUpdateRequestMapper extends DtoMapperFacade<User, UserUpdateReq
     entity.setGender(dto.getGender());
     entity.setPremium(dto.isPremium());
     entity.setPremiumNickname(dto.isPremium() ? dto.getPremiumNickname() : null);
-    entity.setPremiumEmoji(dto.isPremium() ? dto.getPremiumEmoji(): null);
+    entity.setPremiumEmoji(dto.isPremium() ? dto.getPremiumEmoji() : null);
 
   }
 }

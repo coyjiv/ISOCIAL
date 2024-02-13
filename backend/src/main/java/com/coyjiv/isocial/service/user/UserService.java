@@ -175,9 +175,12 @@ public class UserService implements IUserService {
           User genderUser = user.get();
           genderUser.setGender(UserGender.valueOf((String) value));
           userRepository.save(genderUser);
-        } else if (Objects.equals(key, "premium")){
+        } else if (Objects.equals(key, "premium")) {
           User premiumUser = user.get();
-          if ((boolean) value) {premiumUser.setPremium(true);} else {premiumUser.setPremium(false);}
+          if ((boolean) value) {
+            premiumUser.setPremium(true);
+          } else {
+            premiumUser.setPremium(false);}
           userRepository.save(premiumUser);
         } else {
           Field field = ReflectionUtils.findField(User.class, (String) key);
