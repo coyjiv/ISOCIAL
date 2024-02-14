@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-import Box from '@mui/material/Box';
 import { profileTabs } from '../../data/profileTabs';
 import { profileTabsStyles } from './styles';
 import { Container } from '@mui/material';
 import { useSearchParams } from 'react-router-dom';
+import { Box } from '@mui/material';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 
 
 const ProfileTabs = () => {
