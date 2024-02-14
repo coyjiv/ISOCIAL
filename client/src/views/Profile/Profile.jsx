@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import ProfileTabs from './ProfileTabs'
-import { Box, Typography, Button, Stack, Container, Divider, useTheme } from '@mui/material'
 import { GoPlus } from "react-icons/go";
 import { withLayout } from '../../hooks/withLayout'
 import ProfileSkeleton from './skeletons/ProfileSkeleton'
@@ -14,7 +13,7 @@ import { MdPhotoCamera } from "react-icons/md";
 import styles from './profile.module.scss'
 import MediaUpload from '../../components/modals/MediaUpload';
 import { useMediaQuery } from 'usehooks-ts';
-// import SockJS from 'sockjs-client';
+import { Box, Typography, Button, Stack, Container, Divider, useTheme } from '@mui/material'
 
 const ProfilePage = () => {
   const { id } = useParams();
@@ -45,22 +44,6 @@ const ProfilePage = () => {
   const onOpenBannerUpload = () => {
     setIsBannerUploadOpen(true)
   }
-
-  // const sockJs = new SockJS('http://localhost:9000/ws/1/queue/messages');
-
-  // const stompClient = Stomp.over(sockJs);
-
-  // sockJs.onopen = () => {
-  //   console.log('open');
-  // }
-
-  // sockJs.onmessage = (e) => {
-  //   console.log('message', e);
-  // }
-
-  // sockJs.onclose = () => {
-  //   console.log('close');
-  // }
 
   const profileLayout = (<>
     <Container maxWidth={'lg'} >

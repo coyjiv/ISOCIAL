@@ -33,7 +33,6 @@
     "react-redux": "^9.0.4",
     "react-router-dom": "^6.21.1",
     "sass": "^1.69.7",
-    "sockjs-client": "^1.6.1",
     "sort-by": "^1.2.0",
     "usehooks-ts": "^2.9.5",
     "vite-plugin-svgr": "^4.2.0",
