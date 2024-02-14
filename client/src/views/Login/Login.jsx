@@ -18,7 +18,10 @@ const Login = () => {
         const accessQuery = searchParams.get("access");
         const refreshQuery = searchParams.get("refresh");
         if (accessQuery && refreshQuery) {
+            console.log('accessQuery', accessQuery);
+            console.log('refreshQuery', refreshQuery);
             setSearchParams('');
+
             localStorage.setItem("access", accessQuery);
             localStorage.setItem("refresh", accessQuery);
             navigate("/");

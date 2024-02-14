@@ -62,7 +62,7 @@ public class SecurityConfig {
                             .requestMatchers(mvcMatcherBuilder.pattern("/api/auth/**")).permitAll()
                             .requestMatchers(mvcMatcherBuilder.pattern("/swagger-ui/**")).permitAll()
                             .requestMatchers(mvcMatcherBuilder.pattern("/v3/api-docs/**")).permitAll()
-                            .requestMatchers(mvcMatcherBuilder.pattern("/**")).permitAll()
+//                            .requestMatchers(mvcMatcherBuilder.pattern("/**")).permitAll()
                       .requestMatchers(mvcMatcherBuilder.pattern("/static/**")).permitAll()
                       .requestMatchers(mvcMatcherBuilder.pattern("/favicon.ico")).permitAll()
                       .requestMatchers(mvcMatcherBuilder.pattern("/index.html")).permitAll()

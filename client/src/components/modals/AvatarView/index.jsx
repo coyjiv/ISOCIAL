@@ -46,7 +46,7 @@ const AvatarView = ({ onClose, open }) => {
 
     const handleDownload = () => {
         const link = document.createElement('a');
-        link.href = profile.avatarsUrl[selectedAvatar];
+        link.href = profile?.avatarsUrl[selectedAvatar];
         link.download = 'avatar.jpg';
         link.target = '_blank';
         link.click();
@@ -63,16 +63,16 @@ const AvatarView = ({ onClose, open }) => {
     };
 
     const handleDelete = () => {
-        const newAvatars = profile.avatarsUrl.filter((_, index) => index !== selectedAvatar);
+        const newAvatars = profile?.avatarsUrl.filter((_, index) => index !== selectedAvatar);
         updateProfile({ body: JSON.stringify({ avatarsUrl: newAvatars }), id: loggedUserId });
-        deleteObject(ref(getStorage(), profile.avatarsUrl[selectedAvatar]));
+        deleteObject(ref(getStorage(), profile?.avatarsUrl[selectedAvatar]));
         handleCloseMenu();
         setAvatar(Math.abs(selectedAvatar - 1));
     }
 
     const handleSetAsMain = () => {
-        const newAvatars = profile.avatarsUrl.filter((_, index) => index !== selectedAvatar);
-        updateProfile({ body: JSON.stringify({ avatarsUrl: [profile.avatarsUrl[selectedAvatar], ...newAvatars] }), id: loggedUserId });
+        const newAvatars = profile?.avatarsUrl.filter((_, index) => index !== selectedAvatar);
+        updateProfile({ body: JSON.stringify({ avatarsUrl: [profile?.avatarsUrl[selectedAvatar], ...newAvatars] }), id: loggedUserId });
         handleCloseMenu();
     }
 
@@ -84,10 +84,10 @@ const AvatarView = ({ onClose, open }) => {
             }
         }} onClick={handleClose} open={open}>
             {!isLoading && <div className={styles.avatarWrapper}>
-                <img width={300} height={300} src={profile.avatarsUrl[selectedAvatar] ?? placeholderAvatar(profile.gender)} alt="avatar" />
+                <img width={300} height={300} src={profile?.avatarsUrl[selectedAvatar] ?? placeholderAvatar(profile.gender)} alt="avatar" />
             </div>}
             <button className={leftArrow} disabled={selectedAvatar === 0} onClick={handlePrev}><FaChevronLeft /></button>
-            <button className={rightArrow} disabled={selectedAvatar === profile.avatarsUrl.length - 1} onClick={handleNext}><FaChevronRight /></button>
+            <button className={rightArrow} disabled={selectedAvatar === profile?.avatarsUrl.length - 1} onClick={handleNext}><FaChevronRight /></button>
 
             <svg width="0" height="0">
                 <filter
@@ -144,7 +144,7 @@ const AvatarView = ({ onClose, open }) => {
                 }}
             >
                 <MenuItem onClick={handleClose}>Copy</MenuItem>
-                {!id && profile.avatarsUrl[selectedAvatar] && <MenuItem onClick={handleDelete}>Delete</MenuItem>}
+                {!id && profile?.avatarsUrl[selectedAvatar] && <MenuItem onClick={handleDelete}>Delete</MenuItem>}
                 {!id && selectedAvatar !== 0 && <MenuItem onClick={handleSetAsMain}>Set as main</MenuItem>}
             </Menu>
         </Dialog>

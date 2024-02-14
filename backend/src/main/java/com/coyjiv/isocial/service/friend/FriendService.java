@@ -171,6 +171,10 @@ public class FriendService implements IFriendService {
             .toList();
   }
 
-
+  @Transactional(readOnly = true)
+  @Override
+  public Long getFriendsCount(Long userId) {
+    return 0l;
+  }
 }
 

@@ -31,7 +31,11 @@ const MediaUpload = ({ modalTitle, customOptions, ...props }) => {
 
     const updateProfileImage = (url, id, type = 'avatar') => {
         if (type === 'avatar') {
-            updateProfile({ body: JSON.stringify({ avatarsUrl: [url, ...(profile.avatarsUrl)] }), id: id });
+            if (profile.avatarsUrl.length > 0) {
+                updateProfile({ body: JSON.stringify({ avatarsUrl: [url, ...(profile.avatarsUrl)] }), id: id });
+            } else {
+                updateProfile({ body: JSON.stringify({ avatarsUrl: [url] }), id: id });
+            }
         } else if (type === 'banner') {
             updateProfile({ body: JSON.stringify({ bannerUrl: url }), id: id });
         }
@@ -108,7 +112,7 @@ const MediaUpload = ({ modalTitle, customOptions, ...props }) => {
             ? `${import.meta.env.MODE}/${id}/user_avatar/${file.name}`
             : `${import.meta.env.MODE}/${id}/user_banner/${file.name}`);
 
-        if (customOptions.field === 'banner' && profile.bannerUrl.includes('firebasestorage')) {
+        if (customOptions.field === 'banner' && (profile.bannerUrl && profile.bannerUrl?.includes('firebasestorage'))) {
             deleteObject(ref(getStorage(), profile.bannerUrl)).then(() => {
                 // File deleted successfully
             }).catch((error) => {

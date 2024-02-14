@@ -15,5 +15,7 @@ public interface IFriendService {
 
   boolean deleteFriend(Long friendId) throws IllegalAccessException;
 
+  Long getFriendsCount(Long userId);
+
   List<FriendResponseDto> findAllFriends(Long userId, int page, int size);
 }

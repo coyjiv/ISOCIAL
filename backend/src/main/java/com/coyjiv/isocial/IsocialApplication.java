@@ -8,12 +8,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class IsocialApplication implements ApplicationRunner {
   public static void main(String[] args) {
-    System.out.println("Current DATABASE_URL: " + System.getenv("DATABASE_URL"));
-    System.out.println("Current DATABASE_USERNAME: " + System.getenv("DATABASE_USERNAME"));
-    System.out.println("Current DATABASE_PASSWORD: " + System.getenv("DATABASE_PASSWORD"));
-    System.out.println("Current GOOGLE_OAUTH_CLIENT_ID: " + System.getenv("GOOGLE_OAUTH_CLIENT_ID"));
-    System.out.println("Current GOOGLE_OAUTH_SECRET_KEY: " + System.getenv("GOOGLE_OAUTH_SECRET_KEY"));
-
     SpringApplication.run(IsocialApplication.class, args);
   }
 

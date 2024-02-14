@@ -14,11 +14,12 @@ import { MdPhotoCamera } from "react-icons/md";
 import styles from './profile.module.scss'
 import MediaUpload from '../../components/modals/MediaUpload';
 import { useMediaQuery } from 'usehooks-ts';
+// import SockJS from 'sockjs-client';
 
 const ProfilePage = () => {
   const { id } = useParams();
 
-  const isPersonalProfile = !id;
+  const isPersonalProfile = !id || id === localStorage.getItem('userId');
 
   const { data: profile, error, isLoading } = useGetProfileByIdQuery(id ?? localStorage.getItem('userId'));
 
@@ -44,6 +45,22 @@ const ProfilePage = () => {
   const onOpenBannerUpload = () => {
     setIsBannerUploadOpen(true)
   }
+
+  // const sockJs = new SockJS('http://localhost:9000/ws/1/queue/messages');
+
+  // const stompClient = Stomp.over(sockJs);
+
+  // sockJs.onopen = () => {
+  //   console.log('open');
+  // }
+
+  // sockJs.onmessage = (e) => {
+  //   console.log('message', e);
+  // }
+
+  // sockJs.onclose = () => {
+  //   console.log('close');
+  // }
 
   const profileLayout = (<>
     <Container maxWidth={'lg'} >

@@ -32,7 +32,7 @@ const EditProfile = ({ onClose, open, profile }) => {
                         lastName: profile.lastName,
                         bio: profile.bio,
                         city: profile.city,
-                        // avatarsUrl: profile.avatarsUrl[0],
+                        // avatarsUrl: profile?.avatarsUrl[0],
                         // bannerUrl: profile.bannerUrl,
                     }}
                     // validationSchema={validationSchema}

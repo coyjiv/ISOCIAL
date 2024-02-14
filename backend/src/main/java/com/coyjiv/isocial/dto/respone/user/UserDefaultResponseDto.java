@@ -26,4 +26,5 @@ public class UserDefaultResponseDto {
   private List<String> avatarsUrl;
   private String bannerUrl;
   private UserGender gender;
+  private Long friendsCount;
 }
