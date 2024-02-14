@@ -4,6 +4,7 @@ package com.coyjiv.isocial.service.user;
 import com.coyjiv.isocial.auth.EmailPasswordAuthProvider;
 import com.coyjiv.isocial.auth.JwtTokenProvider;
 import com.coyjiv.isocial.cache.EmailRegistrationCache;
+import com.coyjiv.isocial.cache.PasswordResetCache;
 import com.coyjiv.isocial.dao.UserRepository;
 import com.coyjiv.isocial.domain.User;
 import com.coyjiv.isocial.domain.UserActivityStatus;
@@ -21,6 +22,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,6 +49,7 @@ public class UserService implements IUserService {
   private final EmailPasswordAuthProvider authProvider;
   private final JwtTokenProvider jwtTokenProvider;
   private final BCryptPasswordEncoder passwordEncoder;
+
 
 
   @Transactional(readOnly = true)
@@ -226,12 +229,24 @@ public class UserService implements IUserService {
   }
   @Transactional
   @Override
-  public void resetPassword(String email, String newPassword) {
-    Optional<User> optionalUser = userRepository.findByEmail(email);
-    if(optionalUser.isPresent()) {
-      User user = optionalUser.get();
-      user.setPassword(passwordEncoder.encode(newPassword));
-      userRepository.save(user);
+  public void resetPassword(String uuid, String newPassword) {
+    String email = PasswordResetCache.getEmail(uuid);
+    if(email != null) {
+      Optional<User> optionalUser = userRepository.findByEmail(email);
+      if(optionalUser.isPresent()) {
+        User user = optionalUser.get();
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+      } else {
+        throw new UsernameNotFoundException("No user found with email: " + email);
+      }
     }
   }
+  @Transactional
+  @Override
+  public void requestPasswordReset(String email) {
+    String uuid = PasswordResetCache.putEmail(email);
+    emailService.sendPasswordResetMessage(email, uuid);
+  }
+
 }

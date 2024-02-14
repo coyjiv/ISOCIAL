@@ -66,11 +66,4 @@ public class UserController {
     String token = accessor.getFirstNativeHeader("Authorization");
     userService.handleDisconnect(token);
   }
-
-  @PostMapping("/reset-password")
-  public ResponseEntity<?> resetPassword(@RequestParam String email, @RequestParam String newPassword) {
-    userService.resetPassword(email, newPassword);
-    return ResponseEntity.status(200).body("Password reset successfully.");
-  }
-
 }

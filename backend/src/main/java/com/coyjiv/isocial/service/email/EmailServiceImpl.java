@@ -20,4 +20,18 @@ public class EmailServiceImpl {
     message.setText(text);
     emailSender.send(message);
   }
+  public void sendPasswordResetMessage(String to, String uuid) {
+    SimpleMailMessage message = new SimpleMailMessage();
+
+    String subject = "Password Reset";
+    String resetUrl = "http://localhost:9000/forgotPassword?id=UUID" + uuid;
+    String text = "To reset your password, please follow this link: " + resetUrl;
+
+
+    message.setTo(to);
+    message.setSubject(subject);
+    message.setText(text);
+    emailSender.send(message);
+  }
+
 }

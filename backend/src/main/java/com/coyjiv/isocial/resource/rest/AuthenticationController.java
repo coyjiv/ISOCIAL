@@ -9,6 +9,7 @@ import com.coyjiv.isocial.service.user.IUserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -68,5 +69,20 @@ public class AuthenticationController {
     } catch (Exception exception) {
       return ResponseEntity.status(401).body(exception.getMessage());
     }
+  }
+  @PostMapping("/reset-password")
+  public ResponseEntity<?> resetPassword(@RequestParam String uuid, @RequestParam String newPassword) {
+    try {
+      userService.resetPassword(uuid, newPassword);
+      return ResponseEntity.status(200).body("Password reset successfully.");
+    } catch (UsernameNotFoundException e) {
+      return ResponseEntity.status(404).body(e.getMessage());
+    }
+  }
+
+  @PostMapping("/request-reset-password")
+  public ResponseEntity<?> requestPasswordReset(@RequestParam String email) {
+    userService.requestPasswordReset(email);
+    return ResponseEntity.status(200).body("Password reset request sent successfully.");
   }
 }
