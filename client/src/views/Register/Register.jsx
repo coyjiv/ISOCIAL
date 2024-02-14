@@ -15,16 +15,15 @@ const Register = () => {
   const navigate = useNavigate()
 
   const handleSubmit = async (values) => {
-    const { year, month, day, ...rest } = values
+    const { year, month, day, city, ...rest } = values
 
     delete rest.confirmEmail
 
     const data = {
       ...rest,
       dateOfBirth: `${year}-${month}-${day}`,
+      city: city.charAt(0).toUpperCase() + city.slice(1)
     }
-
-    console.log(data)
 
     try {
       const response = await fetch(

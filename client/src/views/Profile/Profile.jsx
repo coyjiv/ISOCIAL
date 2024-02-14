@@ -7,7 +7,7 @@ import ProfileSkeleton from './skeletons/ProfileSkeleton'
 import { useGetProfileByIdQuery } from '../../store/services/profileService'
 import { useParams } from 'react-router-dom'
 import AvatarMenu from './AvatarMenu';
-import { DEFAULT_USER_AVATAR } from '../../data/placeholders';
+import { placeholderAvatar } from '../../data/placeholders';
 import { EditProfile } from '../../components/modals/EditProfile';
 import { WhiteButton } from '../../components/buttons';
 import { MdPhotoCamera } from "react-icons/md";
@@ -47,13 +47,13 @@ const ProfilePage = () => {
 
   const profileLayout = (<>
     <Container maxWidth={'lg'} >
-      <Box sx={{ borderRadius: '10px', position: 'relative', overflow: 'clip', minHeight: '351px', backgroundColor: theme.palette.lightGrey }}>
+      <Box sx={{ borderRadius: '10px', position: 'relative', overflow: 'clip', minHeight: '351px', backgroundColor: profile?.bannerUrl ? theme.palette.lightGrey : 'mediumpurple' }}>
         {profile?.bannerUrl && <img src={profile?.bannerUrl} alt='user profile banner' style={{ width: '100%', height: '351px', objectFit: 'cover' }} />}
-        {isPersonalProfile && <WhiteButton onClick={onOpenBannerUpload} className={styles.buttonWhite}><MdPhotoCamera /> {!isMobile && "Change banner"}</WhiteButton>}
+        {isPersonalProfile && <WhiteButton onClick={onOpenBannerUpload} className={styles.buttonWhite}><MdPhotoCamera /> {!isMobile && (profile?.bannerUrl ? "Change banner" : "Upload banner")}</WhiteButton>}
       </Box>
       <Container sx={{ px: '5px' }}>
         <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent={'start'} alignItems={'center'} spacing={2} sx={{ translate: '0px -30px', marginBottom: '-10px' }}>
-          <AvatarMenu avatarUrl={profile?.avatarsUrl?.[0] ?? DEFAULT_USER_AVATAR} />
+          <AvatarMenu avatarUrl={profile?.avatarsUrl?.[0] ?? placeholderAvatar(profile?.gender)} />
           <Stack spacing={-1} style={{ marginTop: '30px' }}>
             <Typography variant='h4' sx={{ fontWeight: 900, color: theme.palette.black, fontSize: 32 }}>
               {profile?.firstName + " " + profile?.lastName}
@@ -62,7 +62,7 @@ const ProfilePage = () => {
               friends : {profile?.friends?.length}
             </Typography>
           </Stack>
-          <Stack direction={'row'} spacing={1} style={{ marginLeft: 'auto' }}>
+          <Stack direction={'row'} spacing={1} className={styles.profileActions}>
             {!isPersonalProfile &&
               <Button variant='outlined' sx={{ width: '180px', height: '36px', fontSize: 14 }}>
                 {isFriend ?

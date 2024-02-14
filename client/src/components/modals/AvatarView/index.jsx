@@ -9,6 +9,7 @@ import styles from './avatarView.module.scss'
 import classNames from "classnames";
 import { useParams } from "react-router-dom";
 import { deleteObject, getStorage, ref } from "firebase/storage";
+import { placeholderAvatar } from "../../../data/placeholders";
 
 
 const AvatarView = ({ onClose, open }) => {
@@ -83,7 +84,7 @@ const AvatarView = ({ onClose, open }) => {
             }
         }} onClick={handleClose} open={open}>
             {!isLoading && <div className={styles.avatarWrapper}>
-                <img width={300} height={300} src={profile.avatarsUrl[selectedAvatar]} alt="avatar" />
+                <img width={300} height={300} src={profile.avatarsUrl[selectedAvatar] ?? placeholderAvatar(profile.gender)} alt="avatar" />
             </div>}
             <button className={leftArrow} disabled={selectedAvatar === 0} onClick={handlePrev}><FaChevronLeft /></button>
             <button className={rightArrow} disabled={selectedAvatar === profile.avatarsUrl.length - 1} onClick={handleNext}><FaChevronRight /></button>
@@ -143,7 +144,7 @@ const AvatarView = ({ onClose, open }) => {
                 }}
             >
                 <MenuItem onClick={handleClose}>Copy</MenuItem>
-                {!id && <MenuItem onClick={handleDelete}>Delete</MenuItem>}
+                {!id && profile.avatarsUrl[selectedAvatar] && <MenuItem onClick={handleDelete}>Delete</MenuItem>}
                 {!id && selectedAvatar !== 0 && <MenuItem onClick={handleSetAsMain}>Set as main</MenuItem>}
             </Menu>
         </Dialog>

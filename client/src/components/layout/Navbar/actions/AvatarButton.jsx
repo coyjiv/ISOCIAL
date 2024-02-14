@@ -8,6 +8,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { IoMdSettings } from "react-icons/io";
 import { ImExit } from "react-icons/im";
 import { useGetProfileByIdQuery } from "../../../../store/services/profileService";
+import { placeholderAvatar } from "../../../../data/placeholders";
 
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -146,7 +147,7 @@ const AvatarButton = () => {
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                     variant="dot"
                 >
-                    <Avatar alt="User profile avatar" src={profile.avatarsUrl[0]} />
+                    <Avatar alt="User profile avatar" src={profile.avatarsUrl[0] ?? placeholderAvatar(profile?.gender)} />
                 </StyledBadge>
             </StyledButton>
             <StyledMenu
