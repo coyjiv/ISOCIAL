@@ -1,10 +1,10 @@
 import {Link, useNavigate, useSearchParams} from "react-router-dom";
 import "./Chat.scss";
 
-const ChatItem = ({ key, name, lastMessage, timestamp }) => {
+const ChatItem = ({ chatId, chatName, lastMessage, chatAvatar }) => {
   return (
-    <Link to={`/chats/${key}`} className="chat-item">
-      <div className='message-avatar'></div><h3>{name}</h3>
+    <Link to={`/chats/${chatId}`} className="chat-item">
+      <div className='message-avatar'><img src="chatAvatar" alt="" /></div><h3>{chatName}</h3>
       
     </Link>
   );
