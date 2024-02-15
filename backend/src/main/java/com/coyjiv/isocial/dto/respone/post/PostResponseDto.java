@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
 import java.util.List;
 
 @Setter
@@ -24,5 +25,16 @@ public class PostResponseDto {
 
   private Long authorId;
 
-  private List<String> likes;
+  private String authorAvatar;
+
+  private String authorFullNane;
+
+  private Date authorLastSeen;
+
+  private boolean isAuthorPremium;
+
+  private String authorPremiumNickname;
+
+  private String authorPremiumEmoji;
+
 }

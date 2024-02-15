@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
 import java.util.List;
 
 @Setter
@@ -13,12 +14,30 @@ import java.util.List;
 @NoArgsConstructor
 public class FavoriteResponseDto {
   private Long id;
+
   private Long selectorId;
+
   private Long selectedPostId;
+
   private String textContent;
+
   private List<String> attachments;
+
   private boolean isEdited;
+
   private Long originalPostId;
+
   private Long authorId;
 
+  private String authorAvatar;
+
+  private String authorFullNane;
+
+  private Date authorLastSeen;
+
+  private boolean isAuthorPremium;
+
+  private String authorPremiumNickname;
+
+  private String authorPremiumEmoji;
 }
