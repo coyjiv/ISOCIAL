@@ -51,10 +51,10 @@ const Login = () => {
                 <div className={styles.footer}>
                     <Link to={'/register'} className={styles.registrationBtn}>Create new account</Link>
                     <span>OR</span>
-                    <Link className={styles.signInWithGoogleBtn} to="/oauth2/authorization/google">
+                    <a className={styles.signInWithGoogleBtn} href="/oauth2/authorization/google">
                         <img src={GLink} alt="google icon" className={styles.google} />
                         <Typography>Continue with Google</Typography>
-                    </Link>
+                    </a>
                 </div>
             </div>
         </div>

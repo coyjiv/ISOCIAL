@@ -18,8 +18,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -47,16 +49,16 @@ public class FriendService implements IFriendService {
     }
 
     Optional<Friend> existingFriendship = friendRepository.findByRequesterAndAddresserAndIsActive(requester.get(),
-            addresser.get(), true);
+      addresser.get(), true);
     if (existingFriendship.isPresent()) {
       return false;
     }
 
     Optional<Friend> inactiveFriendship = friendRepository.findByRequesterAndAddresserAndIsActive(requester.get(),
-            addresser.get(), false);
+      addresser.get(), false);
     if (!inactiveFriendship.isPresent()) {
       inactiveFriendship = friendRepository.findByRequesterAndAddresserAndIsActive(addresser.get(),
-              requester.get(), false);
+        requester.get(), false);
     }
     if (inactiveFriendship.isPresent()) {
       Friend friend = inactiveFriendship.get();
@@ -68,7 +70,7 @@ public class FriendService implements IFriendService {
     }
 
     if (friendRepository.existsByRequesterAndAddresserAndIsActive(requester.get(), addresser.get(), true)
-            || friendRepository.existsByRequesterAndAddresserAndIsActive(addresser.get(), requester.get(), true)) {
+      || friendRepository.existsByRequesterAndAddresserAndIsActive(addresser.get(), requester.get(), true)) {
       throw new IllegalAccessException("You need to accept existing request");
     }
 
@@ -76,10 +78,6 @@ public class FriendService implements IFriendService {
     friendRepository.save(friend);
     return true;
   }
-
-
-
-
 
 
   @Transactional
@@ -113,8 +111,8 @@ public class FriendService implements IFriendService {
 
 
     if (user.isEmpty()
-            || friend.isEmpty()
-            || (!user.get().equals(friend.get().getRequester()) && !user.get().equals(friend.get().getAddresser()))) {
+      || friend.isEmpty()
+      || (!user.get().equals(friend.get().getRequester()) && !user.get().equals(friend.get().getAddresser()))) {
       return false;
     }
 
@@ -162,19 +160,58 @@ public class FriendService implements IFriendService {
     }
 
     Page<Friend> friendsPage = friendRepository.findAllByRequesterOrAddresserAndStatus(user.get(),
-            user.get(), "ACCEPTED", pageable);
+      user.get(), "ACCEPTED", pageable);
 
     return friendsPage.getContent().stream()
-            .filter(friend -> "ACCEPTED".equals(friend.getStatus()))
-            .map(friend -> user.get().equals(friend.getRequester()) ? friend.getAddresser() : friend.getRequester())
-            .map(friendResponseMapper::convertToDto)
-            .toList();
+      .filter(friend -> "ACCEPTED".equals(friend.getStatus()))
+      .map(friend -> user.get().equals(friend.getRequester()) ? friend.getAddresser() : friend.getRequester())
+      .map(friendResponseMapper::convertToDto)
+      .toList();
   }
 
   @Transactional(readOnly = true)
   @Override
   public Long getFriendsCount(Long userId) {
-    return 0l;
+    return friendRepository.countAllAcceptedFriends(userRepository.findById(userId).orElseThrow());
+  }
+
+  @Transactional(readOnly = true)
+  @Override
+  public Long getSubscribersCount(Long userId) {
+    return friendRepository.countAllNonAcceptedFriends(userRepository.findById(userId).orElseThrow());
+  }
+  @Transactional(readOnly = true)
+  @Override
+  public boolean haveSentRequest(Long currentUserId, Long userId) {
+    return friendRepository.existsByRequesterAndAddresserAndIsActive(userRepository.findById(currentUserId).orElseThrow(),
+      userRepository.findById(userId).orElseThrow(), true);
+  }
+  @Transactional
+  @Override
+  public boolean cancelFriendRequest(Long friendId) {
+    return friendRepository.deletePendingFriendRequestsByUserId(friendId) > 0;
+  }
+
+  @Override
+  public List<FriendResponseDto> availableFriendRequests(Long userId) {
+    Optional<User> userOptional = userRepository.findById(userId);
+    if (userOptional.isEmpty()) {
+      return Collections.emptyList();
+    }
+    User user = userOptional.get();
+
+    List<Friend> pendingFriendRequests = friendRepository.findAllByAddresserAndStatus(user, "PENDING");
+
+    return pendingFriendRequests.stream()
+      .map(Friend::getRequester)
+      .map(friendResponseMapper::convertToDto)
+      .collect(Collectors.toList());
+  }
+
+  @Override
+  public boolean isFriend(Long currentUserId, Long userId) {
+    return friendRepository.countFriendship(userRepository.findById(currentUserId).orElseThrow(),
+      userRepository.findById(userId).orElseThrow())>0;
   }
 }
 

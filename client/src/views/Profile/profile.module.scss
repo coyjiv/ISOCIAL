@@ -31,7 +31,14 @@
 
 .profileActions {
   margin: 0px auto;
+  flex-wrap: wrap;
+  row-gap: 10px;
+  column-gap: 10px;
+  justify-content: center;
   @include breakpoints.media('sm') {
     margin-left: auto !important;
   }
+}
+
+.friendsCard {
 }

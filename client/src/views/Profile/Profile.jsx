@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import ProfileTabs from './ProfileTabs'
-import { GoPlus } from "react-icons/go";
+import FriendRequestButton from './FriendRequestButton'
 import { withLayout } from '../../hooks/withLayout'
 import ProfileSkeleton from './skeletons/ProfileSkeleton'
 import { useGetProfileByIdQuery } from '../../store/services/profileService'
+import { useFriendsCountQuery, useSendFriendRequestMutation, useHaveSentFriendRequestQuery, useIsFriendQuery } from '../../store/services/friendService'
 import { useParams } from 'react-router-dom'
 import AvatarMenu from './AvatarMenu';
 import { placeholderAvatar } from '../../data/placeholders';
@@ -21,13 +22,16 @@ const ProfilePage = () => {
   const isPersonalProfile = !id || id === localStorage.getItem('userId');
 
   const { data: profile, error, isLoading } = useGetProfileByIdQuery(id ?? localStorage.getItem('userId'));
+  const { data: friendsCount } = useFriendsCountQuery(id ?? localStorage.getItem('userId'));
+  const [sendFriendRequest, result] = useSendFriendRequestMutation()
+  const { data: haveSentFriendRequest } = useHaveSentFriendRequestQuery({ currentUserId: localStorage.getItem('userId'), id }, { skip: isPersonalProfile });
 
 
   const [isProfileEditOpen, setIsProfileEditOpen] = useState(false)
   const [isBannerUploadOpen, setIsBannerUploadOpen] = useState(false)
   const isMobile = useMediaQuery('(max-width: 480px)')
   const theme = useTheme()
-  const isFriend = false
+  const { data: isFriend } = useIsFriendQuery({ currentUserId: localStorage.getItem('userId'), id }, { skip: isPersonalProfile });
 
   const openMessenger = () => {
     console.log('open messenger');
@@ -59,19 +63,11 @@ const ProfilePage = () => {
               {profile?.firstName + " " + profile?.lastName}
             </Typography>
             <Typography variant='h5' sx={{ fontWeight: 500, color: theme.palette.greyColor, fontSize: 15, textAlign: isMobile ? 'center' : 'left' }} style={{ marginTop: '8px' }}>
-              friends : {profile?.friends?.length}
+              friends : {friendsCount}
             </Typography>
           </Stack>
           <Stack direction={'row'} spacing={1} className={styles.profileActions}>
-            {!isPersonalProfile &&
-              <Button variant='outlined' sx={{ width: '180px', height: '36px', fontSize: 14 }}>
-                {isFriend ?
-                  "Remove from friends" :
-                  <>
-                    <GoPlus /> Add Friend
-                  </>
-                }
-              </Button>}
+            <FriendRequestButton isPersonalProfile={isPersonalProfile} isFriend={isFriend} haveSentFriendRequest={haveSentFriendRequest} result={result} sendFriendRequest={sendFriendRequest} id={id} />
             <Button onClick={isPersonalProfile ? openProfileEdit : openMessenger} variant='outlined' sx={{ width: '180px', height: '36px', fontSize: 14 }}>{isPersonalProfile ? "Edit Profile" : "Send message"}</Button>
           </Stack>
         </Stack>

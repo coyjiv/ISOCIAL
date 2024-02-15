@@ -69,6 +69,9 @@ spring:
     init:
       mode: never
       schema-locations: classpath:db/schema-postgres.sql
+  h2:
+    console:
+      enabled: false
   datasource:
     url: ${DATABASE_URL}
     username: ${DATABASE_USERNAME}

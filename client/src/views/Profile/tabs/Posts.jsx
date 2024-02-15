@@ -3,6 +3,7 @@ import { Avatar, Box, Container, Divider, Grid, Input, Stack, Typography } from 
 import { Link } from 'react-router-dom'
 import { AiFillHome } from "react-icons/ai";
 import { useGetProfileByIdQuery } from '../../../store/services/profileService';
+import { useSubscribersCountQuery } from '../../../store/services/friendService';
 import { useParams } from 'react-router-dom'
 import styles from '../profile.module.scss'
 import CreatePostModal from '../../../components/modals/CreatePost';
@@ -13,6 +14,7 @@ const Posts = () => {
   // eslint-disable-next-line no-unused-vars
   const { data: profile, error, isLoading } = useGetProfileByIdQuery(id ?? localStorage.getItem('userId'));
   const { data: loggedUserProfile, isLoading: isLoggedUserLoading } = useGetProfileByIdQuery(localStorage.getItem('userId'))
+  const { data: subscribersCount } = useSubscribersCountQuery(id ?? localStorage.getItem('userId'));
 
   const [isCreatePostModalOpen, setIsCreatePostModalOpen] = useState(false)
   const onClose = () => setIsCreatePostModalOpen(false)
@@ -30,7 +32,7 @@ const Posts = () => {
                 <Typography marginY={2}>{profile.bio}</Typography>
                 <Divider />
                 <Typography marginTop={2}><AiFillHome /> Lives in {profile.city}</Typography>
-                <Typography marginTop={2}>Subscribers</Typography>
+                <Typography marginTop={2}>Subscribers : {subscribersCount}</Typography>
               </div>
               <div className={styles.card}>
                 <div>

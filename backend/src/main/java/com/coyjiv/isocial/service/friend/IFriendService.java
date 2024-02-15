@@ -18,4 +18,14 @@ public interface IFriendService {
   Long getFriendsCount(Long userId);
 
   List<FriendResponseDto> findAllFriends(Long userId, int page, int size);
+
+  Long getSubscribersCount(Long userId);
+
+  boolean haveSentRequest(Long currentUserId, Long userId);
+
+  boolean cancelFriendRequest(Long friendId);
+
+  List<FriendResponseDto> availableFriendRequests(Long userId);
+
+  boolean isFriend(Long currentUserId, Long userId);
 }
