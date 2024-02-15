@@ -1,4 +1,4 @@
-
+DROP TABLE IF EXISTS public.users CASCADE;
 CREATE TABLE public.users
 (
     id                 SERIAL PRIMARY KEY,
@@ -9,18 +9,18 @@ CREATE TABLE public.users
     password           VARCHAR(250),
     avatars_url        TEXT[],
     banner_url         VARCHAR,
-    bio                TEXT,
+    bio                VARCHAR,
     is_private         BOOLEAN NOT NULL DEFAULT FALSE,
     last_seen          TIMESTAMP,
     activity_status    VARCHAR(10) NOT NULL DEFAULT 'OFFLINE',
-    gender             VARCHAR(10) NOT NULL,
+    gender             VARCHAR(20) NOT NULL,
     date_of_birth      DATE,
     creation_date      TIMESTAMP,
     last_modified_date TIMESTAMP,
     is_active          BOOLEAN NOT NULL DEFAULT FALSE
 );
 
--- Create the roles table
+DROP TABLE IF EXISTS public.roles CASCADE;
 CREATE TABLE public.roles
 (
     id      SERIAL PRIMARY KEY,
@@ -29,7 +29,7 @@ CREATE TABLE public.roles
     FOREIGN KEY (user_id) REFERENCES public.users (id)
 );
 
--- Create the chats table
+DROP TABLE IF EXISTS public.chats CASCADE;
 CREATE TABLE public.chats
 (
     id                 SERIAL PRIMARY KEY,
@@ -41,7 +41,7 @@ CREATE TABLE public.chats
     is_active          BOOLEAN NOT NULL DEFAULT FALSE
 );
 
--- Create the messages table
+DROP TABLE IF EXISTS public.messages CASCADE;
 CREATE TABLE public.messages
 (
     id                 SERIAL PRIMARY KEY,
@@ -49,8 +49,8 @@ CREATE TABLE public.messages
     sender_id          INT,
     status             VARCHAR(50) NOT NULL DEFAULT 'SENT',
     text               VARCHAR(1000),
-    attachements       TEXT[],
-    is_editted         BOOLEAN,
+    attachments        TEXT[],
+    is_edited          BOOLEAN,
     creation_date      TIMESTAMP,
     last_modified_date TIMESTAMP,
     is_active          BOOLEAN NOT NULL DEFAULT FALSE,
@@ -58,7 +58,7 @@ CREATE TABLE public.messages
     FOREIGN KEY (sender_id) REFERENCES public.users (id)
 );
 
--- Create the users_chats table
+DROP TABLE IF EXISTS public.users_chats CASCADE;
 CREATE TABLE public.users_chats
 (
     id      SERIAL PRIMARY KEY,
@@ -68,7 +68,7 @@ CREATE TABLE public.users_chats
     FOREIGN KEY (chat_id) REFERENCES public.chats (id)
 );
 
--- Create the friends table
+DROP TABLE IF EXISTS public.friends CASCADE;
 CREATE TABLE public.friends
 (
     id           SERIAL PRIMARY KEY,

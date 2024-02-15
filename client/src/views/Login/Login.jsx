@@ -9,30 +9,41 @@ import styles from './styles.module.scss'
 import GLink from './icons/google_icon.svg';
 import { Typography } from "@mui/material";
 
+import { jwtDecode } from "jwt-decode";
+import { useLocalStorage } from "usehooks-ts";
+
 
 const Login = () => {
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
+    const [userId, setUserId] = useLocalStorage('userId', null);
 
     useEffect(() => {
-        const accessQuery = searchParams.get("access");
-        const refreshQuery = searchParams.get("refresh");
-        if (accessQuery && refreshQuery) {
-            console.log('accessQuery', accessQuery);
-            console.log('refreshQuery', refreshQuery);
-            setSearchParams('');
+        (async () => {
+            const accessQuery = searchParams.get("access");
+            const refreshQuery = searchParams.get("refresh");
+            if (accessQuery && refreshQuery) {
+                console.log('accessQuery', accessQuery);
+                console.log('refreshQuery', refreshQuery);
+                setSearchParams('');
+                const decoded = await jwtDecode(accessQuery);
 
-            localStorage.setItem("access", accessQuery);
-            localStorage.setItem("refresh", accessQuery);
-            navigate("/");
-        }
+                if (userId !== decoded.id) {
+                    setUserId(parseInt(decoded.id));
+                }
+                localStorage.setItem("access", accessQuery);
+                localStorage.setItem("refresh", accessQuery);
+                navigate("/");
+            }
 
 
-        const access = localStorage.getItem("access");
-        const refresh = localStorage.getItem("refresh");
-        if (refresh || access) {
-            navigate("/")
-        }
+            const access = localStorage.getItem("access");
+            const refresh = localStorage.getItem("refresh");
+            if (refresh || access) {
+                navigate("/")
+            }
+
+        })();
         //eslint-disable-next-line
     }, []);
 

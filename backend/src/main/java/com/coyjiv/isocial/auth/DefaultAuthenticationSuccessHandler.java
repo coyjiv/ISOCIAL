@@ -50,7 +50,7 @@ public class DefaultAuthenticationSuccessHandler implements AuthenticationSucces
       userRepository.save(user);
     }
 
-    String access = tokenProvider.generateAccessToken();
+    String access = tokenProvider.generateAccessToken(email, null);
     String refresh = tokenProvider.generateRefreshToken();
 
     String redirectUrl = String.format("/login?access=%s&refresh=%s", access, refresh);
