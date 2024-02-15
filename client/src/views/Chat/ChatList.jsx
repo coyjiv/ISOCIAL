@@ -1,25 +1,48 @@
 //libs
-import {Link, useNavigate, useSearchParams} from "react-router-dom";
-import {useEffect} from "react";
+import {Link, useNavigate} from "react-router-dom";
+import {useEffect, useState} from "react";
+
+import { API_URL, instance } from "../../api/config";
 
 
 import ChatItem from './ChatItem';
 import "./Chat.scss"
 
 const ChatList = () => {
-  const chats = [
-    { id: 1, name: 'Chat 1', lastMessage: 'Hello!', timestamp: '2 minutes ago' },
-    { id: 2, name: 'Chat 2', lastMessage: 'How are you?', timestamp: '1 hour ago' },
-  ];
+  const [chats, setChats] = useState([]);
+
+  useEffect(() => {
+    const fetchChats = async () => {
+      try {
+        const response = await instance.get('http://localhost:9000/api/chats?page=0&quantity=10');
+        console.log(response);
+        setChats(response.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        //setLoading(false);
+      }
+    };
+
+    fetchChats();
+  }, []);
+
+  /* chats.map((chat) => (
+        <ChatItem
+          key={chat.id}
+          name={chat.name}
+          lastMessage={chat.lastMessage}
+        />
+      )) */
 
   return (
     <div className="chat-list">
       {chats.map((chat) => (
         <ChatItem
-          key={chat.id}
-          name={chat.name}
+          chatId={chat.id}
+          chatName={chat.chatName}
           lastMessage={chat.lastMessage}
-          timestamp={chat.timestamp}
+          chatAvatar={chat.avatarUrl}
         />
       ))}
     </div>
