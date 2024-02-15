@@ -2,6 +2,7 @@ package com.coyjiv.isocial.resource.rest;
 
 import com.coyjiv.isocial.cache.EmailRegistrationCache;
 import com.coyjiv.isocial.dto.request.auth.LoginRequestDto;
+import com.coyjiv.isocial.dto.request.auth.PasswordResetRequestDto;
 import com.coyjiv.isocial.dto.request.auth.RefreshRequestDto;
 import com.coyjiv.isocial.dto.request.user.UserRegistrationRequestDto;
 import com.coyjiv.isocial.service.auth.IAuthService;
@@ -70,11 +71,13 @@ public class AuthenticationController {
       return ResponseEntity.status(401).body(exception.getMessage());
     }
   }
+
+
   @PostMapping("/reset-password")
-  public ResponseEntity<?> resetPassword(@RequestParam String uuid, @RequestParam String newPassword) {
+  public ResponseEntity<?> resetPassword(@RequestBody PasswordResetRequestDto passwordResetRequestDto) {
     try {
-      userService.resetPassword(uuid, newPassword);
-      return ResponseEntity.status(200).body("Password reset successfully.");
+      userService.resetPassword(passwordResetRequestDto);
+      return ResponseEntity.status(200).body("Password reset successfully");
     } catch (UsernameNotFoundException e) {
       return ResponseEntity.status(404).body(e.getMessage());
     }

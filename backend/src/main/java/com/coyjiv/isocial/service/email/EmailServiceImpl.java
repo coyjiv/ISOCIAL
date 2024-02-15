@@ -20,6 +20,7 @@ public class EmailServiceImpl {
     message.setText(text);
     emailSender.send(message);
   }
+
   public void sendPasswordResetMessage(String to, String uuid) {
     SimpleMailMessage message = new SimpleMailMessage();
 

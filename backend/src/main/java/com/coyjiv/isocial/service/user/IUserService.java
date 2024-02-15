@@ -1,6 +1,7 @@
 package com.coyjiv.isocial.service.user;
 
 import com.coyjiv.isocial.domain.User;
+import com.coyjiv.isocial.dto.request.auth.PasswordResetRequestDto;
 import com.coyjiv.isocial.dto.request.user.UserRegistrationRequestDto;
 import com.coyjiv.isocial.dto.respone.user.UserDefaultResponseDto;
 import com.coyjiv.isocial.dto.respone.user.UserSearchResponseDto;
@@ -40,6 +41,8 @@ public interface IUserService {
   void handleConnect(String token);
 
   void handleDisconnect(String token);
-  void resetPassword(String uuid, String newPassword);
+
+  void resetPassword(PasswordResetRequestDto passwordResetRequestDto);
+
   void requestPasswordReset(String email);
 }

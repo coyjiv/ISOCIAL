@@ -1,9 +1,11 @@
 package com.coyjiv.isocial.cache;
+
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+
 public class PasswordResetCache {
 
   private static final Cache<String, String> resetCache = CacheBuilder.newBuilder()

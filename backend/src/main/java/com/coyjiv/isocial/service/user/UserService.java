@@ -8,6 +8,7 @@ import com.coyjiv.isocial.cache.PasswordResetCache;
 import com.coyjiv.isocial.dao.UserRepository;
 import com.coyjiv.isocial.domain.User;
 import com.coyjiv.isocial.domain.UserActivityStatus;
+import com.coyjiv.isocial.dto.request.auth.PasswordResetRequestDto;
 import com.coyjiv.isocial.dto.request.user.UserRegistrationRequestDto;
 import com.coyjiv.isocial.dto.respone.user.UserDefaultResponseDto;
 import com.coyjiv.isocial.dto.respone.user.UserSearchResponseDto;
@@ -49,7 +50,6 @@ public class UserService implements IUserService {
   private final EmailPasswordAuthProvider authProvider;
   private final JwtTokenProvider jwtTokenProvider;
   private final BCryptPasswordEncoder passwordEncoder;
-
 
 
   @Transactional(readOnly = true)
@@ -227,21 +227,23 @@ public class UserService implements IUserService {
       }
     }
   }
+
   @Transactional
   @Override
-  public void resetPassword(String uuid, String newPassword) {
-    String email = PasswordResetCache.getEmail(uuid);
-    if(email != null) {
+  public void resetPassword(PasswordResetRequestDto passwordResetRequestDto) {
+    String email = PasswordResetCache.getEmail(passwordResetRequestDto.getUuid());
+    if (email != null) {
       Optional<User> optionalUser = userRepository.findByEmail(email);
-      if(optionalUser.isPresent()) {
+      if (optionalUser.isPresent()) {
         User user = optionalUser.get();
-        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setPassword(passwordEncoder.encode(passwordResetRequestDto.getNewPassword()));
         userRepository.save(user);
       } else {
         throw new UsernameNotFoundException("No user found with email: " + email);
       }
     }
   }
+
   @Transactional
   @Override
   public void requestPasswordReset(String email) {
