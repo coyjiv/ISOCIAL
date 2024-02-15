@@ -1,10 +1,13 @@
 import { configureStore } from '@reduxjs/toolkit'
-import users from './slices/users'
-import profile from './slices/profile'
+import { profileApi } from './services/profileService'
+import { setupListeners } from '@reduxjs/toolkit/query'
 
 export const store = configureStore({
   reducer: {
-    users,
-    profile
+    [profileApi.reducerPath]: profileApi.reducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(profileApi.middleware),
 })
+
+setupListeners(store.dispatch)

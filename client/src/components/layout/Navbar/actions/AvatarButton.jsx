@@ -4,10 +4,10 @@ import { useState, useRef } from "react";
 import { useOnClickOutside } from "usehooks-ts";
 import classNames from "classnames";
 import { Menu, MenuItem } from "@mui/material";
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { IoMdSettings } from "react-icons/io";
 import { ImExit } from "react-icons/im";
+import { useGetProfileByIdQuery } from "../../../../store/services/profileService";
 
 
 const StyledBadge = styled(Badge)(({ theme }) => ({
@@ -56,11 +56,12 @@ const StyledButton = styled.button`
     outline: none;
     transition-property: color, filter;
     transition: .2s ease-in-out;
+
     &.clicked {
         scale: 0.9;
         filter: brightness(0.8);
     }
-    `
+`
 
 const StyledCard = styled(Card)(({ theme }) => ({
     "&.MuiCard-root": {
@@ -106,10 +107,12 @@ const StyledMenuItem = styled(MenuItem)(() => ({
 
 const AvatarButton = () => {
     const ref = useRef(null)
+    const { data: profile, isLoading } = useGetProfileByIdQuery(localStorage.getItem("userId"))
     const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
-    const profile = useSelector(state => state.profile)
+
+    const navigate = useNavigate()
 
     const buttonClasses = classNames({
         'clicked': isProfileMenuOpen
@@ -127,8 +130,15 @@ const AvatarButton = () => {
         setAnchorEl(null);
     };
 
+    const handleLogout = () => {
+        localStorage.removeItem("access");
+        localStorage.removeItem("refresh");
+        navigate("/login");
+    }
+
     useOnClickOutside(ref, handleClickOutside)
     return (
+        !isLoading &&
         <>
             <StyledButton ref={ref} className={buttonClasses} onClick={handleClickInside}>
                 <StyledBadge
@@ -136,7 +146,7 @@ const AvatarButton = () => {
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                     variant="dot"
                 >
-                    <Avatar alt="User profile avatar" src="https://avatar.iran.liara.run/public/7" />
+                    <Avatar alt="User profile avatar" src={profile.avatarsUrl[0]} />
                 </StyledBadge>
             </StyledButton>
             <StyledMenu
@@ -150,12 +160,16 @@ const AvatarButton = () => {
             >
                 <Link to='/profile'>
                     <StyledCard>
-                        <Avatar alt="User profile avatar" src="https://avatar.iran.liara.run/public/7" />
+                        <Avatar alt="User profile avatar" src={profile.avatarsUrl[0]} />
                         <Typography fontWeight='900'>{profile.firstName + " " + profile.lastName}</Typography>
                     </StyledCard>
                 </Link>
-                <StyledMenuItem onClick={handleClose}><div><IoMdSettings /></div>Settings</StyledMenuItem>
-                <StyledMenuItem onClick={handleClose}><div><ImExit /></div> Logout</StyledMenuItem>
+                <StyledMenuItem onClick={handleClose}>
+                    <div><IoMdSettings /></div>
+                    Settings</StyledMenuItem>
+                <StyledMenuItem onClick={handleLogout}>
+                    <div><ImExit /></div>
+                    Logout</StyledMenuItem>
             </StyledMenu>
         </>
     )

@@ -1,6 +1,7 @@
 package com.coyjiv.isocial.auth;
 
 
+import com.coyjiv.isocial.service.user.IUserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -18,6 +19,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
 import java.security.Key;
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -50,12 +52,15 @@ public class JwtTokenProvider {
   }
 
   public String generateAccessToken(@NotNull String email, @NotNull String password) throws AuthenticationException {
+
     Authentication authentication = emailPasswordAuthProvider.authenticate(
             new UsernamePasswordAuthenticationToken(email, password, null)
     );
 
+    SecurityContextHolder.getContext().setAuthentication(authentication);
+
     return Jwts.builder().setIssuer("ISOCIAL").setSubject("Access Jwt Token")
-            .claim("email", authentication.getName())
+            .claim("id", authentication.getName())
             .claim("authorities", getAuthorities(authentication.getAuthorities()))
             .setIssuedAt(new Date())
             .setExpiration(getExpirationDate(ACCESS_LEAVE_HOURS))
@@ -63,14 +68,14 @@ public class JwtTokenProvider {
   }
 
   public String generateAccessToken() throws AuthenticationException {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    Authentication authentication = emailPasswordAuthProvider.getSecurityContextAuthentication();
 
     if (authentication == null) {
       throw new AuthenticationCredentialsNotFoundException("Authentication not found in security context");
     }
 
     return Jwts.builder().setIssuer("ISOCIAL").setSubject("Access Jwt Token")
-            .claim("email", authentication.getName())
+            .claim("id", authentication.getName())
             .claim("authorities", getAuthorities(authentication.getAuthorities()))
             .setIssuedAt(new Date())
             .setExpiration(getExpirationDate(ACCESS_LEAVE_HOURS))
@@ -78,25 +83,25 @@ public class JwtTokenProvider {
   }
 
   public String generateRefreshToken() {
-    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    Authentication authentication = emailPasswordAuthProvider.getSecurityContextAuthentication();
 
     return Jwts.builder().setIssuer("ISOCIAL").setSubject("Refresh Jwt Token")
-            .claim("email", authentication.getName())
+            .claim("id", authentication.getName())
             .claim("authorities", getAuthorities(authentication.getAuthorities()))
             .setIssuedAt(new Date())
             .setExpiration(getExpirationDate(REFRESH_LEAVE_HOURS))
             .signWith(getKey(jwtRefreshSecret)).compact();
   }
 
-  public static void validateAccessToken(@NonNull String token) throws Exception {
+  public void validateAccessToken(@NonNull String token) {
     validateToken(token, getKey(jwtAccessSecret));
   }
 
-  public static boolean validateRefreshToken(@NonNull String token) throws Exception {
+  public boolean validateRefreshToken(@NonNull String token) {
     return validateToken(token, getKey(jwtRefreshSecret));
   }
 
-  private static boolean validateToken(@NonNull String token, @NonNull Key secret) throws Exception {
+  private boolean validateToken(@NonNull String token, @NonNull Key secret) {
     try {
       Claims claims = Jwts.parserBuilder()
               .setSigningKey(secret)
@@ -104,14 +109,12 @@ public class JwtTokenProvider {
               .parseClaimsJws(token)
               .getBody();
 
-      if (SecurityContextHolder.getContext().getAuthentication() == null) {
-        String email = String.valueOf(claims.get("email"));
-        String authorities = String.valueOf(claims.get("authorities"));
-        Authentication authentication = new UsernamePasswordAuthenticationToken(
-                email, null, AuthorityUtils.commaSeparatedStringToAuthorityList(authorities)
-        );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-      }
+      String id = String.valueOf(claims.get("id"));
+      String authorities = String.valueOf(claims.get("authorities"));
+      Authentication authentication = new UsernamePasswordAuthenticationToken(
+              id, null, AuthorityUtils.commaSeparatedStringToAuthorityList(authorities)
+      );
+      SecurityContextHolder.getContext().setAuthentication(authentication);
 
       return true;
     } catch (Exception e) {
@@ -134,7 +137,7 @@ public class JwtTokenProvider {
     return Date.from(instant);
   }
 
-  private static Key getKey(String secret) {
+  private Key getKey(String secret) {
     return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));
   }
 

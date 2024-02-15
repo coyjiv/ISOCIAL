@@ -1,0 +1,135 @@
+@import "../../styles/variables/colors";
+@import "../../styles/mixins/common";
+
+.spinner{
+  width: 64px;
+  height: 64px;
+  margin: 0 auto;
+}
+.container{
+  max-width: 1440px;
+  margin: 0 auto;
+
+  height: 100vh;
+  position: relative;
+}
+.logo{
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1.2;
+
+  color: $primaryButtonBackground;
+  text-align: center;
+}
+.form_wrapper{
+  width: 396px;
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -40%);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, .1), 0 8px 16px rgba(0, 0, 0, .1);
+
+  padding: 24px 10px;
+  border-radius: 10px;
+}
+.body{
+  padding-bottom: 24px;
+  border-bottom: 1px solid $lightGrey;
+}
+.forgot_password{
+  display: block;
+  text-align: center;
+  margin-top: 24px;
+  font-size: 14px;
+  font-weight: 500;
+  color: $primaryButtonBackground;
+}
+.footer{
+  padding-top: 24px;
+  span{
+    display: block;
+    margin-top: 24px;
+    margin-bottom: 24px;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+  }
+}
+.registation_btn{
+  display: block;
+  width: fit-content;
+  margin: 0 auto;
+  padding: 12px 32px;
+  background-color: $green;
+
+  color: white;
+  border-radius: 6px;
+  font-family: 'Segoe UI',sans-serif;
+  font-size: 17px;
+  font-weight: bold;
+  letter-spacing: 0.3px;
+  line-height: 1.2;
+
+}
+.google{
+  display: block;
+  width: 44px;
+  height: 44px;
+  margin: 0 auto;
+}
+.form{
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.password{
+  position: relative;
+}
+.eye{
+  cursor: pointer;
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.field{
+  font-size: 17px;
+  line-height: 16px;
+  padding: 14px 16px;
+  width: 100%;
+  border-radius: 6px;
+  border: 1px solid #dddfe2;
+}
+.error{
+  border-color: rgba(255, 0, 0, 0.5);
+}
+.wrong_pass{
+  color: rgb(254, 101, 101);
+  font-size: 17px;
+  line-height: 16px;
+  font-weight: 800;
+  text-align: center;
+}
+.field{
+
+}
+.error{
+
+}
+.submit_btn{
+  padding: 12px 32px;
+  color: white;
+  background-color: $primaryButtonBackground;
+  border-radius: 6px;
+  font-family: 'Segoe UI',sans-serif;
+  font-size: 17px;
+  font-weight: bold;
+  letter-spacing: 0.3px;
+  line-height: 1.2;
+  cursor: pointer;
+  @include shadow();
+  &:focus{
+    outline: none;
+  }
+}
+

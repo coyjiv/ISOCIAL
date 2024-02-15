@@ -1,13 +1,9 @@
-import { withLayout } from "../../hooks/withLayout"
+import { withLayout } from "../../hooks/withLayout";
+import { Link } from "react-router-dom";
 
 const HomePage = () => {
-  return (
-    <div>
-      
-    </div>
-  )
-}
+  return <Link to="/login">Log In</Link>;
+};
 
-
-const Home = withLayout(HomePage)
-export default Home
+const Home = withLayout(HomePage);
+export default Home;

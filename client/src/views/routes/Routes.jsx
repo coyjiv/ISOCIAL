@@ -8,56 +8,66 @@ import ForgotPassword from "../Forgot-password/Forgot-password";
 import Groups from "../Groups/Groups";
 import Videos from "../Videos/Videos";
 import Friends from "../Friends/Friends";
-import Confirmation from "../../components/confirmation/Confirmation";
+import Confirmation from "../Confirmation/Confirmation";
+// import NotFound from "../Not-found/NotFound";
+import { ErrorFallback } from "../../components/ErrorFallBack/ErrorFallBack";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Home />,
+    errorElement: <ErrorFallback />,
   },
   {
     path: "register",
     element: <Register />,
+    errorElement: <ErrorFallback />,
   },
   {
     path: "login",
     element: <Login />,
+    errorElement: <ErrorFallback />,
   },
   {
     path: "profile",
     element: <Profile />,
+    errorElement: <ErrorFallback />,
+  },
+  {
+    path: "profile/:id",
+    element: <Profile />,
+    errorElement: <ErrorFallback />,
   },
   {
     path: "settings",
     element: <Settings />,
+    errorElement: <ErrorFallback />,
   },
   {
     path: "friends",
     element: <Friends />,
+    errorElement: <ErrorFallback />,
   },
   {
     path: "watch",
     element: <Videos />,
+    errorElement: <ErrorFallback />,
   },
   {
     path: "groups",
     element: <Groups />,
+    errorElement: <ErrorFallback />,
   },
   {
     path: "feed",
     element: <div>Users</div>,
   },
   {
-    path: "users/:id",
-    element: <div>Users</div>,
-  },
-  {
     path: "confirmation",
     element: <Confirmation />,
+    errorElement: <ErrorFallback />,
   },
-  { path: "forgotPassword", 
-    element: <ForgotPassword /> 
-  },
+  { path: "forgotPassword", element: <ForgotPassword /> },
 ]);
 
 export const App = () => <RouterProvider router={router} />;
