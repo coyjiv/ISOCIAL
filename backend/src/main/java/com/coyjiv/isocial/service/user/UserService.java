@@ -9,6 +9,7 @@ import com.coyjiv.isocial.dao.UserRepository;
 import com.coyjiv.isocial.domain.User;
 import com.coyjiv.isocial.domain.UserActivityStatus;
 import com.coyjiv.isocial.dto.request.auth.PasswordResetRequestDto;
+import com.coyjiv.isocial.domain.UserGender;
 import com.coyjiv.isocial.dto.request.user.UserRegistrationRequestDto;
 import com.coyjiv.isocial.dto.respone.user.UserDefaultResponseDto;
 import com.coyjiv.isocial.dto.respone.user.UserSearchResponseDto;
@@ -93,6 +94,11 @@ public class UserService implements IUserService {
     return userRepository.findActiveByEmail(email);
   }
 
+  @Override
+  public boolean isUserActive(String email) {
+    return userRepository.existsActiveUserByEmail(email);
+  }
+
   @Transactional(readOnly = true)
   @Override
   public List<UserSearchResponseDto> findByName(String name, int page, int size) {
@@ -152,9 +158,10 @@ public class UserService implements IUserService {
     }
   }
 
+
   @Transactional
   @Override
-  public void update(Long id, Map<String, String> fields)
+  public void update(Long id, Map<Object, Object> fields)
           throws IllegalAccessException, EntityNotFoundException {
     Long requestOwnerId = authProvider.getAuthenticationPrincipal();
     if (!Objects.equals(id, requestOwnerId)) {
@@ -164,14 +171,22 @@ public class UserService implements IUserService {
     Optional<User> user = userRepository.findById(id);
     if (user.isPresent()) {
       fields.forEach((key, value) -> {
-        if (Objects.equals(key, "email") || Objects.equals(key, "password")
-                || Objects.equals(key, "activity_status") || Objects.equals(key, "last_seen")) {
+        String stringKey = (String) key;
+        if (Objects.equals(stringKey, "email") || Objects.equals(stringKey, "password")
+                || Objects.equals(stringKey, "activity_status") || Objects.equals(stringKey, "last_seen")) {
           return;
         }
-        Field field = ReflectionUtils.findField(User.class, key);
-        if (field != null) {
-          field.setAccessible(true);
-          ReflectionUtils.setField(field, user.get(), value);
+        if (Objects.equals(key, "gender")) {
+          User genderUser = user.get();
+          genderUser.setGender(UserGender.valueOf((String) value));
+          userRepository.save(genderUser);
+        } else {
+          Field field = ReflectionUtils.findField(User.class, (String) key);
+          System.out.println(field);
+          if (field != null) {
+            field.setAccessible(true);
+            ReflectionUtils.setField(field, user.get(), value);
+          }
         }
       });
       userRepository.save(user.get());
