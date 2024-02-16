@@ -1,8 +1,9 @@
 package com.coyjiv.isocial.service.comment;
 
+import com.coyjiv.isocial.auth.EmailPasswordAuthProvider;
 import com.coyjiv.isocial.dao.CommentRepository;
 import com.coyjiv.isocial.domain.Comment;
-import com.coyjiv.isocial.dto.comment.UpdateCommentRequestDto;
+import com.coyjiv.isocial.dto.comment.DefaultCommentRequestDto;
 import com.coyjiv.isocial.dto.respone.comment.CommentResponseDto;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.transfer.comment.CommentResponseMapper;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -18,6 +20,7 @@ import java.util.Optional;
 public class CommentService implements ICommentService {
   private final CommentRepository commentRepository;
   private final CommentResponseMapper commentResponseMapper;
+  private final EmailPasswordAuthProvider emailPasswordAuthProvider;
 
   @Transactional(readOnly = true)
   @Override
@@ -47,25 +50,39 @@ public class CommentService implements ICommentService {
 
   @Transactional
   @Override
-  public void delete(Long id) {
-    Optional<Comment> comment = commentRepository.findById(id);
-    comment.ifPresent(commentRepository::delete);
-  }
-
-  @Transactional
-  @Override
-  public Comment create(Long commenterId, Long postId, String text) {
-    return commentRepository.save(new Comment(commenterId, postId, text));
-  }
-
-  @Transactional
-  @Override
-  public Comment update(Long id, UpdateCommentRequestDto dto) throws EntityNotFoundException {
+  public void delete(Long id) throws IllegalAccessException {
     Optional<Comment> comment = commentRepository.findById(id);
     if (comment.isPresent()) {
-      comment.get().setText(dto.getText());
-      return commentRepository.save(comment.get());
+      if (Objects.equals(comment.get().getCommenterId(), emailPasswordAuthProvider.getAuthenticationPrincipal())) {
+        comment.get().setActive(false);
+        commentRepository.save(comment.get());
+      } else {
+        throw new IllegalAccessException("User have no authorities to do this request.");
+      }
     }
-    throw new EntityNotFoundException("Comment not found");
+  }
+
+  @Transactional
+  @Override
+  public Comment create(Long postId, DefaultCommentRequestDto dto) {
+    Comment comment = new Comment(emailPasswordAuthProvider.getAuthenticationPrincipal(), postId, dto.getText());
+    comment.setActive(true);
+    return commentRepository.save(comment);
+  }
+
+  @Transactional
+  @Override
+  public Comment update(Long id, DefaultCommentRequestDto dto) throws EntityNotFoundException, IllegalAccessException {
+    Optional<Comment> comment = commentRepository.findById(id);
+    if (comment.isPresent()) {
+      if (Objects.equals(comment.get().getCommenterId(), emailPasswordAuthProvider.getAuthenticationPrincipal())) {
+        comment.get().setText(dto.getText());
+        return commentRepository.save(comment.get());
+      } else {
+        throw new IllegalAccessException("User have no authorities to do this request.");
+      }
+    } else {
+      throw new EntityNotFoundException("Comment not found");
+    }
   }
 }

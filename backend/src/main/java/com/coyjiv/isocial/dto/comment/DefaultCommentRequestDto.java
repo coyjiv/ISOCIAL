@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UpdateCommentRequestDto {
+public class DefaultCommentRequestDto {
   @NotBlank
   private String text;
 }

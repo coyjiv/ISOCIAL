@@ -1,6 +1,6 @@
 package com.coyjiv.isocial.resource.rest;
 
-import com.coyjiv.isocial.dto.comment.UpdateCommentRequestDto;
+import com.coyjiv.isocial.dto.comment.DefaultCommentRequestDto;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.service.comment.ICommentService;
 import jakarta.validation.Valid;
@@ -23,10 +23,9 @@ public class CommentController {
   private final ICommentService commentService;
 
   @PostMapping("/")
-  public ResponseEntity<?> create(@RequestParam(name = "commenterId") Long commenterId,
-                                  @RequestParam(name = "postId") Long postId,
-                                  @RequestParam(name = "text") String text) {
-    return ResponseEntity.ok(commentService.create(commenterId, postId, text));
+  public ResponseEntity<?> create(@RequestParam(name = "postId") Long postId,
+                                  @RequestBody @Valid DefaultCommentRequestDto defaultCommentRequestDto){
+    return ResponseEntity.ok(commentService.create(postId, defaultCommentRequestDto));
   }
 
   @GetMapping("/{postId}")
@@ -35,15 +34,15 @@ public class CommentController {
   }
 
   @DeleteMapping("/{id}")
-  public ResponseEntity<?> delete(@PathVariable(name = "id") Long id) {
+  public ResponseEntity<?> delete(@PathVariable(name = "id") Long id) throws IllegalAccessException {
     commentService.delete(id);
     return ResponseEntity.status(204).build();
   }
 
   @PatchMapping("/{id}")
   public ResponseEntity<?> update(@PathVariable(name = "id") Long id,
-                                  @RequestBody @Valid UpdateCommentRequestDto updateCommentRequestDto)
-          throws EntityNotFoundException {
-    return ResponseEntity.ok(commentService.update(id, updateCommentRequestDto));
+                                  @RequestBody @Valid DefaultCommentRequestDto defaultCommentRequestDto)
+          throws EntityNotFoundException, IllegalAccessException {
+    return ResponseEntity.ok(commentService.update(id, defaultCommentRequestDto));
   }
 }
