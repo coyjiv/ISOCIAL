@@ -23,7 +23,6 @@ import java.util.Map;
 
 
 @RequiredArgsConstructor
-
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
@@ -48,7 +47,7 @@ public class UserController {
   }
 
   @PatchMapping("/{id}")
-  public ResponseEntity<?> update(@PathVariable("id") @Min(0) Long id, @RequestBody Map<String, String> fields)
+  public ResponseEntity<?> update(@PathVariable("id") @Min(0) Long id, @RequestBody Map<Object, Object> fields)
           throws EntityNotFoundException, IllegalAccessException {
     userService.update(id, fields);
     return ResponseEntity.status(204).build();

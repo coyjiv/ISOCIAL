@@ -12,10 +12,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.security.auth.login.AccountNotFoundException;
 
@@ -50,6 +52,20 @@ public class AuthenticationController {
       return ResponseEntity.status(204).build();
     } catch (AccountNotFoundException exception) {
       return ResponseEntity.status(404).body(exception.getMessage());
+    }
+  }
+
+  @GetMapping("/active/{email}")
+  public ResponseEntity<?> isActive(@PathVariable("email") String email) {
+    if (email == null) {
+      return ResponseEntity.badRequest().body("Email is required");
+    } else {
+      boolean isActive = userService.isUserActive(email);
+      if (isActive) {
+        return ResponseEntity.ok(true);
+      } else {
+        return ResponseEntity.notFound().build();
+      }
     }
   }
 

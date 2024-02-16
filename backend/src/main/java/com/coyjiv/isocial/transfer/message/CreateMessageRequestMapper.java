@@ -28,5 +28,8 @@ public class CreateMessageRequestMapper extends DtoMapperFacade<Message, CreateM
     if (dto.getAttachements() == null) {
       entity.setAttachements(List.of());
     }
+    if (dto.getText() == null) {
+      entity.setText("");
+    }
   }
 }
