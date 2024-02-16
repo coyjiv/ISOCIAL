@@ -31,7 +31,7 @@ const MediaUpload = ({ modalTitle, customOptions, ...props }) => {
 
     const updateProfileImage = (url, id, type = 'avatar') => {
         if (type === 'avatar') {
-            if (profile.avatarsUrl.length > 0) {
+            if (profile?.avatarsUrl?.length > 0) {
                 updateProfile({ body: JSON.stringify({ avatarsUrl: [url, ...(profile.avatarsUrl)] }), id: id });
             } else {
                 updateProfile({ body: JSON.stringify({ avatarsUrl: [url] }), id: id });

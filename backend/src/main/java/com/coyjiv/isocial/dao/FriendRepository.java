@@ -38,9 +38,12 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
   List<Friend> findAllByAddresserAndStatus(User addresser, String status);
 
 
-  @Query("SELECT COUNT(f) FROM Friend f WHERE " +
-    "((f.requester = :user AND f.addresser = :friend) OR " +
-    "(f.addresser = :user AND f.requester = :friend)) AND " +
+  @Query("SELECT COUNT(f) FROM Friend f WHERE "
+    +
+    "((f.requester = :user AND f.addresser = :friend) OR "
+    +
+    "(f.addresser = :user AND f.requester = :friend)) AND "
+    +
     "f.status = 'ACCEPTED'")
   long countFriendship(@Param("user") User user, @Param("friend") User friend);
 

@@ -147,7 +147,7 @@ const AvatarButton = () => {
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                     variant="dot"
                 >
-                    <Avatar alt="User profile avatar" src={profile?.avatarsUrl[0] ?? placeholderAvatar(profile?.gender)} />
+                    <Avatar alt="User profile avatar" src={profile?.avatarsUrl?.[0] ?? placeholderAvatar(profile?.gender)} />
                 </StyledBadge>
             </StyledButton>
             <StyledMenu
@@ -161,7 +161,7 @@ const AvatarButton = () => {
             >
                 <Link to='/profile'>
                     <StyledCard>
-                        <Avatar alt="User profile avatar" src={profile?.avatarsUrl[0]} />
+                        <Avatar alt="User profile avatar" src={profile?.avatarsUrl?.[0]} />
                         <Typography fontWeight='900'>{profile.firstName + " " + profile.lastName}</Typography>
                     </StyledCard>
                 </Link>

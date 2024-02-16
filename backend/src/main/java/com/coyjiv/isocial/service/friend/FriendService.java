@@ -48,17 +48,16 @@ public class FriendService implements IFriendService {
       throw new EntityNotFoundException("User not found");
     }
 
-    Optional<Friend> existingFriendship = friendRepository.findByRequesterAndAddresserAndIsActive(requester.get(),
-      addresser.get(), true);
+    Optional<Friend> existingFriendship =
+      friendRepository.findByRequesterAndAddresserAndIsActive(requester.get(), addresser.get(), true);
     if (existingFriendship.isPresent()) {
       return false;
     }
 
-    Optional<Friend> inactiveFriendship = friendRepository.findByRequesterAndAddresserAndIsActive(requester.get(),
-      addresser.get(), false);
+    Optional<Friend> inactiveFriendship =
+      friendRepository.findByRequesterAndAddresserAndIsActive(requester.get(), addresser.get(), false);
     if (!inactiveFriendship.isPresent()) {
-      inactiveFriendship = friendRepository.findByRequesterAndAddresserAndIsActive(addresser.get(),
-        requester.get(), false);
+      inactiveFriendship = friendRepository.findByRequesterAndAddresserAndIsActive(addresser.get(), requester.get(), false);
     }
     if (inactiveFriendship.isPresent()) {
       Friend friend = inactiveFriendship.get();
@@ -70,7 +69,8 @@ public class FriendService implements IFriendService {
     }
 
     if (friendRepository.existsByRequesterAndAddresserAndIsActive(requester.get(), addresser.get(), true)
-      || friendRepository.existsByRequesterAndAddresserAndIsActive(addresser.get(), requester.get(), true)) {
+      ||
+      friendRepository.existsByRequesterAndAddresserAndIsActive(addresser.get(), requester.get(), true)) {
       throw new IllegalAccessException("You need to accept existing request");
     }
 
@@ -110,8 +110,7 @@ public class FriendService implements IFriendService {
     Optional<Friend> friend = friendRepository.findById(friendId);
 
 
-    if (user.isEmpty()
-      || friend.isEmpty()
+    if (user.isEmpty() || friend.isEmpty()
       || (!user.get().equals(friend.get().getRequester()) && !user.get().equals(friend.get().getAddresser()))) {
       return false;
     }
@@ -159,14 +158,12 @@ public class FriendService implements IFriendService {
       return new ArrayList<>();
     }
 
-    Page<Friend> friendsPage = friendRepository.findAllByRequesterOrAddresserAndStatus(user.get(),
-      user.get(), "ACCEPTED", pageable);
+    Page<Friend> friendsPage =
+      friendRepository.findAllByRequesterOrAddresserAndStatus(user.get(), user.get(), "ACCEPTED", pageable);
 
-    return friendsPage.getContent().stream()
-      .filter(friend -> "ACCEPTED".equals(friend.getStatus()))
+    return friendsPage.getContent().stream().filter(friend -> "ACCEPTED".equals(friend.getStatus()))
       .map(friend -> user.get().equals(friend.getRequester()) ? friend.getAddresser() : friend.getRequester())
-      .map(friendResponseMapper::convertToDto)
-      .toList();
+      .map(friendResponseMapper::convertToDto).toList();
   }
 
   @Transactional(readOnly = true)
@@ -180,12 +177,14 @@ public class FriendService implements IFriendService {
   public Long getSubscribersCount(Long userId) {
     return friendRepository.countAllNonAcceptedFriends(userRepository.findById(userId).orElseThrow());
   }
+
   @Transactional(readOnly = true)
   @Override
   public boolean haveSentRequest(Long currentUserId, Long userId) {
     return friendRepository.existsByRequesterAndAddresserAndIsActive(userRepository.findById(currentUserId).orElseThrow(),
       userRepository.findById(userId).orElseThrow(), true);
   }
+
   @Transactional
   @Override
   public boolean cancelFriendRequest(Long friendId) {
@@ -202,16 +201,14 @@ public class FriendService implements IFriendService {
 
     List<Friend> pendingFriendRequests = friendRepository.findAllByAddresserAndStatus(user, "PENDING");
 
-    return pendingFriendRequests.stream()
-      .map(Friend::getRequester)
-      .map(friendResponseMapper::convertToDto)
+    return pendingFriendRequests.stream().map(Friend::getRequester).map(friendResponseMapper::convertToDto)
       .collect(Collectors.toList());
   }
 
   @Override
   public boolean isFriend(Long currentUserId, Long userId) {
     return friendRepository.countFriendship(userRepository.findById(currentUserId).orElseThrow(),
-      userRepository.findById(userId).orElseThrow())>0;
+      userRepository.findById(userId).orElseThrow()) > 0;
   }
 }
 

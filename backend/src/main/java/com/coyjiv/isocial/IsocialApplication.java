@@ -15,13 +15,13 @@ public class IsocialApplication implements ApplicationRunner {
   public static void main(String[] args) {
     SpringApplication.run(IsocialApplication.class, args);
   }
-  @Bean
-  public WebServerFactoryCustomizer<ConfigurableWebServerFactory> webServerFactoryCustomizer() {
-    return factory -> {
-      ErrorPage error404Page = new ErrorPage(HttpStatus.NOT_FOUND, "/index.html");
-      factory.addErrorPages(error404Page);
-    };
-  }
+  //  @Bean
+  //  public WebServerFactoryCustomizer<ConfigurableWebServerFactory> webServerFactoryCustomizer() {
+  //    return factory -> {
+  //      ErrorPage error404Page = new ErrorPage(HttpStatus.NOT_FOUND, "/index.html");
+  //      factory.addErrorPages(error404Page);
+  //    };
+  //  }
 
 
   @Override

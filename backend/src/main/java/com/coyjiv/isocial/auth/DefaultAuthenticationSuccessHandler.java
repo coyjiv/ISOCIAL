@@ -15,6 +15,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Set;
 
 @Service
@@ -42,6 +43,8 @@ public class DefaultAuthenticationSuccessHandler implements AuthenticationSucces
       user.setActivityStatus(UserActivityStatus.OFFLINE);
       user.setGender(UserGender.NOT_SPECIFIED);
       user.setActive(true);
+      user.setBannerUrl("");
+      user.setAvatarsUrl(new ArrayList<>());
       Role userRole = new Role();
       userRole.setName("ROLE_USER");
       userRole.setUser(user);

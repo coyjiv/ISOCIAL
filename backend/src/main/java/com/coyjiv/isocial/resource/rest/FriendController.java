@@ -132,10 +132,10 @@ public class FriendController {
     return ResponseEntity.ok(friendService.availableFriendRequests(userId));
   }
 
-    @GetMapping("/isFriend")
-    public ResponseEntity<Boolean> isFriend(@RequestParam Long userId, @RequestParam Long friendId) {
-        return ResponseEntity.ok(friendService.isFriend(userId, friendId));
-    }
+  @GetMapping("/isFriend")
+  public ResponseEntity<Boolean> isFriend(@RequestParam Long userId, @RequestParam Long friendId) {
+    return ResponseEntity.ok(friendService.isFriend(userId, friendId));
+  }
 
 
 }

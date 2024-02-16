@@ -1,5 +1,5 @@
 import Posts from '../views/Profile/tabs/Posts'
-import About from '../views/Profile/tabs/About'
+// import About from '../views/Profile/tabs/About'
 import Friends from '../views/Profile/tabs/Friends'
 import Photos from '../views/Profile/tabs/Photos'
 // import Videos from "../views/Profile/tabs/Videos";
@@ -11,20 +11,20 @@ export const profileTabs = [
     path: '/profile/posts',
     component: Posts,
   },
+  // {
+  //   id: 2,
+  //   label: 'About',
+  //   path: '/profile/about',
+  //   component: About,
+  // },
   {
     id: 2,
-    label: 'About',
-    path: '/profile/about',
-    component: About,
-  },
-  {
-    id: 3,
     label: 'Friends',
     path: '/profile/friends',
     component: Friends,
   },
   {
-    id: 4,
+    id: 3,
     label: 'Photos',
     path: '/profile/photos',
     component: Photos,

@@ -144,7 +144,7 @@ const AvatarView = ({ onClose, open }) => {
                 }}
             >
                 <MenuItem onClick={handleClose}>Copy</MenuItem>
-                {!id && profile?.avatarsUrl[selectedAvatar] && <MenuItem onClick={handleDelete}>Delete</MenuItem>}
+                {!id && profile?.avatarsUrl?.[selectedAvatar] && <MenuItem onClick={handleDelete}>Delete</MenuItem>}
                 {!id && selectedAvatar !== 0 && <MenuItem onClick={handleSetAsMain}>Set as main</MenuItem>}
             </Menu>
         </Dialog>
