@@ -24,7 +24,7 @@ public class CommentController {
 
   @PostMapping("/")
   public ResponseEntity<?> create(@RequestParam(name = "postId") Long postId,
-                                  @RequestBody @Valid DefaultCommentRequestDto defaultCommentRequestDto){
+                                  @RequestBody @Valid DefaultCommentRequestDto defaultCommentRequestDto) {
     return ResponseEntity.ok(commentService.create(postId, defaultCommentRequestDto));
   }
 
