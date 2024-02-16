@@ -1,6 +1,10 @@
 package com.coyjiv.isocial.dto.request.user;
 
 
+import com.coyjiv.isocial.domain.UserGender;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,4 +37,6 @@ public class UserUpdateRequestDto {
   private String bannerUrl;
 
   private Date dateOfBirth;
+
+  private UserGender gender;
 }

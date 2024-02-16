@@ -1,12 +1,14 @@
 //libs
-import {Link, useNavigate, useSearchParams} from "react-router-dom";
-import {useEffect} from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useEffect } from "react";
 //components
 import LoginForm from './LoginForm';
 //styles
 import styles from './styles.module.scss'
 //images
 import GLink from './icons/google_icon.svg';
+import { Typography } from "@mui/material";
+
 
 const Login = () => {
     const navigate = useNavigate();
@@ -34,18 +36,22 @@ const Login = () => {
 
     return (
         <div className={styles.container}>
-            <h1 className={styles.logo}>ISOCIAL</h1>
-            <div className={styles.form_wrapper}>
+            <div className={styles.logoWrapper}>
+                <h1 className={styles.logo}>iSocial</h1>
+                <Typography className={styles.slogan}>iSpeak. iLike. iSocial.</Typography>
+            </div>
+            <div className={styles.formWrapper}>
                 <div className={styles.body}>
-                    <LoginForm/>
-                    <Link to={'/forgot-password'} className={styles.forgot_password}>Forgot Password</Link>
+                    <LoginForm />
+                    <Link to={'/forgot-password'} className={styles.forgotPassword}>Forgot Password</Link>
                 </div>
                 <div className={styles.footer}>
-                    <Link to={'/registration'} className={styles.registation_btn}>Create new account</Link>
+                    <Link to={'/register'} className={styles.registrationBtn}>Create new account</Link>
                     <span>OR</span>
-                    <a href="http://localhost:9000/oauth2/authorization/google">
-                        <img src={GLink} alt="google icon" className={styles.google}/>
-                    </a>
+                    <Link className={styles.signInWithGoogleBtn} to="/oauth2/authorization/google">
+                        <img src={GLink} alt="google icon" className={styles.google} />
+                        <Typography>Continue with Google</Typography>
+                    </Link>
                 </div>
             </div>
         </div>
