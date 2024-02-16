@@ -262,11 +262,6 @@ public class UserService implements IUserService {
   @Transactional
   @Override
   public void requestPasswordReset(String email) {
-    Optional<User> user = userRepository.findByEmail(email);
-    if (user.isEmpty()) {
-      throw new UsernameNotFoundException("User not found");
-    }
-
     String uuid = PasswordResetCache.putEmail(email);
     emailService.sendPasswordResetMessage(email, uuid);
   }
