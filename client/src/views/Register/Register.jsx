@@ -9,7 +9,6 @@ import { useToast } from '../../context'
 import styles from '../Login/styles.module.scss'
 
 const Register = () => {
-	const [isError, setIsError] = useState(false)
 	const [openModal, setOpenModal] = useState(false)
 	const [email, setEmail] = useState('')
 	const { onToast } = useToast()
@@ -40,14 +39,13 @@ const Register = () => {
 				},
 			)
 			if (response.status != 201 && !response.ok) {
-				setIsError(true)
 				onToast("Something went wrong", 'error')
 			} else {
 				setEmail(data.email)
 				setOpenModal(true)
 			}
 		} catch (error) {
-			onToast(error.message, 'error')
+			onToast(error.message, 'info')
 		}
 	}
 
@@ -67,8 +65,6 @@ const Register = () => {
 				validationSchema={validationSchema}
 				onSubmit={handleSubmit}
 			/>
-			{/* @TODO: send toast with error message */}
-			{isError && <div>Error</div>}
 			<RegisterConfirmModal
 				open={openModal}
 				onClose={handleModalClose}

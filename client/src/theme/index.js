@@ -30,18 +30,6 @@ export const theme = createTheme({
     disabledButtonBackground: '#e4e6eb',
     disabledButtonColor: '#a7a9ab',
 		greyBorder: '#ccc',
-		// info: '#0866FF',
-    background: {
-      secondary: '#eff2f5',
-      greyHover: '#e4e6eb',
-      colorAction: '#50514b',
-      greyIcon: '#B9BECC',
-      selectIcon: '#536A80',
-      error: '#F23939',
-      info: '#3990F6',
-      warning: '#FFB800',
-      success: '#18B74E',
-    },
     text: {
       grey: '#6a6d71',
       base: '#1c1e21',
