@@ -108,7 +108,8 @@ const StyledMenuItem = styled(MenuItem)(() => ({
 
 const AvatarButton = () => {
     const ref = useRef(null)
-    const { data: profile, isLoading } = useGetProfileByIdQuery(localStorage.getItem("userId"))
+    const userId = localStorage.getItem('userId')
+    const { data: profile, isLoading } = useGetProfileByIdQuery(userId, { skip: !userId })
     const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -139,7 +140,7 @@ const AvatarButton = () => {
 
     useOnClickOutside(ref, handleClickOutside)
     return (
-        !isLoading &&
+        userId && !isLoading &&
         <>
             <StyledButton ref={ref} className={buttonClasses} onClick={handleClickInside}>
                 <StyledBadge
@@ -162,7 +163,7 @@ const AvatarButton = () => {
                 <Link to='/profile'>
                     <StyledCard>
                         <Avatar alt="User profile avatar" src={profile?.avatarsUrl?.[0]} />
-                        <Typography fontWeight='900'>{profile.firstName + " " + profile.lastName}</Typography>
+                        <Typography fontWeight='900'>{profile?.firstName + " " + profile?.lastName}</Typography>
                     </StyledCard>
                 </Link>
                 <StyledMenuItem onClick={handleClose}>
