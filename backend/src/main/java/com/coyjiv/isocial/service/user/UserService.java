@@ -245,8 +245,8 @@ public class UserService implements IUserService {
 
   @Transactional
   @Override
-  public void resetPassword(PasswordResetRequestDto passwordResetRequestDto) {
-    String email = PasswordResetCache.getEmail(passwordResetRequestDto.getUuid());
+  public void resetPassword(String uuid, PasswordResetRequestDto passwordResetRequestDto) {
+    String email = PasswordResetCache.getEmail(uuid);
     if (email != null) {
       Optional<User> optionalUser = userRepository.findByEmail(email);
       if (optionalUser.isPresent()) {
@@ -262,6 +262,10 @@ public class UserService implements IUserService {
   @Transactional
   @Override
   public void requestPasswordReset(String email) {
+    Optional<User> user = userRepository.findByEmail(email);
+    if (user.isEmpty()) {
+      throw new UsernameNotFoundException("Email not found");
+    }
     String uuid = PasswordResetCache.putEmail(email);
     emailService.sendPasswordResetMessage(email, uuid);
   }

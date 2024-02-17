@@ -13,10 +13,6 @@ import lombok.Setter;
 @AllArgsConstructor
 public class PasswordResetRequestDto {
   @NotBlank
-  private String uuid;
-
-  @NotBlank
   @Size(min = 8, max = 15)
   private String newPassword;
-
 }

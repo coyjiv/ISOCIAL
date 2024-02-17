@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,8 +19,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
+import com.coyjiv.isocial.domain.User;
 
 import javax.security.auth.login.AccountNotFoundException;
+import java.util.Optional;
 
 
 @RestController
@@ -89,19 +92,22 @@ public class AuthenticationController {
   }
 
 
-  @PostMapping("/reset-password")
-  public ResponseEntity<?> resetPassword(@Valid @RequestBody PasswordResetRequestDto passwordResetRequestDto) {
+  @PostMapping("/reset-password/{uuid}")
+  public ResponseEntity<?> resetPassword(@PathVariable String uuid, @Valid @RequestBody PasswordResetRequestDto passwordResetRequestDto) {
     try {
-      userService.resetPassword(passwordResetRequestDto);
+      userService.resetPassword(uuid, passwordResetRequestDto);
       return ResponseEntity.status(200).body("Password reset successfully");
     } catch (UsernameNotFoundException e) {
       return ResponseEntity.status(404).body(e.getMessage());
     }
   }
-
   @PostMapping("/request-reset-password")
   public ResponseEntity<?> requestPasswordReset(@RequestParam String email) {
-    userService.requestPasswordReset(email);
-    return ResponseEntity.status(200).body("Password reset request sent successfully.");
+    try {
+      userService.requestPasswordReset(email);
+      return ResponseEntity.status(200).body("Password reset request sent successfully.");
+    } catch (UsernameNotFoundException ex) {
+      return ResponseEntity.status(404).body("Email not found.");
+    }
   }
 }

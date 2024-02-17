@@ -44,7 +44,7 @@ public interface IUserService {
 
   void handleDisconnect(String token);
 
-  void resetPassword(PasswordResetRequestDto passwordResetRequestDto);
+  void resetPassword(String uuid, PasswordResetRequestDto passwordResetRequestDto);
 
   void requestPasswordReset(String email);
 }
