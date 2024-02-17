@@ -12,13 +12,13 @@ public interface ICommentService {
 
   CommentResponseDto findById(Long id) throws EntityNotFoundException;
 
-  List<CommentResponseDto> findByPostId(Long id, int page, int size);
+  List<CommentResponseDto> findByPostId(Long id, int page, int size) throws EntityNotFoundException;
 
   List<CommentResponseDto> findByCommenterId(Long id, int page, int size);
 
-  void delete(Long id) throws IllegalAccessException;
+  void delete(Long id) throws IllegalAccessException, EntityNotFoundException;
 
-  Comment create(Long postId, DefaultCommentRequestDto dto);
+  Comment create(Long postId, DefaultCommentRequestDto dto) throws EntityNotFoundException;
 
   Comment update(Long id, DefaultCommentRequestDto dto) throws EntityNotFoundException, IllegalAccessException;
 }
