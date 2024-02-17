@@ -66,10 +66,10 @@ public class CommentService implements ICommentService {
   public void delete(Long id) throws IllegalAccessException, EntityNotFoundException {
     Optional<Comment> comment = commentRepository.findById(id);
     if (comment.isPresent()) {
-      Optional<Post> post= postRepository.findActiveById(comment.get().getPostId());
+      Optional<Post> post = postRepository.findActiveById(comment.get().getPostId());
       if (post.isPresent()) {
         if (Objects.equals(comment.get().getCommenterId(), emailPasswordAuthProvider.getAuthenticationPrincipal())
-        && Objects.equals(post.get().getAuthorId(), emailPasswordAuthProvider.getAuthenticationPrincipal())) {
+                && Objects.equals(post.get().getAuthorId(), emailPasswordAuthProvider.getAuthenticationPrincipal())) {
           comment.get().setActive(false);
           commentRepository.save(comment.get());
         } else {
