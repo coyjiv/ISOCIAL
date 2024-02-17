@@ -3,11 +3,14 @@ package com.coyjiv.isocial.service.comment;
 import com.coyjiv.isocial.auth.EmailPasswordAuthProvider;
 import com.coyjiv.isocial.dao.CommentRepository;
 import com.coyjiv.isocial.domain.Comment;
-import com.coyjiv.isocial.dto.comment.DefaultCommentRequestDto;
+import com.coyjiv.isocial.dto.request.comment.DefaultCommentRequestDto;
 import com.coyjiv.isocial.dto.respone.comment.CommentResponseDto;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.transfer.comment.CommentResponseMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,16 +38,19 @@ public class CommentService implements ICommentService {
 
   @Transactional(readOnly = true)
   @Override
-  public List<CommentResponseDto> findByPostId(Long id) {
-
-    return commentRepository.findByPostId(id).stream()
+  public List<CommentResponseDto> findByPostId(Long id, int page, int size) {
+    Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "id"));
+    Pageable pageable = PageRequest.of(page, size, sort);
+    return commentRepository.findByPostId(id,pageable).stream()
             .map(commentResponseMapper::convertToDto).toList();
   }
 
   @Transactional(readOnly = true)
   @Override
-  public List<CommentResponseDto> findByCommenterId(Long id) {
-    return commentRepository.findByCommenterId(id).stream()
+  public List<CommentResponseDto> findByCommenterId(Long id, int page, int size) {
+    Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "id"));
+    Pageable pageable = PageRequest.of(page, size, sort);
+    return commentRepository.findByCommenterId(id,pageable).stream()
             .map(commentResponseMapper::convertToDto).toList();
   }
 

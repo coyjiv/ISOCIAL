@@ -1,9 +1,10 @@
 package com.coyjiv.isocial.resource.rest;
 
-import com.coyjiv.isocial.dto.comment.DefaultCommentRequestDto;
+import com.coyjiv.isocial.dto.request.comment.DefaultCommentRequestDto;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.service.comment.ICommentService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -29,8 +30,10 @@ public class CommentController {
   }
 
   @GetMapping("/{postId}")
-  public ResponseEntity<?> findByPostId(@PathVariable("postId") Long postId) {
-    return ResponseEntity.ok(commentService.findByPostId(postId));
+  public ResponseEntity<?> findByPostId(@PathVariable("postId") Long postId,
+                                        @RequestParam(defaultValue = "0") @Min(0) Integer page,
+                                        @RequestParam(defaultValue = "10") @Min(0) Integer size) {
+    return ResponseEntity.ok(commentService.findByPostId(postId, page, size));
   }
 
   @DeleteMapping("/{id}")

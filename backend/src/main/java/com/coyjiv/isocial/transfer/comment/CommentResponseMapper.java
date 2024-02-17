@@ -16,5 +16,6 @@ public class CommentResponseMapper extends DtoMapperFacade<Comment, CommentRespo
     dto.setCommenterId(entity.getCommenterId());
     dto.setText(entity.getText());
     dto.setPostId(entity.getPostId());
+    dto.setId(entity.getId());
   }
 }

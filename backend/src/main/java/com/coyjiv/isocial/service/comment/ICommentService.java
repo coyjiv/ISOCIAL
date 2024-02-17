@@ -1,10 +1,9 @@
 package com.coyjiv.isocial.service.comment;
 
 import com.coyjiv.isocial.domain.Comment;
-import com.coyjiv.isocial.dto.comment.DefaultCommentRequestDto;
+import com.coyjiv.isocial.dto.request.comment.DefaultCommentRequestDto;
 import com.coyjiv.isocial.dto.respone.comment.CommentResponseDto;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -13,9 +12,9 @@ public interface ICommentService {
 
   CommentResponseDto findById(Long id) throws EntityNotFoundException;
 
-  List<CommentResponseDto> findByPostId(Long id);
+  List<CommentResponseDto> findByPostId(Long id, int page, int size);
 
-  List<CommentResponseDto> findByCommenterId(Long id);
+  List<CommentResponseDto> findByCommenterId(Long id, int page, int size);
 
   void delete(Long id) throws IllegalAccessException;
 

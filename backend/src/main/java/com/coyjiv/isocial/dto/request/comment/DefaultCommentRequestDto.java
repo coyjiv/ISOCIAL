@@ -1,4 +1,4 @@
-package com.coyjiv.isocial.dto.comment;
+package com.coyjiv.isocial.dto.request.comment;
 
 
 import jakarta.validation.constraints.NotBlank;
