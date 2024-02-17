@@ -27,7 +27,7 @@ public class WebsocketMessageService implements IWebsocketMessageService {
     users.forEach((user -> {
       if (!Objects.equals(user.getId(), message.getSenderId())) {
         messagingTemplate.convertAndSendToUser(
-                String.valueOf(user.getId()), "/queue/messages", messageNotificationDto
+                String.valueOf(user.getId()), "/messages", messageNotificationDto
         );
       }
     }));
