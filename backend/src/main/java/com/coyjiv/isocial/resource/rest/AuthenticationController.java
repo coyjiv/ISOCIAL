@@ -93,7 +93,8 @@ public class AuthenticationController {
 
 
   @PostMapping("/reset-password/{uuid}")
-  public ResponseEntity<?> resetPassword(@PathVariable String uuid, @Valid @RequestBody PasswordResetRequestDto passwordResetRequestDto) {
+  public ResponseEntity<?> resetPassword(@PathVariable String uuid,
+                                         @Valid @RequestBody PasswordResetRequestDto passwordResetRequestDto) {
     try {
       userService.resetPassword(uuid, passwordResetRequestDto);
       return ResponseEntity.status(200).body("Password reset successfully");
@@ -101,6 +102,7 @@ public class AuthenticationController {
       return ResponseEntity.status(404).body(e.getMessage());
     }
   }
+
   @PostMapping("/request-reset-password")
   public ResponseEntity<?> requestPasswordReset(@RequestParam String email) {
     try {
