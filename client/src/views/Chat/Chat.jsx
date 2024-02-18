@@ -1,40 +1,59 @@
 import { useState, useEffect } from 'react';
 import './Chat.scss';
 import cx from 'classnames';
+import { API_URL, instance } from "../../api/config";
+import { useLocation } from 'react-router-dom';
 
 
 
 const Chat = () => {
+  const location = useLocation();
+  const  chatId  = location.state.chatId;
+  console.log(chatId);
 
-  const sampleMessage = [
-    { text: 'Hi, everyone', sender: 'bot' },
-    { text: 'What is your name?', sender: 'bot' },
-    { text: 'Hi, new friend', sender: 'user' },
-    { text: 'How are you?', sender: 'bot' },
-    { text: 'I am ok! And you?', sender: 'user' },
-  ];
-
-  const [messages, setMessages] = useState(sampleMessage);
+  const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
+
+  useEffect(() => {
+    instance.get(`http://localhost:9000/api/messages?page=0&quantity=30&chatId=${chatId}`)
+      .then((response) => {
+        setMessages(response.data)
+      console.log(response);})
+      
+      .catch((error) => console.error('Data error:', error));
+  }, []);
 
   const handleSendMessage = async (event) => {
     if (event.key === 'Enter') {
       if (newMessage.trim() !== '') {
 
       try {
-        setMessages([...messages, { text: newMessage, sender: 'user' }]);
+        await instance.post(`http://localhost:9000/api/messages?chatId=${chatId}`, {text: newMessage});
+        const response = await instance.get(`http://localhost:9000/api/messages?page=0&quantity=30&chatId=${chatId}`)
+        console.log(response);
+        setMessages(response.data);
         setNewMessage('');
       } catch (error) {
-        console.error('Ошибка отправки сообщения:', error);
+        console.error('Send message error:', error);
       }
         
       }
     }
   };
 
-  {messages.map((message, index) => (
-    console.log(messages[index - 1])
-   ))}
+  const deleteMessage = async (item) => {
+
+      try {
+        console.log(item.id);
+        await instance.delete(`http://localhost:9000/api/messages/${item.id}`);
+        const response = await instance.get(`http://localhost:9000/api/messages?page=0&quantity=30&chatId=${chatId}`)
+        console.log(response);
+        setMessages(response.data);
+        setNewMessage('');
+      } catch (error) {
+        console.error('Delete message error:', error);
+      }     
+  };
 
     return (
     <>
@@ -42,13 +61,13 @@ const Chat = () => {
       <div className="chat-container">
         <div className="chat-messages">
           {messages.map((message, index) => (
-           <div key={index} className={cx('message-item', {'user': message.sender === 'user'}, {"bot":message.sender === 'bot'})}>
-            <div className={cx(messages[index + 1] === undefined || {'message-avatar' : (messages[index + 1].sender !== 'bot')})}></div>
+           <div key={index} className={cx('message-item', {'user': message.senderId === 1}, {"bot":message.senderId !== 1})}>
+            <div className={cx(messages[index + 1] === undefined || {'message-avatar' : (messages[index + 1].senderId === 1)})}></div>
             <div className='message-text'>
               {message.text}
             </div>
             <div className='message-options'>
-              <div className='message-options_option'><img src="./public/assets/free-icon-delete-2907762.png"></img></div>
+              <div className='message-options_option' onClick={() => deleteMessage(message)}><img src="./free-icon-delete-2907762.png"></img></div>
               <div className='message-options_option'></div>
               <div className='message-options_option'></div>
             </div>
