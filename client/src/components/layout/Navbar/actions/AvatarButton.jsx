@@ -135,12 +135,16 @@ const AvatarButton = () => {
     const handleLogout = () => {
         localStorage.removeItem("access");
         localStorage.removeItem("refresh");
+        localStorage.removeItem("userId");
         navigate("/login");
     }
 
     useOnClickOutside(ref, handleClickOutside)
+
+    const avatarSrc = profile === undefined ? '' : profile?.avatarsUrl?.[0] ?? placeholderAvatar(profile?.gender, profile?.firstName, profile?.lastName)
+
     return (
-        userId && !isLoading && profile?.firstName &&
+        (userId && !isLoading && profile !== undefined) &&
         <>
             <StyledButton ref={ref} className={buttonClasses} onClick={handleClickInside}>
                 <StyledBadge
@@ -148,7 +152,7 @@ const AvatarButton = () => {
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                     variant="dot"
                 >
-                    <Avatar alt="User profile avatar" src={profile?.avatarsUrl?.[0] ?? placeholderAvatar(profile?.gender, profile?.firstName, profile?.lastName)} />
+                    <Avatar alt="User profile avatar" src={avatarSrc} />
                 </StyledBadge>
             </StyledButton>
             <StyledMenu
@@ -162,7 +166,7 @@ const AvatarButton = () => {
             >
                 <Link to='/profile'>
                     <StyledCard>
-                        <Avatar alt="User profile avatar" src={profile?.avatarsUrl?.[0]} />
+                        <Avatar alt="User profile avatar" src={avatarSrc} />
                         <Typography fontWeight='900'>{profile?.firstName + " " + profile?.lastName}</Typography>
                     </StyledCard>
                 </Link>
