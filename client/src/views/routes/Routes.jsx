@@ -9,7 +9,6 @@ import Groups from "../Groups/Groups";
 import Videos from "../Videos/Videos";
 import Friends from "../Friends/Friends";
 import Confirmation from "../Confirmation/Confirmation";
-// import NotFound from "../Not-found/NotFound";
 import { ErrorFallback } from "../../components/ErrorFallBack/ErrorFallBack";
 
 const router = createBrowserRouter([
@@ -37,6 +36,10 @@ const router = createBrowserRouter([
     path: "profile/:id",
     element: <Profile />,
     errorElement: <ErrorFallback />,
+  },
+  {
+    path: "profile/:id",
+    element: <Profile />
   },
   {
     path: "settings",
