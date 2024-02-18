@@ -17,7 +17,7 @@ const Navbar = () => {
         </ul>
         <ul className={styles.actionList}>
           <li><NotificationButton /></li>
-          <li><MessengerButton /></li>
+          <li><Link to='/chats'><MessengerButton /></Link></li>
           <li><AvatarButton /></li>
         </ul>
       </nav>
