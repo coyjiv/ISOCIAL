@@ -57,14 +57,14 @@ public class UserService implements IUserService {
     Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "id"));
     Pageable pageable = PageRequest.of(page, size, sort);
     return userRepository.findAll(pageable).toList().stream()
-      .map(userDefaultResponseMapper::convertToDto).toList();
+            .map(userDefaultResponseMapper::convertToDto).toList();
   }
 
   @Transactional(readOnly = true)
   @Override
   public List<UserDefaultResponseDto> findAllActive() {
     return userRepository.findAll().stream()
-      .map(userDefaultResponseMapper::convertToDto).toList();
+            .map(userDefaultResponseMapper::convertToDto).toList();
   }
 
   @Transactional(readOnly = true)
@@ -114,7 +114,7 @@ public class UserService implements IUserService {
     }
 
     return result.stream()
-      .map(userSearchResponseMapper::convertToDto).toList();
+            .map(userSearchResponseMapper::convertToDto).toList();
   }
 
   //  @Transactional
@@ -143,13 +143,13 @@ public class UserService implements IUserService {
 
 
     String text = String.format("Open link to confirm your account ! Link: %s/confirmation?id=%s",
-      hostname, uuidForConfirmationLink);
+            hostname, uuidForConfirmationLink);
 
     userRepository.save(user);
 
     emailService.sendSimpleMessage(
-      userRegistrationDto.getEmail(), "Account confirmation",
-      text
+            userRegistrationDto.getEmail(), "Account confirmation",
+            text
     );
 
     //    sendConfirmationEmail(userRegistrationDto.getEmail(), userRegistrationDto.getFirstName(), text);
@@ -173,7 +173,7 @@ public class UserService implements IUserService {
   @Transactional
   @Override
   public void update(Long id, Map<Object, Object> fields)
-    throws IllegalAccessException, EntityNotFoundException {
+          throws IllegalAccessException, EntityNotFoundException {
     Long requestOwnerId = authProvider.getAuthenticationPrincipal();
     if (!Objects.equals(id, requestOwnerId)) {
       throw new IllegalAccessException("User have no authorities to do this request.");
@@ -184,7 +184,7 @@ public class UserService implements IUserService {
       fields.forEach((key, value) -> {
         String stringKey = (String) key;
         if (Objects.equals(stringKey, "email") || Objects.equals(stringKey, "password")
-          || Objects.equals(stringKey, "activity_status") || Objects.equals(stringKey, "last_seen")) {
+                || Objects.equals(stringKey, "activity_status") || Objects.equals(stringKey, "last_seen")) {
           return;
         }
         if (Objects.equals(key, "gender")) {

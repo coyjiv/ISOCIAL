@@ -49,9 +49,10 @@ public class SecurityConfig {
       // TODO: REMOVE IN PRODUCTION
       .cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(Collections.singletonList("*"));
+        config.setAllowedOriginPatterns(Collections.singletonList("*"));
         config.setAllowedMethods(Collections.singletonList("*"));
         config.setAllowedHeaders(Collections.singletonList("*"));
+        config.setAllowCredentials(true);
         config.setMaxAge(3600L);
         return config;
       }))

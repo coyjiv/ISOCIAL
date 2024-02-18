@@ -60,16 +60,4 @@ public class UserController {
     return ResponseEntity.status(204).build();
   }
 
-
-  @MessageMapping("/connect")
-  public void handleConnectUser(StompHeaderAccessor accessor) {
-    String token = accessor.getFirstNativeHeader("Authorization");
-    userService.handleConnect(token);
-  }
-
-  @MessageMapping("/disconnect")
-  public void handleDisconnectUser(StompHeaderAccessor accessor) {
-    String token = accessor.getFirstNativeHeader("Authorization");
-    userService.handleDisconnect(token);
-  }
 }
