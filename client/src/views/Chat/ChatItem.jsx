@@ -3,7 +3,7 @@ import "./Chat.scss";
 
 const ChatItem = ({ chatId, chatName, lastMessage, chatAvatar }) => {
   return (
-    <Link to={`/chats/${chatId}`} className="chat-item">
+    <Link to={`/chats/${chatId}`} state={{chatId}}  className="chat-item">
       <div className='message-avatar'><img src="chatAvatar" alt="" /></div><h3>{chatName}</h3>
       
     </Link>
