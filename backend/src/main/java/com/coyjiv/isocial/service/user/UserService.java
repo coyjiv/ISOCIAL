@@ -10,11 +10,13 @@ import com.coyjiv.isocial.domain.UserActivityStatus;
 import com.coyjiv.isocial.domain.UserGender;
 import com.coyjiv.isocial.dto.request.user.UserRegistrationRequestDto;
 import com.coyjiv.isocial.dto.respone.user.UserDefaultResponseDto;
+import com.coyjiv.isocial.dto.respone.user.UserProfileResponseDto;
 import com.coyjiv.isocial.dto.respone.user.UserSearchResponseDto;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.exceptions.PasswordMatchException;
 import com.coyjiv.isocial.service.email.EmailServiceImpl;
 import com.coyjiv.isocial.transfer.user.UserDefaultResponseMapper;
+import com.coyjiv.isocial.transfer.user.UserProfileResponseDtoMapper;
 import com.coyjiv.isocial.transfer.user.UserRegistrationRequestMapper;
 import com.coyjiv.isocial.transfer.user.UserSearchResponseMapper;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +47,7 @@ public class UserService implements IUserService {
   private final EmailServiceImpl emailService;
   private final UserSearchResponseMapper userSearchResponseMapper;
   private final UserDefaultResponseMapper userDefaultResponseMapper;
+  private final UserProfileResponseDtoMapper userProfileResponseDtoMapper;
   private final EmailPasswordAuthProvider authProvider;
   private final JwtTokenProvider jwtTokenProvider;
   @Value("${HOSTNAME}")
@@ -69,11 +72,11 @@ public class UserService implements IUserService {
 
   @Transactional(readOnly = true)
   @Override
-  public UserDefaultResponseDto findActiveById(Long id) throws EntityNotFoundException {
+  public UserProfileResponseDto findActiveById(Long id) throws EntityNotFoundException {
     Optional<User> userOptional = userRepository.findActiveById(id);
 
     if (userOptional.isPresent()) {
-      return userDefaultResponseMapper.convertToDto(userOptional.get());
+      return userProfileResponseDtoMapper.convertToDto(userOptional.get());
     } else {
       throw new EntityNotFoundException("User not found");
     }

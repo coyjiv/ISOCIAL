@@ -62,7 +62,7 @@ const Login = () => {
                 <div className={styles.footer}>
                     <Link to={'/register'} className={styles.registrationBtn}>Create new account</Link>
                     <span>OR</span>
-                    <a className={styles.signInWithGoogleBtn} href="/oauth2/authorization/google">
+                    <a className={styles.signInWithGoogleBtn} href={`https://${window.location.host}/oauth2/authorization/google`}>
                         <img src={GLink} alt="google icon" className={styles.google} />
                         <Typography>Continue with Google</Typography>
                     </a>

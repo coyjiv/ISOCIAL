@@ -56,7 +56,7 @@ const Posts = () => {
               {!isLoggedUserLoading && <div className={styles.card}>
                 <div onClick={triggerPostModal}>
                   <Stack width={'100%'} gap={2} direction={'row'}>
-                    <Avatar src={loggedUserProfile?.avatarsUrl[0] ?? placeholderAvatar(loggedUserProfile.gender)} sx={{ width: 40, height: 'auto' }} />
+                    <Avatar src={loggedUserProfile?.avatarsUrl[0] ?? placeholderAvatar(loggedUserProfile?.gender, loggedUserProfile?.firstName, loggedUserProfile?.lastName)} sx={{ width: 40, height: 'auto' }} />
                     <Input sx={{ width: '100%', borderRadius: '50px', "MuiInput-input": { cursor: 'pointer' } }} disableUnderline placeholder={'What\'s on your mind?'} />
                   </Stack>
                 </div>

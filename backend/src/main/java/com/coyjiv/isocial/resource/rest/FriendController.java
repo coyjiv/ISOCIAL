@@ -47,7 +47,7 @@ public class FriendController {
 
   @PostMapping("/decline")
   public ResponseEntity<String> declineFriendRequest(@RequestParam Long friendId) throws IllegalAccessException {
-    boolean result = friendService.declineFriendRequest(friendId);
+    boolean result = friendService.declineOrCancelFriendRequest(friendId);
     if (result) {
       return ResponseEntity.ok("Declined");
     }
@@ -55,7 +55,7 @@ public class FriendController {
   }
 
   @DeleteMapping()
-  public ResponseEntity<String> deleteFriend(@RequestParam Long friendId) throws IllegalAccessException {
+  public ResponseEntity<String> deleteFriend(@RequestParam Long friendId) {
     boolean result = friendService.deleteFriend(friendId);
     if (result) {
       return ResponseEntity.ok("Deleted");
@@ -102,39 +102,12 @@ public class FriendController {
     }
   }
 
-
-  @GetMapping("/haveSentFriendRequest")
-  public ResponseEntity<Boolean> haveSentRequest(
-    @RequestParam String currentUserId,
-    @RequestParam String userId) {
-    try {
-      boolean result = friendService.haveSentRequest(Long.parseLong(currentUserId), Long.parseLong(userId));
-      return ResponseEntity.ok(result);
-    } catch (Exception e) {
-      return ResponseEntity.badRequest().body(false);
-    }
-  }
-
-  @PostMapping("cancelFriendRequest")
-  public ResponseEntity<String> cancelFriendRequest(@RequestParam Long friendId) {
-    boolean result = friendService.cancelFriendRequest(friendId);
-    if (result) {
-      return ResponseEntity.ok("Request cancelled");
-    }
-    return ResponseEntity.status(400).body("Friend request not found");
-  }
-
   @GetMapping("/availableFriendRequests")
   public ResponseEntity<List<FriendResponseDto>> availableFriendRequests(@RequestParam Long userId) {
     if (userId == null) {
       return ResponseEntity.badRequest().body(null);
     }
     return ResponseEntity.ok(friendService.availableFriendRequests(userId));
-  }
-
-  @GetMapping("/isFriend")
-  public ResponseEntity<Boolean> isFriend(@RequestParam Long userId, @RequestParam Long friendId) {
-    return ResponseEntity.ok(friendService.isFriend(userId, friendId));
   }
 
 

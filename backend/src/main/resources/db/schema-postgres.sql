@@ -71,13 +71,14 @@ CREATE TABLE public.users_chats
 DROP TABLE IF EXISTS public.friends CASCADE;
 CREATE TABLE public.friends
 (
-    id           SERIAL PRIMARY KEY,
-    requester_id INT,
-    addresser_id INT,
-    status       VARCHAR(255),
+    id SERIAL PRIMARY KEY,
+    requester_id INT NOT NULL,
+    addresser_id INT NOT NULL,
+    status VARCHAR(255) NOT NULL,
     FOREIGN KEY (requester_id) REFERENCES public.users (id),
     FOREIGN KEY (addresser_id) REFERENCES public.users (id),
-    creation_date      TIMESTAMP,
-    last_modified_date TIMESTAMP,
-    is_active BOOLEAN NOT NULL DEFAULT FALSE
+    creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    last_modified_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE
 );
+

@@ -140,7 +140,7 @@ const AvatarButton = () => {
 
     useOnClickOutside(ref, handleClickOutside)
     return (
-        userId && !isLoading &&
+        userId && !isLoading && profile?.firstName &&
         <>
             <StyledButton ref={ref} className={buttonClasses} onClick={handleClickInside}>
                 <StyledBadge
@@ -148,7 +148,7 @@ const AvatarButton = () => {
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                     variant="dot"
                 >
-                    <Avatar alt="User profile avatar" src={profile?.avatarsUrl?.[0] ?? placeholderAvatar(profile?.gender)} />
+                    <Avatar alt="User profile avatar" src={profile?.avatarsUrl?.[0] ?? placeholderAvatar(profile?.gender, profile?.firstName, profile?.lastName)} />
                 </StyledBadge>
             </StyledButton>
             <StyledMenu
