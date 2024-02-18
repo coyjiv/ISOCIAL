@@ -10,21 +10,22 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserProfileResponseDtoMapper extends DtoMapperFacade<User, UserProfileResponseDto> {
 
-    private final IFriendService friendService;
-    private final EmailPasswordAuthProvider emailPasswordAuthProvider;
+  private final IFriendService friendService;
+  private final EmailPasswordAuthProvider emailPasswordAuthProvider;
 
 
-    public UserProfileResponseDtoMapper(IFriendService friendService, EmailPasswordAuthProvider emailPasswordAuthProvider) {
-        super(User.class, UserProfileResponseDto.class);
-        this.friendService = friendService;
-        this.emailPasswordAuthProvider = emailPasswordAuthProvider;
-    }
+  public UserProfileResponseDtoMapper(IFriendService friendService, EmailPasswordAuthProvider emailPasswordAuthProvider) {
+    super(User.class, UserProfileResponseDto.class);
+    this.friendService = friendService;
+    this.emailPasswordAuthProvider = emailPasswordAuthProvider;
+  }
 
-    @Override
-    protected void decorateDto(UserProfileResponseDto dto, User entity) {
-        dto.setFriendsCount(friendService.getFriendsCount(entity.getId()));
-        dto.setFriendStatus(friendService.getFriendStatus(entity.getId(), emailPasswordAuthProvider.getAuthenticationPrincipal()));
-        dto.setSubscriptionsCount(friendService.getSubscriptionsCount(entity.getId()));
-        dto.setSubscribersCount(friendService.getSubscribersCount(entity.getId()));
-    }
+  @Override
+  protected void decorateDto(UserProfileResponseDto dto, User entity) {
+    dto.setFriendsCount(friendService.getFriendsCount(entity.getId()));
+    dto.setFriendStatus(
+      friendService.getFriendStatus(entity.getId(), emailPasswordAuthProvider.getAuthenticationPrincipal()));
+    dto.setSubscriptionsCount(friendService.getSubscriptionsCount(entity.getId()));
+    dto.setSubscribersCount(friendService.getSubscribersCount(entity.getId()));
+  }
 }

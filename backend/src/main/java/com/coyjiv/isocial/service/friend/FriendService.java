@@ -97,7 +97,8 @@ public class FriendService implements IFriendService {
     System.out.println(friendRequest.get().getStatus());
 
 
-    if (friendRequest.get().getStatus() == UserFriendStatus.REQUEST_SENT || friendRequest.get().getStatus() == UserFriendStatus.REQUEST_RECEIVED) {
+    if (friendRequest.get().getStatus() == UserFriendStatus.REQUEST_SENT
+      || friendRequest.get().getStatus() == UserFriendStatus.REQUEST_RECEIVED) {
       friendRequest.get().setStatus(UserFriendStatus.FRIEND);
       friendRepository.save(friendRequest.get());
       return true;
@@ -105,7 +106,6 @@ public class FriendService implements IFriendService {
 
     return false;
   }
-
 
 
   @Transactional
@@ -136,11 +136,6 @@ public class FriendService implements IFriendService {
     friendRepository.delete(friend);
     return true;
   }
-
-
-
-
-
 
 
   @Transactional

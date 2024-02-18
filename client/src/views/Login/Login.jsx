@@ -10,13 +10,15 @@ import GLink from './icons/google_icon.svg';
 import { Typography } from "@mui/material";
 
 import { jwtDecode } from "jwt-decode";
-import { useLocalStorage } from "usehooks-ts";
+import { useDocumentTitle, useLocalStorage } from "usehooks-ts";
 
 
 const Login = () => {
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
     const [userId, setUserId] = useLocalStorage('userId', null);
+
+    useDocumentTitle('Login')
 
     useEffect(() => {
         (async () => {

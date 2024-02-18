@@ -165,7 +165,7 @@ const MediaUpload = ({ modalTitle, customOptions, ...props }) => {
                 );
             }
         },
-        100,
+        500,
         [completedCrop],
     );
 

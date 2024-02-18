@@ -79,6 +79,5 @@ CREATE TABLE public.friends
     FOREIGN KEY (addresser_id) REFERENCES public.users (id),
     creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     last_modified_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    is_active BOOLEAN NOT NULL DEFAULT TRUE
+    is_active BOOLEAN NOT NULL DEFAULT FALSE
 );
-
