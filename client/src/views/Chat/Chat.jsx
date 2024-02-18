@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './Chat.scss';
 import cx from 'classnames';
 
@@ -17,11 +17,17 @@ const Chat = () => {
   const [messages, setMessages] = useState(sampleMessage);
   const [newMessage, setNewMessage] = useState('');
 
-  const handleSendMessage = (event) => {
+  const handleSendMessage = async (event) => {
     if (event.key === 'Enter') {
       if (newMessage.trim() !== '') {
+
+      try {
         setMessages([...messages, { text: newMessage, sender: 'user' }]);
         setNewMessage('');
+      } catch (error) {
+        console.error('Ошибка отправки сообщения:', error);
+      }
+        
       }
     }
   };

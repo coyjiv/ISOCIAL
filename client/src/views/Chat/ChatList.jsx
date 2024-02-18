@@ -27,14 +27,6 @@ const ChatList = () => {
     fetchChats();
   }, []);
 
-  /* chats.map((chat) => (
-        <ChatItem
-          key={chat.id}
-          name={chat.name}
-          lastMessage={chat.lastMessage}
-        />
-      )) */
-
   return (
     <div className="chat-list">
       {chats.map((chat) => (
