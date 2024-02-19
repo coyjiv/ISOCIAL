@@ -52,12 +52,9 @@ public class EmailServiceImpl {
 
     String subject = "iSocial:Password Reset Request";
     String resetUrl = hostname + "/forgot-password/" + uuid;
-    String text = String
-      .format("""
-        We received a request to reset your password. If you did not make this request, please ignore this email.
-        
-        To reset your password, please follow this link: %s
-        """, resetUrl);
+    String text = "We received a request to reset your password."
+      + "\n" + "If you did not make this request, please ignore this email."
+      + "\n" + String.format("To reset your password, please follow this link: %s ", resetUrl);
 
     message.setTo(to);
     message.setSubject(subject);
