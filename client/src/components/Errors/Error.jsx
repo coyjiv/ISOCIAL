@@ -1,4 +1,4 @@
-import "./Error.scss";
+import styles from './Error.module.scss'
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
@@ -10,13 +10,13 @@ export const ErrorPage = ({
   customLinkText,
 }) => {
   return (
-    <main className="not-found-container">
-      <div className="text-center">
-        <p className="status-code">{statusCode}</p>
-        <h1 className="title">{title}</h1>
-        <p className="description">{description}</p>
-        <div className="action-links">
-          <Link to={customLinkUrl ?? "/"} className="home-link">
+    <main className={styles.notFoundContainer}>
+      <div className={styles.textCenter}>
+        <p className={styles.statusCode}>{statusCode}</p>
+        <h1 className={styles.title}>{title}</h1>
+        <p className={styles.description}>{description}</p>
+        <div className={styles.actionLinks}>
+          <Link to={customLinkUrl ?? "/"} className={styles.homeLink}>
             {customLinkText ?? "Go back home"}
           </Link>
         </div>

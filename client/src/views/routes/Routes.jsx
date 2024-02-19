@@ -70,7 +70,11 @@ const router = createBrowserRouter([
     element: <Confirmation />,
     errorElement: <ErrorFallback />,
   },
-  { path: "forgotPassword", element: <ForgotPassword /> },
+  {
+    path: "forgot-password",
+    element: <ForgotPassword />,
+    errorElement: <ErrorFallback />,
+  },
 ]);
 
 export const App = () => <RouterProvider router={router} />;

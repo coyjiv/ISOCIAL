@@ -24,8 +24,6 @@ const Register = () => {
       dateOfBirth: `${year}-${month}-${day}`,
     }
 
-    console.log(data)
-
     try {
       const response = await fetch(
         `${API_URL}/auth/registration`,
