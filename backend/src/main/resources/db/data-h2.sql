@@ -9,7 +9,7 @@ INSERT INTO public.roles (user_id,name) VALUES ( 1, 'ROLE_USER' );
 INSERT INTO public.users (first_name, last_name, email, city, password, avatars_url, banner_url, bio, gender,
                           is_private, last_seen, date_of_birth, creation_date, last_modified_date, is_active, activity_status)
 
-VALUES ('Alice', 'Johnson', 'test1@example.com', 'Los Angeles', '$2a$10$5OPwzIZ2N8CIeWUA2q9t0OzoI1kB7cvf1qDGwyxeiBFEAR3h2Psmu', ARRAY['avatar3.jpg',
+VALUES ('Alice', 'Johnson', 'test2@example.com', 'Los Angeles', '$2a$10$5OPwzIZ2N8CIeWUA2q9t0OzoI1kB7cvf1qDGwyxeiBFEAR3h2Psmu', ARRAY['avatar3.jpg',
         'avatar4.jpg'], 'banner2.jpg',
         'Bio for Alice Johnson', 'MALE', FALSE, CURRENT_TIMESTAMP,
         '1985-03-20', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, 'OFFLINE');
