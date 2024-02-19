@@ -1,4 +1,4 @@
-package com.coyjiv.isocial.dto.respone.post;
+package com.coyjiv.isocial.dto.respone.favorite;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,8 +12,12 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class PostResponseDto {
+public class FavoriteResponseDto {
   private Long id;
+
+  private Long selectorId;
+
+  private Long selectedPostId;
 
   private String textContent;
 
@@ -36,5 +40,4 @@ public class PostResponseDto {
   private String authorPremiumNickname;
 
   private String authorPremiumEmoji;
-
 }

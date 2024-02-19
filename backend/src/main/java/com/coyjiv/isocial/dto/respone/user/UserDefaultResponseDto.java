@@ -3,6 +3,7 @@ package com.coyjiv.isocial.dto.respone.user;
 import com.coyjiv.isocial.domain.UserActivityStatus;
 import com.coyjiv.isocial.domain.UserGender;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,4 +27,8 @@ public class UserDefaultResponseDto {
   private List<String> avatarsUrl;
   private String bannerUrl;
   private UserGender gender;
+  private boolean isPremium;
+  private String premiumNickname;
+  private String premiumEmoji;
+
 }
