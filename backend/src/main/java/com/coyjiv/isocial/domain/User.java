@@ -72,4 +72,14 @@ public class User extends AbstractEntity {
 
   @ManyToMany(mappedBy = "users")
   private List<Chat> chats;
+
+  @Column(name = "is_premium")
+  private boolean isPremium;
+
+  @Column(name = "premium_nickname")
+  private String premiumNickname;
+
+  @Column(name = "premium_emoji")
+  private String premiumEmoji;
+
 }

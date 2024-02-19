@@ -17,6 +17,9 @@ CREATE TABLE public.users
     date_of_birth      DATE,
     creation_date      TIMESTAMP,
     last_modified_date TIMESTAMP,
+    is_premium         BOOLEAN      NOT NULL DEFAULT FALSE,
+    premium_nickname   VARCHAR(250),
+    premium_emoji      VARCHAR(250),
     is_active          BOOLEAN      NOT NULL DEFAULT FALSE
 );
 
@@ -79,4 +82,57 @@ CREATE TABLE friends
     creation_date      TIMESTAMP,
     last_modified_date TIMESTAMP,
     is_active BOOLEAN NOT NULL DEFAULT FALSE
+);
+
+DROP TABLE IF EXISTS subscriptions;
+CREATE TABLE public.subscriptions
+(
+    id                 INT AUTO_INCREMENT PRIMARY KEY,
+    user_id            INT,
+    subscriber_id          INT,
+    is_subscribed          BOOLEAN     NOT NULL DEFAULT FALSE,
+    FOREIGN KEY (user_id) REFERENCES users (id),
+    FOREIGN KEY (subscriber_id) REFERENCES users (id)
+);
+
+DROP TABLE IF EXISTS comments;
+CREATE TABLE public.comments
+(
+    id                 INT AUTO_INCREMENT PRIMARY KEY,
+    commenter_id       INT NOT NULL,
+    post_id            INT NOT NULL ,
+    text               VARCHAR(1000),
+(
+    id           INT AUTO_INCREMENT PRIMARY KEY,
+    requester_id INT,
+    addresser_id INT,
+    status       VARCHAR(255),
+    FOREIGN KEY (requester_id) REFERENCES public.users (id),
+    FOREIGN KEY (addresser_id) REFERENCES public.users (id),
+    creation_date      TIMESTAMP,
+    last_modified_date TIMESTAMP,
+    is_active BOOLEAN NOT NULL DEFAULT FALSE
+);
+DROP TABLE IF EXISTS posts;
+CREATE TABLE public.posts
+(
+    id                 INT AUTO_INCREMENT PRIMARY KEY,
+    text_content       VARCHAR(1000),
+    attachments        VARCHAR ARRAY,
+    is_edited          BOOLEAN NOT NULL DEFAULT FALSE,
+    original_post_id   INT,
+    user_id            INT REFERENCES users (id),
+    creation_date      TIMESTAMP,
+    last_modified_date TIMESTAMP,
+    is_active BOOLEAN  NOT NULL DEFAULT FALSE
+);
+DROP TABLE IF EXISTS favorites;
+CREATE TABLE public.favorites
+(
+    id                 INT AUTO_INCREMENT PRIMARY KEY,
+    selected_post_id   INT,
+    user_selector_id   INT REFERENCES users (id),
+    creation_date      TIMESTAMP,
+    last_modified_date TIMESTAMP,
+    is_active BOOLEAN  NOT NULL DEFAULT FALSE
 );
