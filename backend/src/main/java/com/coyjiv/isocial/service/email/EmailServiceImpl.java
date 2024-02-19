@@ -1,6 +1,7 @@
 package com.coyjiv.isocial.service.email;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 public class EmailServiceImpl {
   private final JavaMailSender emailSender;
 
+  @Value("${HOSTNAME}")
+  private String hostname;
+
 
   public void sendSimpleMessage(String to, String subject, String text) {
     SimpleMailMessage message = new SimpleMailMessage();
@@ -20,4 +24,19 @@ public class EmailServiceImpl {
     message.setText(text);
     emailSender.send(message);
   }
+
+  public void sendPasswordResetMessage(String to, String uuid) {
+    SimpleMailMessage message = new SimpleMailMessage();
+
+    String subject = "Password Reset";
+    String resetUrl = hostname + "/forgotPassword?id=UUID" + uuid;
+    String text = "To reset your password, please follow this link: " + resetUrl;
+
+
+    message.setTo(to);
+    message.setSubject(subject);
+    message.setText(text);
+    emailSender.send(message);
+  }
+
 }

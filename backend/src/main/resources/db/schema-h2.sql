@@ -29,7 +29,7 @@ CREATE TABLE public.roles
     id      INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT         NOT NULL,
     name    VARCHAR(50) NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users (id)
+    FOREIGN KEY (user_id) REFERENCES public.users (id)
 );
 
 DROP TABLE IF EXISTS chats;
@@ -53,12 +53,12 @@ CREATE TABLE public.messages
     status             VARCHAR(50) NOT NULL DEFAULT 'SENT',
     text               VARCHAR(1000),
     attachements       VARCHAR ARRAY,
-    is_editted         BOOLEAN,
+    is_edited          BOOLEAN,
     creation_date      TIMESTAMP,
     last_modified_date TIMESTAMP,
     is_active          BOOLEAN     NOT NULL DEFAULT FALSE,
-    FOREIGN KEY (chat_id) REFERENCES chats (id),
-    FOREIGN KEY (sender_id) REFERENCES users (id)
+    FOREIGN KEY (chat_id) REFERENCES public.chats (id),
+    FOREIGN KEY (sender_id) REFERENCES public.users (id)
 );
 
 DROP TABLE IF EXISTS users_chats;
@@ -102,8 +102,6 @@ CREATE TABLE public.comments
     commenter_id       INT NOT NULL,
     post_id            INT NOT NULL ,
     text               VARCHAR(1000),
-(
-    id           INT AUTO_INCREMENT PRIMARY KEY,
     requester_id INT,
     addresser_id INT,
     status       VARCHAR(255),
