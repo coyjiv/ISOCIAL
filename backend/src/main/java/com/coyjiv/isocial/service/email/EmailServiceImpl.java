@@ -29,7 +29,7 @@ public class EmailServiceImpl {
     SimpleMailMessage message = new SimpleMailMessage();
 
     String subject = "Password Reset";
-    String resetUrl = "http://localhost:9000/forgotPassword?id=UUID" + uuid;
+    String resetUrl = hostname+"/forgotPassword?id=UUID" + uuid;
     String text = "To reset your password, please follow this link: " + resetUrl;
 
 
