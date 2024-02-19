@@ -4,6 +4,7 @@ import com.coyjiv.isocial.domain.User;
 import com.coyjiv.isocial.dto.request.auth.PasswordResetRequestDto;
 import com.coyjiv.isocial.dto.request.user.UserRegistrationRequestDto;
 import com.coyjiv.isocial.dto.respone.user.UserDefaultResponseDto;
+import com.coyjiv.isocial.dto.respone.user.UserProfileResponseDto;
 import com.coyjiv.isocial.dto.respone.user.UserSearchResponseDto;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.exceptions.PasswordMatchException;
@@ -22,7 +23,7 @@ public interface IUserService {
 
   List<UserDefaultResponseDto> findAllActive();
 
-  UserDefaultResponseDto findActiveById(Long id) throws EntityNotFoundException;
+  UserProfileResponseDto findActiveById(Long id) throws EntityNotFoundException;
 
   Optional<User> findByEmail(String email);
 

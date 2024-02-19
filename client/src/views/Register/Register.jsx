@@ -6,6 +6,7 @@ import { initialValues, validationSchema } from './Register.utils'
 import { useNavigate } from 'react-router-dom'
 import { API_URL } from '../../api'
 import styles from '../Login/styles.module.scss'
+import { useDocumentTitle } from 'usehooks-ts'
 
 const Register = () => {
   const [isError, setIsError] = useState(false)
@@ -15,16 +16,15 @@ const Register = () => {
   const navigate = useNavigate()
 
   const handleSubmit = async (values) => {
-    const { year, month, day, ...rest } = values
+    const { year, month, day, city, ...rest } = values
 
     delete rest.confirmEmail
 
     const data = {
       ...rest,
       dateOfBirth: `${year}-${month}-${day}`,
+      city: city.charAt(0).toUpperCase() + city.slice(1)
     }
-
-    console.log(data)
 
     try {
       const response = await fetch(
@@ -54,6 +54,7 @@ const Register = () => {
     navigate('/login')
   }
 
+  useDocumentTitle('Register')
   return (
     <div className={styles.container}>
       <div className={styles.logoWrapper}>
