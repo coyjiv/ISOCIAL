@@ -7,10 +7,12 @@
   place-items: center;
   background-color: white;
   padding: 24px;
-  @media (min-width: 640px) {
+
+  @media (width >= 640px) {
     padding: 32px;
   }
-  @media (min-width: 1024px) {
+
+  @media (width >= 1024px) {
     padding: 0 32px;
   }
 }
@@ -30,8 +32,9 @@
   font-size: 1.875rem;
   font-weight: bold;
   color: #1f2937;
-  @media (min-width: 640px) {
-    font-size: 3.25rem; // 5xl
+
+  @media (width >= 640px) {
+    font-size: 3.25rem; /* 5xl */
   }
 }
 
@@ -72,6 +75,7 @@
   justify-content: center;
   gap: 2px;
   cursor: pointer;
+
   @include common.transition(background-color, 0.2s);
 
   &:hover {
@@ -82,7 +86,9 @@
     background-color: colors.$disabledButtonBackground;
     color: colors.$disabledButtonColor;
   }
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.05);
+
+  box-shadow: 0 2px 2px 0 rgba(0 0 0 5%);
+
   &:focus-visible {
     outline: 2px solid rgba(colors.$black, 0.8);
   }
@@ -90,6 +96,7 @@
 
 .support-link {
   color: #1f2937;
+
   &:hover {
     text-decoration: underline;
   }

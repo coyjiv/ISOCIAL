@@ -1,4 +1,4 @@
-import { useRouteError, isRouteErrorResponse } from "react-router";
+import { useRouteError } from "react-router";
 import { ErrorPage } from "../Errors/Error";
 
 function ErrorFallback() {
@@ -9,14 +9,14 @@ function ErrorFallback() {
     error?.status === 404
       ? "Page not found"
       : error?.status === 401
-      ? "Unauthorized"
-      : "Oh no! An error occurred.";
+        ? "Unauthorized"
+        : "Oh no! An error occurred.";
   const description =
     error?.status === 404
       ? "Page not found"
       : error.status === 401
-      ? "You need to be logged in to view this page."
-      : "An error occurred on the server. Please try again later. If the problem persists, contact support.";
+        ? "You need to be logged in to view this page."
+        : "An error occurred on the server. Please try again later. If the problem persists, contact support.";
 
   return (
     <ErrorPage
