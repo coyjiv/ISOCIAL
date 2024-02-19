@@ -2,13 +2,17 @@ package com.coyjiv.isocial.transfer.user;
 
 import com.coyjiv.isocial.domain.User;
 import com.coyjiv.isocial.dto.respone.user.UserDefaultResponseDto;
+import com.coyjiv.isocial.service.friend.IFriendService;
 import com.coyjiv.isocial.transfer.DtoMapperFacade;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserDefaultResponseMapper extends DtoMapperFacade<User, UserDefaultResponseDto> {
-  public UserDefaultResponseMapper() {
+  private final IFriendService friendService;
+
+  public UserDefaultResponseMapper(IFriendService friendService) {
     super(User.class, UserDefaultResponseDto.class);
+    this.friendService = friendService;
   }
 
   @Override
@@ -22,5 +26,6 @@ public class UserDefaultResponseMapper extends DtoMapperFacade<User, UserDefault
     dto.setBannerUrl(entity.getBannerUrl());
     dto.setAvatarsUrl(entity.getAvatarsUrl());
     dto.setGender(entity.getGender());
+    dto.setFriendsCount(friendService.getFriendsCount(entity.getId()));
   }
 }

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { ClickAwayListener, Tooltip as MuiTooltip } from '@mui/material'
 import PropTypes from 'prop-types'
-import Box from '@mui/material/Box'
+import { Box } from '@mui/material';
 
 const Tooltip = ({ className, title, arrow, children, trigger, ...props }) => {
   const [isOpen, setIsOpen] = useState(false)

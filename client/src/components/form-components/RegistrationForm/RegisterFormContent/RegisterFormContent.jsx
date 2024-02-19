@@ -2,6 +2,7 @@ import { Stack } from '@mui/material'
 import { useFormikContext } from 'formik'
 
 import { FormInput, FormMultiSelect, FormSelect } from '../../index'
+import FormRadioGroup from '../../FormRadioGroup/FormRadioGroup'
 import { BlueRoundedButton } from '../../../buttons'
 import { PASSWORD_MIN_LENGTH } from '../../../../views/Register'
 import {
@@ -88,6 +89,7 @@ const RegisterFormContent = () => {
           labelTrigger="click"
           labelDescription="Choose your birthday"
         />
+        <FormRadioGroup name="gender" role="gender" />
       </Stack>
       {isSubmitting ?
         <img src={spinner} alt="spinner" className={styles.spinner} />

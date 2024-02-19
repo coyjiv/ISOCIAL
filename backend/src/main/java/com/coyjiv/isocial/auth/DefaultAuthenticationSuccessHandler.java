@@ -3,6 +3,8 @@ package com.coyjiv.isocial.auth;
 import com.coyjiv.isocial.dao.UserRepository;
 import com.coyjiv.isocial.domain.Role;
 import com.coyjiv.isocial.domain.User;
+import com.coyjiv.isocial.domain.UserActivityStatus;
+import com.coyjiv.isocial.domain.UserGender;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -13,6 +15,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Set;
 
 @Service
@@ -37,7 +40,11 @@ public class DefaultAuthenticationSuccessHandler implements AuthenticationSucces
       user.setFirstName(firstName);
       user.setLastName(lastName);
       user.setEmail(email);
+      user.setActivityStatus(UserActivityStatus.OFFLINE);
+      user.setGender(UserGender.NOT_SPECIFIED);
       user.setActive(true);
+      user.setBannerUrl("");
+      user.setAvatarsUrl(new ArrayList<>());
       Role userRole = new Role();
       userRole.setName("ROLE_USER");
       userRole.setUser(user);
@@ -46,10 +53,10 @@ public class DefaultAuthenticationSuccessHandler implements AuthenticationSucces
       userRepository.save(user);
     }
 
-    String access = tokenProvider.generateAccessToken();
+    String access = tokenProvider.generateAccessToken(email, null);
     String refresh = tokenProvider.generateRefreshToken();
 
-    String redirectUrl = String.format("/login?token=%s&%s", access, refresh);
+    String redirectUrl = String.format("/login?access=%s&refresh=%s", access, refresh);
 
     response.sendRedirect(redirectUrl);
   }
