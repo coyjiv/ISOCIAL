@@ -273,6 +273,7 @@ public class UserService implements IUserService {
   @Override
   public void resetPassword(String uuid, PasswordResetRequestDto passwordResetRequestDto) {
     String email = PasswordResetCache.getEmail(uuid);
+    System.out.println(email);
     if (email != null) {
       Optional<User> optionalUser = userRepository.findByEmail(email);
       if (optionalUser.isPresent()) {
@@ -282,6 +283,8 @@ public class UserService implements IUserService {
       } else {
         throw new UsernameNotFoundException("No user found with email: " + email);
       }
+    } else {
+      throw new UsernameNotFoundException("No user found with this email ");
     }
   }
 
