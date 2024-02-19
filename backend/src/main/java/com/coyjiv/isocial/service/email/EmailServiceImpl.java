@@ -50,10 +50,14 @@ public class EmailServiceImpl {
   public void sendPasswordResetMessage(String to, String uuid) {
     SimpleMailMessage message = new SimpleMailMessage();
 
-    String subject = "Password Reset";
-    String resetUrl = hostname + "/forgotPassword?id=UUID" + uuid;
-    String text = "To reset your password, please follow this link: " + resetUrl;
-
+    String subject = "iSocial:Password Reset Request";
+    String resetUrl = hostname + "/forgot-password/" + uuid;
+    String text = String
+      .format("""
+        We received a request to reset your password. If you did not make this request, please ignore this email.
+        
+        To reset your password, please follow this link: %s
+        """, resetUrl);
 
     message.setTo(to);
     message.setSubject(subject);

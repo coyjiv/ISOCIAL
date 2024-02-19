@@ -4,11 +4,12 @@ import Register from "../Register/Register";
 import Login from "../Login/Login";
 import Profile from "../Profile/Profile";
 import Settings from "../Settings/Settings";
-import ForgotPassword from "../Forgot-password/Forgot-password";
+import ForgotPassword from "../Forgot-password/ForgotPassword";
 import Groups from "../Groups/Groups";
 import Videos from "../Videos/Videos";
 import Friends from "../Friends/Friends";
 import Confirmation from "../Confirmation/Confirmation";
+import UpdatePassword from "../UpdatePassword";
 import { ErrorFallback } from "../../components/ErrorFallBack/ErrorFallBack";
 
 const router = createBrowserRouter([
@@ -75,6 +76,10 @@ const router = createBrowserRouter([
     element: <ForgotPassword />,
     errorElement: <ErrorFallback />,
   },
+  {
+    path: "forgot-password/:id",
+    element: <UpdatePassword />,
+  }
 ]);
 
 export const App = () => <RouterProvider router={router} />;

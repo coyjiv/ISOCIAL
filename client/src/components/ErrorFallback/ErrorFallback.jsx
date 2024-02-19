@@ -4,6 +4,8 @@ import { ErrorPage } from "../Errors/Error";
 function ErrorFallback() {
   const error = useRouteError();
 
+  console.error(error);
+
   const statusCode = error?.status;
   const title =
     error?.status === 404
@@ -16,11 +18,12 @@ function ErrorFallback() {
       ? "Page not found"
       : error.status === 401
         ? "You need to be logged in to view this page."
-        : "An error occurred on the server. Please try again later. If the problem persists, contact support.";
+        : error.status ? "An error occurred on the server. Please try again later. If the problem persists, contact support." :
+          "Unexpected error occurred. Try refreshing the page. If the problem persists, contact support.";
 
   return (
     <ErrorPage
-      statusCode={statusCode}
+      statusCode={statusCode ?? 'Oops'}
       title={title}
       description={description}
       customLinkUrl={error.status === 401 ? "login" : null}
