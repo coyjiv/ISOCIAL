@@ -7,6 +7,5 @@ const HomePage = () => {
   )
 }
 
-
-const Home = withLayout(HomePage)
-export default Home
+const Home = withLayout(HomePage);
+export default Home;
