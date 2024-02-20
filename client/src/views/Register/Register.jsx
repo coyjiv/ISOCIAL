@@ -10,22 +10,23 @@ import styles from '../Login/styles.module.scss'
 import { useDocumentTitle } from 'usehooks-ts'
 
 const Register = () => {
+	// const [isError, setIsError] = useState(false)
 	const [openModal, setOpenModal] = useState(false)
 	const [email, setEmail] = useState('')
 	const { onToast } = useToast()
 
 	const navigate = useNavigate()
 
-  const handleSubmit = async (values) => {
-    const { year, month, day, city, ...rest } = values
+	const handleSubmit = async (values) => {
+		const { year, month, day, city, ...rest } = values
 
 		delete rest.confirmEmail
 
-    const data = {
-      ...rest,
-      dateOfBirth: `${year}-${month}-${day}`,
-      city: city.charAt(0).toUpperCase() + city.slice(1)
-    }
+		const data = {
+			...rest,
+			dateOfBirth: `${year}-${month}-${day}`,
+			city: city.charAt(0).toUpperCase() + city.slice(1)
+		}
 
 		try {
 			const response = await fetch(
@@ -45,7 +46,8 @@ const Register = () => {
 				setOpenModal(true)
 			}
 		} catch (error) {
-			onToast(error.message, 'info')
+			onToast(error.message, 'error')
+			// setIsError(true);
 		}
 	}
 
@@ -54,6 +56,7 @@ const Register = () => {
 		navigate('/login')
 	}
 
+	useDocumentTitle('Register')
 	return (
 		<div className={styles.container}>
 			<div className={styles.logoWrapper}>
@@ -65,6 +68,8 @@ const Register = () => {
 				validationSchema={validationSchema}
 				onSubmit={handleSubmit}
 			/>
+			{/* @TODO: send toast with error message */}
+			{/* {isError && <div>Error</div>} */}
 			<RegisterConfirmModal
 				open={openModal}
 				onClose={handleModalClose}
