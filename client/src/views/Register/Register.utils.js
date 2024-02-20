@@ -16,6 +16,7 @@ export const initialValues = {
   year: yearNow,
   month: monthNow,
   day: dayNow,
+  gender: '',
 }
 
 export const validationSchema = object({
@@ -60,4 +61,7 @@ export const validationSchema = object({
     .required('Day is required')
     .min(1, 'Invalid day')
     .max(31, 'Invalid day'),
+  gender: string()
+    .oneOf(['MALE', 'FEMALE'], 'Invalid gender')
+    .required('Required field'),
 })

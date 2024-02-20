@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import { API_URL } from '../../api'
 import { useToast } from '../../context'
 import styles from '../Login/styles.module.scss'
+import { useDocumentTitle } from 'usehooks-ts'
 
 const Register = () => {
 	const [openModal, setOpenModal] = useState(false)
@@ -15,17 +16,16 @@ const Register = () => {
 
 	const navigate = useNavigate()
 
-	const handleSubmit = async (values) => {
-		const { year, month, day, ...rest } = values
+  const handleSubmit = async (values) => {
+    const { year, month, day, city, ...rest } = values
 
 		delete rest.confirmEmail
 
-		const data = {
-			...rest,
-			dateOfBirth: `${year}-${month}-${day}`,
-		}
-
-		console.log(data)
+    const data = {
+      ...rest,
+      dateOfBirth: `${year}-${month}-${day}`,
+      city: city.charAt(0).toUpperCase() + city.slice(1)
+    }
 
 		try {
 			const response = await fetch(

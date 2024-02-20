@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -91,7 +90,7 @@ public class MessageService implements IMessageService {
     if (messageOptional.isPresent() && isRequestOwnerSender(requestOwnerId, messageOptional.get())) {
       Message message = messageOptional.get();
       message.setText(updateMessageRequestDto.getText());
-      message.setEditted(true);
+      message.setEdited(true);
       chatService.updateLastMessage(message.getChatId(),
               updateMessageRequestDto.getText(),
               message.getSenderId());

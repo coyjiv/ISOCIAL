@@ -1,13 +1,17 @@
 @use "../../../styles/variables/colors";
+@use "../../../styles/mixins/breakpoints";
 
 .avatarWrapper {
   height: 80svh;
-  width: 35svw;
+  width: 100%;
   margin: auto;
   display: flex;
   filter: url(#ambilight);
   & img {
     margin: auto;
+  }
+  @include breakpoints.media('sm') {
+    width: 35svw;
   }
 }
 

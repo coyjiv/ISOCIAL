@@ -28,11 +28,11 @@ const EditProfile = ({ onClose, open, profile }) => {
                 <Typography textAlign={'left'}>Profile details :</Typography>
                 <Formik
                     initialValues={{
-                        firstName: profile.firstName,
-                        lastName: profile.lastName,
-                        bio: profile.bio,
-                        city: profile.city,
-                        // avatarsUrl: profile.avatarsUrl[0],
+                        firstName: profile?.firstName,
+                        lastName: profile?.lastName,
+                        bio: profile?.bio,
+                        city: profile?.city,
+                        // avatarsUrl: profile?.avatarsUrl[0],
                         // bannerUrl: profile.bannerUrl,
                     }}
                     // validationSchema={validationSchema}
