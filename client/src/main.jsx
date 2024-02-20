@@ -16,7 +16,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
             <ThemeProvider theme={theme}>
                 <StompSessionProvider url={`${API_URL}/ws`}
                                       connectHeaders={{"Authorization": `Bearer ${localStorage.getItem("access")}`}}
-                                      disconnectHeaders={{"DiscconnectedH": `Bearer ${localStorage.getItem("access")}`}}>
+                                      disconnectHeaders={{"Authorization": `Bearer ${localStorage.getItem("access")}`}}>
                     <App/>
                 </StompSessionProvider>
             </ThemeProvider>

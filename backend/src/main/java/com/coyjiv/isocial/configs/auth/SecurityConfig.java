@@ -44,46 +44,35 @@ public class SecurityConfig {
     MvcRequestMatcher.Builder mvcMatcherBuilder = new MvcRequestMatcher.Builder(introspector);
 
     return http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-      .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
-      .csrf(AbstractHttpConfigurer::disable)
-      // TODO: REMOVE IN PRODUCTION
-      .cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOriginPatterns(Collections.singletonList("*"));
-        config.setAllowedMethods(Collections.singletonList("*"));
-        config.setAllowedHeaders(Collections.singletonList("*"));
-        config.setAllowCredentials(true);
-        config.setMaxAge(3600L);
-        return config;
-      }))
-      .httpBasic(AbstractHttpConfigurer::disable)
-      .addFilterBefore(new JwtValidatorFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
-      .authorizeHttpRequests(req ->
-        req
-          .requestMatchers(mvcMatcherBuilder.pattern("/api/user/**")).hasRole("USER")
-          .requestMatchers(mvcMatcherBuilder.pattern("/api/auth/**")).permitAll()
-          //          .requestMatchers(mvcMatcherBuilder.pattern("/swagger-ui/**")).permitAll()
-          //          .requestMatchers(mvcMatcherBuilder.pattern("/v3/api-docs/**")).permitAll()
-          //          .requestMatchers(mvcMatcherBuilder.pattern("/assets/**")).permitAll()
-          //          .requestMatchers(mvcMatcherBuilder.pattern("/static/**")).permitAll()
-          //          .requestMatchers(mvcMatcherBuilder.pattern("/favicon.ico")).permitAll()
-          //          .requestMatchers(mvcMatcherBuilder.pattern("/index.html")).permitAll()
-          //          .requestMatchers(mvcMatcherBuilder.pattern("/")).permitAll()
-          //          .requestMatchers(mvcMatcherBuilder.pattern("/oauth2/authorization/google")).permitAll()
-          //          .requestMatchers(mvcMatcherBuilder.pattern("/login/oauth2/code/**")).permitAll()
-
-          //          .requestMatchers(toH2Console()).permitAll()
-          //          .anyRequest().hasRole("USER")
-          .anyRequest().permitAll()
-      )
-      .exceptionHandling(exceptionHandling ->
-        exceptionHandling.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
-      .oauth2Login(oauth -> oauth
-        .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
-          .userService(googleAuthUserService)
-        )
-        .successHandler(defaultAuthenticationSuccessHandler)
-      )
-      .build();
+            .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
+            .csrf(AbstractHttpConfigurer::disable)
+            // TODO: REMOVE IN PRODUCTION
+            .cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
+              CorsConfiguration config = new CorsConfiguration();
+              config.setAllowedOriginPatterns(Collections.singletonList("*"));
+              config.setAllowedMethods(Collections.singletonList("*"));
+              config.setAllowedHeaders(Collections.singletonList("*"));
+              config.setAllowCredentials(true);
+              config.setMaxAge(3600L);
+              return config;
+            }))
+            .httpBasic(AbstractHttpConfigurer::disable)
+            .addFilterBefore(new JwtValidatorFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
+            .authorizeHttpRequests(req ->
+                    req
+                            .requestMatchers(mvcMatcherBuilder.pattern("/api/auth/**")).permitAll()
+                            .requestMatchers(mvcMatcherBuilder.pattern("/api/ws/**")).permitAll()
+                            .requestMatchers(mvcMatcherBuilder.pattern("/api/**")).hasRole("USER")
+                            .anyRequest().permitAll()
+            )
+            .exceptionHandling(exceptionHandling ->
+                    exceptionHandling.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
+            .oauth2Login(oauth -> oauth
+                    .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
+                            .userService(googleAuthUserService)
+                    )
+                    .successHandler(defaultAuthenticationSuccessHandler)
+            )
+            .build();
   }
 }

@@ -25,7 +25,7 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON;
 @RequiredArgsConstructor
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-  private final WebSocketEventListener eventListener;
+//  private final WebSocketEventListener eventListener;
 
 
   @Override
@@ -52,6 +52,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     return false;
   }
+
 
 }
 

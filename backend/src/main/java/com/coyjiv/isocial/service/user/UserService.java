@@ -240,17 +240,13 @@ public class UserService implements IUserService {
 
   @Transactional
   @Override
-  public void handleDisconnect(String token) {
-    jwtTokenProvider.validateAccessToken(token);
-    Long userId = authProvider.getAuthenticationPrincipal();
-    if (userId != null) {
-      Optional<User> userOptional = userRepository.findActiveById(userId);
-      if (userOptional.isPresent()) {
-        User user = userOptional.get();
-        user.setActivityStatus(UserActivityStatus.OFFLINE);
-        user.setLastSeen(new Date());
-        userRepository.save(user);
-      }
+  public void handleDisconnect(Long userId) {
+    Optional<User> userOptional = userRepository.findActiveById(userId);
+    if (userOptional.isPresent()) {
+      User user = userOptional.get();
+      user.setActivityStatus(UserActivityStatus.OFFLINE);
+      user.setLastSeen(new Date());
+      userRepository.save(user);
     }
   }
 }

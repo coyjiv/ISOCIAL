@@ -11,10 +11,8 @@ import Groups from "../Groups/Groups";
 import Videos from "../Videos/Videos";
 import Friends from "../Friends/Friends";
 import Confirmation from "../Confirmation/Confirmation";
-import {API_URL} from "../../api/index.js";
-import {StompSessionProvider, useStompClient} from "react-stomp-hooks";
-import {useLocalStorage} from "usehooks-ts";
-import {useEffect} from "react";
+import ChatList from "../Chat/ChatList.jsx";
+import Chat from "../Chat/Chat.jsx";
 
 const router = createBrowserRouter([
     {
@@ -58,6 +56,14 @@ const router = createBrowserRouter([
         element: <div>Users</div>,
     },
     {
+        path: "chats",
+        element: <ChatList />,
+    },
+    {
+        path: "chats/:id",
+        element: <Chat />,
+    },
+    {
         path: "confirmation",
         element: <Confirmation/>,
     },
@@ -65,6 +71,6 @@ const router = createBrowserRouter([
 
 export const App = () => {
     return (
-            <RouterProvider router={router}/>
+        <RouterProvider router={router}/>
     )
 };

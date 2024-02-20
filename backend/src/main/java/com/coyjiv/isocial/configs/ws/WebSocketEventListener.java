@@ -1,6 +1,8 @@
 package com.coyjiv.isocial.configs.ws;
 
+import com.coyjiv.isocial.auth.EmailPasswordAuthProvider;
 import com.coyjiv.isocial.auth.JwtTokenProvider;
+import com.coyjiv.isocial.cache.OnlineUsersCache;
 import com.coyjiv.isocial.service.user.IUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
@@ -17,24 +19,24 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 @RequiredArgsConstructor
 public class WebSocketEventListener {
 
-  private final JwtTokenProvider jwtTokenProvider;
+  private final EmailPasswordAuthProvider authProvider;
   private final IUserService userService;
 
   @EventListener
   public void handleWebSocketConnectListener(SessionConnectEvent event) {
     StompHeaderAccessor headers = StompHeaderAccessor.wrap(event.getMessage());
     String token = headers.getFirstNativeHeader("Authorization");
+
     if (token != null) {
       userService.handleConnect(token.substring(7));
+      OnlineUsersCache.putUserId(headers.getSessionId(),authProvider.getAuthenticationPrincipal());
     }
   }
 
   @EventListener
   public void handleWebSocketDisconnectListener(SessionDisconnectEvent event) {
     StompHeaderAccessor headers = StompHeaderAccessor.wrap(event.getMessage());
-    String token = headers.getFirstNativeHeader("Authorization");
-    if (token != null) {
-      userService.handleDisconnect(token.substring(7));
-    }
+    Long userId = OnlineUsersCache.getUserId(headers.getSessionId());
+    userService.handleDisconnect(userId);
   }
 }
