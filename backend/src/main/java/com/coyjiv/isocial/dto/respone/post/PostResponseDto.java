@@ -1,5 +1,6 @@
 package com.coyjiv.isocial.dto.respone.post;
 
+import com.coyjiv.isocial.dto.respone.user.UserSearchResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,14 +28,22 @@ public class PostResponseDto {
 
   private String authorAvatar;
 
-  private String authorFullNane;
+  private String authorFullName;
 
   private Date authorLastSeen;
 
+  private Long likesCount;
+
+  private List<UserSearchResponseDto> recentLikedUsers;
+
   private boolean isAuthorPremium;
+
+  private boolean isLiked;
 
   private String authorPremiumNickname;
 
   private String authorPremiumEmoji;
+
+  private Date creationDate;
 
 }

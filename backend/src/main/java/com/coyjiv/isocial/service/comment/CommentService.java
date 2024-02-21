@@ -87,7 +87,7 @@ public class CommentService implements ICommentService {
   @Override
   public Comment create(Long postId, DefaultCommentRequestDto dto) throws EntityNotFoundException {
     if (postRepository.findActiveById(postId).isPresent()) {
-      Comment comment = new Comment(emailPasswordAuthProvider.getAuthenticationPrincipal(), postId, dto.getText());
+      Comment comment = new Comment(emailPasswordAuthProvider.getAuthenticationPrincipal(), postId, dto.getText(), false);
       comment.setActive(true);
       return commentRepository.save(comment);
     } else {
@@ -103,6 +103,7 @@ public class CommentService implements ICommentService {
       if (postRepository.findActiveById(comment.get().getPostId()).isPresent()) {
         if (Objects.equals(comment.get().getCommenterId(), emailPasswordAuthProvider.getAuthenticationPrincipal())) {
           comment.get().setText(dto.getText());
+          comment.get().setEdited(true);
           return commentRepository.save(comment.get());
         } else {
           throw new IllegalAccessException("User have no authorities to do this request.");

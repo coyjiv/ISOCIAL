@@ -4,6 +4,7 @@ import com.coyjiv.isocial.auth.DefaultAuthenticationSuccessHandler;
 import com.coyjiv.isocial.auth.JwtTokenProvider;
 import com.coyjiv.isocial.filters.JwtValidatorFilter;
 import com.coyjiv.isocial.service.auth.OAuthUserService;
+import jakarta.servlet.DispatcherType;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -61,6 +62,7 @@ public class SecurityConfig {
         req
           .requestMatchers(mvcMatcherBuilder.pattern("/api/user/**")).hasRole("USER")
           .requestMatchers(mvcMatcherBuilder.pattern("/api/auth/**")).permitAll()
+          .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
           //          .requestMatchers(mvcMatcherBuilder.pattern("/swagger-ui/**")).permitAll()
           //          .requestMatchers(mvcMatcherBuilder.pattern("/v3/api-docs/**")).permitAll()
           //          .requestMatchers(mvcMatcherBuilder.pattern("/assets/**")).permitAll()

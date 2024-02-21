@@ -7,7 +7,10 @@ import com.coyjiv.isocial.domain.Post;
 import com.coyjiv.isocial.domain.User;
 import com.coyjiv.isocial.dto.respone.favorite.FavoriteResponseDto;
 import com.coyjiv.isocial.dto.respone.post.PostResponseDto;
+import com.coyjiv.isocial.service.like.ILikeService;
+import com.coyjiv.isocial.service.user.IUserService;
 import com.coyjiv.isocial.transfer.DtoMapperFacade;
+import com.coyjiv.isocial.transfer.user.UserSearchResponseMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -15,11 +18,16 @@ import java.util.Date;
 @Service
 public class PostResponseMapper extends DtoMapperFacade<Post, PostResponseDto> {
   private final UserRepository userRepository;
+  private final ILikeService likeService;
+  private final UserSearchResponseMapper userSearchResponseMapper;
 
-  public PostResponseMapper(UserRepository userRepository) {
+  public PostResponseMapper(UserRepository userRepository, ILikeService likeService,
+                            UserSearchResponseMapper userSearchResponseMapper) {
 
     super(Post.class, PostResponseDto.class);
     this.userRepository = userRepository;
+    this.likeService = likeService;
+    this.userSearchResponseMapper = userSearchResponseMapper;
   }
 
   protected void decorateDto(PostResponseDto dto, Post entity) {
@@ -29,11 +37,18 @@ public class PostResponseMapper extends DtoMapperFacade<Post, PostResponseDto> {
       if (!author.getAvatarsUrl().isEmpty()) {
         dto.setAuthorAvatar(author.getAvatarsUrl().get(0));
       }
-      dto.setAuthorFullNane(author.getFirstName() + " " + author.getLastName());
+      dto.setAuthorFullName(author.getFirstName() + " " + author.getLastName());
       dto.setAuthorLastSeen(author.getLastSeen());
       dto.setAuthorPremium(author.isPremium());
       dto.setAuthorPremiumNickname(author.getPremiumNickname());
       dto.setAuthorPremiumEmoji(author.getPremiumEmoji());
+      dto.setLikesCount((long) likeService.countLikesByEntity(entity.getId(), entity.getEntityType()));
+      dto.setLiked(likeService.isLikedByUser(entity.getAuthorId(), entity.getId(), entity.getEntityType()));
+      dto.setRecentLikedUsers(likeService.getRecentLikes(entity.getId(), entity.getEntityType()).stream()
+        .map(like -> {
+          User liker = userRepository.findActiveById(like.getUserId()).get();
+          return userSearchResponseMapper.convertToDto(liker);
+        }).toList());
     } catch (Exception exception) {
       exception.printStackTrace();
     }

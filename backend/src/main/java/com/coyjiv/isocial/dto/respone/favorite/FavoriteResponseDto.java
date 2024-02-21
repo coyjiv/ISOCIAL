@@ -31,7 +31,7 @@ public class FavoriteResponseDto {
 
   private String authorAvatar;
 
-  private String authorFullNane;
+  private String authorFullName;
 
   private Date authorLastSeen;
 

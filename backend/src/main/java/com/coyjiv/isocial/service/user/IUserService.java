@@ -48,4 +48,14 @@ public interface IUserService {
   void resetPassword(String uuid, PasswordResetRequestDto passwordResetRequestDto);
 
   void requestPasswordReset(String email);
+
+  String getAvatar(Long id) throws EntityNotFoundException;
+
+  String getFullName(Long id) throws EntityNotFoundException;
+
+  boolean isPremium(Long commenterId);
+
+  String getPremiumNickname(Long commenterId);
+
+  String getPremiumEmoji(Long commenterId);
 }
