@@ -115,7 +115,7 @@ public class ChatService implements IChatService {
 
     firstMessage.setChatId(chat.getId());
     messageRepository.save(firstMessage);
-    websocketChatMessageService.sendMessageNotificationToUser(chat.getUsers(), firstMessage);
+    websocketChatMessageService.sendMessageNotificationToUsers(chat.getUsers(), firstMessage);
     return activeChatDtoMapper.convertToDto(chat);
   }
 

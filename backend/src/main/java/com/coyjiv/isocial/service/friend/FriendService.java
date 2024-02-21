@@ -7,6 +7,7 @@ import com.coyjiv.isocial.domain.Friend;
 import com.coyjiv.isocial.domain.User;
 import com.coyjiv.isocial.dto.respone.friend.FriendResponseDto;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
+import com.coyjiv.isocial.service.message.IWebsocketMessageService;
 import com.coyjiv.isocial.transfer.friend.FriendResponseMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -32,6 +33,7 @@ public class FriendService implements IFriendService {
   private final FriendRepository friendRepository;
   private final FriendResponseMapper friendResponseMapper;
   private final EmailPasswordAuthProvider emailPasswordAuthProvider;
+  private final IWebsocketMessageService websocketService;
 
   @Transactional
   @Override
@@ -76,6 +78,7 @@ public class FriendService implements IFriendService {
 
     Friend friend = new Friend(requester.get(), addresser.get());
     friendRepository.save(friend);
+    websocketService.sendFriendNotificationToUser(friend);
     return true;
   }
 

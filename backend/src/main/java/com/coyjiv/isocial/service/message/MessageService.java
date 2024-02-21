@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -76,7 +75,7 @@ public class MessageService implements IMessageService {
     );
 
     messageRepository.save(message);
-    websocketChatMessageService.sendMessageNotificationToUser(chat.getUsers(), message);
+    websocketChatMessageService.sendMessageNotificationToUsers(chat.getUsers(), message);
 
     return message;
   }

@@ -1,5 +1,6 @@
 import { withLayout } from "../../hooks/withLayout"
 import { Link } from "react-router-dom";
+import {withWebsocket} from "../../hooks/withWebsocket.tsx";
 
 const HomePage = () => {
   return (
@@ -8,5 +9,5 @@ const HomePage = () => {
 }
 
 
-const Home = withLayout(HomePage)
+const Home = withWebsocket(withLayout(HomePage))
 export default Home
