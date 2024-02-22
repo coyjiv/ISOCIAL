@@ -8,6 +8,7 @@ import { ToastContainer } from '../components/NotificationToast'
 
 export const ToastContext = createContext(null)
 
+// eslint-disable-next-line react-refresh/only-export-components
 export let toastMessage = () => {}
 
 const ToastProvider = ({ children }) => {
@@ -55,6 +56,7 @@ const ToastProvider = ({ children }) => {
 	)
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useToast = () => {
 	return useContext(ToastContext)
 }
