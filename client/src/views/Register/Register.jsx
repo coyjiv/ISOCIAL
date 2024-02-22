@@ -10,7 +10,7 @@ import styles from '../Login/styles.module.scss'
 import { useDocumentTitle } from 'usehooks-ts'
 
 const Register = () => {
-	// const [isError, setIsError] = useState(false)
+	const [isError, setIsError] = useState(false)
 	const [openModal, setOpenModal] = useState(false)
 	const [email, setEmail] = useState('')
 	const { onToast } = useToast()
@@ -47,7 +47,7 @@ const Register = () => {
 			}
 		} catch (error) {
 			onToast(error.message, 'error')
-			// setIsError(true);
+			setIsError(true);
 		}
 	}
 
@@ -68,8 +68,7 @@ const Register = () => {
 				validationSchema={validationSchema}
 				onSubmit={handleSubmit}
 			/>
-			{/* @TODO: send toast with error message */}
-			{/* {isError && <div>Error</div>} */}
+			{isError && <div>Error</div>}
 			<RegisterConfirmModal
 				open={openModal}
 				onClose={handleModalClose}
