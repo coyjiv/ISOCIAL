@@ -29,7 +29,11 @@ export const theme = createTheme({
     shadow2: 'rgba(0, 0, 0, 0.2)',
     disabledButtonBackground: '#e4e6eb',
     disabledButtonColor: '#a7a9ab',
-    greyBorder: '#ccc',
+		greyBorder: '#ccc',
+    text: {
+      grey: '#6a6d71',
+      base: '#1c1e21',
+    },
     error: {
       main: '#ff0000',
       light: '#ffe6e6',
