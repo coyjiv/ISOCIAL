@@ -46,4 +46,5 @@ public class PostResponseDto {
 
   private Date creationDate;
 
+  private int commentsCount;
 }

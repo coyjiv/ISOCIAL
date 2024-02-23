@@ -1,6 +1,8 @@
 package com.coyjiv.isocial.service.post;
 
 import com.coyjiv.isocial.auth.EmailPasswordAuthProvider;
+import com.coyjiv.isocial.dao.CommentRepository;
+import com.coyjiv.isocial.dao.LikeRepository;
 import com.coyjiv.isocial.dao.PostRepository;
 import com.coyjiv.isocial.dao.UserRepository;
 import com.coyjiv.isocial.domain.Post;
@@ -25,6 +27,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import static com.coyjiv.isocial.domain.LikeableEntity.POST;
+
 @Service
 @RequiredArgsConstructor
 public class PostService implements IPostService {
@@ -35,6 +39,8 @@ public class PostService implements IPostService {
   private final EmailPasswordAuthProvider emailPasswordAuthProvider;
   private final UserRepository userRepository;
   private final IFavoriteService favoriteService;
+  private final CommentRepository commentRepository;
+  private final LikeRepository likeRepository;
 
   @Transactional(readOnly = true)
   @Override
@@ -118,12 +124,21 @@ public class PostService implements IPostService {
           throw new RuntimeException(e);
         }
       });
+      commentRepository.findAllActiveByPostIdNonPageable(id).forEach(entry ->{
+        entry.setActive(false);
+        commentRepository.save(entry);
+      } );
+      likeRepository.findByEntityIdAndEntityTypeNonPageable(id, POST).forEach(entry -> {
+        likeRepository.deleteByUserIdAndEntityIdAndEntityType(entry.getUserId(), entry.getEntityId(), POST);
+      });
     }
     List<Post> repostedToDeactivate = postRepository.findAllActiveReposts(id);
     if (!repostedToDeactivate.isEmpty()) {
       repostedToDeactivate.forEach(entry -> {
-        entry.setActive(false);
-        postRepository.save(entry);
+        commentRepository.findAllActiveByPostIdNonPageable(entry.getId()).forEach(en ->{
+          en.setActive(false);
+          commentRepository.save(en);
+        } );
         favoriteService.findActiveByPostId(entry.getId()).forEach(en -> {
           try {
             favoriteService.delete(en.getId(), false);
@@ -131,6 +146,11 @@ public class PostService implements IPostService {
             throw new RuntimeException(e);
           }
         });
+        likeRepository.findByEntityIdAndEntityTypeNonPageable(entry.getId(), POST).forEach(e -> {
+          likeRepository.deleteByUserIdAndEntityIdAndEntityType(e.getUserId(), e.getEntityId(), POST);
+        });
+        entry.setActive(false);
+        postRepository.save(entry);
       });
     }
   }

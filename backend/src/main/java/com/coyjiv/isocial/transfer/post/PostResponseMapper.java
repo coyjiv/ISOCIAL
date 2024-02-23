@@ -1,5 +1,6 @@
 package com.coyjiv.isocial.transfer.post;
 
+import com.coyjiv.isocial.dao.CommentRepository;
 import com.coyjiv.isocial.dao.PostRepository;
 import com.coyjiv.isocial.dao.UserRepository;
 import com.coyjiv.isocial.domain.Favorite;
@@ -18,16 +19,19 @@ import java.util.Date;
 @Service
 public class PostResponseMapper extends DtoMapperFacade<Post, PostResponseDto> {
   private final UserRepository userRepository;
+  private final CommentRepository commentRepository;
   private final ILikeService likeService;
   private final UserSearchResponseMapper userSearchResponseMapper;
 
   public PostResponseMapper(UserRepository userRepository, ILikeService likeService,
-                            UserSearchResponseMapper userSearchResponseMapper) {
+                            UserSearchResponseMapper userSearchResponseMapper ,
+                            CommentRepository commentRepository) {
 
     super(Post.class, PostResponseDto.class);
     this.userRepository = userRepository;
     this.likeService = likeService;
     this.userSearchResponseMapper = userSearchResponseMapper;
+    this.commentRepository = commentRepository;
   }
 
   protected void decorateDto(PostResponseDto dto, Post entity) {
@@ -49,6 +53,7 @@ public class PostResponseMapper extends DtoMapperFacade<Post, PostResponseDto> {
           User liker = userRepository.findActiveById(like.getUserId()).get();
           return userSearchResponseMapper.convertToDto(liker);
         }).toList());
+      dto.setCommentsCount(commentRepository.findAllActiveByPostIdNonPageable(entity.getId()).size());
     } catch (Exception exception) {
       exception.printStackTrace();
     }

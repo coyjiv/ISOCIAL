@@ -23,7 +23,9 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
 
   Page<Like> findByEntityIdAndEntityType(Long entityId, LikeableEntity entityType, Pageable pageable);
 
-
+  @Query("FROM Like l WHERE l.entityId = :entityId AND l.entityType = :entityType")
+  List<Like> findByEntityIdAndEntityTypeNonPageable(@Param("entityId") Long entityId,
+                                                    @Param("entityType") LikeableEntity entityType);
   List<Like> findByUserId(Long userId);
 
   boolean existsByUserIdAndEntityIdAndEntityType(Long userId, Long entityId, LikeableEntity entityType);
