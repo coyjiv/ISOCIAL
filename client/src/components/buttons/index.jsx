@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { Button } from '@mui/base';
+import { ButtonMain } from "./ButtonMain";
 import classNames from 'classnames';
 import styles from './buttons.module.scss'
 
@@ -54,4 +55,11 @@ GreenRoundedButton.propTypes = {
     className: PropTypes.string
 };
 
-export { GrayButton, BlueRoundedButton, WhiteButton, RedRoundedButton, GreenRoundedButton }
+export {
+		GrayButton,
+		BlueRoundedButton,
+		WhiteButton,
+		RedRoundedButton,
+		GreenRoundedButton,
+		ButtonMain,
+}
