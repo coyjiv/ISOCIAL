@@ -21,6 +21,7 @@ import com.coyjiv.isocial.transfer.user.UserDefaultResponseMapper;
 import com.coyjiv.isocial.transfer.user.UserProfileResponseDtoMapper;
 import com.coyjiv.isocial.transfer.user.UserRegistrationRequestMapper;
 import com.coyjiv.isocial.transfer.user.UserSearchResponseMapper;
+import jakarta.security.auth.message.AuthException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -240,8 +241,12 @@ public class UserService implements IUserService {
 
   @Transactional
   @Override
-  public void handleConnect(String token) {
-    jwtTokenProvider.validateAccessToken(token);
+  public void handleConnect(String token) throws IllegalAccessException {
+    try {
+      jwtTokenProvider.validateAccessToken(token);
+    } catch (Exception e) {
+      throw new IllegalAccessException("Token not valid");
+    }
     Long userId = authProvider.getAuthenticationPrincipal();
     if (userId != null) {
       Optional<User> userOptional = userRepository.findActiveById(userId);

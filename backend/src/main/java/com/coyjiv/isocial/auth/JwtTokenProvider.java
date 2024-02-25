@@ -32,7 +32,9 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 public class JwtTokenProvider {
-  public static final int ACCESS_LEAVE_HOURS = 6;
+    public static final int ACCESS_LEAVE_HOURS = 6;
+
+
   public static final int REFRESH_LEAVE_HOURS = 168;
 
   private final EmailPasswordAuthProvider emailPasswordAuthProvider;
@@ -101,25 +103,22 @@ public class JwtTokenProvider {
     return validateToken(token, getKey(jwtRefreshSecret));
   }
 
+
   private boolean validateToken(@NonNull String token, @NonNull Key secret) {
-    try {
-      Claims claims = Jwts.parserBuilder()
-              .setSigningKey(secret)
-              .build()
-              .parseClaimsJws(token)
-              .getBody();
+    Claims claims = Jwts.parserBuilder()
+            .setSigningKey(secret)
+            .build()
+            .parseClaimsJws(token)
+            .getBody();
 
-      String id = String.valueOf(claims.get("id"));
-      String authorities = String.valueOf(claims.get("authorities"));
-      Authentication authentication = new UsernamePasswordAuthenticationToken(
-              id, null, AuthorityUtils.commaSeparatedStringToAuthorityList(authorities)
-      );
-      SecurityContextHolder.getContext().setAuthentication(authentication);
+    String id = String.valueOf(claims.get("id"));
+    String authorities = String.valueOf(claims.get("authorities"));
+    Authentication authentication = new UsernamePasswordAuthenticationToken(
+            id, null, AuthorityUtils.commaSeparatedStringToAuthorityList(authorities)
+    );
+    SecurityContextHolder.getContext().setAuthentication(authentication);
 
-      return true;
-    } catch (Exception e) {
-      return false;
-    }
+    return true;
   }
 
 
@@ -136,6 +135,7 @@ public class JwtTokenProvider {
     Instant instant = now.plusHours(hours).atZone(ZoneId.systemDefault()).toInstant();
     return Date.from(instant);
   }
+
 
   private Key getKey(String secret) {
     return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));

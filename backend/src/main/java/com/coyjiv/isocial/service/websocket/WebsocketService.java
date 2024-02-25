@@ -1,13 +1,16 @@
 package com.coyjiv.isocial.service.websocket;
 
 import com.coyjiv.isocial.dao.UserRepository;
-import com.coyjiv.isocial.domain.*;
+import com.coyjiv.isocial.domain.Friend;
+import com.coyjiv.isocial.domain.Message;
+import com.coyjiv.isocial.domain.Post;
+import com.coyjiv.isocial.domain.Subscription;
+import com.coyjiv.isocial.domain.User;
 import com.coyjiv.isocial.dto.respone.friend.FriendNotificationDto;
 import com.coyjiv.isocial.dto.respone.message.MessageNotificationDto;
 import com.coyjiv.isocial.dto.respone.post.PostNotificationDto;
 import com.coyjiv.isocial.dto.respone.post.RepostNotificationDto;
 import com.coyjiv.isocial.service.subscription.ISubscriptionService;
-import com.coyjiv.isocial.service.user.IUserService;
 import com.coyjiv.isocial.transfer.friend.FriendNotificationMapper;
 import com.coyjiv.isocial.transfer.message.MessageNotificationDtoMapper;
 import com.coyjiv.isocial.transfer.post.PostNotificationMapper;

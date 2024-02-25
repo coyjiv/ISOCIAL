@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class FriendNotificationMapper extends DtoMapperFacade<Friend, FriendNotificationDto> {
-  public FriendNotificationMapper(){
+  public FriendNotificationMapper() {
     super(Friend.class, FriendNotificationDto.class);
   }
 

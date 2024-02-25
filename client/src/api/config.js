@@ -45,6 +45,7 @@ instance.interceptors.response.use(
         } catch (exception) {
           localStorage.removeItem('access')
           localStorage.removeItem('refresh')
+          localStorage.removeItem('userId')
           window.location.href = '/login'
         }
       }

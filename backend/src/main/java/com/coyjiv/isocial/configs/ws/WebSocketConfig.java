@@ -25,9 +25,6 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON;
 @RequiredArgsConstructor
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-//  private final WebSocketEventListener eventListener;
-
-
   @Override
   public void configureMessageBroker(MessageBrokerRegistry registry) {
     registry.enableSimpleBroker("/queue", "/topic", "/user");

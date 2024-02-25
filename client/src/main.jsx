@@ -1,14 +1,22 @@
-import React from 'react'
+//libs
+
+import {ThemeProvider} from '@mui/material'
+import {StompSessionProvider} from "react-stomp-hooks";
 import ReactDOM from 'react-dom/client'
+import {theme} from './theme'
+//routes
 import {App} from './views/routes/Routes'
+//styles
+import 'react-toastify/dist/ReactToastify.css';
 import './index.scss'
+//redux
 import {store} from './store'
 import {Provider} from 'react-redux'
-import {ThemeProvider} from '@mui/material'
-import {theme} from './theme'
+//configs
 import '../src/lib/firebase/firebaseConfig'
 import {API_URL} from "./api/index.js";
-import {StompSessionProvider} from "react-stomp-hooks";
+import React from "react";
+
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>

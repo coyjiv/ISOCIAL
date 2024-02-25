@@ -16,7 +16,7 @@ public class RepostNotificationMapper extends DtoMapperFacade<Post, RepostNotifi
   private final EmailPasswordAuthProvider authProvider;
   private final UserRepository userRepository;
 
-  public RepostNotificationMapper(EmailPasswordAuthProvider authProvider, UserRepository userRepository){
+  public RepostNotificationMapper(EmailPasswordAuthProvider authProvider, UserRepository userRepository) {
     super(Post.class, RepostNotificationDto.class);
     this.authProvider = authProvider;
     this.userRepository = userRepository;
