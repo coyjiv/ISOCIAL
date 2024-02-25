@@ -4,6 +4,8 @@ import {useEffect, useState} from "react";
 
 import { API_URL, instance } from "../../api/config";
 
+import { withLayout } from "../../hooks/withLayout"
+
 
 import ChatItem from './ChatItem';
 import "./Chat.scss"
@@ -41,4 +43,5 @@ const ChatList = () => {
   );
 };
 
-export default ChatList;
+const Chats = withLayout(ChatList)
+export default Chats

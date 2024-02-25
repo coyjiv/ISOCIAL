@@ -5,25 +5,24 @@
 
 
 /* ---   Chat   --- */
-
-.App {
-    text-align: center;
-  }
   
   .chat-container {
+    width: 800px;
     max-width: 90%;
-    height: 100vh;
-    margin: 50px auto;
-    border: 1px solid #ccc;
+    height: 80vh;
+    overflow-y: scroll;
+    margin: 30px auto;
+    border: 0px solid #ccc;
     padding: 20px;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+    text-align: center;
   }
   
   .chat-messages {
     
-    overflow-y: auto;
+    //overflow-y: auto;
     display: flex;
     flex-direction: column;
     font-size: 16px;
@@ -34,19 +33,31 @@
     display: flex;
     justify-content: flex-start;
     position: relative;
+    
   }
 
   .user {
     align-self: flex-end;
     text-align: right;
     
-    .message-text {
+    .message-body {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+
+      .message-text {
         margin: 5px;
         padding: 10px 10px;
         border-radius: 20px;
         background-color: #0084ff;
         color: #fff;
         font-family: 'Segoe UI',sans-serif;
+      }
+
+      .message-img {
+        max-width: 500px;
+      }
+        
         
       }
 
