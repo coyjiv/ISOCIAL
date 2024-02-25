@@ -11,8 +11,9 @@ import Friends from "../Friends/Friends";
 import Confirmation from "../Confirmation/Confirmation";
 import UpdatePassword from "../UpdatePassword";
 import { ErrorFallback } from "../../components/ErrorFallback/ErrorFallback";
+import Confirmation from "../../components/confirmation/Confirmation";
+import Chats from "../Chat/ChatList";
 import Chat from "../Chat/Chat";
-import ChatList from "../Chat/ChatList";
 
 const router = createBrowserRouter([
   {
@@ -66,7 +67,7 @@ const router = createBrowserRouter([
   },
   {
     path: "chats",
-    element: <ChatList />,
+    element: <Chats />,
   },
   {
     path: "chats/:id",
