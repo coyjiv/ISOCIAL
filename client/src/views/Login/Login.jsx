@@ -10,13 +10,15 @@ import GLink from './icons/google_icon.svg';
 import { Typography } from "@mui/material";
 
 import { jwtDecode } from "jwt-decode";
-import { useLocalStorage } from "usehooks-ts";
+import { useDocumentTitle, useLocalStorage } from "usehooks-ts";
 
 
 const Login = () => {
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
     const [userId, setUserId] = useLocalStorage('userId', null);
+
+    useDocumentTitle('Login')
 
     useEffect(() => {
         (async () => {
@@ -62,7 +64,7 @@ const Login = () => {
                 <div className={styles.footer}>
                     <Link to={'/register'} className={styles.registrationBtn}>Create new account</Link>
                     <span>OR</span>
-                    <a className={styles.signInWithGoogleBtn} href="/oauth2/authorization/google">
+                    <a className={styles.signInWithGoogleBtn} href={`https://${window.location.host}/oauth2/authorization/google`}>
                         <img src={GLink} alt="google icon" className={styles.google} />
                         <Typography>Continue with Google</Typography>
                     </a>

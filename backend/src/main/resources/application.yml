@@ -4,6 +4,7 @@ jwt:
     refresh: ${JWT_SECRET_REFRESH}
 server:
   port: 9000
+  forward-headers-strategy: framework
 springdoc:
   swagger-ui:
     tags-sorter: alpha
@@ -39,7 +40,7 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     defer-datasource-initialization: false
-    show-sql: true
+    show-sql: false
     hibernate:
       ddl-auto: none
     properties:

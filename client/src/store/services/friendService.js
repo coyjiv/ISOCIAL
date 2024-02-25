@@ -1,21 +1,13 @@
-import { createApi } from '@reduxjs/toolkit/query/react'
-import { instance } from '../../api/config'
+import { profileApi } from './profileService'
 
-export const friendsApi = createApi({
-  reducerPath: 'friendsApi',
-  baseQuery: async (args) => {
-    try {
-      const response = await instance(args)
-      return { data: response.data }
-    } catch (error) {
-      return { error }
-    }
-  },
-  tagTypes: ['Friends'],
+export const friendsApi = profileApi.injectEndpoints({
   endpoints: (builder) => ({
     getFriendsList: builder.query({
       query: (id, page, size) => `friends/${id}?page=${page}&size=${size}`,
-      providesTags: (id) => [{ type: 'Friends', id }],
+      providesTags: (id) => [
+        { type: 'Friends', id },
+        { type: 'Profile', id },
+      ],
     }),
     sendFriendRequest: builder.mutation({
       query: ({ userId }) => {
@@ -24,7 +16,10 @@ export const friendsApi = createApi({
           method: 'POST',
         }
       },
-      invalidatesTags: [{ type: 'Friends' }],
+      invalidatesTags: (result, error, { userId }) => [
+        { type: 'Friends', id: userId },
+        { type: 'Profile', id: userId },
+      ],
     }),
     removeFriend: builder.mutation({
       query: ({ userId }) => {
@@ -34,7 +29,10 @@ export const friendsApi = createApi({
           data: { userId },
         }
       },
-      invalidatesTags: [{ type: 'Friends' }],
+      invalidatesTags: (result, error, { userId }) => [
+        { type: 'Friends', id: userId },
+        { type: 'Profile', id: userId },
+      ],
     }),
     acceptFriendRequest: builder.mutation({
       query: ({ userId }) => {
@@ -43,7 +41,10 @@ export const friendsApi = createApi({
           method: 'POST',
         }
       },
-      invalidatesTags: [{ type: 'Friends' }],
+      invalidatesTags: (result, error, { userId }) => [
+        { type: 'Friends', id: userId },
+        { type: 'Profile', id: userId },
+      ],
     }),
     declineFriendRequest: builder.mutation({
       query: ({ userId }) => {
@@ -52,21 +53,16 @@ export const friendsApi = createApi({
           method: 'POST',
         }
       },
-      invalidatesTags: [{ type: 'Friends' }],
-    }),
-    friendsCount: builder.query({
-      query: (id) => `friends/friendsCount/${id}`,
-      providesTags: (id) => [{ type: 'Friends', id }],
+      invalidatesTags: (result, error, { userId }) => [
+        { type: 'Friends', id: userId },
+        { type: 'Profile', id: userId },
+      ],
     }),
     subscribersCount: builder.query({
       query: (id) => `friends/subscribersCount/${id}`,
-      providesTags: (id) => [{ type: 'Friends', id }],
-    }),
-    haveSentFriendRequest: builder.query({
-      query: ({ currentUserId, id }) =>
-        `friends/haveSentFriendRequest?currentUserId=${currentUserId}&userId=${id}`,
-      providesTags: (result, error, { currentUserId, id }) => [
-        { type: 'Friends', id: `${currentUserId}-${id}` },
+      providesTags: (id) => [
+        { type: 'Friends', id },
+        { type: 'Profile', id },
       ],
     }),
     cancelFriendRequest: builder.mutation({
@@ -77,32 +73,28 @@ export const friendsApi = createApi({
           data: { userId },
         }
       },
-      invalidatesTags: [{ type: 'Friends' }],
+      invalidatesTags: (result, error, { userId }) => [
+        { type: 'Friends', id: userId },
+        { type: 'Profile', id: userId },
+      ],
     }),
     availableFriendRequests: builder.query({
       query: (id) => `friends/availableFriendRequests?userId=${id}`,
-      providesTags: (id) => [{ type: 'Friends', id }],
-    }),
-    isFriend: builder.query({
-      query: ({ currentUserId, id }) =>
-        `friends/isFriend?userId=${currentUserId}&friendId=${id}`,
-      providesTags: (result, error, { currentUserId, id }) => [
-        { type: 'Friends', id: `${currentUserId}-${id}` },
+      providesTags: (id) => [
+        { type: 'Friends', id },
+        { type: 'Profile', id },
       ],
     }),
   }),
 })
 
 export const {
-  useGetFriendsListQuery,
   useSendFriendRequestMutation,
   useRemoveFriendMutation,
   useAcceptFriendRequestMutation,
   useDeclineFriendRequestMutation,
   useFriendsCountQuery,
   useSubscribersCountQuery,
-  useHaveSentFriendRequestQuery,
   useCancelFriendRequestMutation,
   useAvailableFriendRequestsQuery,
-  useIsFriendQuery,
 } = friendsApi

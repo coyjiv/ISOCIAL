@@ -14,7 +14,7 @@ import com.coyjiv.isocial.dto.respone.chat.ActiveChatListDto;
 import com.coyjiv.isocial.exceptions.ChatAlreadyExistException;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.exceptions.RequestValidationException;
-import com.coyjiv.isocial.service.message.IWebsocketMessageService;
+import com.coyjiv.isocial.service.websocket.IWebsocketService;
 import com.coyjiv.isocial.transfer.chat.ActiveChatDtoMapper;
 import com.coyjiv.isocial.transfer.chat.ActiveChatListDtoMapper;
 import com.coyjiv.isocial.transfer.message.CreateMessageRequestMapper;
@@ -43,7 +43,7 @@ public class ChatService implements IChatService {
   private final ActiveChatListDtoMapper activeChatListDtoMapper;
   private final EmailPasswordAuthProvider authProvider;
   private final ActiveChatDtoMapper activeChatDtoMapper;
-  private final IWebsocketMessageService websocketChatMessageService;
+  private final IWebsocketService websocketChatMessageService;
 
   @Transactional(readOnly = true)
   @Override

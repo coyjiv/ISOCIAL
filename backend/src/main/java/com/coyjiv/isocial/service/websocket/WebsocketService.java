@@ -1,14 +1,16 @@
-package com.coyjiv.isocial.service.message;
+package com.coyjiv.isocial.service.websocket;
 
-import com.coyjiv.isocial.domain.Friend;
-import com.coyjiv.isocial.domain.Message;
-import com.coyjiv.isocial.domain.Post;
-import com.coyjiv.isocial.domain.User;
+import com.coyjiv.isocial.dao.UserRepository;
+import com.coyjiv.isocial.domain.*;
 import com.coyjiv.isocial.dto.respone.friend.FriendNotificationDto;
 import com.coyjiv.isocial.dto.respone.message.MessageNotificationDto;
+import com.coyjiv.isocial.dto.respone.post.PostNotificationDto;
 import com.coyjiv.isocial.dto.respone.post.RepostNotificationDto;
+import com.coyjiv.isocial.service.subscription.ISubscriptionService;
+import com.coyjiv.isocial.service.user.IUserService;
 import com.coyjiv.isocial.transfer.friend.FriendNotificationMapper;
 import com.coyjiv.isocial.transfer.message.MessageNotificationDtoMapper;
+import com.coyjiv.isocial.transfer.post.PostNotificationMapper;
 import com.coyjiv.isocial.transfer.post.RepostNotificationMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -20,12 +22,15 @@ import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
-public class WebsocketMessageService implements IWebsocketMessageService {
+public class WebsocketService implements IWebsocketService {
 
   private final SimpMessagingTemplate messagingTemplate;
   private final MessageNotificationDtoMapper messageNotificationDtoMapper;
   private final FriendNotificationMapper friendMapper;
   private final RepostNotificationMapper repostMapper;
+  private final PostNotificationMapper postNotificationMapper;
+  private final UserRepository userRepository;
+  private final ISubscriptionService subscriptionService;
 
   @Override
   @Transactional
@@ -51,7 +56,7 @@ public class WebsocketMessageService implements IWebsocketMessageService {
     FriendNotificationDto dto = friendMapper.convertToDto(friend);
 
     messagingTemplate.convertAndSendToUser(
-            String.valueOf(friend.getAddresser()), "/friends", dto
+            String.valueOf(friend.getAddresser().getId()), "/friends", dto
     );
   }
 
@@ -63,4 +68,16 @@ public class WebsocketMessageService implements IWebsocketMessageService {
             String.valueOf(post.getAuthorId()), "/reposts", dto
     );
   }
+
+  @Override
+  public void sendSubscriptionEventNotificationToUser(Post post) {
+    List<Subscription> subscriptions = subscriptionService.findAllUserSubscribers(post.getAuthorId());
+    PostNotificationDto dto = postNotificationMapper.convertToDto(post);
+    subscriptions.forEach(s -> {
+      messagingTemplate.convertAndSendToUser(
+              String.valueOf(s.getSubscriberId()), "/subscriptions", dto
+      );
+    });
+  }
+
 }

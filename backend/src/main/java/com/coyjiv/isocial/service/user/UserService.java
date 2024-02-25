@@ -4,17 +4,21 @@ package com.coyjiv.isocial.service.user;
 import com.coyjiv.isocial.auth.EmailPasswordAuthProvider;
 import com.coyjiv.isocial.auth.JwtTokenProvider;
 import com.coyjiv.isocial.cache.EmailRegistrationCache;
+import com.coyjiv.isocial.cache.PasswordResetCache;
 import com.coyjiv.isocial.dao.UserRepository;
 import com.coyjiv.isocial.domain.User;
 import com.coyjiv.isocial.domain.UserActivityStatus;
+import com.coyjiv.isocial.dto.request.auth.PasswordResetRequestDto;
 import com.coyjiv.isocial.domain.UserGender;
 import com.coyjiv.isocial.dto.request.user.UserRegistrationRequestDto;
 import com.coyjiv.isocial.dto.respone.user.UserDefaultResponseDto;
+import com.coyjiv.isocial.dto.respone.user.UserProfileResponseDto;
 import com.coyjiv.isocial.dto.respone.user.UserSearchResponseDto;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.exceptions.PasswordMatchException;
 import com.coyjiv.isocial.service.email.EmailServiceImpl;
 import com.coyjiv.isocial.transfer.user.UserDefaultResponseMapper;
+import com.coyjiv.isocial.transfer.user.UserProfileResponseDtoMapper;
 import com.coyjiv.isocial.transfer.user.UserRegistrationRequestMapper;
 import com.coyjiv.isocial.transfer.user.UserSearchResponseMapper;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +27,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ReflectionUtils;
@@ -45,10 +51,12 @@ public class UserService implements IUserService {
   private final EmailServiceImpl emailService;
   private final UserSearchResponseMapper userSearchResponseMapper;
   private final UserDefaultResponseMapper userDefaultResponseMapper;
+  private final UserProfileResponseDtoMapper userProfileResponseDtoMapper;
   private final EmailPasswordAuthProvider authProvider;
   private final JwtTokenProvider jwtTokenProvider;
   @Value("${HOSTNAME}")
   private String hostname;
+  private final BCryptPasswordEncoder passwordEncoder;
 
 
   @Transactional(readOnly = true)
@@ -69,11 +77,11 @@ public class UserService implements IUserService {
 
   @Transactional(readOnly = true)
   @Override
-  public UserDefaultResponseDto findActiveById(Long id) throws EntityNotFoundException {
+  public UserProfileResponseDto findActiveById(Long id) throws EntityNotFoundException {
     Optional<User> userOptional = userRepository.findActiveById(id);
 
     if (userOptional.isPresent()) {
-      return userDefaultResponseMapper.convertToDto(userOptional.get());
+      return userProfileResponseDtoMapper.convertToDto(userOptional.get());
     } else {
       throw new EntityNotFoundException("User not found");
     }
@@ -191,9 +199,16 @@ public class UserService implements IUserService {
           User genderUser = user.get();
           genderUser.setGender(UserGender.valueOf((String) value));
           userRepository.save(genderUser);
+        } else if (Objects.equals(key, "premium")) {
+          User premiumUser = user.get();
+          if ((boolean) value) {
+            premiumUser.setPremium(true);
+          } else {
+            premiumUser.setPremium(false);
+          }
+          userRepository.save(premiumUser);
         } else {
           Field field = ReflectionUtils.findField(User.class, (String) key);
-          System.out.println(field);
           if (field != null) {
             field.setAccessible(true);
             ReflectionUtils.setField(field, user.get(), value);
@@ -249,4 +264,36 @@ public class UserService implements IUserService {
       userRepository.save(user);
     }
   }
+
+  @Transactional
+  @Override
+  public void resetPassword(String uuid, PasswordResetRequestDto passwordResetRequestDto) {
+    String email = PasswordResetCache.getEmail(uuid);
+    System.out.println(email);
+    if (email != null) {
+      Optional<User> optionalUser = userRepository.findByEmail(email);
+      if (optionalUser.isPresent()) {
+        User user = optionalUser.get();
+        user.setPassword(passwordEncoder.encode(passwordResetRequestDto.getNewPassword()));
+        userRepository.save(user);
+      } else {
+        throw new UsernameNotFoundException("No user found with email: " + email);
+      }
+    } else {
+      throw new UsernameNotFoundException("No user found with this email ");
+    }
+  }
+
+  @Transactional
+  @Override
+  public void requestPasswordReset(String email) {
+    Optional<User> user = userRepository.findByEmail(email);
+    if (user.isEmpty()) {
+      throw new UsernameNotFoundException("Email not found");
+    }
+    String uuid = PasswordResetCache.putEmail(email);
+    emailService.sendPasswordResetMessage(email, uuid);
+  }
+
+
 }

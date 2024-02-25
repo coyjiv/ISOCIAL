@@ -28,7 +28,7 @@ import java.util.Map;
 public class UserController {
   private final IUserService userService;
 
-  @GetMapping("/")
+  @GetMapping
   public ResponseEntity<?> findAll(@RequestParam(defaultValue = "0") @Min(0) Integer page,
                                    @RequestParam(defaultValue = "10") @Min(0) Integer size) {
     return ResponseEntity.ok(userService.findAllActive(page, size));

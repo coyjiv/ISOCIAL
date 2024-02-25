@@ -5,7 +5,6 @@ import PropTypes from 'prop-types'
 const FormRadioGroup = ({ role, ...props }) => {
 
     const [field, meta] = useField(props);
-    console.log(meta.error);
 
     const isError = !!meta.error && meta.touched
     return (

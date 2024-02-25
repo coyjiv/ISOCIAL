@@ -1,5 +1,6 @@
 package com.coyjiv.isocial.service.friend;
 
+import com.coyjiv.isocial.domain.UserFriendStatus;
 import com.coyjiv.isocial.dto.respone.friend.FriendResponseDto;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 
@@ -11,7 +12,7 @@ public interface IFriendService {
 
   boolean acceptFriendRequest(Long friendId) throws IllegalAccessException;
 
-  boolean declineFriendRequest(Long friendId) throws IllegalAccessException;
+  boolean declineOrCancelFriendRequest(Long friendId) throws IllegalAccessException;
 
   boolean deleteFriend(Long friendId) throws IllegalAccessException;
 
@@ -21,11 +22,9 @@ public interface IFriendService {
 
   Long getSubscribersCount(Long userId);
 
-  boolean haveSentRequest(Long currentUserId, Long userId);
-
-  boolean cancelFriendRequest(Long friendId);
-
   List<FriendResponseDto> availableFriendRequests(Long userId);
 
-  boolean isFriend(Long currentUserId, Long userId);
+  UserFriendStatus getFriendStatus(Long id, Long authenticationPrincipal);
+
+  Long getSubscriptionsCount(Long id);
 }

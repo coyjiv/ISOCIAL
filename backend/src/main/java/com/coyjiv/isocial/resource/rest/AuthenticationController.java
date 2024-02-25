@@ -2,6 +2,7 @@ package com.coyjiv.isocial.resource.rest;
 
 import com.coyjiv.isocial.cache.EmailRegistrationCache;
 import com.coyjiv.isocial.dto.request.auth.LoginRequestDto;
+import com.coyjiv.isocial.dto.request.auth.PasswordResetRequestDto;
 import com.coyjiv.isocial.dto.request.auth.RefreshRequestDto;
 import com.coyjiv.isocial.dto.request.user.UserRegistrationRequestDto;
 import com.coyjiv.isocial.service.auth.IAuthService;
@@ -9,6 +10,8 @@ import com.coyjiv.isocial.service.user.IUserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,8 +19,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PathVariable;
+import com.coyjiv.isocial.domain.User;
 
 import javax.security.auth.login.AccountNotFoundException;
+import java.util.Optional;
 
 
 @RestController
@@ -83,6 +88,28 @@ public class AuthenticationController {
       return ResponseEntity.ok(authService.refresh(refreshRequestDto));
     } catch (Exception exception) {
       return ResponseEntity.status(401).body(exception.getMessage());
+    }
+  }
+
+
+  @PostMapping("/reset-password/{uuid}")
+  public ResponseEntity<?> resetPassword(@PathVariable String uuid,
+                                         @Valid @RequestBody PasswordResetRequestDto passwordResetRequestDto) {
+    try {
+      userService.resetPassword(uuid, passwordResetRequestDto);
+      return ResponseEntity.status(200).body("Password reset successfully");
+    } catch (UsernameNotFoundException e) {
+      return ResponseEntity.status(404).body(e.getMessage());
+    }
+  }
+
+  @PostMapping("/request-reset-password")
+  public ResponseEntity<?> requestPasswordReset(@RequestParam String email) {
+    try {
+      userService.requestPasswordReset(email);
+      return ResponseEntity.status(200).body("Password reset request sent successfully.");
+    } catch (UsernameNotFoundException ex) {
+      return ResponseEntity.status(404).body("Email not found.");
     }
   }
 }

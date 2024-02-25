@@ -108,7 +108,8 @@ const StyledMenuItem = styled(MenuItem)(() => ({
 
 const AvatarButton = () => {
     const ref = useRef(null)
-    const { data: profile, isLoading } = useGetProfileByIdQuery(localStorage.getItem("userId"))
+    const userId = localStorage.getItem('userId')
+    const { data: profile, isLoading } = useGetProfileByIdQuery(userId, { skip: !userId })
     const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -134,12 +135,16 @@ const AvatarButton = () => {
     const handleLogout = () => {
         localStorage.removeItem("access");
         localStorage.removeItem("refresh");
+        localStorage.removeItem("userId");
         navigate("/login");
     }
 
     useOnClickOutside(ref, handleClickOutside)
+
+    const avatarSrc = profile === undefined ? '' : profile?.avatarsUrl?.[0] ?? placeholderAvatar(profile?.gender, profile?.firstName, profile?.lastName)
+
     return (
-        !isLoading &&
+        (userId && !isLoading && profile !== undefined) &&
         <>
             <StyledButton ref={ref} className={buttonClasses} onClick={handleClickInside}>
                 <StyledBadge
@@ -147,7 +152,7 @@ const AvatarButton = () => {
                     anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
                     variant="dot"
                 >
-                    <Avatar alt="User profile avatar" src={profile?.avatarsUrl?.[0] ?? placeholderAvatar(profile?.gender)} />
+                    <Avatar alt="User profile avatar" src={avatarSrc} />
                 </StyledBadge>
             </StyledButton>
             <StyledMenu
@@ -161,8 +166,8 @@ const AvatarButton = () => {
             >
                 <Link to='/profile'>
                     <StyledCard>
-                        <Avatar alt="User profile avatar" src={profile?.avatarsUrl?.[0]} />
-                        <Typography fontWeight='900'>{profile.firstName + " " + profile.lastName}</Typography>
+                        <Avatar alt="User profile avatar" src={avatarSrc} />
+                        <Typography fontWeight='900'>{profile?.firstName + " " + profile?.lastName}</Typography>
                     </StyledCard>
                 </Link>
                 <StyledMenuItem onClick={handleClose}>

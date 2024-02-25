@@ -6,6 +6,7 @@ import { initialValues, validationSchema } from './Register.utils'
 import { useNavigate } from 'react-router-dom'
 import { API_URL } from '../../api'
 import styles from '../Login/styles.module.scss'
+import { useDocumentTitle } from 'usehooks-ts'
 
 const Register = () => {
   const [isError, setIsError] = useState(false)
@@ -53,6 +54,7 @@ const Register = () => {
     navigate('/login')
   }
 
+  useDocumentTitle('Register')
   return (
     <div className={styles.container}>
       <div className={styles.logoWrapper}>

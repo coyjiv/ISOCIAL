@@ -6,6 +6,7 @@ const withWebsocket = (WrappedComponent) => {
        useSubscription(`/user/${localStorage.getItem("userId")}/messages`,handleMessage )
        useSubscription(`/user/${localStorage.getItem("userId")}/friends`,handleFriend )
        useSubscription(`/user/${localStorage.getItem("userId")}/reposts`,handleRepost )
+       useSubscription(`/user/${localStorage.getItem("userId")}/subscriptions`,handleRepost )
 
        function handleMessage(msg) {
            console.log(JSON.parse(msg.body))
