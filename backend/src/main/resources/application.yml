@@ -4,6 +4,7 @@ jwt:
     refresh: ${JWT_SECRET_REFRESH}
 server:
   port: 9000
+  forward-headers-strategy: framework
 springdoc:
   swagger-ui:
     tags-sorter: alpha
@@ -39,7 +40,7 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
     defer-datasource-initialization: false
-    show-sql: true
+    show-sql: false
     hibernate:
       ddl-auto: none
     properties:
@@ -67,13 +68,16 @@ spring:
     enabled: false
   sql:
     init:
-      mode: never
+      mode: always
+      schema-locations: classpath:db/schema-postgres.sql
   datasource:
     url: ${DATABASE_URL}
     username: ${DATABASE_USERNAME}
     password: ${DATABASE_PASSWORD}
+    driver-class-name: org.postgresql.Driver
   jpa:
     open-in-view: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     defer-datasource-initialization: true
     hibernate:
       ddl-auto: none
@@ -81,6 +85,17 @@ spring:
       hibernate:
         generate_statistics: false
     show-sql: false
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${EMAIL_ADDRESS}
+    password: ${EMAIL_PASSWORD}
+    protocol: smtp
+    tls: true
+    properties.mail.smtp:
+      auth: true
+      starttls.enable: true
+      ssl.trust: smtp.gmail.com
   config:
     activate:
       on-profile: prod

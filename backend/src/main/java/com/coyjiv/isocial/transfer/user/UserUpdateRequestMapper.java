@@ -2,6 +2,7 @@ package com.coyjiv.isocial.transfer.user;
 
 import com.coyjiv.isocial.dao.UserRepository;
 import com.coyjiv.isocial.domain.User;
+import com.coyjiv.isocial.domain.UserGender;
 import com.coyjiv.isocial.dto.request.user.UserUpdateRequestDto;
 import com.coyjiv.isocial.transfer.DtoMapperFacade;
 import org.springframework.stereotype.Service;
@@ -26,5 +27,7 @@ public class UserUpdateRequestMapper extends DtoMapperFacade<User, UserUpdateReq
     entity.setLastName(dto.getLastName());
     entity.setBannerUrl(dto.getBannerUrl());
     entity.setDateOfBirth(dto.getDateOfBirth());
+    entity.setGender(dto.getGender());
+
   }
 }

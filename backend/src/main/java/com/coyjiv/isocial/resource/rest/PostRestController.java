@@ -33,7 +33,7 @@ public class PostRestController {
   private final IPostService postService;
   private final PostResponseMapper postResponseMapper;
 
-  @GetMapping("/")
+  @GetMapping
   public ResponseEntity<?> findAll(@RequestParam(defaultValue = "0") @Min(0) Integer page,
                                    @RequestParam(defaultValue = "10") @Min(0) Integer size) {
     List<Post> posts = postService.findAllActive(page, size);
@@ -59,7 +59,7 @@ public class PostRestController {
     return ResponseEntity.ok(postService.findActiveByAuthorId(page, size, id));
   }
 
-  @PostMapping("/")
+  @PostMapping
   public ResponseEntity<?> create(@RequestBody @Valid PostRequestDto dto)
           throws RequestValidationException {
     return ResponseEntity.ok(postService.create(dto));
@@ -73,7 +73,7 @@ public class PostRestController {
 
   @DeleteMapping("/{id}")
   public ResponseEntity<?> delete(@PathVariable("id") @Min(0) Long id)
-          throws IllegalAccessException {
+          throws IllegalAccessException, RequestValidationException {
     postService.delete(id);
     return ResponseEntity.status(204).build();
   }
