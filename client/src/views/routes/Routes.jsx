@@ -11,6 +11,7 @@ import Friends from "../Friends/Friends";
 import Confirmation from "../Confirmation/Confirmation";
 import UpdatePassword from "../UpdatePassword";
 import { ErrorFallback } from "../../components/ErrorFallback/ErrorFallback";
+import Post from "../Post";
 
 
 const router = createBrowserRouter([
@@ -80,6 +81,11 @@ const router = createBrowserRouter([
   {
     path: "forgot-password/:id",
     element: <UpdatePassword />,
+  },
+  {
+    path: "post/:id",
+    element: <Post />,
+    errorElement: <ErrorFallback />,
   }
 ]);
 

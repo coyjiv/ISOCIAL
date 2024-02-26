@@ -1,17 +1,24 @@
-@import "../../styles/variables/colors";
+@import '../../styles/variables/colors';
+@import '../../styles/mixins/breakpoints';
+@import '../../styles/mixins/common';
 
 .container {
   max-width: 530px;
   padding-top: 16px;
+  width: 100%;
 
   background-color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, .1), 0 8px 16px rgba(0, 0, 0, .1);
+  box-shadow: 0 1px 2px $shadow2;
   border-radius: 8px;
   overflow: hidden;
 
-  margin: 50px auto 0;
+  margin: 0 auto;
 
   position: relative;
+
+  @include media('sm') {
+    max-width: 100%;
+  }
 }
 
 .header {
@@ -66,7 +73,6 @@
 }
 
 .userData {
-
 }
 
 .username {
@@ -82,7 +88,6 @@
 }
 
 .content {
-
 }
 
 .textContent {
@@ -142,7 +147,7 @@
   margin-right: 16px;
   margin-left: 16px;
   padding-bottom: 10px;
-  border-bottom: 1px solid $grey;
+  border-bottom: 1px solid $greyBorder;
 }
 
 .likes {
@@ -150,6 +155,19 @@
   gap: 4px;
   align-items: center;
   cursor: pointer;
+  will-change: scale;
+
+  @include transition(scale, 0.2s);
+
+  @media (hover: hover) {
+    &:hover {
+      scale: 1.1;
+    }
+  }
+
+  &:focus {
+    scale: 1.1;
+  }
 
   p {
     font-size: 15px;
@@ -164,6 +182,26 @@
   align-items: center;
   gap: 4px;
   cursor: pointer;
+  will-change: scale;
+
+  @include transition(scale, 0.2s);
+
+  @media (hover: hover) {
+    &:hover {
+      scale: 1.1;
+    }
+  }
+
+  &:focus {
+    scale: 1.1;
+  }
+
+  span {
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 20px;
+    color: $grey;
+  }
 }
 
 .reactions {
@@ -173,10 +211,10 @@
   margin-right: 16px;
   margin-left: 16px;
   padding-bottom: 10px;
-  border-bottom: 1px solid $grey;
+  border-bottom: 1px solid $greyBorder;
 }
 
-.raction {
+.reaction {
   flex-grow: 1;
   display: flex;
   align-items: center;
@@ -184,7 +222,8 @@
   gap: 8px;
   cursor: pointer;
 
-  span {
+  span,
+  svg {
     font-size: 15px;
     font-weight: 600;
     line-height: 20px;
@@ -209,4 +248,15 @@
   padding: 8px 12px;
   background-color: $wash;
   width: 100%;
+}
+
+.inputCommentWrapper {
+  position: relative;
+}
+
+.inputSendBtn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
 }

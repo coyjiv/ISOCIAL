@@ -4,6 +4,7 @@ import com.coyjiv.isocial.domain.Post;
 import com.coyjiv.isocial.dto.request.post.PostRequestDto;
 import com.coyjiv.isocial.dto.request.post.RePostRequestDto;
 import com.coyjiv.isocial.dto.request.post.UpdatePostRequestDto;
+import com.coyjiv.isocial.dto.respone.page.PageWrapper;
 import com.coyjiv.isocial.dto.respone.post.PostResponseDto;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.exceptions.RequestValidationException;
@@ -17,9 +18,9 @@ public interface IPostService {
 
   Optional<Post> findActiveById(Long id);
 
-  List<PostResponseDto> findActiveByAuthorId(int page, int size, Long id);
+  PageWrapper<PostResponseDto> findActiveByAuthorId(int page, int size, Long id);
 
-  Post create(PostRequestDto postRequestDto) throws RequestValidationException;
+  PostResponseDto create(PostRequestDto postRequestDto) throws RequestValidationException;
 
   void update(Long id, UpdatePostRequestDto updatePostRequestDto) throws IllegalAccessException;
 

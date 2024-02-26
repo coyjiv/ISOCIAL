@@ -7,7 +7,6 @@ import { Box } from '@mui/material';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 
-
 const ProfileTabs = () => {
   const [searchParams, setSearchParams] = useSearchParams({ tab: profileTabs[0].label });
 

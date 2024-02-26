@@ -7,6 +7,7 @@ import com.coyjiv.isocial.domain.Post;
 import com.coyjiv.isocial.dto.request.post.PostRequestDto;
 import com.coyjiv.isocial.dto.request.post.RePostRequestDto;
 import com.coyjiv.isocial.dto.request.post.UpdatePostRequestDto;
+import com.coyjiv.isocial.dto.respone.page.PageWrapper;
 import com.coyjiv.isocial.dto.respone.post.PostResponseDto;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.exceptions.RequestValidationException;
@@ -15,6 +16,7 @@ import com.coyjiv.isocial.transfer.post.PostRequestMapper;
 import com.coyjiv.isocial.transfer.post.PostResponseMapper;
 import com.coyjiv.isocial.transfer.post.RePostRequestMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -52,21 +54,29 @@ public class PostService implements IPostService {
 
   @Override
   @Transactional(readOnly = true)
-  public List<PostResponseDto> findActiveByAuthorId(int page, int size, Long id) {
-    Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "creationDate"));
+  public PageWrapper<PostResponseDto> findActiveByAuthorId(int page, int size, Long id) {
+    Sort sort = Sort.by(Sort.Direction.ASC, "creationDate").and(Sort.by(Sort.Direction.ASC, "id"));
     Pageable pageable = PageRequest.of(page, size, sort);
-    return postRepository.findActiveByAuthorId(id, pageable).stream()
-            .map(postResponseMapper::convertToDto).toList();
+    Page<Post> postPage = postRepository.findActiveByAuthorId(id, pageable);
+
+    List<PostResponseDto> dtos = postPage.getContent().stream()
+      .map(postResponseMapper::convertToDto)
+      .toList();
+
+    boolean hasNext = postPage.hasNext();
+
+    return new PageWrapper<>(dtos, hasNext);
   }
 
   @Override
   @Transactional
-  public Post create(PostRequestDto postRequestDto) throws RequestValidationException {
+  public PostResponseDto create(PostRequestDto postRequestDto) throws RequestValidationException {
     validateCreationPostDto(postRequestDto);
     Long requestOwner = emailPasswordAuthProvider.getAuthenticationPrincipal();
     Post post = postRequestMapper.convertToEntity(postRequestDto);
     post.setAuthorId(requestOwner);
-    return postRepository.save(post);
+    postRepository.save(post);
+    return postResponseMapper.convertToDto(post);
   }
 
   @Override

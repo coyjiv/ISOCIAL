@@ -23,5 +23,8 @@ public interface CommentRepository extends JpaRepository<Comment,Long> {
   @Query("FROM Comment c WHERE c.id = :id AND c.isActive = true")
   @NotNull
   Optional<Comment> findById(@NotNull Long id);
+
+  @Query("SELECT COUNT(c) FROM Comment c WHERE c.postId = :postId AND c.isActive = true")
+  Long countByPostId(@Param("postId") Long id);
 }
 

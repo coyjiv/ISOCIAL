@@ -43,6 +43,7 @@ instance.interceptors.response.use(
         } catch (exception) {
           localStorage.removeItem('access')
           localStorage.removeItem('refresh')
+          localStorage.removeItem('userId')
           window.location.href = '/login'
         }
       }
@@ -50,4 +51,5 @@ instance.interceptors.response.use(
     } else {
       return Promise.reject(error)
     }
-});
+  }
+)

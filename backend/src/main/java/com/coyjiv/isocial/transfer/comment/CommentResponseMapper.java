@@ -1,5 +1,6 @@
 package com.coyjiv.isocial.transfer.comment;
 
+import com.coyjiv.isocial.auth.EmailPasswordAuthProvider;
 import com.coyjiv.isocial.dao.UserRepository;
 import com.coyjiv.isocial.domain.Comment;
 import com.coyjiv.isocial.domain.User;
@@ -19,14 +20,17 @@ public class CommentResponseMapper extends DtoMapperFacade<Comment, CommentRespo
   private final UserRepository userRepository;
   private final ILikeService likeService;
   private final UserSearchResponseMapper userSearchResponseMapper;
+  private final EmailPasswordAuthProvider emailPasswordAuthProvider;
 
   public CommentResponseMapper(IUserService userService, ILikeService likeService, UserRepository userRepository,
-                               UserSearchResponseMapper userSearchResponseMapper) {
+                               UserSearchResponseMapper userSearchResponseMapper,
+                               EmailPasswordAuthProvider emailPasswordAuthProvider) {
     super(Comment.class, CommentResponseDto.class);
     this.userService = userService;
     this.likeService = likeService;
     this.userRepository = userRepository;
     this.userSearchResponseMapper = userSearchResponseMapper;
+    this.emailPasswordAuthProvider = emailPasswordAuthProvider;
   }
 
   @Override
@@ -38,7 +42,8 @@ public class CommentResponseMapper extends DtoMapperFacade<Comment, CommentRespo
     dto.setEdited(entity.isEdited());
     dto.setCreationDate(entity.getCreationDate());
     try {
-      dto.setLiked(likeService.isLikedByUser(entity.getCommenterId(), entity.getId(), entity.getEntityType()));
+      dto.setLiked(likeService.isLikedByUser(emailPasswordAuthProvider.getAuthenticationPrincipal(), entity.getId(),
+        entity.getEntityType()));
     } catch (Exception e) {
       e.printStackTrace();
       dto.setLiked(false);

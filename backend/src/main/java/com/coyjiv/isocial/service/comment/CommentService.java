@@ -46,7 +46,7 @@ public class CommentService implements ICommentService {
       Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "id"));
       Pageable pageable = PageRequest.of(page, size, sort);
       return commentRepository.findByPostId(id, pageable).stream()
-              .map(commentResponseMapper::convertToDto).toList();
+        .map(commentResponseMapper::convertToDto).toList();
     } else {
       throw new EntityNotFoundException("Comment not found");
     }
@@ -58,7 +58,13 @@ public class CommentService implements ICommentService {
     Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "id"));
     Pageable pageable = PageRequest.of(page, size, sort);
     return commentRepository.findByCommenterId(id, pageable).stream()
-            .map(commentResponseMapper::convertToDto).toList();
+      .map(commentResponseMapper::convertToDto).toList();
+  }
+
+  @Transactional(readOnly = true)
+  @Override
+  public Long countByPostId(Long id) throws EntityNotFoundException {
+    return commentRepository.countByPostId(id);
   }
 
   @Transactional
@@ -69,7 +75,7 @@ public class CommentService implements ICommentService {
       Optional<Post> post = postRepository.findActiveById(comment.get().getPostId());
       if (post.isPresent()) {
         if (Objects.equals(comment.get().getCommenterId(), emailPasswordAuthProvider.getAuthenticationPrincipal())
-                && Objects.equals(post.get().getAuthorId(), emailPasswordAuthProvider.getAuthenticationPrincipal())) {
+          && Objects.equals(post.get().getAuthorId(), emailPasswordAuthProvider.getAuthenticationPrincipal())) {
           comment.get().setActive(false);
           commentRepository.save(comment.get());
         } else {
@@ -85,11 +91,11 @@ public class CommentService implements ICommentService {
 
   @Transactional
   @Override
-  public Comment create(Long postId, DefaultCommentRequestDto dto) throws EntityNotFoundException {
+  public CommentResponseDto create(Long postId, DefaultCommentRequestDto dto) throws EntityNotFoundException {
     if (postRepository.findActiveById(postId).isPresent()) {
       Comment comment = new Comment(emailPasswordAuthProvider.getAuthenticationPrincipal(), postId, dto.getText(), false);
       comment.setActive(true);
-      return commentRepository.save(comment);
+      return commentResponseMapper.convertToDto(commentRepository.save(comment));
     } else {
       throw new EntityNotFoundException("Post not found");
     }
@@ -97,14 +103,15 @@ public class CommentService implements ICommentService {
 
   @Transactional
   @Override
-  public Comment update(Long id, DefaultCommentRequestDto dto) throws EntityNotFoundException, IllegalAccessException {
+  public CommentResponseDto update(Long id, DefaultCommentRequestDto dto)
+    throws EntityNotFoundException, IllegalAccessException {
     Optional<Comment> comment = commentRepository.findById(id);
     if (comment.isPresent()) {
       if (postRepository.findActiveById(comment.get().getPostId()).isPresent()) {
         if (Objects.equals(comment.get().getCommenterId(), emailPasswordAuthProvider.getAuthenticationPrincipal())) {
           comment.get().setText(dto.getText());
           comment.get().setEdited(true);
-          return commentRepository.save(comment.get());
+          return commentResponseMapper.convertToDto(commentRepository.save(comment.get()));
         } else {
           throw new IllegalAccessException("User have no authorities to do this request.");
         }

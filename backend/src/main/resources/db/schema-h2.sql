@@ -52,7 +52,7 @@ CREATE TABLE public.messages
     sender_id          INT,
     status             VARCHAR(50) NOT NULL DEFAULT 'SENT',
     text               VARCHAR(1000),
-    attachements       VARCHAR ARRAY,
+    attachments       VARCHAR ARRAY,
     is_edited          BOOLEAN,
     creation_date      TIMESTAMP,
     last_modified_date TIMESTAMP,
@@ -109,7 +109,8 @@ CREATE TABLE public.comments
     FOREIGN KEY (addresser_id) REFERENCES public.users (id),
     creation_date      TIMESTAMP,
     last_modified_date TIMESTAMP,
-    is_active          BOOLEAN NOT NULL DEFAULT FALSE
+    is_active          BOOLEAN NOT NULL DEFAULT FALSE,
+    is_edited          BOOLEAN NOT NULL DEFAULT FALSE
 );
 DROP TABLE IF EXISTS posts;
 CREATE TABLE public.posts

@@ -86,13 +86,13 @@ public class LikeService implements ILikeService {
 
     // Convert likes to UserProfileResponseDto, handling possible EntityNotFoundException
     return likes.stream().map(like -> {
-        try {
-          return userService.findActiveById(like.getUserId());
-        } catch (EntityNotFoundException e) {
-          e.printStackTrace();
-          return null;
-        }
-      }).filter(Objects::nonNull) // Remove nulls in case of not found users
+      try {
+        return userService.findActiveById(like.getUserId());
+      } catch (EntityNotFoundException e) {
+        e.printStackTrace();
+        return null;
+      }
+    }).filter(Objects::nonNull) // Remove nulls in case of not found users
       .distinct().collect(Collectors.toList());
   }
 

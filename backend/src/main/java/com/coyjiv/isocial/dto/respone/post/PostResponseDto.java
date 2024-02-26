@@ -1,5 +1,6 @@
 package com.coyjiv.isocial.dto.respone.post;
 
+import com.coyjiv.isocial.dto.respone.comment.CommentResponseDto;
 import com.coyjiv.isocial.dto.respone.user.UserSearchResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -35,6 +36,10 @@ public class PostResponseDto {
   private Long likesCount;
 
   private List<UserSearchResponseDto> recentLikedUsers;
+
+  private Long commentsCount;
+
+  private List<CommentResponseDto> recentComments;
 
   private boolean isAuthorPremium;
 

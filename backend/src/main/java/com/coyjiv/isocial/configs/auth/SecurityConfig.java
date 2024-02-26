@@ -4,7 +4,6 @@ import com.coyjiv.isocial.auth.DefaultAuthenticationSuccessHandler;
 import com.coyjiv.isocial.auth.JwtTokenProvider;
 import com.coyjiv.isocial.filters.JwtValidatorFilter;
 import com.coyjiv.isocial.service.auth.OAuthUserService;
-import jakarta.servlet.DispatcherType;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -50,9 +49,10 @@ public class SecurityConfig {
       // TODO: REMOVE IN PRODUCTION
       .cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(Collections.singletonList("*"));
+        config.setAllowedOriginPatterns(Collections.singletonList("*"));
         config.setAllowedMethods(Collections.singletonList("*"));
         config.setAllowedHeaders(Collections.singletonList("*"));
+        config.setAllowCredentials(true);
         config.setMaxAge(3600L);
         return config;
       }))
@@ -60,21 +60,9 @@ public class SecurityConfig {
       .addFilterBefore(new JwtValidatorFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
       .authorizeHttpRequests(req ->
         req
-          .requestMatchers(mvcMatcherBuilder.pattern("/api/user/**")).hasRole("USER")
           .requestMatchers(mvcMatcherBuilder.pattern("/api/auth/**")).permitAll()
-          .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
-          //          .requestMatchers(mvcMatcherBuilder.pattern("/swagger-ui/**")).permitAll()
-          //          .requestMatchers(mvcMatcherBuilder.pattern("/v3/api-docs/**")).permitAll()
-          //          .requestMatchers(mvcMatcherBuilder.pattern("/assets/**")).permitAll()
-          //          .requestMatchers(mvcMatcherBuilder.pattern("/static/**")).permitAll()
-          //          .requestMatchers(mvcMatcherBuilder.pattern("/favicon.ico")).permitAll()
-          //          .requestMatchers(mvcMatcherBuilder.pattern("/index.html")).permitAll()
-          //          .requestMatchers(mvcMatcherBuilder.pattern("/")).permitAll()
-          //          .requestMatchers(mvcMatcherBuilder.pattern("/oauth2/authorization/google")).permitAll()
-          //          .requestMatchers(mvcMatcherBuilder.pattern("/login/oauth2/code/**")).permitAll()
-
-          //          .requestMatchers(toH2Console()).permitAll()
-          //          .anyRequest().hasRole("USER")
+          .requestMatchers(mvcMatcherBuilder.pattern("/api/ws/**")).permitAll()
+          .requestMatchers(mvcMatcherBuilder.pattern("/api/**")).hasRole("USER")
           .anyRequest().permitAll()
       )
       .exceptionHandling(exceptionHandling ->
