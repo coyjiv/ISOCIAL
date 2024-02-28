@@ -21,7 +21,7 @@ public class OnlineUsersCache {
   public static Long getUserId(String uuid) throws EntityNotFoundException {
     String userId = onlineUsersCache.getIfPresent(uuid);
     onlineUsersCache.invalidate(uuid);
-    if (Objects.equals(userId, "null")){
+    if (Objects.equals(userId, "null")) {
       throw new EntityNotFoundException("User not found");
     }
     return Long.valueOf(userId);

@@ -32,8 +32,7 @@ import java.util.Set;
 @Service
 @RequiredArgsConstructor
 public class JwtTokenProvider {
-    public static final int ACCESS_LEAVE_HOURS = 6;
-
+  public static final int ACCESS_LEAVE_HOURS = 6;
 
   public static final int REFRESH_LEAVE_HOURS = 168;
 
@@ -80,7 +79,7 @@ public class JwtTokenProvider {
             .claim("id", authentication.getName())
             .claim("authorities", getAuthorities(authentication.getAuthorities()))
             .setIssuedAt(new Date())
-            .setExpiration(getExpirationDate(ACCESS_LEAVE_HOURS))
+            .setExpiration(getExpirationDate(15))
             .signWith(getKey(jwtAccessSecret)).compact();
   }
 
@@ -91,7 +90,7 @@ public class JwtTokenProvider {
             .claim("id", authentication.getName())
             .claim("authorities", getAuthorities(authentication.getAuthorities()))
             .setIssuedAt(new Date())
-            .setExpiration(getExpirationDate(REFRESH_LEAVE_HOURS))
+            .setExpiration(getExpirationDate(60))
             .signWith(getKey(jwtRefreshSecret)).compact();
   }
 
@@ -132,7 +131,7 @@ public class JwtTokenProvider {
 
   private Date getExpirationDate(int hours) {
     LocalDateTime now = LocalDateTime.now();
-    Instant instant = now.plusHours(hours).atZone(ZoneId.systemDefault()).toInstant();
+    Instant instant = now.plusSeconds(hours).atZone(ZoneId.systemDefault()).toInstant();
     return Date.from(instant);
   }
 
