@@ -79,7 +79,7 @@ public class JwtTokenProvider {
             .claim("id", authentication.getName())
             .claim("authorities", getAuthorities(authentication.getAuthorities()))
             .setIssuedAt(new Date())
-            .setExpiration(getExpirationDate(15))
+            .setExpiration(getExpirationDate(ACCESS_LEAVE_HOURS))
             .signWith(getKey(jwtAccessSecret)).compact();
   }
 
@@ -90,7 +90,7 @@ public class JwtTokenProvider {
             .claim("id", authentication.getName())
             .claim("authorities", getAuthorities(authentication.getAuthorities()))
             .setIssuedAt(new Date())
-            .setExpiration(getExpirationDate(60))
+            .setExpiration(getExpirationDate(REFRESH_LEAVE_HOURS))
             .signWith(getKey(jwtRefreshSecret)).compact();
   }
 
