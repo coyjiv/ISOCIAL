@@ -45,6 +45,8 @@ public class PostResponseDto {
 
   private boolean isLiked;
 
+  private boolean isFavourite;
+
   private String authorPremiumNickname;
 
   private String authorPremiumEmoji;

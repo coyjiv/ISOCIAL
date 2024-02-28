@@ -1,8 +1,8 @@
 @use "../../../styles/variables/colors";
 @use "../../../styles/mixins/breakpoints";
 
-.avatarWrapper {
-  height: 80svh;
+.imageWrapper {
+  // height: 80svh;
   width: 100%;
   margin: auto;
   display: flex;
@@ -74,5 +74,26 @@
         background: rgba(colors.$black, 0.5);
       }
     }
+  }
+}
+
+.loadingImg {
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  transition: transform 0.5s ease-in-out;
+  transform: translateY(5%);
+}
+
+.beautyImage {
+  opacity: 1;
+  animation: slideUp 0.2s ease-in-out forwards;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(5%);
+  }
+  to {
+    transform: translateY(0);
   }
 }

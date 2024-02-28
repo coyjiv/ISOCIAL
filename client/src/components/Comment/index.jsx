@@ -13,6 +13,7 @@ import { useDeleteCommentMutation } from '../../store/services/commentService';
 import { useHover } from 'usehooks-ts'
 import { Menu, MenuItem } from '@mui/material';
 import Like from '../Like'
+import ConfirmModal from '../modals/ConfirmModal';
 
 const Comment = ({
     id,
@@ -37,6 +38,7 @@ const Comment = ({
 
     //comment actions
     const [actionBtn, setActionBtn] = useState(null);
+    const [deleteCommentDialog, setDeleteCommentDialog] = useState(false)
     const handleActionClick = (event) => {
         setActionBtn(event.currentTarget);
     };
@@ -52,6 +54,14 @@ const Comment = ({
         setOptimisticLiked(!optimisticLiked)
         setOptimisticLikesCount(optimisticLiked ? optimisticLikesCount - 1 : optimisticLikesCount + 1)
         toggleLike({ entityId: id, entityType: 'COMMENT' })
+    }
+
+    const handleDeleteComment = async (commentId) => {
+        await deleteComment(commentId).then((res) => {
+            console.log(res, res.status);
+            onCommentDelete(res, commentId);
+            setDeleteCommentDialog(false)
+        })
     }
 
     const isCommentOwner = currentUser?.id === commenterId
@@ -81,7 +91,8 @@ const Comment = ({
                     </div>
                 </div>
             </div>
-            <CommentActions anchorEl={actionBtn} setAnchorEl={setActionBtn} />
+            <CommentActions anchorEl={actionBtn} setAnchorEl={setActionBtn} deleteComment={() => { setDeleteCommentDialog(true); setActionBtn(null) }} />
+            <ConfirmModal open={deleteCommentDialog} onClose={() => setDeleteCommentDialog(false)} onConfirm={() => handleDeleteComment(id)} title={'Delete the comment?'} message={'Are you sure that you want to delete the comment?'} confirmButtonText={'Yes'} cancelButtonText={'No'} />
         </div>
     )
 }

@@ -112,6 +112,11 @@ public class FavoriteService implements IFavoriteService {
     }
   }
 
+  @Override
+  public boolean isFavorite(Long postId) {
+    return findActiveBySelectorIdPostId(postId).isPresent();
+  }
+
 
   private void validateFavoriteOwner(Long selectorId, boolean noPermission) throws IllegalAccessException {
     Long requestOwner = emailPasswordAuthProvider.getAuthenticationPrincipal();

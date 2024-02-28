@@ -3,38 +3,57 @@ import { Dialog, DialogContent, DialogTitle } from "@mui/material";
 import { TextareaAutosize } from "@mui/material";
 import PropTypes from 'prop-types'
 import { BlueRoundedButton } from "../../buttons";
-import styles from './createPost.module.scss'
 import { useSessionStorage } from "usehooks-ts";
-import { useCreatePostMutation } from "../../../store/services/postService";
+import { useCreatePostMutation, useEditPostMutation } from "../../../store/services/postService";
 import { CiImageOn } from "react-icons/ci";
 import MemoMediaUpload from "../MediaUpload";
+import Attachment from "./Attachment";
+import styles from './createPost.module.scss'
 
-const CreatePostModal = (props) => {
-  const { onClose, open, onSuccess } = props;
+const CreateEditPostModal = (props) => {
+  const { onClose, open, onSuccess, type = 'create', postData } = props;
   const [mediaUploadOpen, setMediaUploadOpen] = useState(false)
-  const [imageAttachments, setImageAttachments] = useState([])
+  const [imageAttachments, setImageAttachments] = useSessionStorage('postAttachments', []);
 
   const [createPost] = useCreatePostMutation();
+  const [editPost] = useEditPostMutation();
 
   const handleClose = () => {
     onClose();
   };
 
   const [postContent, setPostContent] = useSessionStorage('postContent', '');
+  const [editPostContent, setEditPostContent] = useState(postData?.textContent || '')
 
   const handleListItemClick = async () => {
-    createPost({ textContent: postContent, attachments: imageAttachments }).then((res) => {
-      setPostContent('')
-      onSuccess({
-        ...res.data
-      });
-      onClose();
-    })
+    if (type === 'create') {
+      createPost({ textContent: postContent, attachments: imageAttachments }).then((res) => {
+        setPostContent('')
+        setImageAttachments([])
+        onSuccess({
+          ...res.data
+        });
+        onClose();
+      })
+    } else {
+      editPost({ id: postData.id, textContent: editPostContent }).then((res) => {
+        setPostContent('')
+        setImageAttachments([])
+        onSuccess({
+          ...res.data
+        });
+        onClose();
+      })
+    }
   };
 
 
   const handleChange = (event) => {
     setPostContent(event.target.value);
+  };
+
+  const handleEditChange = (event) => {
+    setEditPostContent(event.target.value);
   };
 
   const handleOpenMediaUpload = () => {
@@ -47,6 +66,10 @@ const CreatePostModal = (props) => {
 
   const addImageAttachment = (url) => {
     setImageAttachments([...imageAttachments, url])
+  }
+
+  const onRemoveAttachment = (url) => {
+    setImageAttachments(imageAttachments.filter(attachment => attachment !== url))
   }
 
 
@@ -63,28 +86,31 @@ const CreatePostModal = (props) => {
         <DialogContent>
           <TextareaAutosize
             className={styles.textarea}
-            onChange={handleChange}
-            value={postContent}
+            onChange={type === 'create' ? handleChange : handleEditChange}
+            value={type === 'create' ? postContent : editPostContent}
             aria-label="post content text area"
             placeholder="What's on your mind?"
           />
         </DialogContent>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginBottom: '20px' }}>
-          {imageAttachments.map((attachment, index) => <img key={index} src={attachment
-          } alt="post attachment" style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '10px' }} />)}
-        </div>
-        <div onClick={handleOpenMediaUpload} style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '30px', marginLeft: '10px', cursor: 'pointer' }}><CiImageOn fontSize={30} /> <p>Add image</p></div>
-        <BlueRoundedButton onClick={handleListItemClick} disabled={postContent.length < 0}>Create a post</BlueRoundedButton>
+        {type === 'create' && <>
+          {imageAttachments.length > 0 && <div className={styles.attachments}>
+            {imageAttachments.map((attachment, index) => <Attachment key={index} url={attachment} onRemove={onRemoveAttachment} />)}
+          </div>}
+          <div onClick={handleOpenMediaUpload} style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '30px', marginLeft: '10px', cursor: 'pointer' }}><CiImageOn fontSize={30} /> <p>Add image</p></div>
+        </>}
+        <BlueRoundedButton onClick={handleListItemClick} disabled={postContent.length < 0}>{type === 'create' ? 'Create' : 'Edit'} a post</BlueRoundedButton>
       </Dialog>
-      <MemoMediaUpload customOptions={{ aspect: 1 / 1, minWidth: 800, width: 800, height: 800, minHeight: 800, x: 25, y: 25, field: 'postAttachment', callbackOnUpload: addImageAttachment, dropzoneDescription: 'Drag and drop your image' }} modalTitle="Upload an image to post" open={mediaUploadOpen} onClose={handleCloseMediaUpload} />
+      {type === 'create' && <MemoMediaUpload customOptions={{ aspect: 1 / 1, minWidth: 100, width: 1000, height: 1000, minHeight: 100, x: 25, y: 25, field: 'postAttachment', callbackOnUpload: addImageAttachment, dropzoneDescription: 'Drag and drop your image' }} modalTitle="Upload an image to post" open={mediaUploadOpen} onClose={handleCloseMediaUpload} />}
     </>
   );
 }
 
-CreatePostModal.propTypes = {
+CreateEditPostModal.propTypes = {
   onClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
-  onSuccess: PropTypes.func.isRequired
+  onSuccess: PropTypes.func.isRequired,
+  type: PropTypes.string,
+  postData: PropTypes.object
 };
 
-export default CreatePostModal
+export default CreateEditPostModal

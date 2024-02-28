@@ -6,7 +6,8 @@ import { Divider, Modal, Stack, Typography } from '@mui/material'
 import { Paper } from '@mui/material'
 
 import s from './RegisterConfirmModal.module.scss'
-import { BlueRoundedButton, GreenRoundedButton, RedRoundedButton } from '../../buttons'
+import { BlueRoundedButton } from '../../buttons'
+import ConfirmModal from '../ConfirmModal'
 import { useEffect } from 'react'
 import { API_URL } from '../../../api'
 
@@ -73,32 +74,15 @@ const RegisterConfirmModal = ({ open, onClose, email }) => {
 					</BlueRoundedButton>
 				</Paper>
 			</Modal>
-			<Modal
+			<ConfirmModal
 				open={preCloseModal}
 				onClose={() => setPreCloseModal(false)}
-				aria-labelledby="modal-modal-title"
-				aria-describedby="modal-modal-description"
-				className={s.modalInner}
-				disableAutoFocus
-			>
-				<Paper className={s.modalWrapper}>
-					<Stack gap="10px" width="100%">
-						<Typography variant="h4" fontSize="24px" fontWeight={900}>
-							Are you sure?
-						</Typography>
-						<Divider />
-						<Typography component="p" variant="subtitle1">
-							If you close this window, you will not be able to check immediately the confirmation status. Do you want to close it?
-						</Typography>
-					</Stack>
-					<GreenRoundedButton className={s.proceedButton} onClick={() => setPreCloseModal(false)}>
-						No
-					</GreenRoundedButton>
-					<RedRoundedButton className={s.proceedButton} onClick={() => { setWillToClose(true); setPreCloseModal(false) }}>
-						Yes
-					</RedRoundedButton>
-				</Paper>
-			</Modal>
+				onConfirm={() => { setWillToClose(true); setPreCloseModal(false) }}
+				title="Are you sure?"
+				message="If you close this window, you will not be able to check immediately the confirmation status. Do you want to close it?"
+				confirmButtonText="Yes"
+				cancelButtonText="No"
+			/>
 		</>
 	)
 }

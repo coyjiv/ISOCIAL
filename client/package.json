@@ -40,6 +40,7 @@
     "react-stomp-hooks": "^2.2.1",
     "sass": "^1.69.7",
     "sort-by": "^1.2.0",
+    "styled-components": "^6.1.8",
     "swiper": "^11.0.6",
     "usehooks-ts": "^2.9.5",
     "vite-plugin-svgr": "^4.2.0",

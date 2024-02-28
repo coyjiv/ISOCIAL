@@ -29,4 +29,6 @@ public interface IFavoriteService {
 
   void delete(Long id,boolean noPermission) throws IllegalAccessException, RequestValidationException;
 
+  boolean isFavorite(Long postId) throws EntityNotFoundException;
+
 }

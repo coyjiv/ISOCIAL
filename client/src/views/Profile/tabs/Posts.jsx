@@ -56,7 +56,10 @@ const Posts = () => {
   const addNewPost = (post) => {
     if (post) setPostsData([post, ...postsData])
     console.log('post', post);
+  }
 
+  const removePost = (postId) => {
+    setPostsData(postsData.filter(post => post.id !== postId))
   }
   const fetchData = () => {
     setPage(page + 1);
@@ -128,6 +131,7 @@ const Posts = () => {
                     commentsCount={post?.commentsCount}
                     recentComments={post?.recentComments}
                     liked={post.liked}
+                    removePost={() => removePost(post.id)}
                   />)}
                 </InfiniteScroll>}
                 {/* <PostsWrapper /> */}

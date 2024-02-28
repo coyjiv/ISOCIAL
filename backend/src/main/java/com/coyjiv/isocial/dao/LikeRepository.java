@@ -33,7 +33,9 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
   void deleteByUserIdAndEntityIdAndEntityType(@Param("userId") Long userId,
                                               @Param("entityId") Long entityId,
                                               @Param("entityType") LikeableEntity entityType);
-
+  @Query("FROM Like l WHERE l.entityId = :entityId AND l.entityType = :entityType")
+  List<Like> findByEntityIdAndEntityTypeNonPageable(@Param("entityId") Long entityId,
+                                                    @Param("entityType") LikeableEntity entityType);
   @Query("select l from Like l where l.entityId = :entityId and l.entityType = :entityType order by l.creationDate desc")
   List<Like> getRecentLikes(@Param("entityId") Long entityId, @Param("entityType") LikeableEntity entityType,
                             Pageable pageable);

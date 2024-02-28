@@ -9,6 +9,7 @@ import com.coyjiv.isocial.domain.User;
 import com.coyjiv.isocial.dto.respone.favorite.FavoriteResponseDto;
 import com.coyjiv.isocial.dto.respone.post.PostResponseDto;
 import com.coyjiv.isocial.service.comment.ICommentService;
+import com.coyjiv.isocial.service.favorite.IFavoriteService;
 import com.coyjiv.isocial.service.like.ILikeService;
 import com.coyjiv.isocial.service.user.IUserService;
 import com.coyjiv.isocial.transfer.DtoMapperFacade;
@@ -24,10 +25,11 @@ public class PostResponseMapper extends DtoMapperFacade<Post, PostResponseDto> {
   private final ICommentService commentService;
   private final UserSearchResponseMapper userSearchResponseMapper;
   private final EmailPasswordAuthProvider emailPasswordAuthProvider;
+  private final IFavoriteService favoriteService;
 
   public PostResponseMapper(UserRepository userRepository, ILikeService likeService,
                             UserSearchResponseMapper userSearchResponseMapper, ICommentService commentService,
-                            EmailPasswordAuthProvider emailPasswordAuthProvider) {
+                            EmailPasswordAuthProvider emailPasswordAuthProvider, IFavoriteService favoriteService) {
 
     super(Post.class, PostResponseDto.class);
     this.userRepository = userRepository;
@@ -35,6 +37,7 @@ public class PostResponseMapper extends DtoMapperFacade<Post, PostResponseDto> {
     this.userSearchResponseMapper = userSearchResponseMapper;
     this.commentService = commentService;
     this.emailPasswordAuthProvider = emailPasswordAuthProvider;
+    this.favoriteService = favoriteService;
   }
 
   protected void decorateDto(PostResponseDto dto, Post entity) {
@@ -49,6 +52,7 @@ public class PostResponseMapper extends DtoMapperFacade<Post, PostResponseDto> {
       dto.setAuthorPremium(author.isPremium());
       dto.setAuthorPremiumNickname(author.getPremiumNickname());
       dto.setAuthorPremiumEmoji(author.getPremiumEmoji());
+      dto.setFavourite(favoriteService.isFavorite(entity.getId()));
       dto.setCommentsCount(commentService.countByPostId(entity.getId()));
       dto.setRecentComments(commentService.findByPostId(entity.getId(), 0, 3));
       dto.setLikesCount((long) likeService.countLikesByEntity(entity.getId(), entity.getEntityType()));

@@ -22,11 +22,11 @@ public interface IPostService {
 
   PostResponseDto create(PostRequestDto postRequestDto) throws RequestValidationException;
 
-  void update(Long id, UpdatePostRequestDto updatePostRequestDto) throws IllegalAccessException;
+  PostResponseDto update(Long id, UpdatePostRequestDto updatePostRequestDto) throws IllegalAccessException;
 
   void delete(Long id) throws IllegalAccessException, RequestValidationException;
 
-  Post repost(RePostRequestDto rePostRequestDto) throws IllegalAccessException, EntityNotFoundException;
+  PostResponseDto repost(RePostRequestDto rePostRequestDto) throws IllegalAccessException, EntityNotFoundException;
 
 
 }
