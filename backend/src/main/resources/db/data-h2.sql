@@ -76,3 +76,12 @@ INSERT INTO public.comments (commenter_id, post_id, text, creation_date, last_mo
 VALUES (5, 5, '55555555', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
 
 
+INSERT INTO public.friends (requester_id, addresser_id, status, creation_date, last_modified_date, is_active)
+VALUES (4, 1, 'FRIEND', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE);
+INSERT INTO public.friends (requester_id, addresser_id, status, creation_date, last_modified_date, is_active)
+VALUES (3, 1, 'REQUEST_SENT', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE);
+INSERT INTO public.friends (requester_id, addresser_id, status, creation_date, last_modified_date, is_active)
+VALUES (1, 5, 'REQUEST_SENT', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE);
+INSERT INTO public.friends (requester_id, addresser_id, status, creation_date, last_modified_date, is_active)
+VALUES (6, 1, 'REQUEST_SENT', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE);
+
