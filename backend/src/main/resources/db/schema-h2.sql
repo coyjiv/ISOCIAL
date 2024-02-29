@@ -52,7 +52,7 @@ CREATE TABLE public.messages
     sender_id          INT,
     status             VARCHAR(50) NOT NULL DEFAULT 'SENT',
     text               VARCHAR(1000),
-    attachements       VARCHAR ARRAY,
+    attachments       VARCHAR ARRAY,
     is_edited          BOOLEAN,
     creation_date      TIMESTAMP,
     last_modified_date TIMESTAMP,
