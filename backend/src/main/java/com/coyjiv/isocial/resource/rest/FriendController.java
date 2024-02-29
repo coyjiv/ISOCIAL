@@ -1,6 +1,7 @@
 package com.coyjiv.isocial.resource.rest;
 
 
+
 import com.coyjiv.isocial.dto.respone.friend.FriendResponseDto;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.service.friend.FriendService;
@@ -28,7 +29,7 @@ public class FriendController {
 
   @PostMapping()
   public ResponseEntity<String> sendFriendRequest(@RequestParam Long addresserId)
-    throws EntityNotFoundException, IllegalAccessException {
+          throws EntityNotFoundException, IllegalAccessException {
     boolean result = friendService.sendFriendRequest(addresserId);
     if (result) {
       return ResponseEntity.ok("Request sent successfully");
@@ -47,7 +48,7 @@ public class FriendController {
 
   @PostMapping("/decline")
   public ResponseEntity<String> declineFriendRequest(@RequestParam Long friendId) throws IllegalAccessException {
-    boolean result = friendService.declineOrCancelFriendRequest(friendId);
+    boolean result = friendService.declineFriendRequest(friendId);
     if (result) {
       return ResponseEntity.ok("Declined");
     }
@@ -55,7 +56,7 @@ public class FriendController {
   }
 
   @DeleteMapping()
-  public ResponseEntity<String> deleteFriend(@RequestParam Long friendId) {
+  public ResponseEntity<String> deleteFriend(@RequestParam Long friendId) throws IllegalAccessException {
     boolean result = friendService.deleteFriend(friendId);
     if (result) {
       return ResponseEntity.ok("Deleted");
@@ -69,45 +70,6 @@ public class FriendController {
                                                                @RequestParam(defaultValue = "10") @Min(0) Integer size) {
     List<FriendResponseDto> friends = friendService.findAllFriends(userId, page, size);
     return ResponseEntity.ok(friends);
-  }
-
-  @GetMapping("/friendsCount/{userId}")
-  public ResponseEntity<Long> getFriendsCount(@PathVariable Long userId) {
-    try {
-      if (userId == null) {
-        return ResponseEntity.status(400).body(0L);
-      } else {
-        Long count = friendService.getFriendsCount(userId);
-        return ResponseEntity.ok(count);
-      }
-
-    } catch (Exception e) {
-      return ResponseEntity.status(400).body(0L);
-    }
-
-  }
-
-  @GetMapping("/subscribersCount/{userId}")
-  public ResponseEntity<Long> getSubscribersCount(@PathVariable Long userId) {
-    try {
-      if (userId == null) {
-        return ResponseEntity.status(400).body(0L);
-      } else {
-        Long count = friendService.getSubscribersCount(userId);
-        return ResponseEntity.ok(count);
-      }
-
-    } catch (Exception e) {
-      return ResponseEntity.status(400).body(0L);
-    }
-  }
-
-  @GetMapping("/availableFriendRequests")
-  public ResponseEntity<List<FriendResponseDto>> availableFriendRequests(@RequestParam Long userId) {
-    if (userId == null) {
-      return ResponseEntity.badRequest().body(null);
-    }
-    return ResponseEntity.ok(friendService.availableFriendRequests(userId));
   }
 
 

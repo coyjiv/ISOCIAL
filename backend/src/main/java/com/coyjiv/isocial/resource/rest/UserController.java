@@ -28,7 +28,7 @@ import java.util.Map;
 public class UserController {
   private final IUserService userService;
 
-  @GetMapping
+  @GetMapping("/")
   public ResponseEntity<?> findAll(@RequestParam(defaultValue = "0") @Min(0) Integer page,
                                    @RequestParam(defaultValue = "10") @Min(0) Integer size) {
     return ResponseEntity.ok(userService.findAllActive(page, size));
@@ -47,7 +47,7 @@ public class UserController {
   }
 
   @PatchMapping("/{id}")
-  public ResponseEntity<?> update(@PathVariable("id") @Min(0) Long id, @RequestBody Map<Object, Object> fields)
+  public ResponseEntity<?> update(@PathVariable("id") @Min(0) Long id, @RequestBody Map<String, String> fields)
           throws EntityNotFoundException, IllegalAccessException {
     userService.update(id, fields);
     return ResponseEntity.status(204).build();

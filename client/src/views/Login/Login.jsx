@@ -1,67 +1,52 @@
 //libs
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { useEffect } from "react";
+import {Link, useNavigate, useSearchParams} from "react-router-dom";
+import {useEffect} from "react";
 //components
 import LoginForm from './LoginForm';
 //styles
 import styles from './styles.module.scss'
 //images
 import GLink from './icons/google_icon.svg';
+import { API_URL } from "../../api/config";
 
 const Login = () => {
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
-    const [userId, setUserId] = useLocalStorage('userId', null);
-
-    useDocumentTitle('Login')
 
     useEffect(() => {
-        (async () => {
-            const accessQuery = searchParams.get("access");
-            const refreshQuery = searchParams.get("refresh");
-            if (accessQuery && refreshQuery) {
-                console.log('accessQuery', accessQuery);
-                console.log('refreshQuery', refreshQuery);
-                setSearchParams('');
-                const decoded = await jwtDecode(accessQuery);
-
-                if (userId !== decoded.id) {
-                    setUserId(parseInt(decoded.id));
-                }
-                localStorage.setItem("access", accessQuery);
-                localStorage.setItem("refresh", accessQuery);
-                navigate("/");
-            }
+        const accessQuery = searchParams.get("access");
+        const refreshQuery = searchParams.get("refresh");
+        if (accessQuery && refreshQuery) {
+            setSearchParams('');
+            localStorage.setItem("access", accessQuery);
+            localStorage.setItem("refresh", accessQuery);
+            navigate("/");
+        }
 
 
-            const access = localStorage.getItem("access");
-            const refresh = localStorage.getItem("refresh");
-            if (refresh || access) {
-                navigate("/")
-            }
-
-        })();
+        const access = localStorage.getItem("access");
+        const refresh = localStorage.getItem("refresh");
+        if (refresh || access) {
+            navigate("/")
+        }
         //eslint-disable-next-line
     }, []);
 
 
     return (
         <div className={styles.container}>
-            <div className={styles.logoWrapper}>
-                <h1 className={styles.logo}>iSocial</h1>
-                <Typography className={styles.slogan}>iSpeak. iLike. iSocial.</Typography>
-            </div>
-            <div className={styles.formWrapper}>
+            <h1 className={styles.logo}>ISOCIAL</h1>
+            <div className={styles.form_wrapper}>
                 <div className={styles.body}>
+                    {API_URL}
                     <LoginForm/>
                     <Link to={'/forgot-password'} className={styles.forgot_password}>Forgot Password</Link>
                 </div>
                 <div className={styles.footer}>
-                    <Link to={'/register'} className={styles.registrationBtn}>Create new account</Link>
+                    <Link to={'/registration'} className={styles.registation_btn}>Create new account</Link>
                     <span>OR</span>
-                    <a className={styles.signInWithGoogleBtn} href={`https://${window.location.host}/oauth2/authorization/google`}>
-                        <img src={GLink} alt="google icon" className={styles.google} />
-                        <Typography>Continue with Google</Typography>
+                    <a href="http://localhost:9000/oauth2/authorization/google">
+                        <img src={GLink} alt="google icon" className={styles.google}/>
                     </a>
                 </div>
             </div>

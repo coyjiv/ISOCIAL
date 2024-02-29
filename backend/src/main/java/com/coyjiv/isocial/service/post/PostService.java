@@ -10,7 +10,6 @@ import com.coyjiv.isocial.dto.request.post.UpdatePostRequestDto;
 import com.coyjiv.isocial.dto.respone.post.PostResponseDto;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.exceptions.RequestValidationException;
-import com.coyjiv.isocial.service.favorite.IFavoriteService;
 import com.coyjiv.isocial.transfer.post.PostRequestMapper;
 import com.coyjiv.isocial.transfer.post.PostResponseMapper;
 import com.coyjiv.isocial.transfer.post.RePostRequestMapper;
@@ -34,7 +33,6 @@ public class PostService implements IPostService {
   private final PostResponseMapper postResponseMapper;
   private final EmailPasswordAuthProvider emailPasswordAuthProvider;
   private final UserRepository userRepository;
-  private final IFavoriteService favoriteService;
 
   @Transactional(readOnly = true)
   @Override
@@ -104,35 +102,25 @@ public class PostService implements IPostService {
 
   @Override
   @Transactional
-  public void delete(Long id) throws IllegalAccessException, RequestValidationException {
+  public void delete(Long id) throws IllegalAccessException {
     Optional<Post> postToDeactivate = postRepository.findActiveById(id);
     if (postToDeactivate.isPresent()) {
       Post post = postToDeactivate.get();
       validateRequestOwner(post.getAuthorId());
       post.setActive(false);
       postRepository.save(post);
-      favoriteService.findActiveByPostId(id).forEach(entry -> {
-        try {
-          favoriteService.delete(entry.getId(), false);
-        } catch (IllegalAccessException | RequestValidationException e) {
-          throw new RuntimeException(e);
-        }
-      });
     }
     List<Post> repostedToDeactivate = postRepository.findAllActiveReposts(id);
     if (!repostedToDeactivate.isEmpty()) {
       repostedToDeactivate.forEach(entry -> {
+
         entry.setActive(false);
         postRepository.save(entry);
-        favoriteService.findActiveByPostId(entry.getId()).forEach(en -> {
-          try {
-            favoriteService.delete(en.getId(), false);
-          } catch (IllegalAccessException | RequestValidationException e) {
-            throw new RuntimeException(e);
-          }
-        });
+
       });
     }
+
+
   }
 
   private void validateRequestOwner(Long authorId) throws IllegalAccessException {

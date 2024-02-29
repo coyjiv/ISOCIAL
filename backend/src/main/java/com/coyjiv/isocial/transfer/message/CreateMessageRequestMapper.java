@@ -22,11 +22,11 @@ public class CreateMessageRequestMapper extends DtoMapperFacade<Message, CreateM
   @Override
   protected void decorateEntity(Message entity, CreateMessageRequestDto dto) {
     entity.setStatus(MessageStatus.SENT);
-    entity.setEdited(false);
+    entity.setEditted(false);
     entity.setActive(true);
     entity.setSenderId(authProvider.getAuthenticationPrincipal());
     if (dto.getAttachements() == null) {
-      entity.setAttachments(List.of());
+      entity.setAttachements(List.of());
     }
     if (dto.getText() == null) {
       entity.setText("");

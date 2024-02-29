@@ -23,7 +23,7 @@ public interface IPostService {
 
   void update(Long id, UpdatePostRequestDto updatePostRequestDto) throws IllegalAccessException;
 
-  void delete(Long id) throws IllegalAccessException, RequestValidationException;
+  void delete(Long id) throws IllegalAccessException;
 
   Post repost(RePostRequestDto rePostRequestDto) throws IllegalAccessException, EntityNotFoundException;
 

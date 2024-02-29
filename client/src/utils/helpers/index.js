@@ -1,1 +1,0 @@
-export { getCurrentData } from './getCurrentData'

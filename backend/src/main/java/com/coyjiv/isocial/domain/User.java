@@ -3,8 +3,6 @@ package com.coyjiv.isocial.domain;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
@@ -50,14 +48,9 @@ public class User extends AbstractEntity {
   @Column(name = "bio")
   private String bio;
 
-  @Enumerated(EnumType.STRING)
-  @Column(name = "gender")
-  private UserGender gender;
-
   @Column(name = "is_private")
   private boolean isPrivate;
 
-  @Enumerated(EnumType.STRING)
   @Column(name = "activity_status")
   private UserActivityStatus activityStatus;
 
@@ -72,14 +65,4 @@ public class User extends AbstractEntity {
 
   @ManyToMany(mappedBy = "users")
   private List<Chat> chats;
-
-  @Column(name = "is_premium")
-  private boolean isPremium;
-
-  @Column(name = "premium_nickname")
-  private String premiumNickname;
-
-  @Column(name = "premium_emoji")
-  private String premiumEmoji;
-
 }

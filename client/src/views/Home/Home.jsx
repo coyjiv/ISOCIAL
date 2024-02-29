@@ -1,13 +1,12 @@
 import { withLayout } from "../../hooks/withLayout"
-import { Link } from "react-router-dom";
-import { useDocumentTitle } from "usehooks-ts";
+import {Link} from "react-router-dom";
 
 const HomePage = () => {
-  useDocumentTitle('Feed')
   return (
     <Link to="/login">Log In</Link>
   )
 }
 
-const Home = withLayout(HomePage);
-export default Home;
+
+const Home = withLayout(HomePage)
+export default Home

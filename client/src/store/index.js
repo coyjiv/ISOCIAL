@@ -1,16 +1,10 @@
-import { profileApi } from './services/profileService'
-import { friendsApi } from './services/friendService'
-
 import { configureStore } from '@reduxjs/toolkit'
-import { setupListeners } from '@reduxjs/toolkit/query'
+import users from './slices/users'
+import profile from './slices/profile'
 
 export const store = configureStore({
   reducer: {
-    [profileApi.reducerPath]: profileApi.reducer,
-    [friendsApi.reducerPath]: friendsApi.reducer,
+    users,
+    profile
   },
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(profileApi.middleware, friendsApi.middleware),
 })
-
-setupListeners(store.dispatch)

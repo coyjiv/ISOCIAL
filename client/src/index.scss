@@ -1,12 +1,5 @@
-@use './styles/variables/colors';
-
 * {
   box-sizing: border-box;
-  font-family: 'Segoe UI', 'Segoe UI Historic', -apple-system,
-  BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji',
-  'Segoe UI Emoji', 'Segoe UI Symbol';
-  font-style: normal;
-  line-height: 1;
 
   &:focus {
     outline: none;
@@ -154,7 +147,7 @@ table {
 @font-face {
   font-family: 'Segoe UI';
   src: url('assets/fonts/SegoeUI.woff2') format('woff2'),
-    url('assets/fonts/SegoeUI.woff') format('woff');
+  url('assets/fonts/SegoeUI.woff') format('woff');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -163,7 +156,7 @@ table {
 @font-face {
   font-family: 'Segoe UI';
   src: url('assets/fonts/SegoeUI-BoldItalic.woff2') format('woff2'),
-    url('assets/fonts/SegoeUI-BoldItalic.woff') format('woff');
+  url('assets/fonts/SegoeUI-BoldItalic.woff') format('woff');
   font-weight: bold;
   font-style: italic;
   font-display: swap;
@@ -172,7 +165,7 @@ table {
 @font-face {
   font-family: 'Segoe UI';
   src: url('assets/fonts/SegoeUI-Italic.woff2') format('woff2'),
-    url('assets/fonts/SegoeUI-Italic.woff') format('woff');
+  url('assets/fonts/SegoeUI-Italic.woff') format('woff');
   font-weight: normal;
   font-style: italic;
   font-display: swap;
@@ -181,15 +174,14 @@ table {
 @font-face {
   font-family: 'Segoe UI';
   src: url('assets/fonts/SegoeUI-Bold.woff2') format('woff2'),
-    url('assets/fonts/SegoeUI-Bold.woff') format('woff');
+  url('assets/fonts/SegoeUI-Bold.woff') format('woff');
   font-weight: bold;
   font-style: normal;
   font-display: swap;
 }
 
 body {
-  font-family: 'Segoe UI', sans-serif;
+  font-family: "Segoe UI", sans-serif;
   font-style: normal;
   line-height: 1;
-  background-color: colors.$wash;
 }

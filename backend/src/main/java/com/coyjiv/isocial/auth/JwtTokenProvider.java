@@ -57,8 +57,6 @@ public class JwtTokenProvider {
             new UsernamePasswordAuthenticationToken(email, password, null)
     );
 
-    SecurityContextHolder.getContext().setAuthentication(authentication);
-
     return Jwts.builder().setIssuer("ISOCIAL").setSubject("Access Jwt Token")
             .claim("id", authentication.getName())
             .claim("authorities", getAuthorities(authentication.getAuthorities()))
@@ -109,12 +107,14 @@ public class JwtTokenProvider {
               .parseClaimsJws(token)
               .getBody();
 
-      String id = String.valueOf(claims.get("id"));
-      String authorities = String.valueOf(claims.get("authorities"));
-      Authentication authentication = new UsernamePasswordAuthenticationToken(
-              id, null, AuthorityUtils.commaSeparatedStringToAuthorityList(authorities)
-      );
-      SecurityContextHolder.getContext().setAuthentication(authentication);
+      if (emailPasswordAuthProvider.getSecurityContextAuthentication() == null) {
+        String id = String.valueOf(claims.get("id"));
+        String authorities = String.valueOf(claims.get("authorities"));
+        Authentication authentication = new UsernamePasswordAuthenticationToken(
+                id, null, AuthorityUtils.commaSeparatedStringToAuthorityList(authorities)
+        );
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+      }
 
       return true;
     } catch (Exception e) {

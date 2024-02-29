@@ -29,16 +29,16 @@ public class EmailPasswordAuthProvider implements AuthenticationProvider {
   @Override
   public Authentication authenticate(Authentication authentication) throws AuthenticationException {
     String username = authentication.getName();
-    String password = authentication.getCredentials() == null ? null : authentication.getCredentials().toString();
-
+    String password = authentication.getCredentials().toString();
 
     User user = userRepository.findActiveByEmail(username).orElseThrow(() ->
-      new UsernameNotFoundException("Active user not found with email: " + username));
+            new UsernameNotFoundException("Active user not found with email: " + username));
 
-    if (password != null && !passwordEncoder.matches(password, user.getPassword())) {
+    if (passwordEncoder.matches(password, user.getPassword())) {
+      return new UsernamePasswordAuthenticationToken(user.getId(), password, getGrantedAuthorities(user.getRoles()));
+    } else {
       throw new BadCredentialsException("Incorrect password for user: " + username);
     }
-    return new UsernamePasswordAuthenticationToken(user.getId(), password, getGrantedAuthorities(user.getRoles()));
   }
 
   private List<GrantedAuthority> getGrantedAuthorities(Set<Role> authorities) {

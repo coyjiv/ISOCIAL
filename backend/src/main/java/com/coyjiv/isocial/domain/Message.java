@@ -30,9 +30,9 @@ public class Message extends AbstractEntity {
   @Column(name = "text")
   private String text;
 
-  @Column(name = "attachments")
-  private List<String> attachments;
+  @Column(name = "attachements")
+  private List<String> attachements;
 
-  @Column(name = "is_edited")
-  private boolean isEdited;
+  @Column(name = "is_editted")
+  private boolean isEditted;
 }

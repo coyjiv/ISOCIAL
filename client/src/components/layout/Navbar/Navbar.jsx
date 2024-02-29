@@ -2,10 +2,10 @@ import { Typography } from "@mui/material"
 import { navbarLinks } from "../../../data/navbarLinks";
 import MessengerButton from "./actions/MessengerButton";
 import { HeaderLinks } from "./HeaderLinks";
+import styles from "./navbar.module.scss"
 import NotificationButton from "./actions/NotificationButton";
 import AvatarButton from "./actions/AvatarButton";
 import { Link } from "react-router-dom";
-import styles from "./navbar.module.scss"
 
 const Navbar = () => {
   return (
