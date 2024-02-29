@@ -5,31 +5,31 @@ import { FaRegBookmark, FaBookmark } from "react-icons/fa6";
 import gsap from 'gsap';
 import styles from './save.module.scss';
 
-const SavePostIcon = ({ favorite, hovered }) => {
+const SavePostIcon = ({ saved, hovered }) => {
     const container = useRef(null);
 
     useGSAP(() => {
-        if (favorite) {
-            gsap.timeline({ repeat: 0 }).to('.favorite', {
+        if (saved) {
+            gsap.timeline({ repeat: 0 }).to('.saved', {
                 scale: 1.4,
                 rotateY: 180,
                 duration: 0.3,
-            }).to('.favorite', {
+            }).to('.saved', {
                 scale: 1,
                 duration: 0.3,
             });
         } else {
-            gsap.timeline({ repeat: 0 }).to('.nonfavorite', {
+            gsap.timeline({ repeat: 0 }).to('.nonsaved', {
                 scale: 1.4,
                 rotateY: 180,
                 duration: 0.3,
-            }).to('.nonfavorite', {
+            }).to('.nonsaved', {
                 scale: 1,
                 duration: 0.3,
             });
         }
 
-    }, { dependencies: [favorite], scope: container })
+    }, { dependencies: [saved], scope: container })
 
     useGSAP(() => {
         if (hovered) {
@@ -46,12 +46,12 @@ const SavePostIcon = ({ favorite, hovered }) => {
     }, { dependencies: [hovered], scope: container })
 
     return (
-        <span className={styles.saveWrapper}>{favorite ? <FaBookmark className="favorite" /> : <FaRegBookmark className="nonfavorite" />}</span>
+        <span ref={container} className={styles.saveWrapper}>{saved ? <FaBookmark className="saved" /> : <FaRegBookmark className="nonsaved" />}</span>
     )
 }
 
 SavePostIcon.propTypes = {
-    favorite: PropTypes.bool,
+    saved: PropTypes.bool,
     hovered: PropTypes.bool,
 }
 

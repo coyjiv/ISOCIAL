@@ -4,8 +4,7 @@ import gsap from "gsap";
 import { useGSAP } from "@gsap/react";
 
 import PropTypes from "prop-types";
-import { IoHeart } from "react-icons/io5";
-import { IoIosHeartEmpty } from "react-icons/io";
+import { FaRegHeart, FaHeart } from "react-icons/fa6";
 
 import styles from './like.module.scss'
 
@@ -49,7 +48,7 @@ const Like = ({ liked, hovered }) => {
         }
     }, { dependencies: [hovered], scope: container })
     return (
-        <span ref={container} className={styles.likeWrapper}>{liked ? <IoHeart className="liked" style={{ color: 'red' }} /> : <IoIosHeartEmpty className="nonliked" />}</span>
+        <span ref={container} className={styles.likeWrapper}>{liked ? <FaHeart className="liked" style={{ color: 'red' }} /> : <FaRegHeart className="nonliked" />}</span>
     )
 }
 

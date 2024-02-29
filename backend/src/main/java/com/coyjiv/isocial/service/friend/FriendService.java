@@ -94,8 +94,6 @@ public class FriendService implements IFriendService {
       return false;
     }
 
-    System.out.println(friendRequest.get().getStatus());
-
 
     if (friendRequest.get().getStatus() == UserFriendStatus.REQUEST_SENT
       || friendRequest.get().getStatus() == UserFriendStatus.REQUEST_RECEIVED) {

@@ -113,6 +113,8 @@ const Post = ({
 
     const handleOpenComments = () => { };
 
+    const handleSavePost = () => { }
+
 
     return (
         <>
@@ -206,7 +208,7 @@ Post.propTypes = {
 export default Post;
 
 
-const PostActionButtons = ({ handleLikePost, handleOpenComments, optimisticLiked, optimisticFavourite, commentPanelOpen }) => {
+const PostActionButtons = ({ handleLikePost, handleOpenComments, optimisticLiked, optimisticFavourite, commentPanelOpen, handleSavePost }) => {
     const likesRef = useRef(null)
     const commentRef = useRef(null)
     const shareRef = useRef(null)
@@ -231,8 +233,8 @@ const PostActionButtons = ({ handleLikePost, handleOpenComments, optimisticLiked
                 <SharePostIcon shared={false} hovered={isShareHover} />
                 <span>Share</span>
             </div>
-            <div ref={saveRef} className={styles.reaction}>
-                <SavePostIcon favorite={optimisticFavourite} hovered={isSaveHover} />
+            <div ref={saveRef} className={styles.reaction} onClick={handleSavePost}>
+                <SavePostIcon saved={optimisticFavourite} hovered={isSaveHover} />
                 <span>Save</span>
             </div>
         </div>

@@ -9,20 +9,20 @@ const CommentPostIcon = ({ clicked, hovered }) => {
     const container = useRef(null);
     useGSAP(() => {
         if (clicked) {
-            gsap.timeline({ repeat: 0 }).to('.favourite', {
+            gsap.timeline({ repeat: 0 }).to('.comment', {
                 scale: 1.4,
                 rotateY: 180,
                 duration: 0.3,
-            }).to('.favourite', {
+            }).to('.comment', {
                 scale: 1,
                 duration: 0.3,
             });
         } else {
-            gsap.timeline({ repeat: 0 }).to('.nonfavourite', {
+            gsap.timeline({ repeat: 0 }).to('.noncomment', {
                 scale: 1.4,
                 rotateY: 180,
                 duration: 0.3,
-            }).to('.nonfavourite', {
+            }).to('.noncomment', {
                 scale: 1,
                 duration: 0.3,
             });
@@ -42,10 +42,10 @@ const CommentPostIcon = ({ clicked, hovered }) => {
                 duration: 0.3,
             });
         }
-    }, { dependencies: [clicked], scope: container })
+    }, { dependencies: [hovered], scope: container })
     return (
         <span ref={container} className={styles.commentWrapper}>
-            {clicked ? <FaComment className="favourite" /> : <FaRegComment className="nonfavourite" />}
+            {clicked ? <FaComment className="comment" /> : <FaRegComment className="noncomment" />}
         </span>
     )
 }

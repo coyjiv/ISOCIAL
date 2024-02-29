@@ -100,8 +100,6 @@ public class LikeService implements ILikeService {
   @Transactional
   @Override
   public void toggleLike(Long entityId, LikeableEntity entityType) {
-    System.out.println("entityId: " + entityId);
-    System.out.println("entityType: " + entityType);
     Long userId = emailPasswordAuthProvider.getAuthenticationPrincipal();
 
     boolean exists = likeRepository.existsByUserIdAndEntityIdAndEntityType(userId, entityId, entityType);

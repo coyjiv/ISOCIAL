@@ -21,7 +21,7 @@ const SharePostIcon = ({ shared, hovered }) => {
         } else {
             gsap.timeline({ repeat: 0 }).to('.nonshared', {
                 scale: 1.4,
-                rotateY: 180,
+                rotateY: 0,
                 duration: 0.3,
             }).to('.nonshared', {
                 scale: 1,
@@ -45,7 +45,7 @@ const SharePostIcon = ({ shared, hovered }) => {
         }
     }, { dependencies: [hovered], scope: container })
     return (
-        <span className={styles.shareWrapper}>{shared ? <PiShareFill className="shared" style={{ color: 'red' }} /> : <PiShareFatBold className='nonshared' style={{ width: '18px', height: '18px', translate: '0 1px' }} />}</span>
+        <span ref={container} className={styles.shareWrapper}>{shared ? <PiShareFill className="shared" /> : <PiShareFatBold className='nonshared' style={{ width: '18px', height: '18px', translate: '0 1px' }} />}</span>
     )
 }
 
