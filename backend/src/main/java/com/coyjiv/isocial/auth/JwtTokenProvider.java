@@ -131,7 +131,7 @@ public class JwtTokenProvider {
 
   private Date getExpirationDate(int hours) {
     LocalDateTime now = LocalDateTime.now();
-    Instant instant = now.plusSeconds(hours).atZone(ZoneId.systemDefault()).toInstant();
+    Instant instant = now.plusHours(hours).atZone(ZoneId.systemDefault()).toInstant();
     return Date.from(instant);
   }
 
