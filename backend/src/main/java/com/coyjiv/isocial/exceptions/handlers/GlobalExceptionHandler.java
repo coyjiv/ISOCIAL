@@ -46,6 +46,11 @@ public class GlobalExceptionHandler {
     return ResponseEntity.status(400).body(exception.getMessage());
   }
 
+  @ExceptionHandler(NumberFormatException.class)
+  public ResponseEntity<String> handleNumberFormatException(NumberFormatException ex) {
+    return ResponseEntity.status(400).body(ex.getMessage());
+  }
+
   @ExceptionHandler(Exception.class)
   public ResponseEntity<?> handleUncheckedExceptions(Exception exception) {
     return ResponseEntity.status(500).build();

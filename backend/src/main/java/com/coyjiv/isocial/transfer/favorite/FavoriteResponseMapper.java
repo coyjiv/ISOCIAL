@@ -45,7 +45,7 @@ public class FavoriteResponseMapper extends DtoMapperFacade<Favorite, FavoriteRe
       if (!author.getAvatarsUrl().isEmpty()) {
         dto.setAuthorAvatar(author.getAvatarsUrl().get(0));
       }
-      dto.setAuthorFullNane(author.getFirstName() + " " + author.getLastName());
+      dto.setAuthorFullName(author.getFirstName() + " " + author.getLastName());
       dto.setAuthorLastSeen(author.getLastSeen());
       dto.setAuthorPremium(author.isPremium());
       dto.setAuthorPremiumNickname(author.getPremiumNickname());

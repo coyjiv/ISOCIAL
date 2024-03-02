@@ -1,0 +1,32 @@
+@import '../../styles/variables/colors.scss';
+
+.commentInput {
+  border-radius: 18px;
+  border: none;
+  padding: 10px 12px;
+  background-color: $wash;
+  width: 100%;
+  resize: none;
+  padding-right: 40px;
+}
+
+.inputCommentWrapper {
+  position: relative;
+}
+
+.inputSendBtn {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  > svg {
+    color: $primaryButtonBackground;
+    cursor: pointer;
+    transition: color 0.2s ease-in-out;
+  }
+  &:disabled {
+    > svg {
+      color: $grey;
+    }
+  }
+}

@@ -300,5 +300,40 @@ public class UserService implements IUserService {
     emailService.sendPasswordResetMessage(email, uuid);
   }
 
+  @Override
+  public String getAvatar(Long id) throws EntityNotFoundException {
+    return userRepository.findActiveById(id)
+      .map(User::getAvatar)
+      .orElseThrow(() -> new EntityNotFoundException("User not found"));
+  }
+
+  @Override
+  public String getFullName(Long id) throws EntityNotFoundException {
+    return userRepository.findActiveById(id)
+      .map(User::getFullName)
+      .orElseThrow(() -> new EntityNotFoundException("User not found"));
+  }
+
+  @Override
+  public boolean isPremium(Long commenterId) {
+    return userRepository.findActiveById(commenterId)
+      .map(User::isPremium)
+      .orElse(false);
+  }
+
+  @Override
+  public String getPremiumNickname(Long commenterId) {
+    return userRepository.findActiveById(commenterId)
+      .map(User::getPremiumNickname)
+      .orElse("");
+  }
+
+  @Override
+  public String getPremiumEmoji(Long commenterId) {
+    return userRepository.findActiveById(commenterId)
+      .map(User::getPremiumEmoji)
+      .orElse("");
+  }
+
 
 }

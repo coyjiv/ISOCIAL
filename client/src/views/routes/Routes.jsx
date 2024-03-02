@@ -15,75 +15,84 @@ import Confirmation from "../Confirmation/Confirmation";
 
 import ChatList from "../Chat/ChatList.jsx";
 import Chat from "../Chat/Chat.jsx";
-
+import Post from "../Post";
 
 import UpdatePassword from "../UpdatePassword";
-import {ErrorFallback} from "../../components/ErrorFallback/ErrorFallback";
+import { ErrorFallback } from "../../components/ErrorFallback/ErrorFallback";
 
 
 const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Home />,
+    errorElement: <ErrorFallback />,
+  },
+  {
+    path: "register",
+    element: <Register />,
+    errorElement: <ErrorFallback />,
+  },
+  {
+    path: "login",
+    element: <Login />,
+    errorElement: <ErrorFallback />,
+  },
+  {
+    path: "profile",
+    element: <Profile />,
+    errorElement: <ErrorFallback />,
+  },
+  {
+    path: "profile/:id",
+    element: <Profile />,
+    errorElement: <ErrorFallback />,
+  },
+  {
+    path: "profile/:id",
+    element: <Profile />
+  },
+  {
+    path: "settings",
+    element: <Settings />,
+    errorElement: <ErrorFallback />,
+  },
+  {
+    path: "friends",
+    element: <Friends />,
+    errorElement: <ErrorFallback />,
+  },
+  {
+    path: "watch",
+    element: <Videos />,
+    errorElement: <ErrorFallback />,
+  },
+  {
+    path: "groups",
+    element: <Groups />,
+    errorElement: <ErrorFallback />,
+  },
+  {
+    path: "feed",
+    element: <div>Users</div>,
+  },
+  {
+    path: "confirmation",
+    element: <Confirmation />,
+    errorElement: <ErrorFallback />,
+  },
+  {
+    path: "forgot-password",
+    element: <ForgotPassword />,
+    errorElement: <ErrorFallback />,
+  },
+  {
+    path: "forgot-password/:id",
+    element: <UpdatePassword />,
+  },
     {
-        path: "/",
-        element: <Home/>,
-        errorElement: <ErrorFallback/>,
-    },
-    {
-        path: "register",
-        element: <Register/>,
-        errorElement: <ErrorFallback/>,
-    },
-    {
-        path: "login",
-        element: <Login/>,
-        errorElement: <ErrorFallback/>,
-    },
-    {
-        path: "profile",
-        element: <Profile/>,
-        errorElement: <ErrorFallback/>,
-    },
-    {
-        path: "profile/:id",
-        element: <Profile/>,
-        errorElement: <ErrorFallback/>,
-    },
-    {
-        path: "profile/:id",
-        element: <Profile/>
-    },
-    {
-        path: "settings",
-        element: <Settings/>,
-        errorElement: <ErrorFallback/>,
-    },
-    {
-        path: "friends",
-        element: <Friends/>,
-        errorElement: <ErrorFallback/>,
-    },
-    {
-        path: "watch",
-        element: <Videos/>,
-        errorElement: <ErrorFallback/>,
-    },
-    {
-        path: "groups",
-        element: <Groups/>,
-        errorElement: <ErrorFallback/>,
-    },
-    {
-        path: "feed",
-        element: <div>Users</div>,
-    },
-    {
-        path: "confirmation",
-        element: <Confirmation/>,
-        errorElement: <ErrorFallback/>,
-    },
-    {
-        path: "forgot-password",
-        element: <ForgotPassword/>,
-        errorElement: <ErrorFallback/>,
+        path: "post/:id",
+        element: <Post />,
+        errorElement: <ErrorFallback />,
     },
     {
         path: "chats",
@@ -93,10 +102,6 @@ const router = createBrowserRouter([
         path: "chats/:id",
         element: <Chat/>,
     },
-    {
-        path: "forgot-password/:id",
-        element: <UpdatePassword/>,
-    }
 ]);
 
 export const App = () => <RouterProvider router={router}/>;
