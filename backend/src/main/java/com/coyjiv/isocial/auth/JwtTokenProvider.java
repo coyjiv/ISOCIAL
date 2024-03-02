@@ -101,25 +101,22 @@ public class JwtTokenProvider {
     return validateToken(token, getKey(jwtRefreshSecret));
   }
 
+
   private boolean validateToken(@NonNull String token, @NonNull Key secret) {
-    try {
-      Claims claims = Jwts.parserBuilder()
-              .setSigningKey(secret)
-              .build()
-              .parseClaimsJws(token)
-              .getBody();
+    Claims claims = Jwts.parserBuilder()
+            .setSigningKey(secret)
+            .build()
+            .parseClaimsJws(token)
+            .getBody();
 
-      String id = String.valueOf(claims.get("id"));
-      String authorities = String.valueOf(claims.get("authorities"));
-      Authentication authentication = new UsernamePasswordAuthenticationToken(
-              id, null, AuthorityUtils.commaSeparatedStringToAuthorityList(authorities)
-      );
-      SecurityContextHolder.getContext().setAuthentication(authentication);
+    String id = String.valueOf(claims.get("id"));
+    String authorities = String.valueOf(claims.get("authorities"));
+    Authentication authentication = new UsernamePasswordAuthenticationToken(
+            id, null, AuthorityUtils.commaSeparatedStringToAuthorityList(authorities)
+    );
+    SecurityContextHolder.getContext().setAuthentication(authentication);
 
-      return true;
-    } catch (Exception e) {
-      return false;
-    }
+    return true;
   }
 
 
