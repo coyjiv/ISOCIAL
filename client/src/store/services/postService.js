@@ -63,7 +63,17 @@ export const postsApi = friendsApi.injectEndpoints({
           method: 'POST',
         }
       },
-      invalidatesTags: [{ type: 'Posts' }],
+    }),
+    toggleSave: builder.mutation({
+      query: (postId) => {
+        return {
+          url: `favorites/toggle`,
+          method: 'POST',
+          data: {
+            selectedPostId: postId,
+          },
+        }
+      },
     }),
   }),
 })
@@ -77,4 +87,5 @@ export const {
   useDeletePostMutation,
   useCreatePostMutation,
   useToggleLikeMutation,
+  useToggleSaveMutation,
 } = postsApi

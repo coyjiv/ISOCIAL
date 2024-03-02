@@ -67,9 +67,7 @@ public class PostService implements IPostService {
     Pageable pageable = PageRequest.of(page, size, sort);
     Page<Post> postPage = postRepository.findActiveByAuthorId(id, pageable);
 
-    List<PostResponseDto> dtos = postPage.getContent().stream()
-      .map(postResponseMapper::convertToDto)
-      .toList();
+    List<PostResponseDto> dtos = postPage.getContent().stream().map(postResponseMapper::convertToDto).toList();
 
     boolean hasNext = postPage.hasNext();
 
@@ -137,10 +135,10 @@ public class PostService implements IPostService {
           throw new RuntimeException(e);
         }
       });
-      commentRepository.findAllActiveByPostIdNonPageable(id).forEach(entry ->{
+      commentRepository.findAllActiveByPostIdNonPageable(id).forEach(entry -> {
         entry.setActive(false);
         commentRepository.save(entry);
-      } );
+      });
       likeRepository.findByEntityIdAndEntityTypeNonPageable(id, POST).forEach(entry -> {
         likeRepository.deleteByUserIdAndEntityIdAndEntityType(entry.getUserId(), entry.getEntityId(), POST);
       });
@@ -150,10 +148,10 @@ public class PostService implements IPostService {
       repostedToDeactivate.forEach(entry -> {
         entry.setActive(false);
         postRepository.save(entry);
-        commentRepository.findAllActiveByPostIdNonPageable(entry.getId()).forEach(en ->{
+        commentRepository.findAllActiveByPostIdNonPageable(entry.getId()).forEach(en -> {
           en.setActive(false);
           commentRepository.save(en);
-        } );
+        });
         favoriteService.findActiveByPostId(entry.getId()).forEach(en -> {
           try {
             favoriteService.delete(en.getId(), false);
@@ -179,9 +177,7 @@ public class PostService implements IPostService {
 
   private void validateRePostDto(Post originalPost) throws IllegalAccessException {
     if (userRepository.findActiveById(originalPost.getAuthorId()).get().isPrivate()) {
-      throw new IllegalAccessException(
-              "User have no authorities to do this request."
-      );
+      throw new IllegalAccessException("User have no authorities to do this request.");
     }
   }
 
@@ -189,20 +185,16 @@ public class PostService implements IPostService {
   private void validateCreationPostDto(PostRequestDto postRequestDto) throws RequestValidationException {
     if (postRequestDto.getAttachments() != null && !postRequestDto.getAttachments().isEmpty()) {
       if (postRequestDto.getAttachments().stream().anyMatch(Objects::isNull)
-              ||
-              postRequestDto.getAttachments().stream().anyMatch(String::isBlank)
-      ) {
+        || postRequestDto.getAttachments().stream().anyMatch(String::isBlank)) {
         throw new RequestValidationException(
-                "Post should have text or attachments, attachments should not have empty strings or nulls"
-        );
+          "Post should have text or attachments, attachments should not have empty strings or nulls");
       }
     }
 
     if (postRequestDto.getTextContent() == null || postRequestDto.getTextContent().isBlank()) {
       if (postRequestDto.getAttachments() == null || postRequestDto.getAttachments().isEmpty()) {
         throw new RequestValidationException(
-                "Post should have text or attachments, attachments should not have empty strings or nulls"
-        );
+          "Post should have text or attachments, attachments should not have empty strings or nulls");
       }
     }
   }

@@ -7,9 +7,12 @@ import com.coyjiv.isocial.domain.Comment;
 import com.coyjiv.isocial.domain.Post;
 import com.coyjiv.isocial.dto.request.comment.DefaultCommentRequestDto;
 import com.coyjiv.isocial.dto.respone.comment.CommentResponseDto;
+import com.coyjiv.isocial.dto.respone.page.PageWrapper;
+import com.coyjiv.isocial.dto.respone.post.PostResponseDto;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.transfer.comment.CommentResponseMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -41,12 +44,18 @@ public class CommentService implements ICommentService {
 
   @Transactional(readOnly = true)
   @Override
-  public List<CommentResponseDto> findByPostId(Long id, int page, int size) throws EntityNotFoundException {
+  public PageWrapper<CommentResponseDto> findByPostId(Long id, int page, int size) throws EntityNotFoundException {
     if (postRepository.findActiveById(id).isPresent()) {
       Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "id"));
       Pageable pageable = PageRequest.of(page, size, sort);
-      return commentRepository.findByPostId(id, pageable).stream()
+      Page<Comment> postPage = commentRepository.findByPostId(id, pageable);
+
+      List<CommentResponseDto> dtos = commentRepository.findByPostId(id, pageable).stream()
         .map(commentResponseMapper::convertToDto).toList();
+
+      boolean hasNext = postPage.hasNext();
+
+      return new PageWrapper<>(dtos, hasNext);
     } else {
       throw new EntityNotFoundException("Comment not found");
     }
@@ -118,6 +127,18 @@ public class CommentService implements ICommentService {
       } else {
         throw new EntityNotFoundException("Post not found");
       }
+    } else {
+      throw new EntityNotFoundException("Comment not found");
+    }
+  }
+
+  @Override
+  public List<CommentResponseDto> findRecentByPostId(Long id) throws EntityNotFoundException {
+    if (postRepository.findActiveById(id).isPresent()) {
+      Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "id"));
+      Pageable pageable = PageRequest.of(0, 5, sort);
+      return commentRepository.findByPostId(id, pageable).stream()
+        .map(commentResponseMapper::convertToDto).toList();
     } else {
       throw new EntityNotFoundException("Comment not found");
     }

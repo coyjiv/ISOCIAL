@@ -2,7 +2,7 @@
 //libs
 import moment from "moment";
 import PropTypes from "prop-types";
-import { useRef, useState } from "react";
+import { useState } from "react";
 //styles
 import styles from './styles.module.scss'
 //images
@@ -12,24 +12,19 @@ import comment from './icons/comment.svg'
 // import CommentIcon from './icons/commentIcon.svg?react'
 // import likeIcon from './icons/likeIcon.svg'
 
-import { IoSend } from "react-icons/io5";
-import { TextareaAutosize, Menu, MenuItem } from "@mui/material";
+import { Menu, MenuItem } from "@mui/material";
 import { Link } from "react-router-dom";
-import { useToggleLikeMutation } from "../../store/services/postService";
-import { useHover } from "usehooks-ts";
+import { useToggleLikeMutation, useToggleSaveMutation } from "../../store/services/postService";
 import RecentComments from "./RecentComments";
-import Like from "../Like";
 import { useCreateCommentMutation } from "../../store/services/commentService";
-import { Form, Formik, Field } from "formik";
-import Spinner from "../Spinner";
 import PhotosCollage from "./PhotosCollage";
 import CreateEditPostModal from "../modals/CreatePost";
 import { placeholderAvatar } from "../../data/placeholders";
 import { useDeletePostMutation } from "../../store/services/postService";
 import ConfirmModal from "../modals/ConfirmModal";
-import CommentPostIcon from "../CommentPostIcon";
-import SavePostIcon from "../SavePostIcon";
-import SharePostIcon from "../SharePostIcon";
+import { CommentsModal } from "./CommentsModal";
+import { PostCommentInput } from "./PostCommentInput";
+import { PostActionButtons } from "./PostActionButtons";
 
 
 const Post = ({
@@ -56,12 +51,18 @@ const Post = ({
     const [optimisticFavourite, setOptimisticFavourite] = useState(favourite);
     const [editedModal, setEditedModal] = useState(false);
     const [deleteDialog, setDeleteDialog] = useState(false);
+    const [commentPanelOpen, setCommentPanelOpen] = useState(false);
+
+    console.log(optimisticFavourite, 'favourite');
 
     const isRepost = !!originalPostId;
-
+    console.log(isRepost, 'isRepost');
 
     const [toggleLike] = useToggleLikeMutation();
     const [deletePost] = useDeletePostMutation();
+    const [toggleSavePost] = useToggleSaveMutation();
+    const [postComment] = useCreateCommentMutation();
+
     const loggedUser = localStorage.getItem('userId');
     const isPostOwner = parseInt(loggedUser) === authorId;
 
@@ -79,7 +80,6 @@ const Post = ({
         });
     }
 
-    const [postComment] = useCreateCommentMutation();
 
     const handleComment = async (values) => {
         await postComment({ postId, text: values.text }).then((res) => {
@@ -111,9 +111,18 @@ const Post = ({
 
     const openModal = Boolean(isModalAction);
 
-    const handleOpenComments = () => { };
+    const handleOpenComments = () => {
+        setCommentPanelOpen(true);
+    };
 
-    const handleSavePost = () => { }
+    const handleSavePost = () => {
+        const oldFavourite = optimisticFavourite;
+        setOptimisticFavourite(!oldFavourite);
+        toggleSavePost(postId).then((res) => {
+            console.log(res);
+            // setOptimisticFavourite(!oldFavourite);
+        });
+    }
 
 
     return (
@@ -128,9 +137,9 @@ const Post = ({
                             <Link to={`/profile/${authorId}`}>
                                 <p className={styles.username}>{username}</p>
                             </Link>
-                            <p className={styles.creationDate}>
-                                {moment(creationDate).format('DD MMMM YYYY [р.]')}
-                            </p>
+                            <time className={styles.creationDate}>
+                                {moment(creationDate).format('DD MMMM YYYY')}
+                            </time>
                         </div>
                     </div>
                     {isPostOwner && (
@@ -175,15 +184,16 @@ const Post = ({
                         <span>{optimisticCommentsCount}</span> <img src={comment} alt="comment icon" />
                     </div>
                 </div>
-                <PostActionButtons handleLikePost={handleLikePost} optimisticLiked={optimisticLiked} optimisticFavourite={optimisticFavourite} />
+                <PostActionButtons handleLikePost={handleLikePost} optimisticLiked={optimisticLiked} optimisticFavourite={optimisticFavourite} handleSavePost={handleSavePost} handleOpenComments={handleOpenComments} commentPanelOpen={commentPanelOpen} />
 
                 <footer className={styles.footer}>
-                    {optimisticRecentComments && optimisticRecentComments.length > 0 && <RecentComments onCommentChange={() => console.log('on comment change')} onCommentDelete={handleDeleteComment} comments={optimisticRecentComments} />}
+                    {optimisticRecentComments && optimisticRecentComments.length > 0 && <RecentComments onCommentDelete={handleDeleteComment} comments={optimisticRecentComments} />}
                     <PostCommentInput handleComment={handleComment} />
                 </footer>
             </div>
             <ConfirmModal open={deleteDialog} onClose={() => setDeleteDialog(false)} onConfirm={handleDeletePost} title={'Delete the post?'} message={'Are you sure that you want to delete the post?'} confirmButtonText={'Yes'} cancelButtonText={'No'} />
             <CreateEditPostModal type="edit" onClose={handleCloseEditModal} open={editedModal} onSuccess={handleSuccessEdit} postData={{ id: postId, textContent }} />
+            <CommentsModal open={commentPanelOpen} onClose={() => setCommentPanelOpen(false)} postId={postId} />
         </>
     );
 };
@@ -206,71 +216,3 @@ Post.propTypes = {
 }
 
 export default Post;
-
-
-const PostActionButtons = ({ handleLikePost, handleOpenComments, optimisticLiked, optimisticFavourite, commentPanelOpen, handleSavePost }) => {
-    const likesRef = useRef(null)
-    const commentRef = useRef(null)
-    const shareRef = useRef(null)
-    const saveRef = useRef(null)
-
-    const isLikesHover = useHover(likesRef)
-    const isCommentHover = useHover(commentRef)
-    const isShareHover = useHover(shareRef)
-    const isSaveHover = useHover(saveRef)
-
-    return (
-        <div className={styles.reactions}>
-            <div ref={likesRef} className={styles.reaction} onClick={() => handleLikePost()}>
-                <Like liked={optimisticLiked} hovered={isLikesHover} />
-                <span>Like</span>
-            </div>
-            <div ref={commentRef} className={styles.reaction} onClick={handleOpenComments}>
-                <CommentPostIcon hovered={isCommentHover} clicked={commentPanelOpen} />
-                <span>Comments</span>
-            </div>
-            <div ref={shareRef} className={styles.reaction}>
-                <SharePostIcon shared={false} hovered={isShareHover} />
-                <span>Share</span>
-            </div>
-            <div ref={saveRef} className={styles.reaction} onClick={handleSavePost}>
-                <SavePostIcon saved={optimisticFavourite} hovered={isSaveHover} />
-                <span>Save</span>
-            </div>
-        </div>
-    )
-}
-
-const PostCommentInput = ({ handleComment }) => {
-
-    const validateComment = (value) => {
-        let error;
-        if (!value) {
-            error = 'You can\'t create an empty comment';
-        } else if (value.length > 280) {
-            error = 'Comment is too long';
-        }
-        return error;
-    }
-
-    return (
-        <Formik
-            initialValues={{ text: '' }}
-            onSubmit={async (values, { resetForm }) => {
-                handleComment(values);
-                resetForm();
-            }}
-            validateOnMount
-            validateOnBlur
-        >
-            {({ isSubmitting, isValid }) => (
-                <Form>
-                    <div className={styles.inputCommentWrapper}>
-                        <button type="submit" disabled={!isValid} className={styles.inputSendBtn}>{isSubmitting ? <Spinner /> : <IoSend />}</button>
-                        <Field validate={validateComment} type="text" name="text" placeholder="Comment..." className={styles.commentInput} as={TextareaAutosize} />
-                    </div>
-                </Form>
-            )}
-        </Formik>
-    )
-}

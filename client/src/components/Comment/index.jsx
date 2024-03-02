@@ -1,4 +1,3 @@
-/* eslint-disable react/prop-types */
 /* eslint-disable no-unused-vars */
 import { useState, useRef } from 'react'
 import { useToggleLikeMutation } from '../../store/services/postService'
@@ -29,7 +28,6 @@ const Comment = ({
     edited,
     liked,
     authorPremium,
-    onCommentChange,
     onCommentDelete
 }) => {
     //like ref
@@ -136,4 +134,11 @@ const CommentActions = ({ anchorEl, setAnchorEl, editComment, deleteComment }) =
             <MenuItem onClick={deleteComment}>Delete comment</MenuItem>
         </Menu>
     )
+}
+
+CommentActions.propTypes = {
+    anchorEl: PropTypes.object,
+    setAnchorEl: PropTypes.func,
+    editComment: PropTypes.func,
+    deleteComment: PropTypes.func
 }

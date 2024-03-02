@@ -31,4 +31,5 @@ public interface IFavoriteService {
 
   boolean isFavorite(Long postId) throws EntityNotFoundException;
 
+  boolean toggle(Long postId) throws EntityNotFoundException, IllegalAccessException;
 }
