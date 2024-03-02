@@ -64,11 +64,11 @@ public class WebsocketService implements IWebsocketService {
   }
 
   @Override
-  public void sendRepostNotificationToUser(Post post) {
-    RepostNotificationDto dto = repostMapper.convertToDto(post);
+  public void sendRepostNotificationToUser(Post repost, Long originalPostAuthorId) {
+    RepostNotificationDto dto = repostMapper.convertToDto(repost);
 
     messagingTemplate.convertAndSendToUser(
-            String.valueOf(post.getAuthorId()), "/reposts", dto
+            String.valueOf(originalPostAuthorId), "/reposts", dto
     );
   }
 

@@ -10,8 +10,9 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RepostNotificationDto {
-  Long postId;
-  Long senderId;
+  private Long postId;
+  private Long senderId;
   private String senderName;
   private String senderAvatarUrl;
+  private String text;
 }

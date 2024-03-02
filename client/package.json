@@ -34,6 +34,7 @@
     "react-redux": "^9.0.4",
     "react-router-dom": "^6.21.1",
     "react-stomp-hooks": "^2.2.1",
+    "react-toastify": "^10.0.4",
     "sass": "^1.69.7",
     "sort-by": "^1.2.0",
     "usehooks-ts": "^2.9.5",

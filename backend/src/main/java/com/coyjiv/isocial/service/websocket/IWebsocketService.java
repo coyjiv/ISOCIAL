@@ -14,7 +14,7 @@ public interface IWebsocketService {
 
   void sendFriendNotificationToUser(Friend friend);
 
-  void sendRepostNotificationToUser(Post post);
+  void sendRepostNotificationToUser(Post repost, Long originalPostAuthorId);
 
   void sendSubscriptionEventNotificationToUser(Post post);
 

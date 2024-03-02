@@ -86,7 +86,7 @@ public class PostService implements IPostService {
       post.setAuthorId(requestOwner);
 
       Post savedPost = postRepository.save(post);
-      websocketService.sendRepostNotificationToUser(savedPost);
+      websocketService.sendRepostNotificationToUser(savedPost, originalPost.getAuthorId());
       return savedPost;
     } else {
       throw new EntityNotFoundException("Original post with this id not found");
