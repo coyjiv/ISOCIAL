@@ -1,6 +1,11 @@
 package com.coyjiv.isocial.service.websocket;
 
-import com.coyjiv.isocial.domain.*;
+import com.coyjiv.isocial.domain.Comment;
+import com.coyjiv.isocial.domain.Friend;
+import com.coyjiv.isocial.domain.Like;
+import com.coyjiv.isocial.domain.Message;
+import com.coyjiv.isocial.domain.Post;
+import com.coyjiv.isocial.domain.User;
 
 import java.util.List;
 

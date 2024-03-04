@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class LikeNotificationDtoMapper extends DtoMapperFacade<Like, LikeNotificationDto> {
   private UserRepository userRepository;
+
   public LikeNotificationDtoMapper(UserRepository userRepository) {
     super(Like.class, LikeNotificationDto.class);
     this.userRepository = userRepository;
