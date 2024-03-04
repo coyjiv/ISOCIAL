@@ -40,10 +40,6 @@ const router = createBrowserRouter([
     errorElement: <ErrorFallback />,
   },
   {
-    path: "profile/:id",
-    element: <Profile />
-  },
-  {
     path: "settings",
     element: <Settings />,
     errorElement: <ErrorFallback />,

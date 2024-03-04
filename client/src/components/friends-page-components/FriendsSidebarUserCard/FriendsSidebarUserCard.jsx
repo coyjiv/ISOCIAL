@@ -15,12 +15,13 @@ const FriendsSidebarUserCard = ({
   fullName,
   onConfirm,
   onDelete,
-  onMessage,
+	onMessage,
+	onClick,
 }) => {
   const isRequestVariant = variant === "requests";
 
   return (
-    <CardWrapper variant={variant}>
+    <CardWrapper variant={variant} onClick={onClick}>
       <Stack direction="row" gap="8px" alignItems="center">
         <Avatar
           src={userImage ?? fallbackAvatar}
@@ -58,7 +59,8 @@ FriendsSidebarUserCard.propTypes = {
   userImage: PropTypes.string,
   onMessage: PropTypes.func,
   onConfirm: PropTypes.func,
-  onDelete: PropTypes.func,
+	onDelete: PropTypes.func,
+	onClick: PropTypes.func,
 };
 
 FriendsSidebarUserCard.displayName = "FriendsSidebarUserCard";

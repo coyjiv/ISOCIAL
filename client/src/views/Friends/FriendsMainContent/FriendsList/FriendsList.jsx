@@ -15,12 +15,12 @@ const FriendsList = ({ variant, users, heading, link }) => {
         </Link>
       </Stack>
       <Stack direction="row" flexWrap="wrap" gap="20px">
-        {users.map(({ id, firstName, lastName, avatar }) => (
+        {users?.map(({ id, firstName, lastName, avatarUrl }) => (
           <FriendCard
             variant={variant}
             key={id}
             fullName={`${firstName} ${lastName}`}
-            image={avatar}
+            image={avatarUrl}
           />
         ))}
       </Stack>
