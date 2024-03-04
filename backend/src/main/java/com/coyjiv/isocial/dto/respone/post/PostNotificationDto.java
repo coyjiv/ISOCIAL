@@ -14,11 +14,9 @@ public class PostNotificationDto {
 
   private Long id;
 
-  private Long authorId;
-
-  private String authorAvatar;
-
-  private String authorFullNane;
+  private Long senderId;
+  private String senderName;
+  private String senderAvatarUrl;
 
   private boolean isAuthorPremium;
 

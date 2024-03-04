@@ -23,9 +23,9 @@ public class PostNotificationMapper extends DtoMapperFacade<Post, PostNotificati
     try {
       User author = userRepository.findActiveById(entity.getAuthorId()).get();
       if (!author.getAvatarsUrl().isEmpty()) {
-        dto.setAuthorAvatar(author.getAvatarsUrl().get(0));
+        dto.setSenderAvatarUrl(author.getAvatar());
       }
-      dto.setAuthorFullNane(author.getFirstName() + " " + author.getLastName());
+      dto.setSenderName(author.getFirstName() + " " + author.getLastName());
       dto.setAuthorPremium(author.isPremium());
       dto.setAuthorPremiumNickname(author.getPremiumNickname());
       dto.setAuthorPremiumEmoji(author.getPremiumEmoji());

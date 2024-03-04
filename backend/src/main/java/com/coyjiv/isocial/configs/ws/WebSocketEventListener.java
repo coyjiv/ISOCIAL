@@ -30,7 +30,7 @@ public class WebSocketEventListener {
     StompHeaderAccessor headers = StompHeaderAccessor.wrap(event.getMessage());
     String token = headers.getFirstNativeHeader("Authorization");
 
-    if (!Objects.equals(token, "Bearer null")) {
+    if (token != null && !Objects.equals(token, "Bearer null")) {
       userService.handleConnect(token.substring(7));
       OnlineUsersCache.putUserId(headers.getSessionId(),authProvider.getAuthenticationPrincipal());
     }

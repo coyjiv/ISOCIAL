@@ -84,6 +84,7 @@ public class PostService implements IPostService {
     Post post = postRequestMapper.convertToEntity(postRequestDto);
     post.setAuthorId(requestOwner);
     postRepository.save(post);
+    websocketService.sendSubscriptionEventNotificationToUser(post);
     return postResponseMapper.convertToDto(post);
   }
 
@@ -103,7 +104,8 @@ public class PostService implements IPostService {
 
       Post savedPost = postRepository.save(post);
       websocketService.sendRepostNotificationToUser(savedPost, originalPost.getAuthorId());
-      return savedPost;
+      websocketService.sendSubscriptionEventNotificationToUser(savedPost);
+      return postResponseMapper.convertToDto(savedPost);
     } else {
       throw new EntityNotFoundException("Original post with this id not found");
     }

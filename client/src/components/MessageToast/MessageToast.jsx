@@ -6,10 +6,13 @@ const ToastMessage = ({type, msg, link}) => {
     console.log(msg)
     const title =
         type === "MESSAGE" ? `New message from ${msg.senderName}`
-        : type === "REPOST" ?
+            : type === "REPOST" ?
                 `${msg?.senderName} reposted your post`
                 : type === "FRIEND" ? `New friend request from ${msg.senderName}`
-            : `${msg?.senderName} created new post`
+                    : type === "SUBSCRIPTION" ? `${msg?.senderName} created new post`
+                    : type === "LIKE_POST" ? `${msg?.likerName} liked your post`
+                        : type === "LIKE_COMMENT" ? `${msg?.likerName} liked your comment`
+                            : type === "COMMENT" ? `${msg?.commenterName} commented your post` : ''
 
 
     return (

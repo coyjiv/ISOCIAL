@@ -9,6 +9,8 @@ const withWebsocket = (WrappedComponent) => {
         useSubscription(`/user/${localStorage.getItem("userId")}/friends`, handleFriend)
         useSubscription(`/user/${localStorage.getItem("userId")}/reposts`, handleRepost)
         useSubscription(`/user/${localStorage.getItem("userId")}/subscriptions`, handleSubscription)
+        useSubscription(`/user/${localStorage.getItem("userId")}/likes`, handleLike)
+        useSubscription(`/user/${localStorage.getItem("userId")}/comments`, handleComment)
 
 
         async function handleMessage(msg) {
@@ -18,7 +20,7 @@ const withWebsocket = (WrappedComponent) => {
                 {
                     icon: () => <Link to={`/chat/${body.chatId}`}>
                         <img style={{objectFit: 'cover', borderRadius: '50%'}} width={'100%'} height={'auto'}
-                             src={'https://sm.ign.com/ign_nordic/cover/a/avatar-gen/avatar-generations_prsz.jpg'}
+                             src={body.senderAvatarUrl}
                              alt={'avatar'}/>
                     </Link>
                 });
@@ -32,7 +34,7 @@ const withWebsocket = (WrappedComponent) => {
                 {
                     icon: () => <Link to={`/friends/requests`}>
                         <img style={{objectFit: 'cover', borderRadius: '50%'}} width={'100%'} height={'auto'}
-                             src={'https://sm.ign.com/ign_nordic/cover/a/avatar-gen/avatar-generations_prsz.jpg'}
+                             src={body.senderAvatarUrl}
                              alt={'avatar'}/>
                     </Link>
                 });
@@ -41,9 +43,23 @@ const withWebsocket = (WrappedComponent) => {
         async function handleRepost(msg) {
             const message = await msg.body;
             const body = JSON.parse(message);
-            toast.info(<ToastMessage link={`/post/${msg.postId}`} msg={body} type={"REPOST"}/>,
+            toast.info(<ToastMessage link={`/post/${body.postId}`} msg={body} type={"REPOST"}/>,
                 {
-                    icon: () => <Link to={`/post/${msg.postId}`}>
+                    icon: () => <Link to={`/post/${body.postId}`}>
+                        <img style={{objectFit: 'cover', borderRadius: '50%'}} width={'100%'} height={'auto'}
+                             src={body.senderAvatarUrl}
+                             alt={'avatar'}/>
+                    </Link>
+                });
+        }
+
+
+        async function handleSubscription(msg) {
+            const message = await msg.body;
+            const body = JSON.parse(message);
+            toast.info(<ToastMessage link={`/post/${body.postId}`} msg={body} type={"SUBSCRIPTION"}/>,
+                {
+                    icon: () => <Link to={`/post/${body.postId}`}>
                         <img style={{objectFit: 'cover', borderRadius: '50%'}} width={'100%'} height={'auto'}
                              src={'https://sm.ign.com/ign_nordic/cover/a/avatar-gen/avatar-generations_prsz.jpg'}
                              alt={'avatar'}/>
@@ -51,9 +67,41 @@ const withWebsocket = (WrappedComponent) => {
                 });
         }
 
+        async function handleLike(msg) {
+            const message = await msg.body;
+            const body = JSON.parse(message);
+            if (body.entityType === "POST"){
+                toast.info(<ToastMessage link={`/post/${body.entityId}`} msg={body} type={"LIKE_POST"}/>,
+                    {
+                        icon: () => <Link to={`/post/${body.entityId}`}>
+                            <img style={{objectFit: 'cover', borderRadius: '50%'}} width={'100%'} height={'auto'}
+                                 src={body.likerAvatar}
+                                 alt={'avatar'}/>
+                        </Link>
+                    });
+            } else {
+                toast.info(<ToastMessage link={`/post/${body.entityId}`} msg={body} type={"LIKE_COMMENT"}/>,
+                    {
+                        icon: () => <Link to={`/post/${body.entityId}`}>
+                            <img style={{objectFit: 'cover', borderRadius: '50%'}} width={'100%'} height={'auto'}
+                                 src={body.likerAvatar}
+                                 alt={'avatar'}/>
+                        </Link>
+                    });
+            }
+        }
 
-        function handleSubscription(msg) {
-            toast.info(<ToastMessage msg={msg} type={"MESSAGE"}/>);
+        async function handleComment(msg) {
+            const message = await msg.body;
+            const body = JSON.parse(message);
+            toast.info(<ToastMessage link={`/post/${body.postId}`} msg={body} type={"COMMENT"}/>,
+                {
+                    icon: () => <Link to={`/post/${body.postId}`}>
+                        <img style={{objectFit: 'cover', borderRadius: '50%'}} width={'100%'} height={'auto'}
+                             src={body.commenterAvatar}
+                             alt={'avatar'}/>
+                    </Link>
+                });
         }
 
         return (

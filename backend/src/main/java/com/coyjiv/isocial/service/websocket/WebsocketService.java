@@ -1,17 +1,19 @@
 package com.coyjiv.isocial.service.websocket;
 
+import com.coyjiv.isocial.dao.CommentRepository;
+import com.coyjiv.isocial.dao.PostRepository;
 import com.coyjiv.isocial.dao.UserRepository;
-import com.coyjiv.isocial.domain.Friend;
-import com.coyjiv.isocial.domain.Message;
-import com.coyjiv.isocial.domain.Post;
-import com.coyjiv.isocial.domain.Subscription;
-import com.coyjiv.isocial.domain.User;
+import com.coyjiv.isocial.domain.*;
+import com.coyjiv.isocial.dto.respone.comment.CommentNotificationDto;
 import com.coyjiv.isocial.dto.respone.friend.FriendNotificationDto;
+import com.coyjiv.isocial.dto.respone.like.LikeNotificationDto;
 import com.coyjiv.isocial.dto.respone.message.MessageNotificationDto;
 import com.coyjiv.isocial.dto.respone.post.PostNotificationDto;
 import com.coyjiv.isocial.dto.respone.post.RepostNotificationDto;
 import com.coyjiv.isocial.service.subscription.ISubscriptionService;
+import com.coyjiv.isocial.transfer.comment.CommentNotificationMapper;
 import com.coyjiv.isocial.transfer.friend.FriendNotificationMapper;
+import com.coyjiv.isocial.transfer.like.LikeNotificationDtoMapper;
 import com.coyjiv.isocial.transfer.message.MessageNotificationDtoMapper;
 import com.coyjiv.isocial.transfer.post.PostNotificationMapper;
 import com.coyjiv.isocial.transfer.post.RepostNotificationMapper;
@@ -32,7 +34,11 @@ public class WebsocketService implements IWebsocketService {
   private final FriendNotificationMapper friendMapper;
   private final RepostNotificationMapper repostMapper;
   private final PostNotificationMapper postNotificationMapper;
+  private final LikeNotificationDtoMapper likeNotificationMapper;
+  private final CommentNotificationMapper commentNotificationMapper;
   private final UserRepository userRepository;
+  private final PostRepository postRepository;
+  private final CommentRepository commentRepository;
   private final ISubscriptionService subscriptionService;
 
   @Override
@@ -49,10 +55,6 @@ public class WebsocketService implements IWebsocketService {
     }));
   }
 
-  @Override
-  public void sendLikeNotificationToUser() {
-
-  }
 
   @Override
   public void sendFriendNotificationToUser(Friend friend) {
@@ -82,5 +84,32 @@ public class WebsocketService implements IWebsocketService {
       );
     });
   }
+
+  @Override
+  public void sendLikeNotificationToUser(Like like) {
+    LikeNotificationDto dto = likeNotificationMapper.convertToDto(like);
+    Long receiverId;
+    if (like.getEntityType() == LikeableEntity.POST) {
+      Post post = postRepository.findById(like.getEntityId()).orElseThrow();
+      receiverId = post.getAuthorId();
+    } else {
+      Comment comment = commentRepository.findById(like.getEntityId()).orElseThrow();
+      receiverId = comment.getCommenterId();
+    }
+
+    messagingTemplate.convertAndSendToUser(
+            String.valueOf(receiverId), "/likes", dto
+    );
+  }
+
+  @Override
+  public void sendCommentNotification(Comment comment) {
+    Post post = postRepository.findById(comment.getPostId()).orElseThrow();
+    CommentNotificationDto dto = commentNotificationMapper.convertToDto(comment);
+    messagingTemplate.convertAndSendToUser(
+            String.valueOf(post.getAuthorId()), "/comments", dto
+    );
+  }
+
 
 }

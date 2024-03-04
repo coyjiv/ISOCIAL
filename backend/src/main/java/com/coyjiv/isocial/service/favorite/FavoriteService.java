@@ -67,7 +67,6 @@ public class FavoriteService implements IFavoriteService {
   @Transactional(readOnly = true)
   public Optional<Favorite> findActiveBySelectorIdPostId(Long postId) {
     Long requestOwner = emailPasswordAuthProvider.getAuthenticationPrincipal();
-    System.out.println(favoriteRepository.findActiveBySelectorIdPostId(requestOwner, postId));
     return favoriteRepository.findActiveBySelectorIdPostId(requestOwner, postId);
   }
 
