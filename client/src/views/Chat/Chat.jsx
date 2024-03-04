@@ -9,19 +9,25 @@ import { useDeleteMessageMutation, useGetMessagesQuery, useSendMessageMutation }
 
 
 
-const Messages = () => {
-  const location = useLocation();
-  const chatId = location.state.chatId;
-  console.log(chatId);
+const Chat = () => {
+  //const location = useLocation();
+  //console.log(location);
+  //const chatId = location.state.chatId;
+  //const chatId = useGetMessagesQuery(chatId);
+  const chatId = 2;
+  
 
   const [messagesData, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [page, setPage] = useState(0)
   const contentRef = useRef();
 
-  const { data: messages, isLoading } = useGetMessagesQuery({ page, chatId })
+  const { data: messages, isLoading } = useGetMessagesQuery({ page, chatId }, {skip: !chatId})
   const [sendMessage] = useSendMessageMutation()
   const [deleteMessage] = useDeleteMessageMutation()
+  const userId = Number(localStorage.getItem('userId'));
+  console.log(userId);
+  console.log(chatId);
 
   useEffect(() => {
     if (!isLoading && messages && messages.length > 0) {
@@ -105,11 +111,11 @@ const Messages = () => {
 
   return (
     <>
-      <div className="chat-container" >
+      <div className="message-container" >
         <div className="chat-messages" ref={contentRef}>
           {messagesData.map((message, index) => (
-            <div key={index} className={cx('message-item', { 'user': message.senderId === 1 }, { "bot": message.senderId !== 1 })}>
-              <div className={cx(messages[index + 1] === undefined || { 'message-avatar': (messages[index + 1].senderId === 1) })}></div>
+            <div key={index} className={cx('message-item', { 'user': message.senderId === userId }, { "bot": message.senderId !== userId })}>
+              <div className={cx(messages[index - 1] === undefined || { 'message-avatar': (messages[index - 1].senderId !== userId) })}></div>
               <div className="message-body">
                 <div className='message-text'>
                   {message.text}
@@ -140,5 +146,4 @@ const Messages = () => {
   )
 }
 
-const Chat = withLayout(Messages)
 export default Chat

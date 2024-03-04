@@ -5,8 +5,13 @@
 
 
 /* ---   Chat   --- */
+
+.chat-container {
+  display: flex;
+  justify-content: flex-start;
+}
   
-  .chat-container {
+  .message-container {
     width: 800px;
     max-width: 90%;
     height: 80vh;
@@ -136,6 +141,10 @@
 
 
   /* ---   ChatList   --- */
+
+
+.chats {
+  width: 500px;
   
 .chat-list {
   display: flex;
@@ -143,6 +152,31 @@
   justify-content: flex-start;
   margin: 10px;
   width: 90%;
+  
+
+  .no-chats {
+    font-size: 24px;
+    text-align: center;
+    opacity: .5;
+  }
+}
+
+.add-chat {
+  padding: 20px;
+  width: 70px;
+  cursor: pointer;
+  transition: color .5s ease;
+  border-radius: 40px;
+
+  &__plus {
+    width: 30px;
+    height: 30px;
+  }
+
+  &:hover {
+    background-color: #999;
+  }
+
 }
 
 .chat-item {
@@ -152,6 +186,7 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
+  position: relative;
 
   .message-avatar {
     @include messageAvatar;
@@ -164,5 +199,22 @@
     font-family: 'Segoe UI',sans-serif;
 
   }
+
+  .chat-options {
+    position: absolute;
+    top: 25%;
+    right: 30px;
+    display: none;
+
+    .chat-options_option {
+        @include messageOption;    
+    }
+  }
+
+  &:hover .chat-options {
+    display: block;
+  }
+
+}
 
 }
