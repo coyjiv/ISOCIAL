@@ -18,6 +18,7 @@ import Chat from "../Chat/Chat.jsx";
 import Post from "../Post";
 
 import UpdatePassword from "../UpdatePassword";
+import Saved from "../Saved";
 import { ErrorFallback } from "../../components/ErrorFallback/ErrorFallback";
 
 
@@ -102,6 +103,11 @@ const router = createBrowserRouter([
         path: "chats/:id",
         element: <Chat/>,
     },
+  {
+    path: "saved",
+    element: <Saved />,
+    errorElement: <ErrorFallback />,
+  }
 ]);
 
 export const App = () => <RouterProvider router={router}/>;

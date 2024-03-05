@@ -18,6 +18,8 @@ public interface IPostService {
 
   Optional<Post> findActiveById(Long id);
 
+  PageWrapper<PostResponseDto> findFavoritePosts(int page, int size);
+
   PageWrapper<PostResponseDto> findActiveByAuthorId(int page, int size, Long id);
 
   PostResponseDto create(PostRequestDto postRequestDto) throws RequestValidationException;

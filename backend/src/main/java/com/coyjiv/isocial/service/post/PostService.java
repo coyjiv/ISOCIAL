@@ -9,6 +9,7 @@ import com.coyjiv.isocial.domain.Post;
 import com.coyjiv.isocial.dto.request.post.PostRequestDto;
 import com.coyjiv.isocial.dto.request.post.RePostRequestDto;
 import com.coyjiv.isocial.dto.request.post.UpdatePostRequestDto;
+import com.coyjiv.isocial.dto.respone.favorite.FavoriteResponseDto;
 import com.coyjiv.isocial.dto.respone.page.PageWrapper;
 import com.coyjiv.isocial.dto.respone.post.PostResponseDto;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
@@ -60,6 +61,23 @@ public class PostService implements IPostService {
   @Transactional(readOnly = true)
   public Optional<Post> findActiveById(Long id) {
     return postRepository.findActiveById(id);
+  }
+
+  @Override
+  public PageWrapper<PostResponseDto> findFavoritePosts(int page, int size) {
+    List<FavoriteResponseDto> favorites =
+      favoriteService.findActiveBySelectorId(page, size, emailPasswordAuthProvider.getAuthenticationPrincipal());
+    if (favorites.isEmpty()) {
+      return new PageWrapper<>(List.of(), false);
+    } else {
+      List<Long> postIds = favorites.stream().map(FavoriteResponseDto::getSelectedPostId).toList();
+      Sort sort = Sort.by(Sort.Direction.DESC, "creationDate").and(Sort.by(Sort.Direction.ASC, "id"));
+      Pageable pageable = PageRequest.of(page, size, sort);
+      Page<Post> postPage = postRepository.findActiveByIdIn(postIds, pageable);
+      List<PostResponseDto> dtos = postPage.getContent().stream().map(postResponseMapper::convertToDto).toList();
+      boolean hasNext = postPage.hasNext();
+      return new PageWrapper<>(dtos, hasNext);
+    }
   }
 
   @Override

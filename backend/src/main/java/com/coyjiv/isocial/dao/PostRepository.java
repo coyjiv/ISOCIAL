@@ -28,6 +28,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
   @Query("FROM Post p WHERE p.originalPostId = :id AND p.isActive = true ")
   List<Post> findAllActiveReposts(@Param("id") Long id);
 
+  @Query("FROM Post p WHERE p.id IN :postIds AND p.isActive = true")
+  Page<Post> findActiveByIdIn(List<Long> postIds, Pageable pageable);
 }
 
 

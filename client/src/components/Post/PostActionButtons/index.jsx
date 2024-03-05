@@ -7,7 +7,7 @@ import { useHover } from "usehooks-ts"
 import PropTypes from "prop-types"
 import styles from './actions.module.scss'
 
-export const PostActionButtons = ({ handleLikePost, handleOpenComments, optimisticLiked, optimisticFavourite, commentPanelOpen, handleSavePost }) => {
+export const PostActionButtons = ({ handleLikePost, handleOpenComments, optimisticLiked, optimisticFavourite, commentPanelOpen, handleSavePost, isRepost, handleOpenShareModal }) => {
     const likesRef = useRef(null)
     const commentRef = useRef(null)
     const shareRef = useRef(null)
@@ -28,10 +28,10 @@ export const PostActionButtons = ({ handleLikePost, handleOpenComments, optimist
                 <CommentPostIcon hovered={isCommentHover} clicked={commentPanelOpen} />
                 <span className={styles.reactionTitle}>Comments</span>
             </div>
-            <div ref={shareRef} className={styles.reaction}>
+            {!isRepost && <div ref={shareRef} className={styles.reaction} onClick={handleOpenShareModal}>
                 <SharePostIcon shared={false} hovered={isShareHover} />
                 <span className={styles.reactionTitle}>Share</span>
-            </div>
+            </div>}
             <div ref={saveRef} className={styles.reaction} onClick={handleSavePost}>
                 <SavePostIcon saved={optimisticFavourite} hovered={isSaveHover} />
                 <span className={styles.reactionTitle}>Save</span>
@@ -47,5 +47,6 @@ PostActionButtons.propTypes = {
     optimisticFavourite: PropTypes.bool.isRequired,
     commentPanelOpen: PropTypes.bool.isRequired,
     handleSavePost: PropTypes.func.isRequired,
-
+    isRepost: PropTypes.bool.isRequired,
+    handleOpenShareModal: PropTypes.func.isRequired
 }

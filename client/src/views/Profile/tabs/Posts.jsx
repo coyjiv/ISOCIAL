@@ -12,6 +12,7 @@ import { useGetPostsByUserQuery } from '../../../store/services/postService';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Post from '../../../components/Post/Post';
 import classNames from 'classnames';
+import { PostSkeleton } from '../skeletons/PostSkeleton';
 // import PostsWrapper from '../../../components/PostsWrapper';
 
 const Posts = () => {
@@ -116,8 +117,9 @@ const Posts = () => {
                   dataLength={postsData?.length ?? 0}
                   next={fetchData}
                   hasMore={hasNext}
-                  loader={<h4>Loading...</h4>}
+                  loader={<div style={{ display: 'flex', width: '100%' }}><PostSkeleton /></div>}
                   className={styles.postWrapper}
+                  style={{ overflow: 'hidden' }}
                 >
                   {postsData?.map((post) => <Post key={post.id}
                     postId={post.id}
@@ -133,6 +135,10 @@ const Posts = () => {
                     liked={post.liked}
                     removePost={() => removePost(post.id)}
                     favourite={post.favourite}
+                    recentLikedUsers={post.recentLikedUsers}
+                    originalPostId={post.originalPostId}
+                    originalPost={post.originalPost}
+                    addNewPost={addNewPost}
                   />)}
                 </InfiniteScroll>}
                 {/* <PostsWrapper /> */}
