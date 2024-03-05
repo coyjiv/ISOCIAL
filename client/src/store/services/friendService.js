@@ -36,9 +36,9 @@ export const friendsApi = profileApi.injectEndpoints({
       ],
     }),
     acceptFriendRequest: builder.mutation({
-      query: ({ userId }) => {
+      query: ({ friendId }) => {
         return {
-          url: `friends/accept?friendId=${userId}`,
+          url: `friends/accept?friendId=${friendId}`,
           method: 'POST',
         };
       },
@@ -48,9 +48,9 @@ export const friendsApi = profileApi.injectEndpoints({
       ],
     }),
     declineFriendRequest: builder.mutation({
-      query: ({ userId }) => {
+      query: ({ friendId }) => {
         return {
-          url: `friends/decline?friendId=${userId}`,
+          url: `friends/decline?friendId=${friendId}`,
           method: 'POST',
         };
       },
@@ -90,7 +90,7 @@ export const friendsApi = profileApi.injectEndpoints({
 });
 
 export const {
-	useGetFriendsListQuery,
+  useGetFriendsListQuery,
   useSendFriendRequestMutation,
   useRemoveFriendMutation,
   useAcceptFriendRequestMutation,
