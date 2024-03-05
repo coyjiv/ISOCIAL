@@ -82,8 +82,7 @@ public class PostRestController {
   public ResponseEntity<?> update(@PathVariable("id") @Min(0) Long id,
                                   @RequestBody @Valid UpdatePostRequestDto dto)
           throws IllegalAccessException {
-    postService.update(id, dto);
-    return ResponseEntity.status(204).build();
+    return ResponseEntity.ok(postService.update(id, dto));
   }
 
 }

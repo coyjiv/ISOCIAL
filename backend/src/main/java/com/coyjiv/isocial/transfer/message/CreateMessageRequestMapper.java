@@ -25,7 +25,7 @@ public class CreateMessageRequestMapper extends DtoMapperFacade<Message, CreateM
     entity.setEdited(false);
     entity.setActive(true);
     entity.setSenderId(authProvider.getAuthenticationPrincipal());
-    if (dto.getAttachements() == null) {
+    if (dto.getAttachments() == null) {
       entity.setAttachments(List.of());
     }
     if (dto.getText() == null) {

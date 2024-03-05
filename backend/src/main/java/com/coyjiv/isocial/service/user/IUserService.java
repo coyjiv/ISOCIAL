@@ -41,11 +41,21 @@ public interface IUserService {
 
   void delete(Long id) throws IllegalAccessException, EntityNotFoundException;
 
-  void handleConnect(String token);
+  void handleConnect(String token) throws IllegalAccessException;
 
-  void handleDisconnect(String token);
+  void handleDisconnect(Long userId);
 
   void resetPassword(String uuid, PasswordResetRequestDto passwordResetRequestDto);
 
   void requestPasswordReset(String email);
+
+  String getAvatar(Long id) throws EntityNotFoundException;
+
+  String getFullName(Long id) throws EntityNotFoundException;
+
+  boolean isPremium(Long commenterId);
+
+  String getPremiumNickname(Long commenterId);
+
+  String getPremiumEmoji(Long commenterId);
 }

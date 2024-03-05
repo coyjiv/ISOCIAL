@@ -1,12 +1,16 @@
 package com.coyjiv.isocial.domain;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.data.jpa.repository.EntityGraph;
 
 import java.util.List;
 
@@ -16,7 +20,7 @@ import java.util.List;
 @Setter
 @ToString
 @NoArgsConstructor
-public class Post extends AbstractEntity {
+public class Post extends AbstractEntity implements Likeable {
   @Column(name = "text_content")
   private String textContent;
 
@@ -32,4 +36,8 @@ public class Post extends AbstractEntity {
   @Column(name = "user_id")
   private Long authorId;
 
+  @Override
+  public LikeableEntity getEntityType() {
+    return LikeableEntity.POST;
+  }
 }

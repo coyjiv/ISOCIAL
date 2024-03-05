@@ -38,6 +38,8 @@ const MediaUpload = ({ modalTitle, customOptions, ...props }) => {
             }
         } else if (type === 'banner') {
             updateProfile({ body: JSON.stringify({ bannerUrl: url }), id: id });
+        } else if (type === 'postAttachment') {
+            customOptions?.callbackOnUpload(url);
         }
     }
 
@@ -110,7 +112,9 @@ const MediaUpload = ({ modalTitle, customOptions, ...props }) => {
         const storage = getStorage();
         const storageRef = ref(storage, customOptions.field === 'avatar'
             ? `${import.meta.env.MODE}/${id}/user_avatar/${file.name}`
-            : `${import.meta.env.MODE}/${id}/user_banner/${file.name}`);
+            : customOptions.field === 'banner'
+                ? `${import.meta.env.MODE}/${id}/user_banner/${file.name}`
+                : `${import.meta.env.MODE}/${id}/user_posts/${file.name}`);
 
         if (customOptions.field === 'banner' && (profile.bannerUrl && profile.bannerUrl?.includes('firebasestorage'))) {
             deleteObject(ref(getStorage(), profile.bannerUrl)).then(() => {
@@ -170,7 +174,7 @@ const MediaUpload = ({ modalTitle, customOptions, ...props }) => {
     );
 
     const avatarSteps = [
-        <Dropzone key={1} onDrop={onDrop} file={file} resetFile={() => setFile(null)} />,
+        <Dropzone key={1} customTitle={customOptions?.dropzoneDescription} onDrop={onDrop} file={file} resetFile={() => setFile(null)} />,
         <CropStep key={2} customSettings={customOptions} imgSrc={imgSrc} onImageLoad={onImageLoad} imgRef={imgRef} crop={crop} setCrop={setCrop} setCompletedCrop={setCompletedCrop} />,
         <PreviewStep key={3} completedCrop={completedCrop} previewCanvasRef={previewCanvasRef} onUploadCropAvatarClick={onUploadCropAvatarClick} uploadProgress={uploadProgress} />
     ];
@@ -205,6 +209,8 @@ MediaUpload.propTypes = {
         y: PropTypes.number,
         height: PropTypes.number,
         width: PropTypes.number,
+        callbackOnUpload: PropTypes.func,
+        dropzoneDescription: PropTypes.string
     })
 }
 

@@ -1,4 +1,7 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+    createBrowserRouter,
+    RouterProvider,
+} from "react-router-dom";
 import Home from "../Home/Home";
 import Register from "../Register/Register";
 import Login from "../Login/Login";
@@ -9,6 +12,11 @@ import Groups from "../Groups/Groups";
 import Videos from "../Videos/Videos";
 import Friends from "../Friends/Friends";
 import Confirmation from "../Confirmation/Confirmation";
+
+import ChatList from "../Chat/ChatList.jsx";
+import Chat from "../Chat/Chat.jsx";
+import Post from "../Post";
+
 import UpdatePassword from "../UpdatePassword";
 import { ErrorFallback } from "../../components/ErrorFallback/ErrorFallback";
 
@@ -80,7 +88,20 @@ const router = createBrowserRouter([
   {
     path: "forgot-password/:id",
     element: <UpdatePassword />,
-  }
+  },
+    {
+        path: "post/:id",
+        element: <Post />,
+        errorElement: <ErrorFallback />,
+    },
+    {
+        path: "chats",
+        element: <ChatList/>,
+    },
+    {
+        path: "chats/:id",
+        element: <Chat/>,
+    },
 ]);
 
-export const App = () => <RouterProvider router={router} />;
+export const App = () => <RouterProvider router={router}/>;

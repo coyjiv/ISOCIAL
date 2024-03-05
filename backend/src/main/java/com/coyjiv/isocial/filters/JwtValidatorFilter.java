@@ -29,6 +29,7 @@ public class JwtValidatorFilter extends OncePerRequestFilter {
         jwtTokenProvider.validateAccessToken(token);
       } catch (Exception e) {
         response.sendError(401, "Token not valid !");
+        return;
       }
     }
     filterChain.doFilter(request, response);
