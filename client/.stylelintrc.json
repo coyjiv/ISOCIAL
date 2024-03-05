@@ -1,4 +1,4 @@
 {
   "extends": "stylelint-config-standard-scss",
-  "ignoreFiles": ["**/*.module.scss", "**/*/_colors.scss", "dist/assets/*"]
+  "ignoreFiles": ["**/*.module.scss", "**/*/*.scss", "dist/assets/*",""]
 }

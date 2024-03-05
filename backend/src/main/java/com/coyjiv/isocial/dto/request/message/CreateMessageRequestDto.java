@@ -16,5 +16,5 @@ public class CreateMessageRequestDto {
 
   private String text;
 
-  private List<String> attachements;
+  private List<String> attachments;
 }

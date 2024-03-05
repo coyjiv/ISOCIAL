@@ -16,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @Entity
 @Table(name = "messages")
-public class Message extends AbstractEntity {
+public class Message extends AbstractEntity implements Likeable {
 
   @Column(name = "chat_id")
   private Long chatId;
@@ -35,4 +35,9 @@ public class Message extends AbstractEntity {
 
   @Column(name = "is_edited")
   private boolean isEdited;
+
+  @Override
+  public LikeableEntity getEntityType() {
+    return LikeableEntity.MESSAGE;
+  }
 }

@@ -111,7 +111,8 @@ CREATE TABLE public.comments
     FOREIGN KEY (addresser_id) REFERENCES public.users (id),
     creation_date      TIMESTAMP,
     last_modified_date TIMESTAMP,
-    is_active          BOOLEAN NOT NULL DEFAULT FALSE
+    is_active          BOOLEAN NOT NULL DEFAULT FALSE,
+    is_edited          BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 DROP TABLE IF EXISTS public.posts CASCADE;
@@ -139,4 +140,16 @@ CREATE TABLE public.favorites
     creation_date      TIMESTAMP,
     last_modified_date TIMESTAMP,
     is_active          BOOLEAN NOT NULL DEFAULT FALSE
+);
+
+DROP TABLE IF EXISTS public.likes CASCADE;
+CREATE TABLE likes
+(
+    id                 BIGSERIAL PRIMARY KEY,
+    user_id            BIGINT                                                     NOT NULL,
+    entity_id          BIGINT                                                     NOT NULL,
+    entity_type        TEXT CHECK (entity_type IN ('POST', 'COMMENT', 'MESSAGE')) NOT NULL,
+    creation_date      TIMESTAMP                                                           DEFAULT CURRENT_TIMESTAMP,
+    last_modified_date TIMESTAMP                                                           DEFAULT CURRENT_TIMESTAMP,
+    is_active          BOOLEAN                                                    NOT NULL DEFAULT TRUE
 );

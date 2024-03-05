@@ -30,15 +30,9 @@ const Navbar = () => {
           <HeaderLinks navbarLinks={navbarLinks} />
         </ul>
         <ul className={styles.actionList}>
-          <li>
-            <NotificationButton />
-          </li>
-          <li>
-            <MessengerButton />
-          </li>
-          <li>
-            <AvatarButton />
-          </li>
+          <li><NotificationButton /></li>
+          <li><Link to='/chats'><MessengerButton /></Link></li>
+          <li><AvatarButton /></li>
         </ul>
       </nav>
     </header>

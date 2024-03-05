@@ -82,4 +82,12 @@ public class User extends AbstractEntity {
   @Column(name = "premium_emoji")
   private String premiumEmoji;
 
+  public String getAvatar() {
+    return avatarsUrl.get(0);
+  }
+
+  public String getFullName() {
+    return firstName + " " + lastName;
+  }
+
 }
