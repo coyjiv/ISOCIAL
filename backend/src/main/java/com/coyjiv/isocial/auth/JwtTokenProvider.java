@@ -33,6 +33,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class JwtTokenProvider {
   public static final int ACCESS_LEAVE_HOURS = 6;
+
   public static final int REFRESH_LEAVE_HOURS = 168;
 
   private final EmailPasswordAuthProvider emailPasswordAuthProvider;
@@ -133,6 +134,7 @@ public class JwtTokenProvider {
     Instant instant = now.plusHours(hours).atZone(ZoneId.systemDefault()).toInstant();
     return Date.from(instant);
   }
+
 
   private Key getKey(String secret) {
     return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secret));

@@ -3,8 +3,8 @@
 * {
   box-sizing: border-box;
   font-family: 'Segoe UI', 'Segoe UI Historic', -apple-system,
-    BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji',
-    'Segoe UI Emoji', 'Segoe UI Symbol';
+  BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji',
+  'Segoe UI Emoji', 'Segoe UI Symbol';
   font-style: normal;
   line-height: 1;
 
@@ -127,6 +127,7 @@ section {
   display: block;
 }
 
+
 ol,
 ul {
   list-style: none;
@@ -191,4 +192,18 @@ body {
   font-style: normal;
   line-height: 1;
   background-color: colors.$wash;
+}
+
+.Toastify__toast {
+  cursor: pointer;
+}
+
+.Toastify__toast-container {
+  width: 400px;
+
+}
+
+.Toastify__toast-icon {
+  width: 70px;
+  height: 70px;
 }

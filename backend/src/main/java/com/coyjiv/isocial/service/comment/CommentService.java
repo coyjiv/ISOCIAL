@@ -10,6 +10,7 @@ import com.coyjiv.isocial.dto.respone.comment.CommentResponseDto;
 import com.coyjiv.isocial.dto.respone.page.PageWrapper;
 import com.coyjiv.isocial.dto.respone.post.PostResponseDto;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
+import com.coyjiv.isocial.service.websocket.IWebsocketService;
 import com.coyjiv.isocial.transfer.comment.CommentResponseMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -30,6 +31,7 @@ public class CommentService implements ICommentService {
   private final CommentResponseMapper commentResponseMapper;
   private final EmailPasswordAuthProvider emailPasswordAuthProvider;
   private final PostRepository postRepository;
+  private final IWebsocketService websocketService;
 
   @Transactional(readOnly = true)
   @Override
@@ -104,7 +106,9 @@ public class CommentService implements ICommentService {
     if (postRepository.findActiveById(postId).isPresent()) {
       Comment comment = new Comment(emailPasswordAuthProvider.getAuthenticationPrincipal(), postId, dto.getText(), false);
       comment.setActive(true);
-      return commentResponseMapper.convertToDto(commentRepository.save(comment));
+      CommentResponseDto savedComment =  commentResponseMapper.convertToDto(commentRepository.save(comment));
+      websocketService.sendCommentNotification(comment);
+      return savedComment;
     } else {
       throw new EntityNotFoundException("Post not found");
     }

@@ -41,9 +41,9 @@ public interface IUserService {
 
   void delete(Long id) throws IllegalAccessException, EntityNotFoundException;
 
-  void handleConnect(String token);
+  void handleConnect(String token) throws IllegalAccessException;
 
-  void handleDisconnect(String token);
+  void handleDisconnect(Long userId);
 
   void resetPassword(String uuid, PasswordResetRequestDto passwordResetRequestDto);
 

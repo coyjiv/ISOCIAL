@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(IllegalAccessException.class)
   public ResponseEntity<?> handleIllegalAccessException(IllegalAccessException exception) {
-    return ResponseEntity.status(403).body(exception.getMessage());
+    return ResponseEntity.status(401).body(exception.getMessage());
   }
 
   @ExceptionHandler(HttpMessageNotReadableException.class)

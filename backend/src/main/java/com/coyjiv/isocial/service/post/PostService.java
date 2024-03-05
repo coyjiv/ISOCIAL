@@ -15,6 +15,7 @@ import com.coyjiv.isocial.dto.respone.post.PostResponseDto;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.exceptions.RequestValidationException;
 import com.coyjiv.isocial.service.favorite.IFavoriteService;
+import com.coyjiv.isocial.service.websocket.IWebsocketService;
 import com.coyjiv.isocial.transfer.post.PostRequestMapper;
 import com.coyjiv.isocial.transfer.post.PostResponseMapper;
 import com.coyjiv.isocial.transfer.post.RePostRequestMapper;
@@ -42,6 +43,7 @@ public class PostService implements IPostService {
   private final EmailPasswordAuthProvider emailPasswordAuthProvider;
   private final UserRepository userRepository;
   private final IFavoriteService favoriteService;
+  private final IWebsocketService websocketService;
 
   private final CommentRepository commentRepository;
 
@@ -100,6 +102,7 @@ public class PostService implements IPostService {
     Post post = postRequestMapper.convertToEntity(postRequestDto);
     post.setAuthorId(requestOwner);
     postRepository.save(post);
+    websocketService.sendSubscriptionEventNotificationToUser(post);
     return postResponseMapper.convertToDto(post);
   }
 
@@ -117,7 +120,10 @@ public class PostService implements IPostService {
       }
       post.setAuthorId(requestOwner);
 
-      return postResponseMapper.convertToDto(postRepository.save(post));
+      Post savedPost = postRepository.save(post);
+      websocketService.sendRepostNotificationToUser(savedPost, originalPost.getAuthorId());
+      websocketService.sendSubscriptionEventNotificationToUser(savedPost);
+      return postResponseMapper.convertToDto(savedPost);
     } else {
       throw new EntityNotFoundException("Original post with this id not found");
     }

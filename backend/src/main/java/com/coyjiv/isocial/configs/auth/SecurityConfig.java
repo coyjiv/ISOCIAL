@@ -44,35 +44,35 @@ public class SecurityConfig {
     MvcRequestMatcher.Builder mvcMatcherBuilder = new MvcRequestMatcher.Builder(introspector);
 
     return http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-      .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
-      .csrf(AbstractHttpConfigurer::disable)
-      // TODO: REMOVE IN PRODUCTION
-      .cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
-        CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOriginPatterns(Collections.singletonList("*"));
-        config.setAllowedMethods(Collections.singletonList("*"));
-        config.setAllowedHeaders(Collections.singletonList("*"));
-        config.setAllowCredentials(true);
-        config.setMaxAge(3600L);
-        return config;
-      }))
-      .httpBasic(AbstractHttpConfigurer::disable)
-      .addFilterBefore(new JwtValidatorFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
-      .authorizeHttpRequests(req ->
-        req
-          .requestMatchers(mvcMatcherBuilder.pattern("/api/auth/**")).permitAll()
-          .requestMatchers(mvcMatcherBuilder.pattern("/api/ws/**")).permitAll()
-          .requestMatchers(mvcMatcherBuilder.pattern("/api/**")).hasRole("USER")
-          .anyRequest().permitAll()
-      )
-      .exceptionHandling(exceptionHandling ->
-        exceptionHandling.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
-      .oauth2Login(oauth -> oauth
-        .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
-          .userService(googleAuthUserService)
-        )
-        .successHandler(defaultAuthenticationSuccessHandler)
-      )
-      .build();
+            .headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
+            .csrf(AbstractHttpConfigurer::disable)
+            // TODO: REMOVE IN PRODUCTION
+            .cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
+              CorsConfiguration config = new CorsConfiguration();
+              config.setAllowedOriginPatterns(Collections.singletonList("*"));
+              config.setAllowedMethods(Collections.singletonList("*"));
+              config.setAllowedHeaders(Collections.singletonList("*"));
+              config.setAllowCredentials(true);
+              config.setMaxAge(3600L);
+              return config;
+            }))
+            .httpBasic(AbstractHttpConfigurer::disable)
+            .addFilterBefore(new JwtValidatorFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class)
+            .authorizeHttpRequests(req ->
+                    req
+                            .requestMatchers(mvcMatcherBuilder.pattern("/api/auth/**")).permitAll()
+                            .requestMatchers(mvcMatcherBuilder.pattern("/api/ws/**")).permitAll()
+                            .requestMatchers(mvcMatcherBuilder.pattern("/api/**")).hasRole("USER")
+                            .anyRequest().permitAll()
+            )
+            .exceptionHandling(exceptionHandling ->
+                    exceptionHandling.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
+            .oauth2Login(oauth -> oauth
+                    .userInfoEndpoint(userInfoEndpointConfig -> userInfoEndpointConfig
+                            .userService(googleAuthUserService)
+                    )
+                    .successHandler(defaultAuthenticationSuccessHandler)
+            )
+            .build();
   }
 }

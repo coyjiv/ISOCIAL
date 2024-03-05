@@ -9,6 +9,7 @@ import com.coyjiv.isocial.dto.request.message.UpdateMessageRequestDto;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.exceptions.RequestValidationException;
 import com.coyjiv.isocial.service.chat.IChatService;
+import com.coyjiv.isocial.service.websocket.IWebsocketService;
 import com.coyjiv.isocial.transfer.message.CreateMessageRequestMapper;
 import com.coyjiv.isocial.utils.MessagesUtils;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +31,7 @@ public class MessageService implements IMessageService {
   private final CreateMessageRequestMapper createMessageRequestMapper;
   private final EmailPasswordAuthProvider authProvider;
 
-  private final IWebsocketMessageService websocketChatMessageService;
+  private final IWebsocketService websocketChatMessageService;
 
   @Transactional(readOnly = true)
   @Override
@@ -75,7 +76,7 @@ public class MessageService implements IMessageService {
     );
 
     messageRepository.save(message);
-    websocketChatMessageService.sendMessageNotificationToUser(chat.getUsers(), message);
+    websocketChatMessageService.sendMessageNotificationToUsers(chat.getUsers(), message);
 
     return message;
   }

@@ -9,6 +9,7 @@ import com.coyjiv.isocial.dto.respone.user.UserProfileResponseDto;
 import com.coyjiv.isocial.dto.respone.user.UserSearchResponseDto;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.service.user.IUserService;
+import com.coyjiv.isocial.service.websocket.IWebsocketService;
 import com.coyjiv.isocial.transfer.like.LikeDtoResponseMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
 public class LikeService implements ILikeService {
   private final LikeRepository likeRepository;
   private final IUserService userService;
+  private final IWebsocketService websocketService;
   private final LikeDtoResponseMapper likeDtoResponseMapper;
   private final EmailPasswordAuthProvider emailPasswordAuthProvider;
 
@@ -111,6 +113,7 @@ public class LikeService implements ILikeService {
       like.setEntityId(entityId);
       like.setEntityType(entityType);
       likeRepository.save(like);
+      websocketService.sendLikeNotificationToUser(like);
     }
   }
 
