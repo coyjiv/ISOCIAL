@@ -133,6 +133,7 @@ const Posts = () => {
                     liked={post.liked}
                     removePost={() => removePost(post.id)}
                     favourite={post.favourite}
+                    recentLikedUsers={post.recentLikedUsers}
                   />)}
                 </InfiniteScroll>}
                 {/* <PostsWrapper /> */}

@@ -25,6 +25,8 @@ import ConfirmModal from "../modals/ConfirmModal";
 import { CommentsModal } from "./CommentsModal";
 import { PostCommentInput } from "./PostCommentInput";
 import { PostActionButtons } from "./PostActionButtons";
+import LikedUsersTooltip from "./LikedUsersTooltip";
+import { LikedUsers } from "./LikedUsers";
 
 
 const Post = ({
@@ -42,6 +44,7 @@ const Post = ({
     removePost,
     favourite,
     originalPostId,
+    recentLikedUsers
 }) => {
     const [optimisticLikesCount, setOptimisticLikesCount] = useState(likesCount);
     const [optimisticLiked, setOptimisticLiked] = useState(liked);
@@ -131,7 +134,7 @@ const Post = ({
                 <header className={styles.header}>
                     <div className={styles.user}>
                         <Link to={`/profile/${authorId}`}>
-                            <img src={avatarUrl ?? placeholderAvatar('', username.split(' ')[0], username.split(' ')[1])} alt="" className={styles.userImage} />
+                            <img src={avatarUrl ?? placeholderAvatar('', username?.split(' ')[0], username?.split(' ')[1])} alt="" className={styles.userImage} />
                         </Link>
                         <div className={styles.userData}>
                             <Link to={`/profile/${authorId}`}>
@@ -172,15 +175,19 @@ const Post = ({
                 <div className={styles.content}>
                     {!!optimisticEditedData && <p className={styles.textContent}>{optimisticEditedData}</p>}
                     {!!images.length &&
-                        <PhotosCollage images={[...images]} />
+                        <PhotosCollage images={images} />
                     }
                 </div>
                 <div className={styles.stats}>
-                    <div className={styles.likes}>
-                        <img src={heart} alt="icon" />
-                        <p>{optimisticLikesCount}</p>
-                    </div>
-                    <div className={styles.commentsCount}>
+                    <LikedUsersTooltip content={
+                        <LikedUsers likesCount={optimisticLikesCount} recentLikedUsers={recentLikedUsers} />
+                    }>
+                        <div className={styles.likes}>
+                            <img src={heart} alt="icon" />
+                            <p>{optimisticLikesCount}</p>
+                        </div>
+                    </LikedUsersTooltip>
+                    <div className={styles.commentsCount} onClick={handleOpenComments}>
                         <span>{optimisticCommentsCount}</span> <img src={comment} alt="comment icon" />
                     </div>
                 </div>
@@ -213,6 +220,7 @@ Post.propTypes = {
     removePost: PropTypes.func.isRequired,
     originalPostId: PropTypes.number,
     favourite: PropTypes.bool,
+    recentLikedUsers: PropTypes.array
 }
 
 export default Post;

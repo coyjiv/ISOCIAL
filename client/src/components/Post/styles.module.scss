@@ -223,3 +223,16 @@
     }
   }
 }
+
+.recent-liked-users {
+  font-size: 14px;
+  color: $grey;
+}
+
+.recent-liked-users-wrapper {
+  display: flex;
+  gap: 4px;
+  margin-top: 4px;
+  align-items: center;
+  padding-bottom: 3px;
+}

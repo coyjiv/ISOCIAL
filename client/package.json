@@ -37,6 +37,7 @@
     "react-infinite-scroll-component": "^6.1.0",
     "react-redux": "^9.0.4",
     "react-router-dom": "^6.21.1",
+    "react-spring-bottom-sheet": "^3.4.1",
     "react-stomp-hooks": "^2.2.1",
     "sass": "^1.69.7",
     "sort-by": "^1.2.0",

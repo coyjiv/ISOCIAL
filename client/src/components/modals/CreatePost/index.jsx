@@ -98,7 +98,7 @@ const CreateEditPostModal = (props) => {
           </div>}
           <div onClick={handleOpenMediaUpload} style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '30px', marginLeft: '10px', cursor: 'pointer' }}><CiImageOn fontSize={30} /> <p>Add image</p></div>
         </>}
-        <BlueRoundedButton onClick={handleListItemClick} disabled={postContent.length < 0}>{type === 'create' ? 'Create' : 'Edit'} a post</BlueRoundedButton>
+        <BlueRoundedButton onClick={handleListItemClick} disabled={!postContent && postContent.length === 0}>{type === 'create' ? 'Create' : 'Edit'} a post</BlueRoundedButton>
       </Dialog>
       {type === 'create' && <MemoMediaUpload customOptions={{ aspect: 1 / 1, minWidth: 100, width: 1000, height: 1000, minHeight: 100, x: 25, y: 25, field: 'postAttachment', callbackOnUpload: addImageAttachment, dropzoneDescription: 'Drag and drop your image' }} modalTitle="Upload an image to post" open={mediaUploadOpen} onClose={handleCloseMediaUpload} />}
     </>

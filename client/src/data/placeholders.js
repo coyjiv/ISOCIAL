@@ -6,3 +6,11 @@ export const placeholderAvatar = (gender, firstName, lastName) =>
     : gender === 'FEMALE'
     ? DEFAULT_FEMALE_AVATAR
     : `https://avatar.iran.liara.run/username?username=${firstName}+${lastName}`
+
+export const userAvatar = (user, firstName, lastName) =>
+  user?.avatarsUrl?.[0] ??
+  placeholderAvatar(
+    user?.gender,
+    user?.firstName ?? firstName,
+    user?.lastName ?? lastName
+  )

@@ -63,6 +63,9 @@ export const postsApi = friendsApi.injectEndpoints({
           method: 'POST',
         }
       },
+      invalidatesTags: (result, error, { entityId }) => [
+        { type: 'Posts', id: entityId },
+      ],
     }),
     toggleSave: builder.mutation({
       query: (postId) => {
