@@ -236,3 +236,15 @@
   align-items: center;
   padding-bottom: 3px;
 }
+
+.repost-info {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+  padding-bottom: 3px;
+  font-size: 14px;
+  color: $grey;
+  margin-bottom: 20px;
+  margin-left: 15px;
+}

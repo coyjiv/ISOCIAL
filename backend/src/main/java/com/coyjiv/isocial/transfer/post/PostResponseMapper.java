@@ -11,9 +11,11 @@ import com.coyjiv.isocial.dto.respone.post.PostResponseDto;
 import com.coyjiv.isocial.service.comment.ICommentService;
 import com.coyjiv.isocial.service.favorite.IFavoriteService;
 import com.coyjiv.isocial.service.like.ILikeService;
+import com.coyjiv.isocial.service.post.IPostService;
 import com.coyjiv.isocial.service.user.IUserService;
 import com.coyjiv.isocial.transfer.DtoMapperFacade;
 import com.coyjiv.isocial.transfer.user.UserSearchResponseMapper;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -25,11 +27,13 @@ public class PostResponseMapper extends DtoMapperFacade<Post, PostResponseDto> {
   private final ICommentService commentService;
   private final UserSearchResponseMapper userSearchResponseMapper;
   private final EmailPasswordAuthProvider emailPasswordAuthProvider;
+  private final IPostService postService;
   private final IFavoriteService favoriteService;
 
   public PostResponseMapper(UserRepository userRepository, ILikeService likeService,
                             UserSearchResponseMapper userSearchResponseMapper, ICommentService commentService,
-                            EmailPasswordAuthProvider emailPasswordAuthProvider, IFavoriteService favoriteService) {
+                            EmailPasswordAuthProvider emailPasswordAuthProvider, IFavoriteService favoriteService, @Lazy
+                            IPostService postService) {
 
     super(Post.class, PostResponseDto.class);
     this.userRepository = userRepository;
@@ -38,6 +42,7 @@ public class PostResponseMapper extends DtoMapperFacade<Post, PostResponseDto> {
     this.commentService = commentService;
     this.emailPasswordAuthProvider = emailPasswordAuthProvider;
     this.favoriteService = favoriteService;
+    this.postService = postService;
   }
 
   protected void decorateDto(PostResponseDto dto, Post entity) {
@@ -63,6 +68,8 @@ public class PostResponseMapper extends DtoMapperFacade<Post, PostResponseDto> {
           User liker = userRepository.findActiveById(like.getUserId()).get();
           return userSearchResponseMapper.convertToDto(liker);
         }).toList());
+      dto.setOriginalPost(entity.getOriginalPostId() == null ? null :
+        convertToDto(postService.findActiveById(entity.getOriginalPostId()).get()));
     } catch (Exception exception) {
       exception.printStackTrace();
     }

@@ -13,6 +13,10 @@ export const postsApi = friendsApi.injectEndpoints({
         { type: 'Profile', id },
       ],
     }),
+    getSavedPosts: builder.query({
+      query: ({ page }) => `posts/favorite?page=${page}&size=20`,
+      providesTags: ['Posts'],
+    }),
     getPostById: builder.query({
       query: (id) => `posts/${id}`,
       providesTags: (result, error, id) => [{ type: 'Posts', id }],
@@ -91,4 +95,5 @@ export const {
   useCreatePostMutation,
   useToggleLikeMutation,
   useToggleSaveMutation,
+  useGetSavedPostsQuery,
 } = postsApi

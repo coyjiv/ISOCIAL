@@ -2,6 +2,8 @@ package com.coyjiv.isocial.dto.respone.post;
 
 import com.coyjiv.isocial.dto.respone.comment.CommentResponseDto;
 import com.coyjiv.isocial.dto.respone.user.UserSearchResponseDto;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +16,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class PostResponseDto {
   private Long id;
 
@@ -24,6 +27,8 @@ public class PostResponseDto {
   private boolean isEdited;
 
   private Long originalPostId;
+
+  private PostResponseDto originalPost;
 
   private Long authorId;
 

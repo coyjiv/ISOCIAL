@@ -12,13 +12,12 @@ import comment from './icons/comment.svg'
 // import CommentIcon from './icons/commentIcon.svg?react'
 // import likeIcon from './icons/likeIcon.svg'
 
-import { Menu, MenuItem } from "@mui/material";
+import { Divider, Menu, MenuItem } from "@mui/material";
 import { Link } from "react-router-dom";
 import { useToggleLikeMutation, useToggleSaveMutation } from "../../store/services/postService";
 import RecentComments from "./RecentComments";
 import { useCreateCommentMutation } from "../../store/services/commentService";
 import PhotosCollage from "./PhotosCollage";
-import CreateEditPostModal from "../modals/CreatePost";
 import { placeholderAvatar } from "../../data/placeholders";
 import { useDeletePostMutation } from "../../store/services/postService";
 import ConfirmModal from "../modals/ConfirmModal";
@@ -27,6 +26,7 @@ import { PostCommentInput } from "./PostCommentInput";
 import { PostActionButtons } from "./PostActionButtons";
 import LikedUsersTooltip from "./LikedUsersTooltip";
 import { LikedUsers } from "./LikedUsers";
+import CreateEditRepostPostModal from "../modals/CreatePost";
 
 
 const Post = ({
@@ -44,7 +44,9 @@ const Post = ({
     removePost,
     favourite,
     originalPostId,
-    recentLikedUsers
+    recentLikedUsers,
+    originalPost,
+    addNewPost
 }) => {
     const [optimisticLikesCount, setOptimisticLikesCount] = useState(likesCount);
     const [optimisticLiked, setOptimisticLiked] = useState(liked);
@@ -53,13 +55,14 @@ const Post = ({
     const [optimisticEditedData, setOptimisticEditedData] = useState(textContent);
     const [optimisticFavourite, setOptimisticFavourite] = useState(favourite);
     const [editedModal, setEditedModal] = useState(false);
+    const [repostModal, setRepostModal] = useState(false);
     const [deleteDialog, setDeleteDialog] = useState(false);
     const [commentPanelOpen, setCommentPanelOpen] = useState(false);
 
     console.log(optimisticFavourite, 'favourite');
 
     const isRepost = !!originalPostId;
-    console.log(isRepost, 'isRepost');
+    console.log(isRepost, originalPostId, 'isRepost');
 
     const [toggleLike] = useToggleLikeMutation();
     const [deletePost] = useDeletePostMutation();
@@ -108,8 +111,20 @@ const Post = ({
         setEditedModal(false);
     }
 
+    const handleCloseRepostModal = () => {
+        setRepostModal(false);
+    }
+
+    const handleOpenRepostModal = () => {
+        setRepostModal(true);
+    }
+
     const handleSuccessEdit = (data) => {
         setOptimisticEditedData(data.textContent);
+    }
+
+    const handleSuccessRepost = (data) => {
+        addNewPost(data);
     }
 
     const openModal = Boolean(isModalAction);
@@ -172,11 +187,24 @@ const Post = ({
 
                     }
                 </header>
+                {isRepost && (
+                    <div className={styles.repostInfo}>
+                        <p className={styles.repostText}>Reposted from <Link to={`/profile/${originalPost.authorId}`}>{originalPost.authorFullName}</Link> | <Link to={`/post/${originalPostId}`}>View original</Link></p>
+                    </div>
+                )}
                 <div className={styles.content}>
                     {!!optimisticEditedData && <p className={styles.textContent}>{optimisticEditedData}</p>}
                     {!!images.length &&
                         <PhotosCollage images={images} />
                     }
+                    {isRepost && !!originalPost?.textContent &&
+                        <>
+                            <Divider style={{ margin: '35px' }} />
+                            <p className={styles.textContent}>{originalPost?.textContent}</p>
+                            {isRepost && !!originalPost?.attachments?.length &&
+                                <PhotosCollage images={originalPost?.attachments} />
+                            }
+                        </>}
                 </div>
                 <div className={styles.stats}>
                     <LikedUsersTooltip content={
@@ -191,7 +219,7 @@ const Post = ({
                         <span>{optimisticCommentsCount}</span> <img src={comment} alt="comment icon" />
                     </div>
                 </div>
-                <PostActionButtons handleLikePost={handleLikePost} optimisticLiked={optimisticLiked} optimisticFavourite={optimisticFavourite} handleSavePost={handleSavePost} handleOpenComments={handleOpenComments} commentPanelOpen={commentPanelOpen} />
+                <PostActionButtons isRepost={isRepost} handleLikePost={handleLikePost} optimisticLiked={optimisticLiked} optimisticFavourite={optimisticFavourite} handleSavePost={handleSavePost} handleOpenComments={handleOpenComments} commentPanelOpen={commentPanelOpen} handleOpenShareModal={handleOpenRepostModal} />
 
                 <footer className={styles.footer}>
                     {optimisticRecentComments && optimisticRecentComments.length > 0 && <RecentComments onCommentDelete={handleDeleteComment} comments={optimisticRecentComments} />}
@@ -199,7 +227,8 @@ const Post = ({
                 </footer>
             </div>
             <ConfirmModal open={deleteDialog} onClose={() => setDeleteDialog(false)} onConfirm={handleDeletePost} title={'Delete the post?'} message={'Are you sure that you want to delete the post?'} confirmButtonText={'Yes'} cancelButtonText={'No'} />
-            <CreateEditPostModal type="edit" onClose={handleCloseEditModal} open={editedModal} onSuccess={handleSuccessEdit} postData={{ id: postId, textContent }} />
+            <CreateEditRepostPostModal type="edit" title="Edit the post" onClose={handleCloseEditModal} open={editedModal} onSuccess={handleSuccessEdit} postData={{ id: postId, textContent }} />
+            <CreateEditRepostPostModal type="repost" title="Share a post" onClose={handleCloseRepostModal} open={repostModal} onSuccess={handleSuccessRepost} postData={{ id: postId, textContent }} />
             <CommentsModal open={commentPanelOpen} onClose={() => setCommentPanelOpen(false)} postId={postId} />
         </>
     );
@@ -220,7 +249,9 @@ Post.propTypes = {
     removePost: PropTypes.func.isRequired,
     originalPostId: PropTypes.number,
     favourite: PropTypes.bool,
-    recentLikedUsers: PropTypes.array
+    recentLikedUsers: PropTypes.array,
+    originalPost: PropTypes.object,
+    addNewPost: PropTypes.func
 }
 
 export default Post;

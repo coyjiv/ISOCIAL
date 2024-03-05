@@ -10,8 +10,9 @@ import Videos from "../Videos/Videos";
 import Friends from "../Friends/Friends";
 import Confirmation from "../Confirmation/Confirmation";
 import UpdatePassword from "../UpdatePassword";
-import { ErrorFallback } from "../../components/ErrorFallback/ErrorFallback";
 import Post from "../Post";
+import Saved from "../Saved";
+import { ErrorFallback } from "../../components/ErrorFallback/ErrorFallback";
 
 
 const router = createBrowserRouter([
@@ -81,6 +82,11 @@ const router = createBrowserRouter([
   {
     path: "post/:id",
     element: <Post />,
+    errorElement: <ErrorFallback />,
+  },
+  {
+    path: "saved",
+    element: <Saved />,
     errorElement: <ErrorFallback />,
   }
 ]);
