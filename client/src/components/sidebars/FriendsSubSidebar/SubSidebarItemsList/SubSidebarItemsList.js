@@ -3,7 +3,7 @@ import { Stack, Typography } from "@mui/material";
 import { FriendsSidebarUserCard } from "../../../friends-page-components";
 import { SidebarItemsList } from "../FriendsSubSidebar.styled.js";
 
-const SubSidebarItemsList = ({ users, searchValue, variant, subTitle }) => {
+const SubSidebarItemsList = ({ users, searchValue, variant, subTitle, handleDeleteRequest, handleConfirmRequest, handleChooseUser }) => {
   const filteredUsers = users?.filter((user) => {
     return (
       user.firstName.toLowerCase().includes(searchValue.toLowerCase()) ||
@@ -38,6 +38,12 @@ const SubSidebarItemsList = ({ users, searchValue, variant, subTitle }) => {
 
 SubSidebarItemsList.propTypes = {
   users: PropTypes.array,
+  searchValue: PropTypes.string,
+  variant: PropTypes.string,
+  subTitle: PropTypes.string,
+  handleDeleteRequest: PropTypes.func,
+  handleConfirmRequest: PropTypes.func,
+  handleChooseUser: PropTypes.func,
 };
 
 SubSidebarItemsList.displayName = "SubSidebarItemsList";

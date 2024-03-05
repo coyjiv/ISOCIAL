@@ -6,8 +6,8 @@ import fallbackAvatar from "../../assets/fallback/Ava.jpg";
 import { ButtonMain } from "../buttons";
 import { useSendFriendRequestMutation } from "../../store/services/friendService.js";
 
-const UserCard = ({ id, avatarUrl, fullName, city, friendsCount, onClick }) => {
-  const [sendFriendRequest, res] = useSendFriendRequestMutation();
+const UserCard = ({ id, avatarUrl, fullName, city, friendsCount }) => {
+  const [sendFriendRequest] = useSendFriendRequestMutation();
 
   const handleAddFriend = () => {
     sendFriendRequest({ userId: id });
