@@ -16,8 +16,11 @@ import {
   SearchWrapper,
 } from "./MainSearch.styled";
 import { useClickOutside } from "../../hooks/index.js";
+import MainSearchEmptySection from "./MainSearchEmptySection/MainSearchEmptySection.jsx";
 
+// eslint-disable-next-line react/prop-types
 const MainSearch = ({ value, searchItems, onChange }) => {
+  const [options, setOptions] = useState(searchItems);
   const [inputActive, setInputActive] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
@@ -25,6 +28,7 @@ const MainSearch = ({ value, searchItems, onChange }) => {
   const handleBlur = () => {
     setInputActive(false);
     onChange("");
+    setOptions([]);
   };
 
   const handleGoToUser = (id) => {
@@ -40,6 +44,12 @@ const MainSearch = ({ value, searchItems, onChange }) => {
   };
 
   useEffect(() => {
+    if (value === "") {
+      setOptions([]);
+    } else {
+      setOptions(searchItems);
+    }
+
     if (inputActive) {
       const t = setTimeout(() => setMenuOpen(true), 80);
       return () => clearTimeout(t);
@@ -48,7 +58,7 @@ const MainSearch = ({ value, searchItems, onChange }) => {
       const t = setTimeout(() => setMenuOpen(false), 80);
       return () => clearTimeout(t);
     }
-  }, [inputActive]);
+  }, [inputActive, searchItems, value]);
 
   return (
     <SearchWrapper open={inputActive} ref={inputRef}>
@@ -71,16 +81,22 @@ const MainSearch = ({ value, searchItems, onChange }) => {
           placeholder="Search Isocial"
         />
       </SearchContainer>
-      {menuOpen && searchItems && (
+      {menuOpen && options && (
         <SearchMenu>
-          {searchItems?.map(({ id, firstName, lastName }) => (
+          {options?.map(({ id, firstName, lastName, avatarsUrl }) => (
             <MainSearchItem
               key={id}
+              avatars={avatarsUrl}
               variant="search"
               fullName={`${firstName} ${lastName}`}
               onClick={() => handleGoToUser(id)}
             />
           ))}
+        </SearchMenu>
+      )}
+      {menuOpen && options?.length === 0 && (
+        <SearchMenu>
+          <MainSearchEmptySection title="No results" user="user" />
         </SearchMenu>
       )}
     </SearchWrapper>

@@ -71,9 +71,11 @@ export const SearchContainer = styled(Stack)(({ theme }) => ({
 export const SearchMenu = styled(Stack)(({ theme }) => ({
   position: "absolute",
   width: "100%",
+  maxHeight: "530px",
+  overflow: "hidden",
   top: "52px",
   left: "0",
-  gap: "4px",
+  gap: "8px",
   backgroundColor: theme.palette.white,
   padding: "20px 8px 8px 8px",
   borderRadius: "0 0 8px 8px",

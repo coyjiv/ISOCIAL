@@ -10,6 +10,8 @@ const ActionIconButton = ({
   variant,
   icon,
   color,
+  bg,
+  size,
   filledOnPress,
   withHover,
   children,
@@ -37,13 +39,14 @@ const ActionIconButton = ({
       variant={variant}
       color={buttonColor}
       withHover={withHover}
+      background={bg}
       onClick={handleClick}
       {...props}
     >
       {hasFilledColor ? (
-        <BiSolidLike size="20" color="inherit" />
+        <BiSolidLike size={size} color="inherit" />
       ) : (
-        iconsMap[icon]
+        iconsMap(size)[icon]
       )}
       {variant === "text" && (
         <Typography color={hasFilledColor && buttonColor}>
@@ -56,6 +59,8 @@ const ActionIconButton = ({
 
 ActionIconButton.propTypes = {
   color: PropTypes.string,
+  bg: PropTypes.string,
+  size: PropTypes.string,
   variant: PropTypes.oneOf(["icon", "text", "iconWithBg"]).isRequired,
   icon: PropTypes.oneOf([
     "dots",
@@ -67,6 +72,8 @@ ActionIconButton.propTypes = {
     "notification",
     "arrowLeft",
     "arrowRight",
+    "search",
+    "clock",
   ]),
   filledOnPress: PropTypes.bool,
   withHover: PropTypes.bool,
@@ -75,6 +82,7 @@ ActionIconButton.propTypes = {
 };
 
 ActionIconButton.defaultProps = {
+  size: "20",
   variant: "icon",
   icon: "dots",
   withHover: true,

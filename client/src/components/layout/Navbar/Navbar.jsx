@@ -5,13 +5,17 @@ import NotificationButton from "./actions/NotificationButton";
 import AvatarButton from "./actions/AvatarButton";
 import { MainSearch } from "../../MainSearch";
 import styles from "./navbar.module.scss";
-import { useGetUserByNameQuery } from "../../../store/services/usersService.js";
+import { useGetUserByNameQuery } from "../../../store/services/searchService";
 import { useState } from "react";
+import { useDebounce } from "usehooks-ts";
 
 const Navbar = () => {
   const [value, setValue] = useState("");
+  const debouncedValue = useDebounce(value);
 
-  const { data } = useGetUserByNameQuery(value, { skip: value === "" });
+  const { data } = useGetUserByNameQuery(debouncedValue, {
+    skip: debouncedValue === "",
+  });
 
   const handleChange = (value) => {
     setValue(value);

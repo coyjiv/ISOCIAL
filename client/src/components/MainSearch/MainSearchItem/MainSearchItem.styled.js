@@ -3,11 +3,11 @@ import { Stack } from "@mui/material";
 
 export const SearchItemWrapper = styled(Stack)(({ theme }) => ({
   width: "100%",
-  height: "48px",
+  height: "56px",
   borderRadius: "4px",
   flexDirection: "row",
   gap: "12px",
-  padding: "8px",
+  padding: "12px 8px",
   cursor: "pointer",
   alignItems: "center",
   transition: "all 0.2s ease-in-out",

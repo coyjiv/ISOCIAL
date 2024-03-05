@@ -6,6 +6,7 @@ export const CardWrapper = styled(Stack)({
   overflow: "hidden",
   width: "fit-content",
   height: "fit-content",
+  boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
 });
 
 export const CardContentWrapper = styled(Stack)(({ theme }) => ({

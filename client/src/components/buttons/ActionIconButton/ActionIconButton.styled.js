@@ -2,8 +2,7 @@ import styled from "@emotion/styled";
 
 const getButtonIconVariant = (theme) => ({
   icon: {
-    width: "36px",
-    height: "36px",
+    padding: "8px 8px 8px 8px",
     borderRadius: "50%",
   },
   text: {
@@ -13,20 +12,20 @@ const getButtonIconVariant = (theme) => ({
     borderRadius: "4px",
   },
   iconWithBg: {
-    width: "36px",
-    height: "36px",
+    padding: "8px 8px 8px 8px",
     borderRadius: "50%",
     backgroundColor: theme.palette.background?.greyHover,
   },
 });
 
 export const ButtonBase = styled.button(
-  ({ color, variant, withHover, theme }) => ({
+  ({ background, color, variant, withHover, theme }) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     cursor: "pointer",
-    background: "none",
+
+    background: background ? background : "none",
     color,
     transition: "background-color 0.25s ease",
     ...getButtonIconVariant(theme)[variant],
