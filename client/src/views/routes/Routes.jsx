@@ -10,7 +10,7 @@ import Settings from "../Settings/Settings";
 import ForgotPassword from "../Forgot-password/ForgotPassword";
 import Groups from "../Groups/Groups";
 import Videos from "../Videos/Videos";
-import Friends from "../Friends/Friends";
+import { Friends, FriendsAll, FriendsRequests } from "../Friends";
 import Confirmation from "../Confirmation/Confirmation";
 
 import ChatList from "../Chat/ChatList.jsx";
@@ -20,7 +20,7 @@ import Post from "../Post";
 import UpdatePassword from "../UpdatePassword";
 import Saved from "../Saved";
 import { ErrorFallback } from "../../components/ErrorFallback/ErrorFallback";
-
+import { PATH } from "../../utils/constants";
 
 const router = createBrowserRouter([
   {
@@ -49,18 +49,22 @@ const router = createBrowserRouter([
     errorElement: <ErrorFallback />,
   },
   {
-    path: "profile/:id",
-    element: <Profile />
-  },
-  {
     path: "settings",
     element: <Settings />,
     errorElement: <ErrorFallback />,
   },
   {
-    path: "friends",
+    path: PATH.FRIENDS,
     element: <Friends />,
     errorElement: <ErrorFallback />,
+	},
+	{
+    path: PATH.FRIENDS_REQUESTS,
+    element: <FriendsRequests />,
+  },
+  {
+    path: PATH.FRIENDS_ALL,
+    element: <FriendsAll />,
   },
   {
     path: "watch",

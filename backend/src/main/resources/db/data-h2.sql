@@ -151,3 +151,12 @@ VALUES (6, 'ROLE_USER');
 --        (3, 1, 'POST', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 --        (2, 3, 'POST', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
 
+INSERT INTO public.friends (requester_id, addresser_id, status, creation_date, last_modified_date, is_active)
+VALUES (4, 1, 'FRIEND', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE);
+INSERT INTO public.friends (requester_id, addresser_id, status, creation_date, last_modified_date, is_active)
+VALUES (3, 1, 'REQUEST_SENT', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE);
+INSERT INTO public.friends (requester_id, addresser_id, status, creation_date, last_modified_date, is_active)
+VALUES (1, 5, 'REQUEST_SENT', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE);
+INSERT INTO public.friends (requester_id, addresser_id, status, creation_date, last_modified_date, is_active)
+VALUES (6, 1, 'REQUEST_SENT', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE);
+
