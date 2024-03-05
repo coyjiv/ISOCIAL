@@ -1,10 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import './Chat.scss';
 import cx from 'classnames';
-import { useLocation } from 'react-router-dom';
 import { AiOutlineDelete } from "react-icons/ai";
-
-import { withLayout } from "../../hooks/withLayout"
 import { useDeleteMessageMutation, useGetMessagesQuery, useSendMessageMutation } from '../../store/services/chatService';
 
 
@@ -15,14 +12,15 @@ const Chat = () => {
   //const chatId = location.state.chatId;
   //const chatId = useGetMessagesQuery(chatId);
   const chatId = 2;
-  
+
 
   const [messagesData, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
+  // eslint-disable-next-line no-unused-vars
   const [page, setPage] = useState(0)
   const contentRef = useRef();
 
-  const { data: messages, isLoading } = useGetMessagesQuery({ page, chatId }, {skip: !chatId})
+  const { data: messages, isLoading } = useGetMessagesQuery({ page, chatId }, { skip: !chatId })
   const [sendMessage] = useSendMessageMutation()
   const [deleteMessage] = useDeleteMessageMutation()
   const userId = Number(localStorage.getItem('userId'));
@@ -97,6 +95,7 @@ const Chat = () => {
   };
 
 
+  // eslint-disable-next-line no-unused-vars
   const scrollBottom = () => {
     const contentHeight = contentRef.current.clientHeight;
     console.log(contentRef);
@@ -125,9 +124,9 @@ const Chat = () => {
                 </div>
               </div>
               <div className='message-options'>
-                <div className='message-options_option' onClick={() => handleDeleteMessage(message)}><AiOutlineDelete /></div>
-                <div className='message-options_option'></div>
-                <div className='message-options_option'></div>
+                <div className='message-options-option' onClick={() => handleDeleteMessage(message)}><AiOutlineDelete /></div>
+                <div className='message-options-option'></div>
+                <div className='message-options-option'></div>
               </div>
             </div>
           ))}

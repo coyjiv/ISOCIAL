@@ -12,7 +12,6 @@ import Confirmation from "../Confirmation/Confirmation";
 import UpdatePassword from "../UpdatePassword";
 import { ErrorFallback } from "../../components/ErrorFallback/ErrorFallback";
 import Chats from "../Chat/Chats";
-import Chat from "../Chat/Chat";
 import ErrorChat from "../Chat/ErrorChat";
 
 const router = createBrowserRouter([
