@@ -20,7 +20,11 @@ public class LikeNotificationDtoMapper extends DtoMapperFacade<Like, LikeNotific
   @Override
   protected void decorateDto(LikeNotificationDto dto, Like entity) {
     User liker = userRepository.findById(entity.getUserId()).orElseThrow();
+    try {
     dto.setLikerAvatar(liker.getAvatar());
+    } catch (Exception e) {
+      dto.setLikerAvatar("");
+    }
     dto.setLikerName(String.format("%s %s", liker.getFirstName(), liker.getLastName()));
   }
 }

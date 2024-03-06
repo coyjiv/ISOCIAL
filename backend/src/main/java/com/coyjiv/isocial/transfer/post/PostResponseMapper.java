@@ -49,8 +49,10 @@ public class PostResponseMapper extends DtoMapperFacade<Post, PostResponseDto> {
 
     try {
       User author = userRepository.findActiveById(entity.getAuthorId()).get();
-      if (!author.getAvatarsUrl().isEmpty()) {
+      try {
         dto.setAuthorAvatar(author.getAvatarsUrl().get(0));
+      } catch (Exception e) {
+        dto.setAuthorAvatar("");
       }
       dto.setAuthorFullName(author.getFirstName() + " " + author.getLastName());
       dto.setAuthorLastSeen(author.getLastSeen());

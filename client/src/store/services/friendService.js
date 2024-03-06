@@ -1,11 +1,11 @@
-import { profileApi } from './profileService';
+import { profileApi } from './profileService'
 
 export const friendsApi = profileApi.injectEndpoints({
   endpoints: (builder) => ({
     getFriendsList: builder.query({
-			query: (id, page = 0, size = 10) =>
-				`friends/${id}?page=${page}&size=${size}`,
-      providesTags: id => [
+      query: (id, page = 0, size = 10) =>
+        `friends/${id}?page=${page}&size=${size}`,
+      providesTags: (id) => [
         { type: 'Friends', id },
         { type: 'Profile', id },
       ],
@@ -15,7 +15,7 @@ export const friendsApi = profileApi.injectEndpoints({
         return {
           url: `friends?addresserId=${userId}`,
           method: 'POST',
-        };
+        }
       },
       invalidatesTags: (result, error, { userId }) => [
         { type: 'Friends', id: userId },
@@ -23,12 +23,11 @@ export const friendsApi = profileApi.injectEndpoints({
       ],
     }),
     removeFriend: builder.mutation({
-      query: ({ friendId }) => {
+      query: ({ userId }) => {
         return {
-          url: `friends?friendId=${friendId}`,
+          url: `friends?friendId=${userId}`,
           method: 'DELETE',
-          data: { friendId },
-        };
+        }
       },
       invalidatesTags: (result, error, { userId }) => [
         { type: 'Friends', id: userId },
@@ -36,11 +35,11 @@ export const friendsApi = profileApi.injectEndpoints({
       ],
     }),
     acceptFriendRequest: builder.mutation({
-      query: ({ friendId }) => {
+      query: ({ userId }) => {
         return {
-          url: `friends/accept?friendId=${friendId}`,
+          url: `friends/accept?friendId=${userId}`,
           method: 'POST',
-        };
+        }
       },
       invalidatesTags: (result, error, { userId }) => [
         { type: 'Friends', id: userId },
@@ -48,11 +47,11 @@ export const friendsApi = profileApi.injectEndpoints({
       ],
     }),
     declineFriendRequest: builder.mutation({
-      query: ({ friendId }) => {
+      query: ({ userId }) => {
         return {
-          url: `friends/decline?friendId=${friendId}`,
+          url: `friends/decline?friendId=${userId}`,
           method: 'POST',
-        };
+        }
       },
       invalidatesTags: (result, error, { userId }) => [
         { type: 'Friends', id: userId },
@@ -60,8 +59,8 @@ export const friendsApi = profileApi.injectEndpoints({
       ],
     }),
     subscribersCount: builder.query({
-      query: id => `friends/subscribersCount/${id}`,
-      providesTags: id => [
+      query: (id) => `friends/subscribersCount/${id}`,
+      providesTags: (id) => [
         { type: 'Friends', id },
         { type: 'Profile', id },
       ],
@@ -72,7 +71,7 @@ export const friendsApi = profileApi.injectEndpoints({
           url: `friends/cancelFriendRequest?friendId=${userId}`,
           method: 'POST',
           data: { userId },
-        };
+        }
       },
       invalidatesTags: (result, error, { userId }) => [
         { type: 'Friends', id: userId },
@@ -80,14 +79,14 @@ export const friendsApi = profileApi.injectEndpoints({
       ],
     }),
     availableFriendRequests: builder.query({
-      query: id => `friends/availableFriendRequests?userId=${id}`,
-      providesTags: id => [
+      query: (id) => `friends/availableFriendRequests?userId=${id}`,
+      providesTags: (id) => [
         { type: 'Friends', id },
         { type: 'Profile', id },
       ],
     }),
   }),
-});
+})
 
 export const {
   useGetFriendsListQuery,
@@ -99,4 +98,4 @@ export const {
   useSubscribersCountQuery,
   useCancelFriendRequestMutation,
   useAvailableFriendRequestsQuery,
-} = friendsApi;
+} = friendsApi

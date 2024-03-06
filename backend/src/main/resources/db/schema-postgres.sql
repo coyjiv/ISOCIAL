@@ -93,6 +93,9 @@ CREATE TABLE public.subscriptions
     user_id       INT,
     subscriber_id INT,
     is_subscribed BOOLEAN NOT NULL DEFAULT FALSE,
+    creation_date TIMESTAMP,
+    last_modified_date TIMESTAMP,
+    is_active     BOOLEAN NOT NULL DEFAULT FALSE,
     FOREIGN KEY (user_id) REFERENCES public.users (id),
     FOREIGN KEY (subscriber_id) REFERENCES public.users (id)
 );

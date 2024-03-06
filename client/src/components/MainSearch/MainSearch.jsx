@@ -69,7 +69,7 @@ const MainSearch = ({ value, searchItems, onChange }) => {
               iSocial
             </Typography>
           </LogoLink>
-          <ActionIconButton icon="arrowLeft" />
+          <ActionIconButton onClick={handleBlur} icon="arrowLeft" />
         </LogoHiddenContentWrapper>
       </LogoContainer>
       <SearchContainer>
@@ -78,7 +78,6 @@ const MainSearch = ({ value, searchItems, onChange }) => {
           value={value}
           onFocus={() => setInputActive(!inputActive)}
           onChange={(e) => handleChange(e)}
-          placeholder="Search Isocial"
         />
       </SearchContainer>
       {menuOpen && options && (

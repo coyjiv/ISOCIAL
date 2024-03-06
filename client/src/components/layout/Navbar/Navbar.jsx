@@ -6,11 +6,15 @@ import NotificationButton from "./actions/NotificationButton";
 import AvatarButton from "./actions/AvatarButton";
 import { MainSearch } from "../../MainSearch";
 import styles from "./navbar.module.scss";
+import { Typography } from "@mui/material";
 import { useGetUserByNameQuery } from "../../../store/services/searchService";
 import { useState } from "react";
-import { useDebounce } from "usehooks-ts";
+import { useDebounce, useMediaQuery } from "usehooks-ts";
 
 const Navbar = () => {
+
+  const isMobile = useMediaQuery('(max-width: 600px)');
+
   const [value, setValue] = useState("");
   const debouncedValue = useDebounce(value);
 
@@ -24,7 +28,8 @@ const Navbar = () => {
 
   return (
     <header className={styles.header}>
-      <MainSearch value={value} searchItems={data} onChange={handleChange} />
+      {!isMobile ? <MainSearch value={value} searchItems={data} onChange={handleChange} />
+        : <Link to='/'><Typography typography={'h1'} fontSize={22} fontWeight={'bold'}>iSocial</Typography></Link>}
 
       <nav className={styles.navWrapper}>
         <ul className={styles.navLinkList}>
