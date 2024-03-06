@@ -75,4 +75,17 @@ VALUES (4, 4, '44444444', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, false);
 INSERT INTO public.comments (commenter_id, post_id, text, creation_date, last_modified_date, is_active)
 VALUES (5, 5, '55555555', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
 
+INSERT INTO public.posts (text_content, attachments, user_id, creation_date, last_modified_date)
+VALUES ('Привіт усім! Це перший пост.', '{"фото1.jpg", "документ.pdf"}', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.posts (text_content, attachments, user_id, creation_date, last_modified_date)
+VALUES ('Привіт усім! Це перший пост.', '{"фото1.jpg", "документ.pdf"}', 3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.posts (text_content, attachments, user_id, creation_date, last_modified_date)
+VALUES ('Привіт усім! Це перший пост.', '{"фото1.jpg", "документ.pdf"}', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.posts (text_content, attachments, user_id, creation_date, last_modified_date)
+VALUES ('Привіт усім! Це перший пост.', '{"фото1.jpg", "документ.pdf"}', 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+
 
