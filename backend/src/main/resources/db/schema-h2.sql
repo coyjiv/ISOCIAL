@@ -87,15 +87,15 @@ CREATE TABLE friends
 DROP TABLE IF EXISTS subscriptions;
 CREATE TABLE public.subscriptions
 (
-    id            INT AUTO_INCREMENT PRIMARY KEY,
-    user_id       INT,
-    subscriber_id INT,
-    is_subscribed BOOLEAN NOT NULL DEFAULT FALSE,
+
+    id                 INT AUTO_INCREMENT PRIMARY KEY,
+    user_id            INT,
+    subscriber_id          INT,
+    FOREIGN KEY (user_id) REFERENCES users (id),
+    FOREIGN KEY (subscriber_id) REFERENCES users (id),
     creation_date      TIMESTAMP,
     last_modified_date TIMESTAMP,
-    is_active          BOOLEAN NOT NULL DEFAULT FALSE,
-    FOREIGN KEY (user_id) REFERENCES users (id),
-    FOREIGN KEY (subscriber_id) REFERENCES users (id)
+    is_active BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 DROP TABLE IF EXISTS comments;
@@ -105,11 +105,6 @@ CREATE TABLE public.comments
     commenter_id       INT     NOT NULL,
     post_id            INT     NOT NULL,
     text               VARCHAR(1000),
-    requester_id       INT,
-    addresser_id       INT,
-    status             VARCHAR(255),
-    FOREIGN KEY (requester_id) REFERENCES public.users (id),
-    FOREIGN KEY (addresser_id) REFERENCES public.users (id),
     creation_date      TIMESTAMP,
     last_modified_date TIMESTAMP,
     is_active          BOOLEAN NOT NULL DEFAULT FALSE,
@@ -136,8 +131,22 @@ CREATE TABLE public.favorites
     user_selector_id   INT REFERENCES users (id),
     creation_date      TIMESTAMP,
     last_modified_date TIMESTAMP,
-    is_active          BOOLEAN NOT NULL DEFAULT FALSE
+    is_active BOOLEAN  NOT NULL DEFAULT FALSE
 );
+
+DROP TABLE IF EXISTS subscribers;
+CREATE TABLE public.subscribers
+(
+    id                 INT AUTO_INCREMENT PRIMARY KEY,
+    user_id            INT,
+    subscriber_id          INT,
+    FOREIGN KEY (user_id) REFERENCES users (id),
+    FOREIGN KEY (subscriber_id) REFERENCES users (id),
+    creation_date      TIMESTAMP,
+    last_modified_date TIMESTAMP,
+    is_active BOOLEAN NOT NULL DEFAULT FALSE
+);
+
 DROP TABLE IF EXISTS likes;
 CREATE TABLE likes
 (
@@ -149,4 +158,5 @@ CREATE TABLE likes
     last_modified_date TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     is_active          BOOLEAN NOT NULL DEFAULT TRUE
 );
+
 
