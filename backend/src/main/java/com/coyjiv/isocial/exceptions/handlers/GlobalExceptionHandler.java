@@ -1,15 +1,14 @@
 package com.coyjiv.isocial.exceptions.handlers;
 
 
-import org.springframework.http.HttpStatus;
+import com.coyjiv.isocial.exceptions.EntityNotFoundException;
+import com.coyjiv.isocial.exceptions.RequestValidationException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.AuthenticationException;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.List;
 import java.util.Map;
@@ -26,5 +25,36 @@ public class GlobalExceptionHandler {
             .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage));
     return ResponseEntity.status(400).body(errors);
   }
+
+  @ExceptionHandler(EntityNotFoundException.class)
+  public ResponseEntity<?> handleEntityNotFoundException(EntityNotFoundException exception) {
+    return ResponseEntity.status(404).body(exception.getMessage());
+  }
+
+  @ExceptionHandler(IllegalAccessException.class)
+  public ResponseEntity<?> handleIllegalAccessException(IllegalAccessException exception) {
+    return ResponseEntity.status(401).body(exception.getMessage());
+  }
+
+  @ExceptionHandler(HttpMessageNotReadableException.class)
+  public ResponseEntity<?> handleHttpMessageNotReadableException(HttpMessageNotReadableException exception) {
+    return ResponseEntity.status(400).body(exception.getMessage());
+  }
+
+  @ExceptionHandler(RequestValidationException.class)
+  public ResponseEntity<?> handleRequestValidationException(RequestValidationException exception) {
+    return ResponseEntity.status(400).body(exception.getMessage());
+  }
+
+  @ExceptionHandler(NumberFormatException.class)
+  public ResponseEntity<String> handleNumberFormatException(NumberFormatException ex) {
+    return ResponseEntity.status(400).body(ex.getMessage());
+  }
+
+  @ExceptionHandler(Exception.class)
+  public ResponseEntity<?> handleUncheckedExceptions(Exception exception) {
+    return ResponseEntity.status(500).build();
+  }
+
 
 }

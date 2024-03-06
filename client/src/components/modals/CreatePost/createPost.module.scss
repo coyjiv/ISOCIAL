@@ -1,0 +1,55 @@
+.textarea {
+  font-size: 15px;
+  resize: none;
+  border: none;
+  outline: none;
+  margin: 0 auto;
+  margin-bottom: 40px;
+  width: 95%;
+  font-size: 24px;
+}
+
+.modal {
+  width: 500px;
+  padding: 5px;
+}
+
+.attachments {
+  display: flex;
+  gap: 10px;
+  margin-block: 20px;
+}
+
+.attachment-img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.attachment-wrapper {
+  position: relative;
+
+  @media (hover: hover) {
+    &:hover .remove-attachment-button {
+      opacity: 1;
+    }
+  }
+}
+
+.remove-attachment-button {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  padding: 5px;
+  cursor: pointer;
+
+  @media (hover: hover) {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+  }
+}

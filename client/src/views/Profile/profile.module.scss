@@ -1,4 +1,5 @@
 @use '../../styles/variables/colors';
+@use '../../styles/mixins/breakpoints';
 
 .card {
   box-shadow: 0 1px 2px colors.$shadow2;
@@ -19,4 +20,37 @@
       color: colors.$primaryButtonBackground;
     }
   }
+}
+
+.buttonWhite {
+  position: absolute;
+  bottom: 15px;
+  right: 30px;
+  z-index: 50;
+}
+
+.profileActions {
+  margin: 0px auto;
+  flex-wrap: wrap;
+  row-gap: 10px;
+  column-gap: 10px;
+  justify-content: center;
+  @include breakpoints.media('sm') {
+    margin-left: auto !important;
+  }
+}
+
+.friendsCard {
+}
+
+.postWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 50px;
+}
+
+.mt10 {
+  margin-bottom: 30px;
 }

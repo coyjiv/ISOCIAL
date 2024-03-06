@@ -1,3 +1,18 @@
+@use './styles/variables/colors';
+
+* {
+  box-sizing: border-box;
+  font-family: 'Segoe UI', 'Segoe UI Historic', -apple-system,
+  BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji',
+  'Segoe UI Emoji', 'Segoe UI Symbol';
+  font-style: normal;
+  line-height: 1;
+
+  &:focus {
+    outline: none;
+  }
+}
+
 html,
 body,
 div,
@@ -87,6 +102,11 @@ video {
   vertical-align: baseline;
 }
 
+button {
+  border: none;
+  outline: none;
+}
+
 a {
   text-decoration: none;
   color: inherit;
@@ -107,9 +127,6 @@ section {
   display: block;
 }
 
-body {
-  line-height: 1;
-}
 
 ol,
 ul {
@@ -168,4 +185,25 @@ table {
   font-weight: bold;
   font-style: normal;
   font-display: swap;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  font-style: normal;
+  line-height: 1;
+  background-color: colors.$wash;
+}
+
+.Toastify__toast {
+  cursor: pointer;
+}
+
+.Toastify__toast-container {
+  width: 400px;
+
+}
+
+.Toastify__toast-icon {
+  width: 70px;
+  height: 70px;
 }

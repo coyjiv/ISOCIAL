@@ -1,0 +1,36 @@
+@import '../../../styles/variables/colors.scss';
+@import '../../../styles/mixins/breakpoints.scss';
+
+.reactions {
+  display: flex;
+  align-items: center;
+  padding-top: 10px;
+  margin-right: 16px;
+  margin-left: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid $greyBorder;
+}
+
+.reaction {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+
+  span,
+  svg {
+    font-size: 15px;
+    font-weight: 600;
+    line-height: 20px;
+    color: $grey;
+  }
+
+  .reaction-title {
+    display: none;
+    @include media('sm') {
+      display: block;
+    }
+  }
+}

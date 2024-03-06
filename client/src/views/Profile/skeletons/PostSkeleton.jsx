@@ -1,6 +1,6 @@
 import { Card, Stack, Skeleton, Avatar, CardMedia, CardContent, Typography } from "@mui/material"
 
-const PostSkeleton = () => (<Card sx={{ p: 1 }}>
+const PostSkeleton = () => (<Card sx={{ p: 1, width: '100%' }}>
     <Stack direction="row" alignItems={'center'} gap={2}>
         <Skeleton animation="wave" variant="circular" width={40} height={40} sx={{ mb: 1 }} >
             <Avatar sx={{ width: 56, height: 56, marginRight: 2 }}>

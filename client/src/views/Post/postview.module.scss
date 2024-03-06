@@ -1,0 +1,11 @@
+.container {
+  padding: 20px;
+}
+
+.back-btn {
+  position: fixed;
+  display: flex;
+  cursor: pointer;
+  height: -webkit-fill-available;
+  top: 90px;
+}

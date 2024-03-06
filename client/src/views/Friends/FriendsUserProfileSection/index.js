@@ -1,0 +1,1 @@
+export {default as FriendsUserProfileSection} from './FriendsUserProfileSection.jsx'

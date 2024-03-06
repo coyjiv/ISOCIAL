@@ -1,5 +1,6 @@
 @use "../../../styles/variables/colors";
 @use "../../../styles/mixins/common";
+@import '../../../styles/mixins/breakpoints';
 
 .header {
   position: sticky;
@@ -7,8 +8,8 @@
   z-index: 100;
   background-color: colors.$white;
   display: flex;
+  padding-left: 16px;
   align-items: center;
-  padding: 5px 1rem;
   @include common.shadow();
 }
 
@@ -37,16 +38,22 @@
   height: 100%;
   display: flex;
   align-items: center;
+  padding: 5px 16px 5px 0;
 }
 
 .navLinkList {
-  display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 auto;
   padding: 0;
   list-style: none;
   height: 100%;
+  @include media(xs) {
+    display: none;
+  }
+  @include media(sm) {
+    display: flex;
+  }
 
   & li {
     height: 100%;
@@ -69,6 +76,10 @@
 
 .actionList {
   display: flex;
+  margin-left: auto;
+  @include media(sm) {
+    margin-left: 0;
+  }
 }
 
 .messengerButton {
