@@ -20,7 +20,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
   List<Post> findAllActive(Pageable pageable);
 
   @Query("FROM Post p WHERE p.authorId = :id AND p.isActive = true")
-  List<Post> findActiveByAuthorId(@Param("id") Long id, Pageable pageable);
+  Page<Post> findActiveByAuthorId(@Param("id") Long id, Pageable pageable);
 
   @Query("FROM Post p WHERE p.id = :id AND p.isActive = true")
   Optional<Post> findActiveById(@Param("id") Long id);
@@ -28,6 +28,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
   @Query("FROM Post p WHERE p.originalPostId = :id AND p.isActive = true ")
   List<Post> findAllActiveReposts(@Param("id") Long id);
 
+  @Query("FROM Post p WHERE p.id IN :postIds AND p.isActive = true")
+  Page<Post> findActiveByIdIn(List<Long> postIds, Pageable pageable);
 }
 
 

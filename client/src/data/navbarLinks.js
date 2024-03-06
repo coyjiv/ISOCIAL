@@ -3,6 +3,8 @@ import {
   BsHouseDoor,
   BsPeople,
   BsPeopleFill,
+  BsBookmark,
+  BsBookmarkFill,
 } from 'react-icons/bs'
 // import { HiOutlineUserGroup, HiUserGroup  } from "react-icons/hi2";
 // import { MdOutlineOndemandVideo, MdOndemandVideo } from "react-icons/md";
@@ -21,6 +23,13 @@ export const navbarLinks = [
     path: '/friends',
     activeIcon: BsPeopleFill,
     defaultIcon: BsPeople,
+  },
+  {
+    id: 3,
+    label: 'Saved',
+    path: '/saved',
+    activeIcon: BsBookmarkFill,
+    defaultIcon: BsBookmark,
   },
   // {
   //     id: 3,

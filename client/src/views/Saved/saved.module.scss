@@ -1,0 +1,17 @@
+@import '../../styles/mixins/breakpoints';
+
+.container {
+  padding-block: 40px;
+}
+
+.title {
+  font-size: 25px;
+  font-weight: 900;
+  margin-left: 30px;
+  display: none;
+
+  @include media(md) {
+    position: fixed;
+    display: block;
+  }
+}

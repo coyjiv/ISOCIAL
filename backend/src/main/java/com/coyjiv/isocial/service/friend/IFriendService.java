@@ -1,6 +1,7 @@
 package com.coyjiv.isocial.service.friend;
 
 import com.coyjiv.isocial.domain.UserFriendStatus;
+import com.coyjiv.isocial.dto.respone.friend.CustomFriendResponse;
 import com.coyjiv.isocial.dto.respone.friend.FriendResponseDto;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 
@@ -22,7 +23,8 @@ public interface IFriendService {
 
   Long getSubscribersCount(Long userId);
 
-  List<FriendResponseDto> availableFriendRequests(Long userId);
+  CustomFriendResponse availableFriendRequests(Integer page,
+                                               Integer size) throws EntityNotFoundException;
 
   UserFriendStatus getFriendStatus(Long id, Long authenticationPrincipal);
 

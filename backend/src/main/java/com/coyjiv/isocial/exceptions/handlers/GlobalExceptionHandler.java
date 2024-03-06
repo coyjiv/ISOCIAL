@@ -33,7 +33,7 @@ public class GlobalExceptionHandler {
 
   @ExceptionHandler(IllegalAccessException.class)
   public ResponseEntity<?> handleIllegalAccessException(IllegalAccessException exception) {
-    return ResponseEntity.status(403).body(exception.getMessage());
+    return ResponseEntity.status(401).body(exception.getMessage());
   }
 
   @ExceptionHandler(HttpMessageNotReadableException.class)
@@ -44,6 +44,11 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(RequestValidationException.class)
   public ResponseEntity<?> handleRequestValidationException(RequestValidationException exception) {
     return ResponseEntity.status(400).body(exception.getMessage());
+  }
+
+  @ExceptionHandler(NumberFormatException.class)
+  public ResponseEntity<String> handleNumberFormatException(NumberFormatException ex) {
+    return ResponseEntity.status(400).body(ex.getMessage());
   }
 
   @ExceptionHandler(Exception.class)

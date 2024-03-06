@@ -3,7 +3,7 @@ import { useDropzone } from 'react-dropzone'
 import PropTypes from 'prop-types'
 import styles from '../mediaUpload.module.scss'
 
-const Dropzone = ({ onDrop, file, resetFile }) => {
+const Dropzone = ({ onDrop, file, resetFile, customTitle }) => {
     const { getRootProps, getInputProps, } = useDropzone({
         onDrop, noClick: !!file, accept: {
             'image/jpeg': [],
@@ -19,13 +19,13 @@ const Dropzone = ({ onDrop, file, resetFile }) => {
                 <div className={styles.dropzone} {...getRootProps()}>
                     <input {...getInputProps()} />
                     {
-                        <Typography>Drag and drop or simply click to select a new avatar</Typography>
+                        <Typography>{customTitle ?? 'Drag and drop or simply click to select a new avatar'}</Typography>
                     }
                 </div>
                 :
                 <div>
                     <div className={styles.dropzonePreview}>
-                        <img src={URL.createObjectURL(file)} alt="avatar" />
+                        <img src={URL.createObjectURL(file)} alt="image to upload" />
                     </div>
                     <Button onClick={resetFile} fullWidth sx={{ marginTop: '20px' }}>Reset</Button>
                 </div>
@@ -38,6 +38,7 @@ Dropzone.propTypes = {
     onDrop: PropTypes.func.isRequired,
     file: PropTypes.object,
     resetFile: PropTypes.func.isRequired,
+    customTitle: PropTypes.string
 }
 
 

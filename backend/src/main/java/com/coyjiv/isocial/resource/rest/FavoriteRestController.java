@@ -67,15 +67,21 @@ public class FavoriteRestController {
     return ResponseEntity.ok(favoriteService.findActiveBySelectorId(page, size, id));
   }
 
+  @PostMapping("/toggle")
+  public ResponseEntity<?> toggle(@RequestBody @Valid FavoriteRequestDto dto)
+    throws EntityNotFoundException, IllegalAccessException {
+    return ResponseEntity.ok(favoriteService.toggle(dto.getSelectedPostId()));
+  }
+
   @PostMapping
   public ResponseEntity<?> create(@RequestBody @Valid FavoriteRequestDto dto)
-          throws EntityNotFoundException, IllegalAccessException {
+    throws EntityNotFoundException, IllegalAccessException {
     return ResponseEntity.status(201).body(favoriteService.create(dto));
   }
 
   @DeleteMapping("/{id}")
   public ResponseEntity<?> delete(@PathVariable("id") @Min(0) Long id)
-          throws IllegalAccessException, RequestValidationException {
+    throws IllegalAccessException, RequestValidationException {
     favoriteService.delete(id, true);
     return ResponseEntity.status(204).build();
   }

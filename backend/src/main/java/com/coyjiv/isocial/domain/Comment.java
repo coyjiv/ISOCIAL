@@ -16,7 +16,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Entity
 @Table(name = "comments")
-public class Comment extends AbstractEntity {
+public class Comment extends AbstractEntity implements Likeable {
   @Column(name = "commenter_id")
   private Long commenterId;
 
@@ -25,4 +25,12 @@ public class Comment extends AbstractEntity {
 
   @Column(name = "text")
   private String text;
+
+  @Column(name = "is_edited")
+  private boolean isEdited;
+
+  @Override
+  public LikeableEntity getEntityType() {
+    return LikeableEntity.COMMENT;
+  }
 }

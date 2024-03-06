@@ -1,16 +1,31 @@
-import { Typography } from "@mui/material"
+import { Link } from "react-router-dom";
 import { navbarLinks } from "../../../data/navbarLinks";
 import MessengerButton from "./actions/MessengerButton";
 import { HeaderLinks } from "./HeaderLinks";
 import NotificationButton from "./actions/NotificationButton";
 import AvatarButton from "./actions/AvatarButton";
-import { Link } from "react-router-dom";
-import styles from "./navbar.module.scss"
+import { MainSearch } from "../../MainSearch";
+import styles from "./navbar.module.scss";
+import { useGetUserByNameQuery } from "../../../store/services/searchService";
+import { useState } from "react";
+import { useDebounce } from "usehooks-ts";
 
 const Navbar = () => {
+  const [value, setValue] = useState("");
+  const debouncedValue = useDebounce(value);
+
+  const { data } = useGetUserByNameQuery(debouncedValue, {
+    skip: debouncedValue === "",
+  });
+
+  const handleChange = (value) => {
+    setValue(value);
+  };
+
   return (
     <header className={styles.header}>
-      <Link to='/'><Typography typography={'h1'} fontSize={22} fontWeight={'bold'}>iSocial</Typography></Link>
+      <MainSearch value={value} searchItems={data} onChange={handleChange} />
+
       <nav className={styles.navWrapper}>
         <ul className={styles.navLinkList}>
           <HeaderLinks navbarLinks={navbarLinks} />
@@ -22,7 +37,7 @@ const Navbar = () => {
         </ul>
       </nav>
     </header>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;
