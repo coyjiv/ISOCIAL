@@ -1,6 +1,6 @@
 import {
-    createBrowserRouter,
-    RouterProvider,
+  createBrowserRouter,
+  RouterProvider,
 } from "react-router-dom";
 import Home from "../Home/Home";
 import Register from "../Register/Register";
@@ -13,8 +13,6 @@ import Videos from "../Videos/Videos";
 import { Friends, FriendsAll, FriendsRequests } from "../Friends";
 import Confirmation from "../Confirmation/Confirmation";
 
-import ChatList from "../Chat/ChatList.jsx";
-import Chat from "../Chat/Chat.jsx";
 import Post from "../Post";
 
 import UpdatePassword from "../UpdatePassword";
@@ -59,8 +57,8 @@ const router = createBrowserRouter([
     path: PATH.FRIENDS,
     element: <Friends />,
     errorElement: <ErrorFallback />,
-	},
-	{
+  },
+  {
     path: PATH.FRIENDS_REQUESTS,
     element: <FriendsRequests />,
   },
@@ -105,11 +103,11 @@ const router = createBrowserRouter([
     path: "forgot-password/:id",
     element: <UpdatePassword />,
   },
-    {
-        path: "post/:id",
-        element: <Post />,
-        errorElement: <ErrorFallback />,
-    },
+  {
+    path: "post/:id",
+    element: <Post />,
+    errorElement: <ErrorFallback />,
+  },
   {
     path: "saved",
     element: <Saved />,
@@ -117,4 +115,4 @@ const router = createBrowserRouter([
   }
 ]);
 
-export const App = () => <RouterProvider router={router}/>;
+export const App = () => <RouterProvider router={router} />;
