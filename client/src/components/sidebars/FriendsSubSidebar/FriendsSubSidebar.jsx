@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import { useState } from "react";
 import { Stack, Typography } from "@mui/material";
 
-import { PATH } from "../../../utils/constants";
 import { SubSidebarHeader } from "./SubSidebarHeader";
 import { FriendsSidebarUserCard } from "../../friends-page-components";
 import { SidebarSearch } from "../../index";
@@ -30,7 +29,7 @@ const FriendsSubSidebar = ({
   if (!Array.isArray(users)) {
     return (
       <SidebarWrapper>
-        <SubSidebarHeader heading={heading} link={PATH.FRIENDS} />
+        <SubSidebarHeader heading={heading} link={`/friends`} />
       </SidebarWrapper>
     );
   }
@@ -56,7 +55,7 @@ const FriendsSubSidebar = ({
 
   return (
     <SidebarWrapper>
-      <SubSidebarHeader heading={heading} link={PATH.FRIENDS}>
+      <SubSidebarHeader heading={heading} link={`/friends`}>
         {withSearch && (
           <SidebarSearch
             value={searchValue}

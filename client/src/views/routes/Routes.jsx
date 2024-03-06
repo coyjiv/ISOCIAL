@@ -20,7 +20,6 @@ import Saved from "../Saved";
 import { ErrorFallback } from "../../components/ErrorFallback/ErrorFallback";
 import Chats from "../Chat/Chats";
 import ErrorChat from "../Chat/ErrorChat";
-import { PATH } from "../../utils/constants";
 
 const router = createBrowserRouter([
   {
@@ -54,16 +53,16 @@ const router = createBrowserRouter([
     errorElement: <ErrorFallback />,
   },
   {
-    path: PATH.FRIENDS,
+    path: "/friends",
     element: <Friends />,
     errorElement: <ErrorFallback />,
   },
   {
-    path: PATH.FRIENDS_REQUESTS,
+    path: "/friends/requests",
     element: <FriendsRequests />,
   },
   {
-    path: PATH.FRIENDS_ALL,
+    path: "/friends/all",
     element: <FriendsAll />,
   },
   {

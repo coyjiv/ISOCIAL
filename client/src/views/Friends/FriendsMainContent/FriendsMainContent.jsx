@@ -1,7 +1,6 @@
 import { Divider } from "@mui/material";
 
 import { FriendsList } from "../../../components/friends-page-components";
-import { PATH } from "../../../utils/constants";
 import {
   useAcceptFriendRequestMutation,
   useAvailableFriendRequestsQuery,
@@ -28,7 +27,7 @@ const FriendsMainContent = () => {
         users={requests?.content}
         isLoading={isLoading}
         heading="Friend Requests"
-        link={PATH.FRIENDS_REQUESTS}
+        link={`/friends/requests`}
         onConfirm={acceptFriendRequest}
         onDecline={declineFriendRequest}
       />
@@ -38,7 +37,7 @@ const FriendsMainContent = () => {
         users={friends}
         isLoading={isLoading}
         heading="All Friends"
-        link={PATH.FRIENDS_ALL}
+        link={`/friends/all`}
         onMessage={handleMessage}
       />
     </MainContentWrapper>
