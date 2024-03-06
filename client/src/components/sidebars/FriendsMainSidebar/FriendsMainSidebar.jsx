@@ -1,6 +1,5 @@
 import { Divider, Stack, Typography } from "@mui/material";
 
-import { FriendsSettingsPopover } from "./FriendsSettingsPopover";
 import { FriendsSidebarItem } from "./FriendsSidebarItem";
 import { sidebarItemsMap } from "./FriendsMainSidebar.utils.jsx";
 import {
@@ -16,7 +15,6 @@ const FriendsMainSidebar = () => {
           <Typography fontSize="24px" fontWeight="600">
             Friends
           </Typography>
-          <FriendsSettingsPopover />
         </Stack>
       </SidebarHeaderWrapper>
       <Stack gap="2px" marginTop="8px">
