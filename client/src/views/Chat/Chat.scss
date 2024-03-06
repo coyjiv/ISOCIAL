@@ -55,8 +55,6 @@
   }
 
   .message-avatar {
-    @include messageAvatar;
-
     position: absolute;
     left: -36px;
     top: 10px;
@@ -181,10 +179,6 @@
     justify-content: flex-start;
     align-items: center;
     position: relative;
-
-    .message-avatar {
-      @include messageAvatar;
-    }
 
     h3 {
       font-size: 20px;
