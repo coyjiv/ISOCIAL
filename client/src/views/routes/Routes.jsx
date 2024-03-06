@@ -1,4 +1,7 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+} from "react-router-dom";
 import Home from "../Home/Home";
 import Register from "../Register/Register";
 import Login from "../Login/Login";
@@ -7,11 +10,17 @@ import Settings from "../Settings/Settings";
 import ForgotPassword from "../Forgot-password/ForgotPassword";
 import Groups from "../Groups/Groups";
 import Videos from "../Videos/Videos";
-import Friends from "../Friends/Friends";
+import { Friends, FriendsAll, FriendsRequests } from "../Friends";
 import Confirmation from "../Confirmation/Confirmation";
-import UpdatePassword from "../UpdatePassword";
-import { ErrorFallback } from "../../components/ErrorFallback/ErrorFallback";
 
+import Post from "../Post";
+
+import UpdatePassword from "../UpdatePassword";
+import Saved from "../Saved";
+import { ErrorFallback } from "../../components/ErrorFallback/ErrorFallback";
+import Chats from "../Chat/Chats";
+import ErrorChat from "../Chat/ErrorChat";
+import { PATH } from "../../utils/constants";
 
 const router = createBrowserRouter([
   {
@@ -40,18 +49,22 @@ const router = createBrowserRouter([
     errorElement: <ErrorFallback />,
   },
   {
-    path: "profile/:id",
-    element: <Profile />
-  },
-  {
     path: "settings",
     element: <Settings />,
     errorElement: <ErrorFallback />,
   },
   {
-    path: "friends",
+    path: PATH.FRIENDS,
     element: <Friends />,
     errorElement: <ErrorFallback />,
+  },
+  {
+    path: PATH.FRIENDS_REQUESTS,
+    element: <FriendsRequests />,
+  },
+  {
+    path: PATH.FRIENDS_ALL,
+    element: <FriendsAll />,
   },
   {
     path: "watch",
@@ -68,6 +81,15 @@ const router = createBrowserRouter([
     element: <div>Users</div>,
   },
   {
+    path: "chats",
+    element: <Chats />,
+  },
+  {
+    path: "chats/:id",
+    element: <Chats />,
+    errorElement: <ErrorChat />,
+  },
+  {
     path: "confirmation",
     element: <Confirmation />,
     errorElement: <ErrorFallback />,
@@ -80,6 +102,16 @@ const router = createBrowserRouter([
   {
     path: "forgot-password/:id",
     element: <UpdatePassword />,
+  },
+  {
+    path: "post/:id",
+    element: <Post />,
+    errorElement: <ErrorFallback />,
+  },
+  {
+    path: "saved",
+    element: <Saved />,
+    errorElement: <ErrorFallback />,
   }
 ]);
 

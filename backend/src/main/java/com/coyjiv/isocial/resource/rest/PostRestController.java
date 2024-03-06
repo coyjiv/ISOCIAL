@@ -61,19 +61,19 @@ public class PostRestController {
 
   @PostMapping
   public ResponseEntity<?> create(@RequestBody @Valid PostRequestDto dto)
-          throws RequestValidationException {
+    throws RequestValidationException {
     return ResponseEntity.ok(postService.create(dto));
   }
 
   @PostMapping("/repost")
   public ResponseEntity<?> repost(@RequestBody @Valid RePostRequestDto dto)
-          throws IllegalAccessException, EntityNotFoundException {
+    throws IllegalAccessException, EntityNotFoundException {
     return ResponseEntity.ok(postService.repost(dto));
   }
 
   @DeleteMapping("/{id}")
   public ResponseEntity<?> delete(@PathVariable("id") @Min(0) Long id)
-          throws IllegalAccessException, RequestValidationException {
+    throws IllegalAccessException, RequestValidationException {
     postService.delete(id);
     return ResponseEntity.status(204).build();
   }
@@ -81,9 +81,13 @@ public class PostRestController {
   @PatchMapping("/{id}")
   public ResponseEntity<?> update(@PathVariable("id") @Min(0) Long id,
                                   @RequestBody @Valid UpdatePostRequestDto dto)
-          throws IllegalAccessException {
-    postService.update(id, dto);
-    return ResponseEntity.status(204).build();
+    throws IllegalAccessException {
+    return ResponseEntity.ok(postService.update(id, dto));
   }
 
+  @GetMapping("/favorite")
+  public ResponseEntity<?> findFavoritePosts(@RequestParam(defaultValue = "0") @Min(0) Integer page,
+                                             @RequestParam(defaultValue = "10") @Min(0) Integer size) {
+    return ResponseEntity.ok(postService.findFavoritePosts(page, size));
+  }
 }

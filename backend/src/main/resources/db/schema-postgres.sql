@@ -108,7 +108,8 @@ CREATE TABLE public.comments
     text               VARCHAR(1000),
     creation_date      TIMESTAMP,
     last_modified_date TIMESTAMP,
-    is_active          BOOLEAN NOT NULL DEFAULT FALSE
+    is_active          BOOLEAN NOT NULL DEFAULT FALSE,
+    is_edited          BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 DROP TABLE IF EXISTS public.posts CASCADE;
@@ -138,6 +139,7 @@ CREATE TABLE public.favorites
     is_active          BOOLEAN NOT NULL DEFAULT FALSE
 );
 
+
 DROP TABLE IF EXISTS public.subscribers CASCADE;
 CREATE TABLE public.subscribers
 (
@@ -150,3 +152,16 @@ CREATE TABLE public.subscribers
     last_modified_date TIMESTAMP,
     is_active          BOOLEAN NOT NULL DEFAULT FALSE
 );
+
+DROP TABLE IF EXISTS public.likes CASCADE;
+CREATE TABLE likes
+(
+    id                 BIGSERIAL PRIMARY KEY,
+    user_id            BIGINT                                                     NOT NULL,
+    entity_id          BIGINT                                                     NOT NULL,
+    entity_type        TEXT CHECK (entity_type IN ('POST', 'COMMENT', 'MESSAGE')) NOT NULL,
+    creation_date      TIMESTAMP                                                           DEFAULT CURRENT_TIMESTAMP,
+    last_modified_date TIMESTAMP                                                           DEFAULT CURRENT_TIMESTAMP,
+    is_active          BOOLEAN                                                    NOT NULL DEFAULT TRUE
+);
+

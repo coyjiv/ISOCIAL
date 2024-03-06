@@ -3,7 +3,8 @@ import { profileApi } from './profileService'
 export const friendsApi = profileApi.injectEndpoints({
   endpoints: (builder) => ({
     getFriendsList: builder.query({
-      query: (id, page, size) => `friends/${id}?page=${page}&size=${size}`,
+      query: (id, page = 0, size = 10) =>
+        `friends/${id}?page=${page}&size=${size}`,
       providesTags: (id) => [
         { type: 'Friends', id },
         { type: 'Profile', id },
@@ -26,7 +27,6 @@ export const friendsApi = profileApi.injectEndpoints({
         return {
           url: `friends?friendId=${userId}`,
           method: 'DELETE',
-          data: { userId },
         }
       },
       invalidatesTags: (result, error, { userId }) => [
@@ -89,6 +89,7 @@ export const friendsApi = profileApi.injectEndpoints({
 })
 
 export const {
+  useGetFriendsListQuery,
   useSendFriendRequestMutation,
   useRemoveFriendMutation,
   useAcceptFriendRequestMutation,

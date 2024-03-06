@@ -7,14 +7,46 @@ const ProfileSkeleton = () => (
             <Skeleton variant='rounded' width={'full'} height={351} />
             <Container sx={{ px: '5px' }}>
                 <Stack direction={'row'} justifyContent={'space-between'} alignItems={'center'} spacing={2} sx={{ my: 2 }}>
-                    <Skeleton variant='circular' width={176} height={176} />
-                    <Stack spacing={-1} width={200}>
-                        <Skeleton variant='text' width={'full'} height={50} />
-                        <Skeleton variant='text' width={'50%'} height={50} />
+                    <Skeleton
+                        variant="circular"
+                        sx={{
+                            width: { xs: 100, sm: 150, md: 176 },
+                            height: { xs: 100, sm: 150, md: 176 }
+                        }}
+                    />
+                    <Stack spacing={-1} sx={{
+                        width: { xs: '20%', sm: '75%', md: 200 },
+                    }}>
+                        <Skeleton
+                            variant='text'
+                            sx={{
+                                width: { xs: '100%', sm: '75%', md: 'full' },
+                                height: 50
+                            }}
+                        />
+                        <Skeleton
+                            variant='text'
+                            sx={{
+                                width: { xs: '100%', sm: '75%', md: '50%' },
+                                height: 50
+                            }}
+                        />
                     </Stack>
-                    <Stack direction={'row'} spacing={1} margin={'auto'}>
-                        <Skeleton variant='rounded' width={180} height={36} />
-                        <Skeleton variant='rounded' width={180} height={36} />
+                    <Stack direction={'row'} spacing={1} sx={{ margin: 'auto' }}>
+                        <Skeleton
+                            variant='rounded'
+                            sx={{
+                                width: { xs: 50, sm: 80, md: 180 },
+                                height: { xs: 28, sm: 32, md: 36 }
+                            }}
+                        />
+                        <Skeleton
+                            variant='rounded'
+                            sx={{
+                                width: { xs: 50, sm: 80, md: 180 },
+                                height: { xs: 28, sm: 32, md: 36 }
+                            }}
+                        />
                     </Stack>
                 </Stack>
                 <Divider />
@@ -25,7 +57,10 @@ const ProfileSkeleton = () => (
                     <Skeleton variant='text' width={'63px'} height={35} />
                     <Skeleton variant='text' width={'60px'} height={35} />
                     <Skeleton variant='text' width={'60px'} height={35} />
-                    <Skeleton variant='rounded' width={'48px'} height={36} style={{ marginLeft: 'auto' }} />
+                    <Skeleton variant='rounded' sx={{
+                        width: { xs: 0, sm: 80, md: 180 },
+                        height: { xs: 0, sm: 32, md: 36 }
+                    }} style={{ marginLeft: 'auto' }} />
                 </Stack>
             </Container>
         </Container>

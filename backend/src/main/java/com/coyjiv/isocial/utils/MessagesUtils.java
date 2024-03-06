@@ -9,10 +9,10 @@ import java.util.Optional;
 public class MessagesUtils {
   public static void validateFirstMessage(CreateMessageRequestDto firstMessageDto) throws RequestValidationException {
 
-    if (firstMessageDto.getAttachements() != null && !firstMessageDto.getAttachements().isEmpty()) {
-      if (firstMessageDto.getAttachements().stream().anyMatch(Objects::isNull)
+    if (firstMessageDto.getAttachments() != null && !firstMessageDto.getAttachments().isEmpty()) {
+      if (firstMessageDto.getAttachments().stream().anyMatch(Objects::isNull)
               ||
-              firstMessageDto.getAttachements().stream().anyMatch(String::isBlank)
+              firstMessageDto.getAttachments().stream().anyMatch(String::isBlank)
       ) {
         throw new RequestValidationException(
                 "Message should have text or attachments, attachments should not have empty strings or nulls"
@@ -21,7 +21,7 @@ public class MessagesUtils {
     }
 
     if (firstMessageDto.getText() == null || firstMessageDto.getText().isBlank()) {
-      if (firstMessageDto.getAttachements() == null || firstMessageDto.getAttachements().isEmpty()) {
+      if (firstMessageDto.getAttachments() == null || firstMessageDto.getAttachments().isEmpty()) {
         throw new RequestValidationException(
                 "Message should have text or attachments, attachments should not have empty strings or nulls"
         );

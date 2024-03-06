@@ -21,6 +21,7 @@ import com.coyjiv.isocial.transfer.user.UserDefaultResponseMapper;
 import com.coyjiv.isocial.transfer.user.UserProfileResponseDtoMapper;
 import com.coyjiv.isocial.transfer.user.UserRegistrationRequestMapper;
 import com.coyjiv.isocial.transfer.user.UserSearchResponseMapper;
+import jakarta.security.auth.message.AuthException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -65,14 +66,14 @@ public class UserService implements IUserService {
     Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "id"));
     Pageable pageable = PageRequest.of(page, size, sort);
     return userRepository.findAll(pageable).toList().stream()
-      .map(userDefaultResponseMapper::convertToDto).toList();
+            .map(userDefaultResponseMapper::convertToDto).toList();
   }
 
   @Transactional(readOnly = true)
   @Override
   public List<UserDefaultResponseDto> findAllActive() {
     return userRepository.findAll().stream()
-      .map(userDefaultResponseMapper::convertToDto).toList();
+            .map(userDefaultResponseMapper::convertToDto).toList();
   }
 
   @Transactional(readOnly = true)
@@ -122,7 +123,7 @@ public class UserService implements IUserService {
     }
 
     return result.stream()
-      .map(userSearchResponseMapper::convertToDto).toList();
+            .map(userSearchResponseMapper::convertToDto).toList();
   }
 
   //  @Transactional
@@ -151,13 +152,13 @@ public class UserService implements IUserService {
 
 
     String text = String.format("Open link to confirm your account ! Link: %s/confirmation?id=%s",
-      hostname, uuidForConfirmationLink);
+            hostname, uuidForConfirmationLink);
 
     userRepository.save(user);
 
     emailService.sendSimpleMessage(
-      userRegistrationDto.getEmail(), "Account confirmation",
-      text
+            userRegistrationDto.getEmail(), "Account confirmation",
+            text
     );
 
     //    sendConfirmationEmail(userRegistrationDto.getEmail(), userRegistrationDto.getFirstName(), text);
@@ -181,7 +182,7 @@ public class UserService implements IUserService {
   @Transactional
   @Override
   public void update(Long id, Map<Object, Object> fields)
-    throws IllegalAccessException, EntityNotFoundException {
+          throws IllegalAccessException, EntityNotFoundException {
     Long requestOwnerId = authProvider.getAuthenticationPrincipal();
     if (!Objects.equals(id, requestOwnerId)) {
       throw new IllegalAccessException("User have no authorities to do this request.");
@@ -192,7 +193,7 @@ public class UserService implements IUserService {
       fields.forEach((key, value) -> {
         String stringKey = (String) key;
         if (Objects.equals(stringKey, "email") || Objects.equals(stringKey, "password")
-          || Objects.equals(stringKey, "activity_status") || Objects.equals(stringKey, "last_seen")) {
+                || Objects.equals(stringKey, "activity_status") || Objects.equals(stringKey, "last_seen")) {
           return;
         }
         if (Objects.equals(key, "gender")) {
@@ -240,8 +241,12 @@ public class UserService implements IUserService {
 
   @Transactional
   @Override
-  public void handleConnect(String token) {
-    jwtTokenProvider.validateAccessToken(token);
+  public void handleConnect(String token) throws IllegalAccessException {
+    try {
+      jwtTokenProvider.validateAccessToken(token);
+    } catch (Exception e) {
+      throw new IllegalAccessException("Token not valid");
+    }
     Long userId = authProvider.getAuthenticationPrincipal();
     if (userId != null) {
       Optional<User> userOptional = userRepository.findActiveById(userId);
@@ -255,17 +260,13 @@ public class UserService implements IUserService {
 
   @Transactional
   @Override
-  public void handleDisconnect(String token) {
-    jwtTokenProvider.validateAccessToken(token);
-    Long userId = authProvider.getAuthenticationPrincipal();
-    if (userId != null) {
-      Optional<User> userOptional = userRepository.findActiveById(userId);
-      if (userOptional.isPresent()) {
-        User user = userOptional.get();
-        user.setActivityStatus(UserActivityStatus.OFFLINE);
-        user.setLastSeen(new Date());
-        userRepository.save(user);
-      }
+  public void handleDisconnect(Long userId) {
+    Optional<User> userOptional = userRepository.findActiveById(userId);
+    if (userOptional.isPresent()) {
+      User user = userOptional.get();
+      user.setActivityStatus(UserActivityStatus.OFFLINE);
+      user.setLastSeen(new Date());
+      userRepository.save(user);
     }
   }
 
@@ -297,6 +298,41 @@ public class UserService implements IUserService {
     }
     String uuid = PasswordResetCache.putEmail(email);
     emailService.sendPasswordResetMessage(email, uuid);
+  }
+
+  @Override
+  public String getAvatar(Long id) throws EntityNotFoundException {
+    return userRepository.findActiveById(id)
+      .map(User::getAvatar)
+      .orElseThrow(() -> new EntityNotFoundException("User not found"));
+  }
+
+  @Override
+  public String getFullName(Long id) throws EntityNotFoundException {
+    return userRepository.findActiveById(id)
+      .map(User::getFullName)
+      .orElseThrow(() -> new EntityNotFoundException("User not found"));
+  }
+
+  @Override
+  public boolean isPremium(Long commenterId) {
+    return userRepository.findActiveById(commenterId)
+      .map(User::isPremium)
+      .orElse(false);
+  }
+
+  @Override
+  public String getPremiumNickname(Long commenterId) {
+    return userRepository.findActiveById(commenterId)
+      .map(User::getPremiumNickname)
+      .orElse("");
+  }
+
+  @Override
+  public String getPremiumEmoji(Long commenterId) {
+    return userRepository.findActiveById(commenterId)
+      .map(User::getPremiumEmoji)
+      .orElse("");
   }
 
 

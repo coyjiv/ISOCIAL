@@ -6,9 +6,14 @@ import com.coyjiv.isocial.dao.UserRepository;
 import com.coyjiv.isocial.domain.Friend;
 import com.coyjiv.isocial.domain.User;
 import com.coyjiv.isocial.domain.UserFriendStatus;
+import com.coyjiv.isocial.dto.respone.friend.CustomFriendResponse;
 import com.coyjiv.isocial.dto.respone.friend.FriendResponseDto;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
+
 import com.coyjiv.isocial.service.subscriber.ISubscriberService;
+
+import com.coyjiv.isocial.service.websocket.IWebsocketService;
+
 import com.coyjiv.isocial.transfer.friend.FriendResponseMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -20,7 +25,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -34,7 +38,11 @@ public class FriendService implements IFriendService {
   private final FriendRepository friendRepository;
   private final FriendResponseMapper friendResponseMapper;
   private final EmailPasswordAuthProvider emailPasswordAuthProvider;
+
   private final ISubscriberService subscriberService;
+
+  private final IWebsocketService websocketService;
+
 
   @Transactional
   @Override
@@ -80,7 +88,11 @@ public class FriendService implements IFriendService {
     Friend friend = new Friend(requester.get(), addresser.get());
     friendRepository.save(friend);
 
+
     subscriberService.createSubscriber(addresserId,requesterId);
+
+
+    websocketService.sendFriendNotificationToUser(friend);
 
     return true;
   }
@@ -98,8 +110,6 @@ public class FriendService implements IFriendService {
     if (user.isEmpty() || friend.isEmpty() || user.get().equals(friend.get()) || friendRequest.isEmpty()) {
       return false;
     }
-
-    System.out.println(friendRequest.get().getStatus());
 
 
     if (friendRequest.get().getStatus() == UserFriendStatus.REQUEST_SENT
@@ -201,15 +211,39 @@ public class FriendService implements IFriendService {
     return friendRepository.countAllNonAcceptedFriends(userRepository.findById(userId).orElseThrow());
   }
 
-  @Override
-  public List<FriendResponseDto> availableFriendRequests(Long userId) {
-    return userRepository.findById(userId).map(user ->
-      friendRepository.findAllByAddresserAndStatus(user, UserFriendStatus.REQUEST_RECEIVED).stream()
-        .map(Friend::getRequester)
-        .map(friendResponseMapper::convertToDto)
-        .collect(Collectors.toList())
-    ).orElse(Collections.emptyList());
+  @Transactional
+  public CustomFriendResponse availableFriendRequests(Integer page, Integer size) throws EntityNotFoundException {
+    long userId = emailPasswordAuthProvider.getAuthenticationPrincipal();
+    Optional<User> user = userRepository.findById(userId);
+
+    if (!user.isPresent()) {
+      throw new EntityNotFoundException("User not found");
+    }
+
+    Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "id"));
+    Pageable pageable = PageRequest.of(page, size, sort);
+
+    Page<Friend> friendRequests = friendRepository.findByAddresserAndStatusAndIsActive(user.get(),
+            UserFriendStatus.REQUEST_SENT, true, pageable);
+
+    List<FriendResponseDto> content = friendRequests.map(friend -> {
+      User requester = friend.getRequester();
+      return new FriendResponseDto(
+              requester.getId(),
+              requester.getFirstName(),
+              requester.getLastName(),
+              requester.getAvatarsUrl()
+      );
+    }).getContent();
+
+    boolean hasNext = friendRequests.hasNext();
+
+    return new CustomFriendResponse(content, hasNext);
   }
+
+
+
+
 
 
   public UserFriendStatus getFriendStatus(Long currentUserId, Long otherUserId) {

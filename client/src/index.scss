@@ -193,3 +193,17 @@ body {
   line-height: 1;
   background-color: colors.$wash;
 }
+
+.Toastify__toast {
+  cursor: pointer;
+}
+
+.Toastify__toast-container {
+  width: 400px;
+
+}
+
+.Toastify__toast-icon {
+  width: 70px;
+  height: 70px;
+}

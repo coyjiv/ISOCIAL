@@ -13,7 +13,7 @@ CREATE TABLE public.users
     is_private         BOOLEAN      NOT NULL DEFAULT FALSE,
     last_seen          TIMESTAMP,
     activity_status    VARCHAR(10)  NOT NULL DEFAULT 'OFFLINE',
-    gender             VARCHAR(20) NOT NULL,
+    gender             VARCHAR(20)  NOT NULL,
     date_of_birth      DATE,
     creation_date      TIMESTAMP,
     last_modified_date TIMESTAMP,
@@ -52,7 +52,7 @@ CREATE TABLE public.messages
     sender_id          INT,
     status             VARCHAR(50) NOT NULL DEFAULT 'SENT',
     text               VARCHAR(1000),
-    attachements       VARCHAR ARRAY,
+    attachments       VARCHAR ARRAY,
     is_edited          BOOLEAN,
     creation_date      TIMESTAMP,
     last_modified_date TIMESTAMP,
@@ -73,20 +73,21 @@ CREATE TABLE public.users_chats
 DROP TABLE IF EXISTS friends;
 CREATE TABLE friends
 (
-    id           INT AUTO_INCREMENT PRIMARY KEY,
-    requester_id INT,
-    addresser_id INT,
-    status       VARCHAR(255),
+    id                 INT AUTO_INCREMENT PRIMARY KEY,
+    requester_id       INT,
+    addresser_id       INT,
+    status             VARCHAR(255),
     FOREIGN KEY (requester_id) REFERENCES public.users (id),
     FOREIGN KEY (addresser_id) REFERENCES public.users (id),
     creation_date      TIMESTAMP,
     last_modified_date TIMESTAMP,
-    is_active BOOLEAN NOT NULL DEFAULT FALSE
+    is_active          BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 DROP TABLE IF EXISTS subscriptions;
 CREATE TABLE public.subscriptions
 (
+
     id                 INT AUTO_INCREMENT PRIMARY KEY,
     user_id            INT,
     subscriber_id          INT,
@@ -101,12 +102,13 @@ DROP TABLE IF EXISTS comments;
 CREATE TABLE public.comments
 (
     id                 INT AUTO_INCREMENT PRIMARY KEY,
-    commenter_id       INT NOT NULL,
-    post_id            INT NOT NULL ,
+    commenter_id       INT     NOT NULL,
+    post_id            INT     NOT NULL,
     text               VARCHAR(1000),
     creation_date      TIMESTAMP,
     last_modified_date TIMESTAMP,
-    is_active BOOLEAN NOT NULL DEFAULT FALSE
+    is_active          BOOLEAN NOT NULL DEFAULT FALSE,
+    is_edited          BOOLEAN NOT NULL DEFAULT FALSE
 );
 DROP TABLE IF EXISTS posts;
 CREATE TABLE public.posts
@@ -119,7 +121,7 @@ CREATE TABLE public.posts
     user_id            INT REFERENCES users (id),
     creation_date      TIMESTAMP,
     last_modified_date TIMESTAMP,
-    is_active BOOLEAN  NOT NULL DEFAULT FALSE
+    is_active          BOOLEAN NOT NULL DEFAULT FALSE
 );
 DROP TABLE IF EXISTS favorites;
 CREATE TABLE public.favorites
@@ -144,3 +146,17 @@ CREATE TABLE public.subscribers
     last_modified_date TIMESTAMP,
     is_active BOOLEAN NOT NULL DEFAULT FALSE
 );
+
+DROP TABLE IF EXISTS likes;
+CREATE TABLE likes
+(
+    id                 BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id            BIGINT       NOT NULL,
+    entity_id          BIGINT       NOT NULL,
+    entity_type        VARCHAR(255) NOT NULL,
+    creation_date      TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_modified_date TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    is_active          BOOLEAN NOT NULL DEFAULT TRUE
+);
+
+
