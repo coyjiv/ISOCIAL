@@ -20,11 +20,12 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
-public class ListSubscriberService{
+public class ListSubscriberService {
   private final SubscriberRepository subscriberRepository;
   private final UserRepository userRepository;
   private final EmailPasswordAuthProvider emailPasswordAuthProvider;
   private final UserProfileResponseDtoMapper userProfileResponseDtoMapper;
+
   @Transactional(readOnly = true)
   public List<UserProfileResponseDto> getSubscribers(int page, int size) throws EntityNotFoundException {
     Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "id"));
