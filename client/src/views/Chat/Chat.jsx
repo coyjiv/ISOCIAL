@@ -1,58 +1,134 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import './Chat.scss';
 import cx from 'classnames';
+import { AiOutlineDelete } from "react-icons/ai";
+import { useDeleteMessageMutation, useGetMessagesQuery, useSendMessageMutation } from '../../store/services/chatService';
 
 
 
 const Chat = () => {
+  //const location = useLocation();
+  //console.log(location);
+  //const chatId = location.state.chatId;
+  //const chatId = useGetMessagesQuery(chatId);
+  const chatId = 2;
 
-  const sampleMessage = [
-    { text: 'Hi, everyone', sender: 'bot' },
-    { text: 'What is your name?', sender: 'bot' },
-    { text: 'Hi, new friend', sender: 'user' },
-    { text: 'How are you?', sender: 'bot' },
-    { text: 'I am ok! And you?', sender: 'user' },
-  ];
 
-  const [messages, setMessages] = useState(sampleMessage);
+  const [messagesData, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
+  // eslint-disable-next-line no-unused-vars
+  const [page, setPage] = useState(0)
+  const contentRef = useRef();
+
+  const { data: messages, isLoading } = useGetMessagesQuery({ page, chatId }, { skip: !chatId })
+  const [sendMessage] = useSendMessageMutation()
+  const [deleteMessage] = useDeleteMessageMutation()
+  const userId = Number(localStorage.getItem('userId'));
+  console.log(userId);
+  console.log(chatId);
+
+  useEffect(() => {
+    if (!isLoading && messages && messages.length > 0) {
+      setMessages(messages)
+    }
+  }, [isLoading, messages])
+
+  // useEffect(() => {
+  //   instance.get(`http://localhost:9000/api/messages?page=0&quantity=30&chatId=${chatId}`)
+  //     .then((response) => {
+  //       setMessages(response.data)
+  //       console.log(response);
+  //       scrollBottom();
+  //     })
+
+  //     .catch((error) => console.error('Data error:', error));
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
+
+  // const handleSendMessage = async (event) => {
+  //   if (event.key === 'Enter') {
+  //     if (newMessage.trim() !== '') {
+
+  //       try {
+  //         await instance.post(`http://localhost:9000/api/messages?chatId=${chatId}`, { text: newMessage });
+  //         const response = await instance.get(`http://localhost:9000/api/messages?page=0&quantity=30&chatId=${chatId}`)
+  //         console.log(response);
+  //         setMessages(response.data);
+  //         setNewMessage('');
+  //       } catch (error) {
+  //         console.error('Send message error:', error);
+  //       }
+
+  //     }
+  //   }
+  // };
 
   const handleSendMessage = async (event) => {
     if (event.key === 'Enter') {
       if (newMessage.trim() !== '') {
 
-      try {
-        setMessages([...messages, { text: newMessage, sender: 'user' }]);
-        setNewMessage('');
-      } catch (error) {
-        console.error('Ошибка отправки сообщения:', error);
-      }
-        
+        try {
+          const response = await sendMessage({ chatId, text: newMessage })
+          console.log(response.data);
+          setMessages([...messagesData, response.data]);
+          setNewMessage('');
+        } catch (error) {
+          console.error('Send message error:', error);
+        }
+
       }
     }
   };
 
-  {messages.map((message, index) => (
-    console.log(messages[index - 1])
-   ))}
+  const handleDeleteMessage = async (item) => {
 
-    return (
+    try {
+      console.log(item.id);
+      await deleteMessage({ messageId: item.id })
+      // const response = await instance.get(`http://localhost:9000/api/messages?page=0&quantity=30&chatId=${chatId}`)
+      // console.log(response);
+      // setMessages(response.data);
+      setNewMessage('');
+    } catch (error) {
+      console.error('Delete message error:', error);
+    }
+  };
+
+
+  // eslint-disable-next-line no-unused-vars
+  const scrollBottom = () => {
+    const contentHeight = contentRef.current.clientHeight;
+    console.log(contentRef);
+    console.log(contentHeight);
+    window.scrollTo({
+      bottom: contentHeight,
+      behavior: 'smooth',
+    });
+  }
+
+  /*useEffect(scrollBottom, []);*/
+
+  return (
     <>
-    <div className="App">
-      <div className="chat-container">
-        <div className="chat-messages">
-          {messages.map((message, index) => (
-           <div key={index} className={cx('message-item', {'user': message.sender === 'user'}, {"bot":message.sender === 'bot'})}>
-            <div className={cx(messages[index + 1] === undefined || {'message-avatar' : (messages[index + 1].sender !== 'bot')})}></div>
-            <div className='message-text'>
-              {message.text}
+      <div className="message-container" >
+        <div className="chat-messages" ref={contentRef}>
+          {messagesData.map((message, index) => (
+            <div key={index} className={cx('message-item', { 'user': message.senderId === userId }, { "bot": message.senderId !== userId })}>
+              <div className={cx(messages[index - 1] === undefined || { 'message-avatar': (messages[index - 1].senderId !== userId) })}></div>
+              <div className="message-body">
+                <div className='message-text'>
+                  {message.text}
+                </div>
+                <div className="message-img">
+
+                </div>
+              </div>
+              <div className='message-options'>
+                <div className='message-options-option' onClick={() => handleDeleteMessage(message)}><AiOutlineDelete /></div>
+                <div className='message-options-option'></div>
+                <div className='message-options-option'></div>
+              </div>
             </div>
-            <div className='message-options'>
-              <div className='message-options_option'><img src="./public/assets/free-icon-delete-2907762.png"></img></div>
-              <div className='message-options_option'></div>
-              <div className='message-options_option'></div>
-            </div>
-           </div>
           ))}
         </div>
         <div className="chat-input">
@@ -65,9 +141,8 @@ const Chat = () => {
           />
         </div>
       </div>
-    </div>
     </>
-    )
+  )
 }
 
 export default Chat
