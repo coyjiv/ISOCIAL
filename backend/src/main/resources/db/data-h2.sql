@@ -13,7 +13,7 @@ INSERT INTO public.users (first_name, last_name, email, city, password, avatars_
                           is_premium, premium_nickname, premium_emoji, activity_status)
 
 VALUES ('Alice', 'Johnson', 'test2@example.com', 'Los Angeles',
-        '$2a$10$5OPwzIZ2N8CIeWUA2q9t0OzoI1kB7cvf1qDGwyxeiBFEAR3h2Psmu', ARRAY ['https://sm.ign.com/ign_nordic/cover/a/avatar-gen/avatar-generations_prsz.jpg'], 'banner2.jpg',
+        '$2a$10$5OPwzIZ2N8CIeWUA2q9t0OzoI1kB7cvf1qDGwyxeiBFEAR3h2Psmu', ARRAY ['https://i.pravatar.cc/150?img=2'], 'banner2.jpg',
         'Bio for Alice Johnson', 'MALE', FALSE, CURRENT_TIMESTAMP,
         '1985-03-20', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, false, null, null, 'OFFLINE');
 
@@ -25,7 +25,7 @@ INSERT INTO public.users (first_name, last_name, email, city, password, avatars_
                           is_private, last_seen, date_of_birth, creation_date, last_modified_date, is_active,
                           is_premium, premium_nickname, premium_emoji, activity_status)
 
-VALUES ('Bob', 'Smith', 'bob.smith@example.com', 'Chicago', 'mypassword', ARRAY ['https://sm.ign.com/ign_nordic/cover/a/avatar-gen/avatar-generations_prsz.jpg'], 'banner3.jpg',
+VALUES ('Bob', 'Smith', 'bob.smith@example.com', 'Chicago', '$2a$10$5OPwzIZ2N8CIeWUA2q9t0OzoI1kB7cvf1qDGwyxeiBFEAR3h2Psmu', ARRAY ['https://i.pravatar.cc/150?img=3'], 'banner3.jpg',
         'Bob Smith bio', 'MALE', FALSE, CURRENT_TIMESTAMP,
         '1992-07-08', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, false, null, null, 'OFFLINE');
 
@@ -36,7 +36,7 @@ INSERT INTO public.users (first_name, last_name, email, city, password, avatars_
                           is_private, last_seen, date_of_birth, creation_date, last_modified_date, is_active,
                           is_premium, premium_nickname, premium_emoji, activity_status)
 VALUES ('Eva', 'Martinez', 'eva.martinez@example.com', 'San Francisco', 'securepass123',
-        ARRAY ['https://sm.ign.com/ign_nordic/cover/a/avatar-gen/avatar-generations_prsz.jpg'], 'banner4.jpg',
+        ARRAY ['https://i.pravatar.cc/150?img=49'], 'banner4.jpg',
         'Evas bio description', 'MALE', FALSE, CURRENT_TIMESTAMP,
         '1988-12-01', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, false, null, null, 'OFFLINE');
 
@@ -47,7 +47,7 @@ INSERT INTO public.users (first_name, last_name, email, city, password, avatars_
                           is_private, last_seen, date_of_birth, creation_date, last_modified_date, is_active,
                           is_premium, premium_nickname, premium_emoji, activity_status)
 
-VALUES ('Michael', 'Williams', 'michael.williams@example.com', 'Miami', 'password123', ARRAY ['https://sm.ign.com/ign_nordic/cover/a/avatar-gen/avatar-generations_prsz.jpg'], 'banner5.jpg',
+VALUES ('Michael', 'Williams', 'michael.williams@example.com', 'Miami', 'password123', ARRAY ['https://i.pravatar.cc/150?img=14'], 'banner5.jpg',
         'Michaels bio', 'MALE', FALSE, CURRENT_TIMESTAMP,
         '1975-06-25', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, false, null, null, 'OFFLINE');
 
