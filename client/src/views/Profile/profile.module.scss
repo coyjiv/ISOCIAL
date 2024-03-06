@@ -1,5 +1,5 @@
-@use '../../styles/variables/colors';
-@use '../../styles/mixins/breakpoints';
+@use "../../styles/variables/colors";
+@use "../../styles/mixins/breakpoints";
 
 .card {
   box-shadow: 0 1px 2px colors.$shadow2;
@@ -21,6 +21,11 @@
     }
   }
 }
+.friends-container {
+  .card {
+    flex-direction: column;
+  }
+}
 
 .buttonWhite {
   position: absolute;
@@ -35,10 +40,35 @@
   row-gap: 10px;
   column-gap: 10px;
   justify-content: center;
-  @include breakpoints.media('sm') {
+  @include breakpoints.media("sm") {
     margin-left: auto !important;
   }
 }
 
-.friendsCard {
+.friends {
+  display: flex;
+  width: 60%;
+}
+.input {
+  border-radius: 50px;
+  background-color: #f6f6f7;
+  color: #b0b1b3;
+}
+.search {
+  position: relative;
+  margin-left: 10px;
+}
+.requestsLink {
+  margin-top: 3%;
+  margin-left: 7%;
+  color: #0088ff;
+}
+.requestsLink:hover {
+  color: rgba(0, 0, 255, 0.8);
+}
+.wrapperCards {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: space-around;
+  align-items: center;
 }
