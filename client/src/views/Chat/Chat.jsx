@@ -3,37 +3,54 @@ import './Chat.scss';
 import cx from 'classnames';
 import { useLocation } from 'react-router-dom';
 import { AiOutlineDelete } from "react-icons/ai";
-
-import { withLayout } from "../../hooks/withLayout"
 import { useDeleteMessageMutation, useGetMessagesQuery, useSendMessageMutation } from '../../store/services/chatService';
 
 
 
 const Chat = () => {
-  //const location = useLocation();
-  //console.log(location);
-  //const chatId = location.state.chatId;
-  //const chatId = useGetMessagesQuery(chatId);
-  const chatId = 2;
-  
+  const location = useLocation();
+  let chatId = null;
+  console.log(location);
+  if (location.state !== null) {
+    chatId = location.state.chatId;
+
+  }  
 
   const [messagesData, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const [page, setPage] = useState(0)
-  const contentRef = useRef();
 
-  const { data: messages, isLoading } = useGetMessagesQuery({ page, chatId }, {skip: !chatId})
+  
   const [sendMessage] = useSendMessageMutation()
   const [deleteMessage] = useDeleteMessageMutation()
   const userId = Number(localStorage.getItem('userId'));
   console.log(userId);
   console.log(chatId);
 
-  useEffect(() => {
-    if (!isLoading && messages && messages.length > 0) {
-      setMessages(messages)
-    }
-  }, [isLoading, messages])
+  const { data: messages, isLoading } = useGetMessagesQuery({ page, chatId }, {skip: !chatId})
+
+    useEffect(() => {
+      if (chatId !== null) {
+        if (!isLoading && messages && messages.length > 0) {
+          setMessages(messages)
+        }
+      }
+      
+    }, [isLoading, messages])
+
+    useEffect(() => {
+      
+        const scrollToBottom = () => {
+          chatContainerRef.current.scrollTop = chatContainerRef.current.offsetHeight + 700;
+          console.log(chatContainerRef.current.scrollHeight);
+        };
+        scrollToBottom();
+      
+    }, [isLoading, messages]);
+
+  
+
+  
 
   // useEffect(() => {
   //   instance.get(`http://localhost:9000/api/messages?page=0&quantity=30&chatId=${chatId}`)
@@ -97,23 +114,17 @@ const Chat = () => {
   };
 
 
-  const scrollBottom = () => {
-    const contentHeight = contentRef.current.clientHeight;
-    console.log(contentRef);
-    console.log(contentHeight);
-    window.scrollTo({
-      bottom: contentHeight,
-      behavior: 'smooth',
-    });
-  }
+  const chatContainerRef = useRef(null);
+  console.log(chatContainerRef);
+  
 
-  /*useEffect(scrollBottom, []);*/
+  
 
   return (
     <>
-      <div className="message-container" >
-        <div className="chat-messages" ref={contentRef}>
-          {messagesData.map((message, index) => (
+      <div className="message-container"  ref={chatContainerRef}>
+        <div className="chat-messages">
+          {chatId && messagesData.map((message, index) => (
             <div key={index} className={cx('message-item', { 'user': message.senderId === userId }, { "bot": message.senderId !== userId })}>
               <div className={cx(messages[index - 1] === undefined || { 'message-avatar': (messages[index - 1].senderId !== userId) })}></div>
               <div className="message-body">
@@ -131,6 +142,7 @@ const Chat = () => {
               </div>
             </div>
           ))}
+          {!chatId && <span className="no-chats">Select a chat to start messaging</span>}
         </div>
         <div className="chat-input">
           <input

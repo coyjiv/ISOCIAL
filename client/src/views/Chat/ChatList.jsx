@@ -21,7 +21,7 @@ const ChatList = () => {
 
   return (
    <div className="chats">
-    <div className="add-chat" onClick={() => addChat({receiverId, "text": "string", "attachements": ["string"]})}><AiOutlinePlus className="add-chat__plus"/></div>
+    <div className="add-chat" onClick={() => addChat({receiverId, "text": "string", "attachments": ["string"]})}><AiOutlinePlus className="add-chat__plus"/></div>
     <div className="chat-list">
       {chats && chats.map((chat, i) => (
         <ChatItem
