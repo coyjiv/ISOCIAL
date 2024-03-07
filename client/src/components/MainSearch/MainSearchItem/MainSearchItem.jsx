@@ -1,14 +1,13 @@
 import PropTypes from "prop-types";
 import { Stack, Avatar, Typography } from "@mui/material";
 
-import fallbackAvatar from "../../../assets/fallback/Ava.jpg";
 import { SearchItemWrapper } from "./MainSearchItem.styled";
 
 const MainSearchItem = ({ fullName, avatars, onClick }) => {
   return (
     <SearchItemWrapper onClick={onClick}>
       <Avatar
-        src={avatars[0] ?? fallbackAvatar}
+        src={avatars[0]}
         alt={fullName}
         sx={{ width: 45, height: 45 }}
       />

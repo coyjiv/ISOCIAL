@@ -18,7 +18,7 @@ import {
 import { useClickOutside } from "../../hooks/index.js";
 import MainSearchEmptySection from "./MainSearchEmptySection/MainSearchEmptySection.jsx";
 
-// eslint-disable-next-line react/prop-types
+
 const MainSearch = ({ value, searchItems, onChange }) => {
   const [options, setOptions] = useState(searchItems);
   const [inputActive, setInputActive] = useState(false);
@@ -103,6 +103,7 @@ const MainSearch = ({ value, searchItems, onChange }) => {
 };
 
 MainSearch.propTypes = {
+  value: PropTypes.string,
   searchItems: PropTypes.array,
   onChange: PropTypes.func,
 };

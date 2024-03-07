@@ -8,6 +8,7 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
+import { useNavigate } from 'react-router'
 import { IoMdArrowDropdown } from "react-icons/io";
 
 import { FriendCard } from "../index";
@@ -21,13 +22,14 @@ const FriendsList = ({
   link,
   isLoading,
   onDecline,
-  onConfirm,
-  onMessage,
+  onConfirm, onAddFriend,
+
 }) => {
   const range = [...Array(5).keys()];
   const isUsers = users?.length > 0;
   const { breakpoints } = useTheme();
   const isMatches = useMediaQuery(breakpoints.up(1200));
+  const navigate = useNavigate();
 
   const isShowButton = users?.length < 4 && isMatches;
 
@@ -36,6 +38,14 @@ const FriendsList = ({
   const handleExpand = () => {
     setExpanded(!expanded);
   };
+
+  const handleShowUser = (id) => {
+    if(variant === "requests"){
+      navigate(`/friends/requests?id=${id}`);
+    } else {
+      navigate(`/profile/${id}`);
+    }
+  }
 
   const filteredUsers = users?.slice(0, 10);
 
@@ -79,11 +89,13 @@ const FriendsList = ({
             <FriendCard
               variant={variant}
               key={id}
+              id={id}
               fullName={`${firstName} ${lastName}`}
               images={avatarsUrl}
-              onConfirm={() => onConfirm({ friendId: id })}
-              onDelete={() => onDecline({ friendId: id })}
-              onMessage={() => onMessage(id)}
+              onConfirm={(e) => onConfirm(e, id)}
+              onDelete={(e) => onDecline(e, id)}
+              onAddFriend={onAddFriend}
+              onClick={() => handleShowUser(id)}
             />
           ))
         ) : (
@@ -112,7 +124,7 @@ FriendsList.propTypes = {
   isLoading: PropTypes.bool,
   onDecline: PropTypes.func,
   onConfirm: PropTypes.func,
-  onMessage: PropTypes.func,
+  onAddFriend: PropTypes.func,
 };
 
 FriendsList.displayName = "FriendsList";

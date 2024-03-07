@@ -14,7 +14,10 @@ const CardActionsPopover = ({ name, onMessage, onRemove }) => {
   const [anchorEl, setAnchorEl] = useState();
   const id = open ? "simple-popover" : undefined;
 
-  const handleClick = (e) => setAnchorEl(e.currentTarget);
+  const handleClick = (e) => {
+    e.stopPropagation()
+    setAnchorEl(e.currentTarget);}
+
   const handleClose = () => setAnchorEl(null);
 
   return (

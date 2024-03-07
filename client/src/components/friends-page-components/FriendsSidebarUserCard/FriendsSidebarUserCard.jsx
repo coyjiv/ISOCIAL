@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
 import { Avatar, Stack, Typography } from "@mui/material";
 
-import fallbackAvatar from "../../../assets/fallback/Ava.jpg";
 import {
   CardContentWrapper,
   CardWrapper,
@@ -25,7 +24,8 @@ const FriendsSidebarUserCard = ({
     <CardWrapper variant={variant} onClick={onClick}>
       <Stack direction="row" gap="8px" alignItems="center">
         <Avatar
-          src={userImage?.[0] ?? fallbackAvatar}
+					src={userImage?.[0]}
+					alt={fullName}
           sx={{ width: 60, height: 60 }}
         />
         <CardContentWrapper variant={variant}>

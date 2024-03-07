@@ -10,7 +10,7 @@ import { SidebarItemsList, SidebarWrapper } from "./FriendsSubSidebar.styled";
 import { useSearchParams } from "react-router-dom";
 import {
   useAcceptFriendRequestMutation,
-  useCancelFriendRequestMutation,
+  useDeclineFriendRequestMutation,
 } from "../../../store/services/friendService.js";
 
 const FriendsSubSidebar = ({
@@ -24,12 +24,12 @@ const FriendsSubSidebar = ({
   let [searchParams, setSearchParams] = useSearchParams();
 
   const [acceptFriendRequest] = useAcceptFriendRequestMutation();
-  const [cancelFriendRequest] = useCancelFriendRequestMutation();
+  const [declineFriendRequest] = useDeclineFriendRequestMutation();
 
   if (!Array.isArray(users)) {
     return (
       <SidebarWrapper>
-        <SubSidebarHeader heading={heading} link={`/friends`} />
+        <SubSidebarHeader heading={heading} link={"/friends"} />
       </SidebarWrapper>
     );
   }
@@ -43,19 +43,19 @@ const FriendsSubSidebar = ({
 
   const handleChange = (value) => setSearchValue(value);
   const handleChooseUser = (id) => setSearchParams({ id });
-  const handleDeleteRequest = (e, id) => {
-    console.log(id);
+  const handleDeclineRequest = (e, id) => {
     e.stopPropagation();
-    cancelFriendRequest({ userId: id });
+    declineFriendRequest({ userId: id });
   };
+
   const handleConfirmRequest = (e, id) => {
     e.stopPropagation();
-    acceptFriendRequest({ userId: 2 });
+    acceptFriendRequest({ userId: id });
   };
 
   return (
     <SidebarWrapper>
-      <SubSidebarHeader heading={heading} link={`/friends`}>
+      <SubSidebarHeader heading={heading} link={"/friends"}>
         {withSearch && (
           <SidebarSearch
             value={searchValue}
@@ -73,14 +73,14 @@ const FriendsSubSidebar = ({
           marginBottom="12px"
         >{`${users?.length ?? "0"} ${subTitle}`}</Typography>
         <Stack width="100%" gap="10px">
-          {filteredUsers?.map(({ id, firstName, lastName, avatar }) => (
+          {filteredUsers?.map(({ id, firstName, lastName, avatarsUrl }) => (
             <FriendsSidebarUserCard
               key={id}
-              userImage={avatar}
+              userImage={avatarsUrl}
               fullName={`${firstName} ${lastName}`}
               variant={variant}
-              onConfirm={(e) => handleConfirmRequest(id)}
-              onDelete={(e) => handleDeleteRequest(e, id)}
+              onConfirm={(e) => handleConfirmRequest(e, id)}
+              onDelete={(e) => handleDeclineRequest(e, id)}
               onClick={() => handleChooseUser(id)}
             />
           ))}

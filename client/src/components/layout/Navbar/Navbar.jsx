@@ -29,7 +29,7 @@ const Navbar = () => {
   return (
     <header className={styles.header}>
       {!isMobile ? <MainSearch value={value} searchItems={data} onChange={handleChange} />
-        : <Link to='/'><Typography typography={'h1'} fontSize={22} fontWeight={'bold'}>iSocial</Typography></Link>}
+        : <Link to='/'style={{marginLeft: '16px'}}><Typography typography={'h1'} fontSize={22} fontWeight={'bold'}>iSocial</Typography></Link>}
 
       <nav className={styles.navWrapper}>
         <ul className={styles.navLinkList}>

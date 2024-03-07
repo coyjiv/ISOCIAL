@@ -10,6 +10,6 @@ export const ExpandedWrapper = styled(Stack)(({ active }) => ({
   flexWrap: "wrap",
   gap: "20px",
   transition: "all 0.45s ease",
-  maxHeight: active ? "100%" : "634px",
+  maxHeight: active ? "100%" : "690px",
   overflowY: !active ? "hidden" : "auto",
 }));

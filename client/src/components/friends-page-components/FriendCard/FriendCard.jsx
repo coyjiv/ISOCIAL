@@ -1,26 +1,42 @@
 import PropTypes from "prop-types";
-import { Avatar, Stack, Typography } from "@mui/material";
+import {Avatar, Stack, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
-import fallbackAvatar from "../../../assets/fallback/Ava.jpg";
 
 import { ButtonMain } from "../../buttons";
 import { CardContentWrapper, CardWrapper } from "./FriendCard.styled.js";
+import {useState} from "react";
 
 const FriendCard = ({
+    id,
   variant,
   fullName,
   images,
   onDelete,
   onConfirm,
-  onMessage,
+  onAddFriend,
+  onClick,
 }) => {
+    const [msg, setMsg] = useState('');
   const isRequestVariant = variant === "requests";
 
+  const handleAddFriend =  async (e) => {
+    e.stopPropagation();
+
+    const data = await onAddFriend({userId: id});
+
+    if (data.error) {
+        setMsg(data?.error?.response?.data);
+    } else {
+        setMsg(data?.data);
+    }
+
+  };
+
   return (
-    <CardWrapper>
+    <CardWrapper onClick={onClick}>
       <Box width="252px" height="208px">
         <Avatar
-          src={images[0] ?? fallbackAvatar}
+          src={images[0]}
           alt={fullName}
           variant="square"
           sx={{
@@ -31,9 +47,13 @@ const FriendCard = ({
         />
       </Box>
       <CardContentWrapper>
-        <Typography fontSize="17px" fontWeight="600" marginBottom="15px">
+        <Typography fontSize="17px" fontWeight="600" marginBottom={!msg ? '30px' : '0'}>
           {fullName}
         </Typography>
+
+          <Typography fontSize="14px" marginBottom={!msg ? '0' : '9px'}>
+              {msg}
+          </Typography>
         {isRequestVariant && (
           <Stack gap="8px">
             <ButtonMain onClick={onConfirm}>Confirm</ButtonMain>
@@ -43,7 +63,7 @@ const FriendCard = ({
           </Stack>
         )}
         {!isRequestVariant && (
-          <ButtonMain onClick={onMessage}>Message</ButtonMain>
+          <ButtonMain onClick={(e) => handleAddFriend(e)}>Add to friends</ButtonMain>
         )}
       </CardContentWrapper>
     </CardWrapper>
@@ -51,12 +71,14 @@ const FriendCard = ({
 };
 
 FriendCard.propTypes = {
+    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   variant: PropTypes.oneOf(["friends", "requests"]),
   fullName: PropTypes.string,
   images: PropTypes.array,
   onDelete: PropTypes.func,
+    onClick: PropTypes.func,
 	onConfirm: PropTypes.func,
-	onMessage: PropTypes.func,
+    onAddFriend: PropTypes.func,
 };
 
 FriendCard.displayName = "FriendCard";

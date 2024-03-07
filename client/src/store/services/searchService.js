@@ -3,6 +3,7 @@ import { instance } from "../../api/index.js";
 
 export const searchApi = createApi({
   reducerPath: "searchApi",
+  tagTypes: ["Search"],
   baseQuery: async (args) => {
     try {
       const response = await instance(args);
