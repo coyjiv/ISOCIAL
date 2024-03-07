@@ -194,3 +194,27 @@ INSERT INTO public.friends (requester_id, addresser_id, status, creation_date, l
 VALUES (6, 1, 'REQUEST_SENT', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE);
 
 
+
+INSERT INTO public.posts (text_content, attachments, user_id, creation_date, last_modified_date, is_active)
+VALUES ('Привіт усім! Це перший пост.', '{"фото1.jpg", "документ.pdf"}', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE);
+INSERT INTO public.posts (text_content, attachments, user_id, creation_date, last_modified_date, is_active)
+VALUES ('Привіт усім! Це перший пост.', '{"фото1.jpg", "документ.pdf"}', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE);
+INSERT INTO public.posts (text_content,user_id, creation_date, last_modified_date, is_active)
+VALUES ('Привіт усім! Це перший пост.', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE);
+
+INSERT INTO public.posts (text_content, attachments, user_id, creation_date, last_modified_date, is_active)
+VALUES ('22222222222222', '{"фото1.jpg", "документ.pdf"}', 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE);
+INSERT INTO public.posts (text_content, attachments, user_id, creation_date, last_modified_date, is_active)
+VALUES ('22222222222222', '{"фото1.jpg", "документ.pdf"}', 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE);
+INSERT INTO public.posts (text_content, user_id, creation_date, last_modified_date, is_active)
+VALUES ('22222222222222', 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE);
+
+INSERT INTO public.posts (text_content, attachments, user_id, creation_date, last_modified_date, is_active)
+VALUES ('333333333333333333', '{"фото1.jpg", "документ.pdf"}', 3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE);
+INSERT INTO public.posts (text_content, attachments, user_id, creation_date, last_modified_date, is_active)
+VALUES ('333333333333333333', '{"фото1.jpg", "документ.pdf"}', 3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE);
+INSERT INTO public.posts (text_content, user_id, creation_date, last_modified_date, is_active)
+VALUES ('333333333333333333', 3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE);
+
+
+
