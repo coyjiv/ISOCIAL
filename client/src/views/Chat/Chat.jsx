@@ -7,13 +7,14 @@ import { AutosizeTextareaSend } from '../../components/AutosizeTextareaSend';
 import * as Yup from 'yup';
 import { useParams } from 'react-router';
 import PropTypes from 'prop-types'
+import { withWebsocket } from '../../hooks/withWebsocket'
 
 const validationScheme = Yup.object().shape({
   text: Yup.string().required('Message is required').max(260, 'Message is too long'),
 });
 
 
-const Chat = ({ id }) => {
+const ChatPage = ({ id }) => {
   const { id: paramsId } = useParams();
 
   const chatId = id || paramsId;
@@ -28,6 +29,8 @@ const Chat = ({ id }) => {
   const [sendMessage] = useSendMessageMutation()
   const [deleteMessage] = useDeleteMessageMutation()
   const userId = Number(localStorage.getItem('userId'));
+
+  console.log(messages);
 
   useEffect(() => {
     if (!isLoading && messages && messages.length > 0) {
@@ -107,8 +110,8 @@ const Chat = ({ id }) => {
   )
 }
 
-Chat.propTypes = {
+ChatPage.propTypes = {
   id: PropTypes.number
 }
 
-export default Chat
+export const Chat = withWebsocket(ChatPage)
