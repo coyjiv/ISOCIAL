@@ -68,7 +68,7 @@ spring:
     enabled: false
   sql:
     init:
-      mode: always
+      mode: never
       schema-locations: classpath:db/schema-postgres.sql
   datasource:
     url: ${DATABASE_URL}

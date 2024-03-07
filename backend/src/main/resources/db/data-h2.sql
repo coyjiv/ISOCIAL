@@ -93,7 +93,7 @@ VALUES ('Привіт усім! Це перший пост.', '{"фото1.jpg",
 
 
 
-        '1995-09-10', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, false, null, null, 'OFFLINE');
+--         '1995-09-10', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, false, null, null, 'OFFLINE');
 INSERT INTO public.roles (user_id, name)
 VALUES (6, 'ROLE_USER');
 

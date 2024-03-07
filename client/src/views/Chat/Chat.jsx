@@ -3,19 +3,23 @@ import './Chat.scss';
 import cx from 'classnames';
 import { AiOutlineDelete } from "react-icons/ai";
 import { useDeleteMessageMutation, useGetMessagesQuery, useSendMessageMutation } from '../../store/services/chatService';
+import { AutosizeTextareaSend } from '../../components/AutosizeTextareaSend';
+import * as Yup from 'yup';
+import { useParams } from 'react-router';
+import PropTypes from 'prop-types'
+
+const validationScheme = Yup.object().shape({
+  text: Yup.string().required('Message is required').max(260, 'Message is too long'),
+});
 
 
+const Chat = ({ id }) => {
+  const { id: paramsId } = useParams();
 
-const Chat = () => {
-  //const location = useLocation();
-  //console.log(location);
-  //const chatId = location.state.chatId;
-  //const chatId = useGetMessagesQuery(chatId);
-  const chatId = 2;
+  const chatId = id || paramsId;
 
 
   const [messagesData, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState('');
   // eslint-disable-next-line no-unused-vars
   const [page, setPage] = useState(0)
   const contentRef = useRef();
@@ -24,8 +28,6 @@ const Chat = () => {
   const [sendMessage] = useSendMessageMutation()
   const [deleteMessage] = useDeleteMessageMutation()
   const userId = Number(localStorage.getItem('userId'));
-  console.log(userId);
-  console.log(chatId);
 
   useEffect(() => {
     if (!isLoading && messages && messages.length > 0) {
@@ -33,62 +35,24 @@ const Chat = () => {
     }
   }, [isLoading, messages])
 
-  // useEffect(() => {
-  //   instance.get(`http://localhost:9000/api/messages?page=0&quantity=30&chatId=${chatId}`)
-  //     .then((response) => {
-  //       setMessages(response.data)
-  //       console.log(response);
-  //       scrollBottom();
-  //     })
 
-  //     .catch((error) => console.error('Data error:', error));
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, []);
-
-  // const handleSendMessage = async (event) => {
-  //   if (event.key === 'Enter') {
-  //     if (newMessage.trim() !== '') {
-
-  //       try {
-  //         await instance.post(`http://localhost:9000/api/messages?chatId=${chatId}`, { text: newMessage });
-  //         const response = await instance.get(`http://localhost:9000/api/messages?page=0&quantity=30&chatId=${chatId}`)
-  //         console.log(response);
-  //         setMessages(response.data);
-  //         setNewMessage('');
-  //       } catch (error) {
-  //         console.error('Send message error:', error);
-  //       }
-
-  //     }
-  //   }
-  // };
-
-  const handleSendMessage = async (event) => {
-    if (event.key === 'Enter') {
-      if (newMessage.trim() !== '') {
-
-        try {
-          const response = await sendMessage({ chatId, text: newMessage })
-          console.log(response.data);
-          setMessages([...messagesData, response.data]);
-          setNewMessage('');
-        } catch (error) {
-          console.error('Send message error:', error);
-        }
-
-      }
+  const handleSendMessage = async (values) => {
+    try {
+      const response = await sendMessage({ chatId, text: values.text })
+      console.log(response.data);
+      setMessages([...messagesData, response.data]);
+    } catch (error) {
+      console.error('Send message error:', error);
     }
-  };
+
+  }
 
   const handleDeleteMessage = async (item) => {
 
     try {
       console.log(item.id);
       await deleteMessage({ messageId: item.id })
-      // const response = await instance.get(`http://localhost:9000/api/messages?page=0&quantity=30&chatId=${chatId}`)
-      // console.log(response);
-      // setMessages(response.data);
-      setNewMessage('');
+      setMessages(messagesData.filter((message) => message.id !== item.id));
     } catch (error) {
       console.error('Delete message error:', error);
     }
@@ -132,17 +96,19 @@ const Chat = () => {
           ))}
         </div>
         <div className="chat-input">
-          <input
-            type="text"
-            placeholder="Type your message..."
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-            onKeyDown={handleSendMessage}
+          <AutosizeTextareaSend
+            onSubmit={handleSendMessage}
+            placeholder={"Type your message..."}
+            validationScheme={validationScheme}
           />
         </div>
       </div>
     </>
   )
+}
+
+Chat.propTypes = {
+  id: PropTypes.number
 }
 
 export default Chat

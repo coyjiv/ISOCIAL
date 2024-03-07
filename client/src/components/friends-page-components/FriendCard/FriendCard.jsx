@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { Avatar, Stack, Typography } from "@mui/material";
-import Box from "@mui/material/Box";
+import { Box } from "@mui/material";
 import fallbackAvatar from "../../../assets/fallback/Ava.jpg";
 
 import { ButtonMain } from "../../buttons";
@@ -55,8 +55,8 @@ FriendCard.propTypes = {
   fullName: PropTypes.string,
   images: PropTypes.array,
   onDelete: PropTypes.func,
-	onConfirm: PropTypes.func,
-	onMessage: PropTypes.func,
+  onConfirm: PropTypes.func,
+  onMessage: PropTypes.func,
 };
 
 FriendCard.displayName = "FriendCard";
