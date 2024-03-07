@@ -95,6 +95,21 @@ public class PostService implements IPostService {
     }
   }
 
+  //  public PageWrapper<PostResponseDto> findRecommendedPosts(int page, int size) {
+  //    List<Long> recommendedPosts = postRepository
+  //    .findRecommendedPosts(emailPasswordAuthProvider.getAuthenticationPrincipal());
+  //    if (recommendedPosts.isEmpty()) {
+  //      return new PageWrapper<>(List.of(), false);
+  //    } else {
+  //      Sort sort = Sort.by(Sort.Direction.DESC, "creationDate").and(Sort.by(Sort.Direction.ASC, "id"));
+  //      Pageable pageable = PageRequest.of(page, size, sort);
+  //      Page<Post> postPage = postRepository.findActiveByIdIn(recommendedPosts, pageable);
+  //      List<PostResponseDto> dtos = postPage.getContent().stream().map(postResponseMapper::convertToDto).toList();
+  //      boolean hasNext = postPage.hasNext();
+  //      return new PageWrapper<>(dtos, hasNext);
+  //    }
+  //  }
+
   @Override
   @Transactional(readOnly = true)
   public PageWrapper<PostResponseDto> findActiveByAuthorId(int page, int size, Long id) {

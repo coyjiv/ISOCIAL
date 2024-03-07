@@ -6,7 +6,7 @@ import { withLayout } from "../../hooks/withLayout"
 import { useParams } from "react-router-dom";
 
 import ChatList from "./ChatList";
-import Chat from "./Chat";
+import { Chat } from './Chat'
 import "./Chat.scss";
 
 const ChatContainer = () => {
