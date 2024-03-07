@@ -64,7 +64,7 @@ const FriendsMainContent = () => {
         users={knownUsers}
         isLoading={isUsersLoading}
         heading="People you may know"
-        link={"/friends/all"}
+        link={"/friends"}
         onAddFriend={sendFriendRequest}
         onMessage={handleMessage}
       />

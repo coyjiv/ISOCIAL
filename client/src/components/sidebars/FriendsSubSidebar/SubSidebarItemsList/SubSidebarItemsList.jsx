@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { Stack, Typography } from "@mui/material";
-import { FriendsSidebarUserCard } from "../../../friends-page-components";
+import { FriendsSidebarUserCard } from "../../../friends-page-components/index.js";
 import { SidebarItemsList } from "../FriendsSubSidebar.styled.js";
 
 const SubSidebarItemsList = ({ users, searchValue, variant, subTitle, handleDeleteRequest, handleConfirmRequest, handleChooseUser }) => {
