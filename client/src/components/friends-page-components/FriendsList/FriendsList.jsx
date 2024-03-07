@@ -85,7 +85,7 @@ const FriendsList = ({
       </Stack>
       <ExpandedWrapper active={expanded ? "expanded" : undefined}>
         {isUsers ? (
-          filteredUsers?.map(({ id, firstName, lastName, avatarsUrl }) => (
+          users?.map(({ id, firstName, lastName, avatarsUrl }) => (
             <FriendCard
               variant={variant}
               key={id}

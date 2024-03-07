@@ -33,7 +33,7 @@ const PostView = () => {
                         recentComments={post?.recentComments}
                         liked={post?.liked}
                         onDeleted={() => {
-                            navigate('/feed')
+                            navigate('/')
                         }}
                     />}
             </Container>

@@ -60,7 +60,40 @@ INSERT INTO public.users (first_name, last_name, email, city, password, avatars_
                           is_premium, premium_nickname, premium_emoji, activity_status)
 VALUES ('Sophia', 'Lee', 'sophia.lee@example.com', 'Seattle', 'strongpassword456', ARRAY [], 'banner6.jpg',
         'Sophias bio information', 'MALE', FALSE, CURRENT_TIMESTAMP,
-        '1995-09-10', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, false, null, null, 'OFFLINE');
+
+        '1995-09-10', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, false, null , null , 'OFFLINE');
+INSERT INTO public.roles (user_id,name) VALUES ( 6, 'ROLE_USER' );
+
+INSERT INTO public.comments (commenter_id, post_id, text, creation_date, last_modified_date, is_active)
+VALUES (1, 1, '11111111', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
+
+INSERT INTO public.comments (commenter_id, post_id, text, creation_date, last_modified_date, is_active)
+VALUES (2, 2, '2222222222', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, false);
+
+INSERT INTO public.comments (commenter_id, post_id, text, creation_date, last_modified_date, is_active)
+VALUES (3, 3, '3333333333', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
+
+INSERT INTO public.comments (commenter_id, post_id, text, creation_date, last_modified_date, is_active)
+VALUES (4, 4, '44444444', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, false);
+
+INSERT INTO public.comments (commenter_id, post_id, text, creation_date, last_modified_date, is_active)
+VALUES (5, 5, '55555555', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
+
+INSERT INTO public.posts (text_content, attachments, user_id, creation_date, last_modified_date)
+VALUES ('Привіт усім! Це перший пост.', '{"фото1.jpg", "документ.pdf"}', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.posts (text_content, attachments, user_id, creation_date, last_modified_date)
+VALUES ('Привіт усім! Це перший пост.', '{"фото1.jpg", "документ.pdf"}', 3, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.posts (text_content, attachments, user_id, creation_date, last_modified_date)
+VALUES ('Привіт усім! Це перший пост.', '{"фото1.jpg", "документ.pdf"}', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+INSERT INTO public.posts (text_content, attachments, user_id, creation_date, last_modified_date)
+VALUES ('Привіт усім! Це перший пост.', '{"фото1.jpg", "документ.pdf"}', 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+
+
+--         '1995-09-10', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, false, null, null, 'OFFLINE');
 INSERT INTO public.roles (user_id, name)
 VALUES (6, 'ROLE_USER');
 
@@ -159,4 +192,5 @@ INSERT INTO public.friends (requester_id, addresser_id, status, creation_date, l
 VALUES (1, 5, 'REQUEST_SENT', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE);
 INSERT INTO public.friends (requester_id, addresser_id, status, creation_date, last_modified_date, is_active)
 VALUES (6, 1, 'REQUEST_SENT', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE);
+
 

@@ -49,6 +49,7 @@ const FriendsSubSidebar = ({
   };
 
   const handleConfirmRequest = (e, id) => {
+    console.log(id);
     e.stopPropagation();
     acceptFriendRequest({ userId: id });
   };
