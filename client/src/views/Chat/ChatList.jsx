@@ -1,8 +1,5 @@
 //libs
-import { Link, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-
-//import { withLayout } from "../../hooks/withLayout"
+import { useState } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
 
 
@@ -12,7 +9,6 @@ import { useGetChatsQuery, useCreateChatMutation } from "../../store/services/ch
 
 const ChatList = () => {
   const [page, setPage] = useState(0);
-  const [receiverId, setReceiverId] = useState(2);
   const [text, setText] = useState('text');
   const [attachment, setAttachment] = useState([21]);
   const { data: chats } = useGetChatsQuery(page);
