@@ -62,7 +62,6 @@ VALUES ('Sophia', 'Lee', 'sophia.lee@example.com', 'Seattle', 'strongpassword456
         'Sophias bio information', 'MALE', FALSE, CURRENT_TIMESTAMP,
 
         '1995-09-10', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, false, null , null , 'OFFLINE');
-INSERT INTO public.roles (user_id,name) VALUES ( 6, 'ROLE_USER' );
 
 INSERT INTO public.comments (commenter_id, post_id, text, creation_date, last_modified_date, is_active)
 VALUES (1, 1, '11111111', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
