@@ -1,0 +1,224 @@
+Subject: [PATCH] US15 forget password endpoint
+---
+Index: ISOCIAL/backend/src/main/java/com/coyjiv/isocial/service/friend/FriendService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/backend/src/main/java/com/coyjiv/isocial/service/friend/FriendService.java b/backend/src/main/java/com/coyjiv/isocial/service/friend/FriendService.java
+--- a/backend/src/main/java/com/coyjiv/isocial/service/friend/FriendService.java	(revision b27e431a9f940bbefcf4c0f3fa753e98a33dd317)
++++ b/backend/src/main/java/com/coyjiv/isocial/service/friend/FriendService.java	(date 1709914333495)
+@@ -6,6 +6,7 @@
+ import com.coyjiv.isocial.domain.Friend;
+ import com.coyjiv.isocial.domain.User;
+ import com.coyjiv.isocial.domain.UserFriendStatus;
++import com.coyjiv.isocial.dto.respone.friend.CustomFriendResponse;
+ import com.coyjiv.isocial.dto.respone.friend.FriendResponseDto;
+ import com.coyjiv.isocial.exceptions.EntityNotFoundException;
+ import com.coyjiv.isocial.transfer.friend.FriendResponseMapper;
+@@ -19,7 +20,6 @@
+ 
+ 
+ import java.util.ArrayList;
+-import java.util.Collections;
+ import java.util.List;
+ import java.util.Optional;
+ import java.util.stream.Collectors;
+@@ -140,26 +140,40 @@
+ 
+   @Transactional
+   @Override
+-  public boolean deleteFriend(Long friendId) {
++  public boolean deleteFriend(Long friendUserId) {
+     Long userId = emailPasswordAuthProvider.getAuthenticationPrincipal();
+     Optional<User> user = userRepository.findById(userId);
+-    Optional<Friend> friend = friendRepository.findById(friendId);
++    Optional<User> friendUser = userRepository.findById(friendUserId);
+ 
+-    if (user.isEmpty() || friend.isEmpty() || friend.get().getStatus() != UserFriendStatus.FRIEND) {
++    if (user.isEmpty() || friendUser.isEmpty()) {
+       return false;
+     }
+-    if (user.get().equals(friend.get().getRequester()) || user.get().equals(friend.get().getAddresser())) {
+-      friend.get().setActive(false);
+ 
+-      friend.get().setStatus(UserFriendStatus.NOT_FRIEND);
+-      friendRepository.save(friend.get());
++    Optional<Friend> activeFriendship =
++            friendRepository.findByRequesterAndAddresserAndStatusAndIsActive(user.get(), friendUser.get(), UserFriendStatus.FRIEND, true);
++    Optional<Friend> activeFriendship1 =
++            friendRepository.findByRequesterAndAddresserAndStatusAndIsActive(friendUser.get(), user.get(),UserFriendStatus.FRIEND, true);
++    if (activeFriendship.isPresent()) {
++      Friend friend = activeFriendship.get();
++      friend.setActive(false);
++      friend.setStatus(UserFriendStatus.NOT_FRIEND);
++      friendRepository.save(friend);
+       return true;
+     }
++    if (activeFriendship1.isPresent()) {
++      Friend friend = activeFriendship1.get();
++      friend.setActive(false);
++      friend.setStatus(UserFriendStatus.NOT_FRIEND);
++      friendRepository.save(friend);
++      return true;
++    }
++
+ 
+     return false;
+   }
+ 
+ 
++
+   @Transactional(readOnly = true)
+   @Override
+   public List<FriendResponseDto> findAllFriends(Long userId, int page, int size) {
+@@ -193,15 +207,39 @@
+     return friendRepository.countAllNonAcceptedFriends(userRepository.findById(userId).orElseThrow());
+   }
+ 
+-  @Override
+-  public List<FriendResponseDto> availableFriendRequests(Long userId) {
+-    return userRepository.findById(userId).map(user ->
+-      friendRepository.findAllByAddresserAndStatus(user, UserFriendStatus.REQUEST_RECEIVED).stream()
+-        .map(Friend::getRequester)
+-        .map(friendResponseMapper::convertToDto)
+-        .collect(Collectors.toList())
+-    ).orElse(Collections.emptyList());
++  @Transactional
++  public CustomFriendResponse availableFriendRequests(Integer page, Integer size) throws EntityNotFoundException {
++    long userId = emailPasswordAuthProvider.getAuthenticationPrincipal();
++    Optional<User> user = userRepository.findById(userId);
++
++    if (!user.isPresent()) {
++      throw new EntityNotFoundException("User not found");
++    }
++
++    Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "id"));
++    Pageable pageable = PageRequest.of(page, size, sort);
++
++    Page<Friend> friendRequests = friendRepository.findByAddresserAndStatusAndIsActive(user.get(),
++            UserFriendStatus.REQUEST_SENT, true, pageable);
++
++    List<FriendResponseDto> content = friendRequests.map(friend -> {
++      User requester = friend.getRequester();
++      return new FriendResponseDto(
++              requester.getId(),
++              requester.getFirstName(),
++              requester.getLastName(),
++              requester.getAvatarsUrl()
++      );
++    }).getContent();
++
++    boolean hasNext = friendRequests.hasNext();
++
++    return new CustomFriendResponse(content, hasNext);
+   }
++
++
++
++
+ 
+ 
+   public UserFriendStatus getFriendStatus(Long currentUserId, Long otherUserId) {
+@@ -222,5 +260,6 @@
+     return friendRepository.countByRequesterAndStatus(userId, UserFriendStatus.REQUEST_SENT);
+   }
+ 
++
+ }
+ 
+Index: ISOCIAL/backend/src/main/java/com/coyjiv/isocial/service/friend/IFriendService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/backend/src/main/java/com/coyjiv/isocial/service/friend/IFriendService.java b/backend/src/main/java/com/coyjiv/isocial/service/friend/IFriendService.java
+--- a/backend/src/main/java/com/coyjiv/isocial/service/friend/IFriendService.java	(revision b27e431a9f940bbefcf4c0f3fa753e98a33dd317)
++++ b/backend/src/main/java/com/coyjiv/isocial/service/friend/IFriendService.java	(date 1709151678678)
+@@ -1,6 +1,7 @@
+ package com.coyjiv.isocial.service.friend;
+ 
+ import com.coyjiv.isocial.domain.UserFriendStatus;
++import com.coyjiv.isocial.dto.respone.friend.CustomFriendResponse;
+ import com.coyjiv.isocial.dto.respone.friend.FriendResponseDto;
+ import com.coyjiv.isocial.exceptions.EntityNotFoundException;
+ 
+@@ -22,7 +23,8 @@
+ 
+   Long getSubscribersCount(Long userId);
+ 
+-  List<FriendResponseDto> availableFriendRequests(Long userId);
++  CustomFriendResponse availableFriendRequests(Integer page,
++                                               Integer size) throws EntityNotFoundException;
+ 
+   UserFriendStatus getFriendStatus(Long id, Long authenticationPrincipal);
+ 
+Index: ISOCIAL/backend/src/main/java/com/coyjiv/isocial/dao/FriendRepository.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/backend/src/main/java/com/coyjiv/isocial/dao/FriendRepository.java b/backend/src/main/java/com/coyjiv/isocial/dao/FriendRepository.java
+--- a/backend/src/main/java/com/coyjiv/isocial/dao/FriendRepository.java	(revision b27e431a9f940bbefcf4c0f3fa753e98a33dd317)
++++ b/backend/src/main/java/com/coyjiv/isocial/dao/FriendRepository.java	(date 1709913826887)
+@@ -48,5 +48,9 @@
+   @Query("SELECT COUNT(f) FROM Friend f WHERE f.requester.id = :userId AND f.status = :status")
+   Long countByRequesterAndStatus(@Param("userId") Long userId, @Param("status") UserFriendStatus status);
+ 
++  Page<Friend> findByAddresserAndStatusAndIsActive(User addresser, UserFriendStatus status,
++                                                   boolean isActive, Pageable pageable);
++
++  Optional<Friend> findByRequesterAndAddresserAndStatusAndIsActive(User requester, User addresser, UserFriendStatus status, boolean isActive);
+ }
+ 
+Index: ISOCIAL/backend/src/main/java/com/coyjiv/isocial/resource/rest/FriendController.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/backend/src/main/java/com/coyjiv/isocial/resource/rest/FriendController.java b/backend/src/main/java/com/coyjiv/isocial/resource/rest/FriendController.java
+--- a/backend/src/main/java/com/coyjiv/isocial/resource/rest/FriendController.java	(revision b27e431a9f940bbefcf4c0f3fa753e98a33dd317)
++++ b/backend/src/main/java/com/coyjiv/isocial/resource/rest/FriendController.java	(date 1709913347576)
+@@ -1,12 +1,14 @@
+ package com.coyjiv.isocial.resource.rest;
+ 
+ 
++import com.coyjiv.isocial.dto.respone.friend.CustomFriendResponse;
+ import com.coyjiv.isocial.dto.respone.friend.FriendResponseDto;
+ import com.coyjiv.isocial.exceptions.EntityNotFoundException;
+ import com.coyjiv.isocial.service.friend.FriendService;
+ 
+ import jakarta.validation.constraints.Min;
+ import lombok.RequiredArgsConstructor;
++import org.springframework.data.domain.Page;
+ import org.springframework.http.ResponseEntity;
+ import org.springframework.web.bind.annotation.DeleteMapping;
+ import org.springframework.web.bind.annotation.GetMapping;
+@@ -55,8 +57,8 @@
+   }
+ 
+   @DeleteMapping()
+-  public ResponseEntity<String> deleteFriend(@RequestParam Long friendId) {
+-    boolean result = friendService.deleteFriend(friendId);
++  public ResponseEntity<String> deleteFriend(@RequestParam Long friendUserId) {
++    boolean result = friendService.deleteFriend(friendUserId);
+     if (result) {
+       return ResponseEntity.ok("Deleted");
+     }
+@@ -103,11 +105,11 @@
+   }
+ 
+   @GetMapping("/availableFriendRequests")
+-  public ResponseEntity<List<FriendResponseDto>> availableFriendRequests(@RequestParam Long userId) {
+-    if (userId == null) {
+-      return ResponseEntity.badRequest().body(null);
+-    }
+-    return ResponseEntity.ok(friendService.availableFriendRequests(userId));
++  public ResponseEntity<?> availableFriendRequests(@RequestParam(defaultValue = "0") @Min(0) Integer page,
++                                                   @RequestParam(defaultValue = "10") @Min(0) Integer size)
++          throws EntityNotFoundException {
++    CustomFriendResponse friendRequests = friendService.availableFriendRequests(page, size);
++    return ResponseEntity.ok(friendRequests);
+   }
+ 
+ 
