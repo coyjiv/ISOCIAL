@@ -5,6 +5,9 @@ import styles from "./Confirmation.module.scss";
 import { GiBreakingChain } from "react-icons/gi";
 import { PiHandshakeDuotone } from "react-icons/pi";
 import { Typography } from "@mui/material";
+import { BlueRoundedButton } from '../../components/buttons';
+import { FaLink } from "react-icons/fa";
+import { Emoji } from 'emoji-picker-react';
 
 const Confirmation = () => {
   const [confirmed, setConfirmed] = useState(false);
@@ -34,18 +37,49 @@ const Confirmation = () => {
     <main className={styles.confirmationMain}>
       {confirmed ? (
         <>
-          <Typography variant="h1" fontSize={22}>Your account is confirmed!</Typography>
-          <PiHandshakeDuotone className={styles.chain} />
+          <Typography variant="h1" fontSize={26} fontWeight={900}>
+          Hooray! Your account has been confirmed.
+          </Typography>
+          <div className={styles.chain}>
+{/*           <Typography variant="h1" fontSize={20}> */}
+{/*        Your account has been confirmed. */}
+{/*         </Typography> */}
+          <Typography variant="h1" fontSize={20}>
+         You are now able to log in and explore our amazing app.
+        </Typography>
+        </div>
+          <Emoji unified="1f973" size="45" className={styles.chain} />
+
+{/*           <BlueRoundedButton onClick={() => navigate("/")}>Main page</BlueRoundedButton> */}
         </>
       ) : (
         <div className={styles.subwrapper}>
-          <Typography variant="h1" fontSize={22}>Something went wrong.</Typography>
-          <GiBreakingChain className={styles.chain} />
-          <Typography variant="h4" fontSize={16}>We can&apos;t confirm your account at the moment.</Typography>
-        </div>
+
+                <Typography variant="h1" fontSize={26} fontWeight={900}>
+                Sadly, we are unable to verify your account.</Typography>
+                <div className={styles.chain}>
+                <Typography variant="h1" fontSize={20}>
+                Please attempt the process again or contact us
+                </Typography>
+                <div className={styles.substring}>
+                    <Typography variant="h1" fontSize={20} >via email at </Typography>
+                    <a href="dontreply.isocial@gmail.com">
+                   <Typography variant="h1" fontSize={20} color='#0866ff' >dontreply.isocial@gmail.com </Typography>
+                   </a>
+                </div>
+                <Typography variant="h1" fontSize={16}>
+                Alternatively, you can sign up using your Google account.
+                </Typography>
+            </div>
+{/*           <FaLink className={styles.chain} /> */}
+          <Emoji unified="1fae3" size="45" className={styles.chain} />
+{/*           <Typography variant="h4" fontSize={16}>We can&apos;t confirm your account at the moment.</Typography> */}
+
+
+
+      </div>
       )}
-      <Typography>Click bellow</Typography>
-      <button className={styles.button} onClick={() => navigate("/")}><Typography>Main page</Typography></button>
+      <BlueRoundedButton onClick={() => navigate("/")} >Back to login</BlueRoundedButton>
     </main>
   );
 };

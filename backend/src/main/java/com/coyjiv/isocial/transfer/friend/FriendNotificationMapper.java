@@ -14,8 +14,8 @@ public class FriendNotificationMapper extends DtoMapperFacade<Friend, FriendNoti
   @Override
   protected void decorateDto(FriendNotificationDto dto, Friend entity) {
     dto.setFriendId(entity.getId());
-    dto.setSenderAvatarUrl(entity.getRequester().getAvatarsUrl().size()>0
-            ? entity.getRequester().getAvatarsUrl().get(0):"");
+    dto.setSenderAvatarUrl(entity.getRequester().getAvatarsUrl().size() > 0
+            ? entity.getRequester().getAvatarsUrl().get(0) : "");
     dto.setSenderId(entity.getRequester().getId());
     dto.setSenderName(entity.getRequester().getFirstName() + " " + entity.getRequester().getLastName());
   }

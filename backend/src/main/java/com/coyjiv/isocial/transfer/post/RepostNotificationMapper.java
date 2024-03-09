@@ -27,8 +27,8 @@ public class RepostNotificationMapper extends DtoMapperFacade<Post, RepostNotifi
     dto.setPostId(entity.getId());
     User user = userRepository.findActiveById(authProvider.getAuthenticationPrincipal()).orElseThrow();
     dto.setSenderId(user.getId());
-    dto.setSenderAvatarUrl(user.getAvatarsUrl().size()>0
-            ? user.getAvatarsUrl().get(0):"");
+    dto.setSenderAvatarUrl(user.getAvatarsUrl().size() > 0
+            ? user.getAvatarsUrl().get(0) : "");
     dto.setSenderName(user.getFirstName() + " " + user.getLastName());
     dto.setText(entity.getTextContent());
   }
