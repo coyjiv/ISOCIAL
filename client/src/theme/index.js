@@ -1,4 +1,4 @@
-import createTheme from '@mui/material/styles/createTheme'
+import { createTheme } from '@mui/material/styles'
 
 // keep palette in sync with colors.scss
 
@@ -29,22 +29,22 @@ export const theme = createTheme({
     shadow2: 'rgba(0, 0, 0, 0.2)',
     disabledButtonBackground: '#e4e6eb',
     disabledButtonColor: '#a7a9ab',
-		greyBorder: '#ccc',
-		background: {
-      secondary: "#eff2f5",
-      lightGrey: "#F2F2F2",
-      grey: "#D8DADE",
-      greyHover: "#e4e6eb",
-      darkGreyHover: "#D8DADE",
-      colorAction: "#50514b",
-      greyIcon: "#B9BECC",
-      selectIcon: "#536A80",
-      field: "#F0F2F5",
+    greyBorder: '#ccc',
+    background: {
+      secondary: '#eff2f5',
+      lightGrey: '#F2F2F2',
+      grey: '#D8DADE',
+      greyHover: '#e4e6eb',
+      darkGreyHover: '#D8DADE',
+      colorAction: '#50514b',
+      greyIcon: '#B9BECC',
+      selectIcon: '#536A80',
+      field: '#F0F2F5',
     },
     text: {
-      base: "#050505",
-      grey: "#6a6d71",
-      white: "#fff",
+      base: '#050505',
+      grey: '#6a6d71',
+      white: '#fff',
     },
     error: {
       main: '#ff0000',

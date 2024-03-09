@@ -5,10 +5,7 @@ export const friendsApi = profileApi.injectEndpoints({
     getFriendsList: builder.query({
       query: (id, page = 0, size = 10) =>
         `friends/${id}?page=${page}&size=${size}`,
-      providesTags: (id) => [
-        { type: 'Friends', id },
-        { type: 'Profile', id },
-      ],
+      providesTags: (id) => [{ type: 'Friends', id }],
     }),
     sendFriendRequest: builder.mutation({
       query: ({ userId }) => {
@@ -19,7 +16,6 @@ export const friendsApi = profileApi.injectEndpoints({
       },
       invalidatesTags: (result, error, { userId }) => [
         { type: 'Friends', id: userId },
-        { type: 'Profile', id: userId },
       ],
     }),
     removeFriend: builder.mutation({
@@ -31,7 +27,6 @@ export const friendsApi = profileApi.injectEndpoints({
       },
       invalidatesTags: (result, error, { userId }) => [
         { type: 'Friends', id: userId },
-        { type: 'Profile', id: userId },
       ],
     }),
     acceptFriendRequest: builder.mutation({
@@ -41,10 +36,7 @@ export const friendsApi = profileApi.injectEndpoints({
           method: 'POST',
         }
       },
-      invalidatesTags: (result, error, { userId }) => [
-        { type: 'Friends', id: userId },
-        { type: 'Profile', id: userId },
-      ],
+      invalidatesTags: () => [{ type: 'Friends' }],
     }),
     declineFriendRequest: builder.mutation({
       query: ({ userId }) => {
@@ -55,7 +47,6 @@ export const friendsApi = profileApi.injectEndpoints({
       },
       invalidatesTags: (result, error, { userId }) => [
         { type: 'Friends', id: userId },
-        { type: 'Profile', id: userId },
       ],
     }),
     subscribersCount: builder.query({
@@ -75,15 +66,11 @@ export const friendsApi = profileApi.injectEndpoints({
       },
       invalidatesTags: (result, error, { userId }) => [
         { type: 'Friends', id: userId },
-        { type: 'Profile', id: userId },
       ],
     }),
     availableFriendRequests: builder.query({
       query: (id) => `friends/availableFriendRequests?userId=${id}`,
-      providesTags: (id) => [
-        { type: 'Friends', id },
-        { type: 'Profile', id },
-      ],
+      providesTags: (id) => [{ type: 'Friends' }, { type: 'Profile', id }],
     }),
   }),
 })
