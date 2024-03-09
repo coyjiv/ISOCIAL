@@ -51,7 +51,7 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
   Page<Friend> findByAddresserAndStatusAndIsActive(User addresser, UserFriendStatus status,
                                                    boolean isActive, Pageable pageable);
 
-  List<Friend> findAllByRequesterIdOrAddresserIdAndStatus(Long requesterId, Long addresserId, UserFriendStatus status);
-
+  Optional<Friend> findByRequesterAndAddresserAndStatusAndIsActive(User requester, User addresser, 
+	                                                                 UserFriendStatus status, boolean isActive);
 }
 

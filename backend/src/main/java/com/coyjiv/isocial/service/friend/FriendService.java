@@ -7,6 +7,7 @@ import com.coyjiv.isocial.domain.Friend;
 import com.coyjiv.isocial.domain.User;
 import com.coyjiv.isocial.domain.UserFriendStatus;
 import com.coyjiv.isocial.dto.respone.friend.CustomFriendResponse;
+import com.coyjiv.isocial.dto.respone.friend.CustomFriendResponse;
 import com.coyjiv.isocial.dto.respone.friend.FriendResponseDto;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 
@@ -158,21 +159,32 @@ public class FriendService implements IFriendService {
 
   @Transactional
   @Override
-  public boolean deleteFriend(Long friendId) {
+  public boolean deleteFriend(Long friendUserId) {
     Long userId = emailPasswordAuthProvider.getAuthenticationPrincipal();
     Optional<User> user = userRepository.findById(userId);
-    Optional<Friend> friend = friendRepository.findById(friendId);
+    Optional<User> friendUser = userRepository.findById(friendUserId);
 
-    if (user.isEmpty() || friend.isEmpty() || friend.get().getStatus() != UserFriendStatus.FRIEND) {
+    if (user.isEmpty() || friendUser.isEmpty()) {
       return false;
     }
-    if (user.get().equals(friend.get().getRequester()) || user.get().equals(friend.get().getAddresser())) {
-      friend.get().setActive(false);
-
-      friend.get().setStatus(UserFriendStatus.NOT_FRIEND);
-      friendRepository.save(friend.get());
+		Optional<Friend> activeFriendship =
+            friendRepository.findByRequesterAndAddresserAndStatusAndIsActive(user.get(), friendUser.get(), UserFriendStatus.FRIEND, true);
+    Optional<Friend> activeFriendship1 =
+            friendRepository.findByRequesterAndAddresserAndStatusAndIsActive(friendUser.get(), user.get(),UserFriendStatus.FRIEND, true);
+    if (activeFriendship.isPresent()) {
+      Friend friend = activeFriendship.get();
+      friend.setActive(false);
+      friend.setStatus(UserFriendStatus.NOT_FRIEND);
+      friendRepository.save(friend);
       return true;
     }
+		if (activeFriendship1.isPresent()) {
+      Friend friend = activeFriendship1.get();
+      friend.setActive(false);
+      friend.setStatus(UserFriendStatus.NOT_FRIEND);
+      friendRepository.save(friend);
+      return true;
+		}
 
     return false;
   }

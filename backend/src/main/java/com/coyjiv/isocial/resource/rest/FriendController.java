@@ -57,8 +57,8 @@ public class FriendController {
   }
 
   @DeleteMapping()
-  public ResponseEntity<String> deleteFriend(@RequestParam Long friendId) {
-    boolean result = friendService.deleteFriend(friendId);
+  public ResponseEntity<String> deleteFriend(@RequestParam Long friendUserId) {
+    boolean result = friendService.deleteFriend(friendUserId);
     if (result) {
       return ResponseEntity.ok("Deleted");
     }
