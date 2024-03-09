@@ -1,6 +1,8 @@
-import axios from 'axios'
+
+import axios from "axios";
 
 export const API_URL = import.meta.env.VITE_API_URL
+
 
 export const instance = axios.create({
   baseURL: API_URL,
@@ -43,6 +45,7 @@ instance.interceptors.response.use(
         } catch (exception) {
           localStorage.removeItem('access')
           localStorage.removeItem('refresh')
+          localStorage.removeItem('userId')
           window.location.href = '/login'
         }
       }

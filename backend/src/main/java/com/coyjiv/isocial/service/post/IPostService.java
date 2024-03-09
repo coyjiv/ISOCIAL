@@ -4,6 +4,7 @@ import com.coyjiv.isocial.domain.Post;
 import com.coyjiv.isocial.dto.request.post.PostRequestDto;
 import com.coyjiv.isocial.dto.request.post.RePostRequestDto;
 import com.coyjiv.isocial.dto.request.post.UpdatePostRequestDto;
+import com.coyjiv.isocial.dto.respone.page.PageWrapper;
 import com.coyjiv.isocial.dto.respone.post.PostResponseDto;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.exceptions.RequestValidationException;
@@ -17,15 +18,18 @@ public interface IPostService {
 
   Optional<Post> findActiveById(Long id);
 
-  List<PostResponseDto> findActiveByAuthorId(int page, int size, Long id);
+  PageWrapper<PostResponseDto> findFavoritePosts(int page, int size);
 
-  Post create(PostRequestDto postRequestDto) throws RequestValidationException;
+  PageWrapper<PostResponseDto> findActiveByAuthorId(int page, int size, Long id);
 
-  void update(Long id, UpdatePostRequestDto updatePostRequestDto) throws IllegalAccessException;
+  PostResponseDto create(PostRequestDto postRequestDto) throws RequestValidationException;
+
+  PostResponseDto update(Long id, UpdatePostRequestDto updatePostRequestDto) throws IllegalAccessException;
 
   void delete(Long id) throws IllegalAccessException, RequestValidationException;
 
-  Post repost(RePostRequestDto rePostRequestDto) throws IllegalAccessException, EntityNotFoundException;
+  PostResponseDto repost(RePostRequestDto rePostRequestDto) throws IllegalAccessException, EntityNotFoundException;
 
 
+  List<PostResponseDto> getRecommendation(int page, int size) throws EntityNotFoundException;
 }

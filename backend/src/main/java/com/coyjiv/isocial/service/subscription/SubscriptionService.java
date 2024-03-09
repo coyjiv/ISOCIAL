@@ -25,6 +25,11 @@ public class SubscriptionService implements ISubscriptionService {
     return subscriptionRepository.findAllBySubscriberId(subscriberId);
   }
 
+  @Override
+  public List<Subscription> findAllUserSubscribers(Long userId) {
+    return subscriptionRepository.findAllUserSubscribers(userId);
+  }
+
   @Transactional(readOnly = true)
   @Override
   public Optional<Subscription> findByUserIdAndSubscriberId(Long userId, Long subscriberId)

@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { Button } from '@mui/base';
+import { ButtonMain } from "./ButtonMain";
 import classNames from 'classnames';
 import styles from './buttons.module.scss'
 
@@ -21,6 +22,10 @@ const RedRoundedButton = ({ children, ...props }) => {
 
 const GreenRoundedButton = ({ children, ...props }) => {
     return <Button {...props} className={classNames(styles.greenRoundedButton, props.className)}>{children}</Button>;
+}
+
+const IconButton = ({ children, ...props }) => {
+    return <Button {...props} className={classNames(styles.iconButton, props.className)}>{children}</Button>;
 }
 
 
@@ -54,4 +59,10 @@ GreenRoundedButton.propTypes = {
     className: PropTypes.string
 };
 
-export { GrayButton, BlueRoundedButton, WhiteButton, RedRoundedButton, GreenRoundedButton }
+IconButton.propTypes = {
+    children: PropTypes.node.isRequired,
+    props: PropTypes.object,
+    className: PropTypes.string
+};
+
+export { GrayButton, BlueRoundedButton, WhiteButton, RedRoundedButton, GreenRoundedButton, IconButton, ButtonMain }

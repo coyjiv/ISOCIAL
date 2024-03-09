@@ -1,8 +1,9 @@
-@import "../../styles/variables/colors";
-@import "../../styles/mixins/common";
-@import "../../index.scss";
-
-
+/* stylelint-disable-next-line scss/at-import-partial-extension */
+@import '../../styles/variables/colors';
+/* stylelint-disable-next-line scss/at-import-partial-extension */
+@import '../../styles/mixins/common';
+/* stylelint-disable-next-line scss/at-import-partial-extension */
+@import '../../index.scss';
 
 /* ---   Chat   --- */
 
@@ -32,48 +33,82 @@
     font-size: 16px;
   }
 
-  .message-item {
-    max-width: 50%;
-    display: flex;
-    justify-content: flex-start;
-    position: relative;
-    
+.message-item {
+  max-width: 50%;
+  display: flex;
+  justify-content: flex-start;
+  position: relative;
+}
+
+.bot {
+  align-self: flex-start;
+  text-align: left;
+  margin-left: 50px;
+
+  .message-text {
+    margin: 5px;
+    padding: 10px;
+    border-radius: 20px;
+    background-color: #f0f0f0;
+    color: #000;
+    font-family: 'Segoe UI', sans-serif;
   }
 
-  .user {
-    align-self: flex-end;
-    text-align: right;
-    
-    .message-body {
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
+  .message-avatar {
+    position: absolute;
+    left: -36px;
+    top: 10px;
+  }
 
-      .message-text {
-        margin: 5px;
-        padding: 10px 10px;
-        border-radius: 20px;
-        background-color: #0084ff;
-        color: #fff;
-        font-family: 'Segoe UI',sans-serif;
-      }
+  .message-options {
+    position: absolute;
+    top: 25%;
+    left: 100%;
+    display: none;
 
-      .message-img {
-        max-width: 500px;
-      }
-        
-        
-      }
+    .message-options-option {
+      @include message-option;
+    }
+  }
 
-      .message-avatar {
-        display: none;
-      }
+  &:hover .message-options {
+    display: block;
+  }
+}
 
-      .message-options {
-        position: absolute;
-        top: 25%;
-        left: -30px;
-        display: none;
+.user {
+  align-self: flex-end;
+  text-align: right;
+
+  .message-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+
+    .message-text {
+      margin: 5px;
+      padding: 10px;
+      border-radius: 20px;
+      background-color: #0084ff;
+      color: #fff;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .message-img {
+      max-width: 500px;
+    }
+  }
+
+  .message-avatar {
+    display: none;
+  }
+
+  /* stylelint-disable-next-line no-descending-specificity */
+  .message-options {
+    position: absolute;
+    top: 25%;
+    left: -30px;
+    display: none;
 
         .message-options_option {
             @include messageOption;    
@@ -81,7 +116,7 @@
       }
 
       &:hover .message-options {
-        display: flex;
+        display: block;
       }
   }
   
@@ -143,8 +178,7 @@
   }
 
 
-  /* ---   ChatList   --- */
-
+/* ---   ChatList   --- */
 
 .chats {
   width: 300px;
@@ -157,12 +191,12 @@
   width: 90%;
   
 
-  .no-chats {
-    font-size: 24px;
-    text-align: center;
-    opacity: .5;
+    .no-chats {
+      font-size: 24px;
+      text-align: center;
+      opacity: 0.5;
+    }
   }
-}
 
 .add-chat {
   margin: 10px 12px;
@@ -173,16 +207,15 @@
   transition: color .5s ease;
   border-radius: 25px;
 
-  &__plus {
-    width: 30px;
-    height: 30px;
-  }
+    &__plus {
+      width: 30px;
+      height: 30px;
+    }
 
-  &:hover {
-    background-color: #999;
+    &:hover {
+      background-color: #999;
+    }
   }
-
-}
 
 .chat-item {
   width: 100%;
@@ -206,21 +239,19 @@
 
   }
 
-  .chat-options {
-    position: absolute;
-    top: 25%;
-    right: 30px;
-    display: none;
+    .chat-options {
+      position: absolute;
+      top: 25%;
+      right: 30px;
+      display: none;
 
-    .chat-options_option {
-        @include messageOption;    
+      .chat-options-option {
+        @include message-option;
+      }
+    }
+
+    &:hover .chat-options {
+      display: block;
     }
   }
-
-  &:hover .chat-options {
-    display: block;
-  }
-
-}
-
 }

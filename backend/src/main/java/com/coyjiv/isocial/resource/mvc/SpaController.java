@@ -1,4 +1,4 @@
-package com.coyjiv.isocial.resource.rest;
+package com.coyjiv.isocial.resource.mvc;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,15 +12,18 @@ public class SpaController {
     "/home",
     "/profile",
     "/profile/*",
-    "/chat",
-    "/chat/*",
+    "/chats",
+    "/chats/*",
     "/search",
     "/feed",
     "/settings",
     "/friends",
+    "/friends/*",
     "/watch",
     "/groups",
-    "/confirmation"
+    "/confirmation",
+    "/saved",
+    "/post/*",
     })
   public String redirect() {
     return "forward:/index.html";

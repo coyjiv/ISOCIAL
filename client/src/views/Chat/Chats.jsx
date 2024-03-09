@@ -1,10 +1,12 @@
+/* eslint-disable no-unused-vars */
 //libs
-//import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-import { withLayout } from "../../hooks/withLayout";
+import { withLayout } from "../../hooks/withLayout"
+import { useParams } from "react-router-dom";
 
 import ChatList from "./ChatList";
-import Chat from "./Chat";
+import { Chat } from './Chat'
 import "./Chat.scss";
 
 import * as React from 'react';

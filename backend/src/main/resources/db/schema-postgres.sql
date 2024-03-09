@@ -92,9 +92,11 @@ CREATE TABLE public.subscriptions
     id            SERIAL PRIMARY KEY,
     user_id       INT,
     subscriber_id INT,
-    is_subscribed BOOLEAN NOT NULL DEFAULT FALSE,
     FOREIGN KEY (user_id) REFERENCES public.users (id),
-    FOREIGN KEY (subscriber_id) REFERENCES public.users (id)
+    FOREIGN KEY (subscriber_id) REFERENCES public.users (id),
+    creation_date      TIMESTAMP,
+    last_modified_date TIMESTAMP,
+    is_active          BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 DROP TABLE IF EXISTS public.comments CASCADE;
@@ -104,14 +106,10 @@ CREATE TABLE public.comments
     commenter_id       INT     NOT NULL,
     post_id            INT     NOT NULL,
     text               VARCHAR(1000),
-    requester_id       INT,
-    addresser_id       INT,
-    status             VARCHAR(255),
-    FOREIGN KEY (requester_id) REFERENCES public.users (id),
-    FOREIGN KEY (addresser_id) REFERENCES public.users (id),
     creation_date      TIMESTAMP,
     last_modified_date TIMESTAMP,
-    is_active          BOOLEAN NOT NULL DEFAULT FALSE
+    is_active          BOOLEAN NOT NULL DEFAULT FALSE,
+    is_edited          BOOLEAN NOT NULL DEFAULT FALSE
 );
 
 DROP TABLE IF EXISTS public.posts CASCADE;
@@ -140,3 +138,30 @@ CREATE TABLE public.favorites
     last_modified_date TIMESTAMP,
     is_active          BOOLEAN NOT NULL DEFAULT FALSE
 );
+
+
+DROP TABLE IF EXISTS public.subscribers CASCADE;
+CREATE TABLE public.subscribers
+(
+    id            SERIAL PRIMARY KEY,
+    user_id       INT,
+    subscriber_id INT,
+    FOREIGN KEY (user_id) REFERENCES public.users (id),
+    FOREIGN KEY (subscriber_id) REFERENCES public.users (id),
+    creation_date      TIMESTAMP,
+    last_modified_date TIMESTAMP,
+    is_active          BOOLEAN NOT NULL DEFAULT FALSE
+);
+
+DROP TABLE IF EXISTS public.likes CASCADE;
+CREATE TABLE likes
+(
+    id                 BIGSERIAL PRIMARY KEY,
+    user_id            BIGINT                                                     NOT NULL,
+    entity_id          BIGINT                                                     NOT NULL,
+    entity_type        TEXT CHECK (entity_type IN ('POST', 'COMMENT', 'MESSAGE')) NOT NULL,
+    creation_date      TIMESTAMP                                                           DEFAULT CURRENT_TIMESTAMP,
+    last_modified_date TIMESTAMP                                                           DEFAULT CURRENT_TIMESTAMP,
+    is_active          BOOLEAN                                                    NOT NULL DEFAULT TRUE
+);
+

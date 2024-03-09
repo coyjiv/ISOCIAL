@@ -12,6 +12,7 @@ public interface ISubscriptionService {
 
   List<Subscription> findAllBySubscriberId();
 
+  List<Subscription> findAllUserSubscribers(Long userId);
 
   Optional<Subscription> findByUserIdAndSubscriberId(Long userId, Long subscriberId) throws IllegalAccessException;
 

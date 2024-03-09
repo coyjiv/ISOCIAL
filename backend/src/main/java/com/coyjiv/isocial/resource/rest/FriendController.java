@@ -1,12 +1,14 @@
 package com.coyjiv.isocial.resource.rest;
 
 
+import com.coyjiv.isocial.dto.respone.friend.CustomFriendResponse;
 import com.coyjiv.isocial.dto.respone.friend.FriendResponseDto;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.service.friend.FriendService;
 
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -103,11 +105,11 @@ public class FriendController {
   }
 
   @GetMapping("/availableFriendRequests")
-  public ResponseEntity<List<FriendResponseDto>> availableFriendRequests(@RequestParam Long userId) {
-    if (userId == null) {
-      return ResponseEntity.badRequest().body(null);
-    }
-    return ResponseEntity.ok(friendService.availableFriendRequests(userId));
+  public ResponseEntity<?> availableFriendRequests(@RequestParam(defaultValue = "0") @Min(0) Integer page,
+                                                   @RequestParam(defaultValue = "10") @Min(0) Integer size)
+          throws EntityNotFoundException {
+    CustomFriendResponse friendRequests = friendService.availableFriendRequests(page, size);
+    return ResponseEntity.ok(friendRequests);
   }
 
 

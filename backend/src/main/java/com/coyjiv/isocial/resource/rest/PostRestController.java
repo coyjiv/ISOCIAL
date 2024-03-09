@@ -82,8 +82,19 @@ public class PostRestController {
   public ResponseEntity<?> update(@PathVariable("id") @Min(0) Long id,
                                   @RequestBody @Valid UpdatePostRequestDto dto)
           throws IllegalAccessException {
-    postService.update(id, dto);
-    return ResponseEntity.status(204).build();
+    return ResponseEntity.ok(postService.update(id, dto));
   }
 
+  @GetMapping("/favorite")
+  public ResponseEntity<?> findFavoritePosts(@RequestParam(defaultValue = "0") @Min(0) Integer page,
+                                             @RequestParam(defaultValue = "10") @Min(0) Integer size) {
+    return ResponseEntity.ok(postService.findFavoritePosts(page, size));
+  }
+
+  @GetMapping("/recommendations")
+  public ResponseEntity<?> getRecommendation(@RequestParam(defaultValue = "0") @Min(0) Integer page,
+                                             @RequestParam(defaultValue = "10") @Min(0) Integer size)
+          throws EntityNotFoundException {
+    return ResponseEntity.ok(postService.getRecommendation(page, size));
+  }
 }

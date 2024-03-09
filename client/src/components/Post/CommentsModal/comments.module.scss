@@ -1,0 +1,47 @@
+.commentsWrapper {
+  display: flex;
+  flex-direction: column;
+  padding-left: 20px;
+  padding-top: 20px;
+  gap: 5px;
+}
+
+.bottom-sheet-wrapper {
+  display: flex;
+  flex-direction: column;
+  padding: 20px 10px 0px;
+  gap: 5px;
+}
+
+.bottom-sheet-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #000;
+  margin-left: 20px;
+  margin-block: 10px;
+}
+
+.textarea-wrapper {
+  padding: 10px 8px;
+  box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.1);
+}
+
+.bottom-sheet {
+  [data-rsbs-scroll] {
+    overflow-y: hidden;
+  }
+}
+
+.no-comments {
+  font-size: 22px;
+  margin-top: 20dvh;
+  text-align: center;
+}
+
+.no-comments-mobile {
+  font-size: 22px;
+  text-align: center;
+  width: 80%;
+  margin: 0 auto;
+  margin-block: 20dvh;
+}

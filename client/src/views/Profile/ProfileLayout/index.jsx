@@ -18,6 +18,7 @@ import { useMediaQuery } from 'usehooks-ts';
 import { placeholderAvatar } from "../../../data/placeholders"
 
 import { MdPhotoCamera } from "react-icons/md"
+import { NotificationSubscriptionBtn } from '../NotificationSubscriptionBtn'
 import styles from '../profile.module.scss'
 
 export const ProfileLayout = ({ id }) => {
@@ -71,6 +72,7 @@ export const ProfileLayout = ({ id }) => {
                         <Stack direction={'row'} spacing={1} className={styles.profileActions}>
                             <FriendRequestButton isPersonalProfile={isPersonalProfile} profile={profile} id={id} />
                             <Button onClick={isPersonalProfile ? openProfileEdit : openMessenger} variant='outlined' sx={{ width: '180px', height: '36px', fontSize: 14 }}>{isPersonalProfile ? "Edit Profile" : "Send message"}</Button>
+                            <NotificationSubscriptionBtn />
                         </Stack>
                     </Stack>
                     <Divider />

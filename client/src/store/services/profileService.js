@@ -2,7 +2,9 @@ import { createApi } from '@reduxjs/toolkit/query/react'
 import { instance } from '../../api/config'
 
 export const profileApi = createApi({
-  reducerPath: 'profileApi',
+	reducerPath: 'profileApi',
+		// для автоматичної інвалідації кешу при роботі із типом "Profile"
+		tagTypes: ["Profile"],
   baseQuery: async (args) => {
     try {
       const response = await instance(args)
@@ -14,7 +16,10 @@ export const profileApi = createApi({
   endpoints: (builder) => ({
     getProfileById: builder.query({
       query: (id) => `users/${id}`,
-      providesTags: (result, error, id) => [{ type: 'Profile', id }],
+      providesTags: (result, error, id) => [
+        { type: 'Profile', id },
+        { type: 'Posts', id },
+      ],
     }),
     updateProfile: builder.mutation({
       query: ({ body, id }) => {
