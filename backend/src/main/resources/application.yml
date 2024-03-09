@@ -21,7 +21,7 @@ spring:
 ---
 spring:
   profiles:
-    active: prod
+    active: dev
 ---
 spring:
   sql:
