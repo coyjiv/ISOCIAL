@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import './Chat.scss';
 import cx from 'classnames';
 import { useLocation } from 'react-router-dom';
@@ -26,8 +26,15 @@ const Chat = () => {
   const userId = Number(localStorage.getItem('userId'));
   console.log(userId);
   console.log(chatId);
+  const chatContainerRef = useRef(null);
+  console.log(chatContainerRef);
 
   const { data: messages, isLoading } = useGetMessagesQuery({ page, chatId }, {skip: !chatId})
+
+  const scrollToBottom = () => {
+    chatContainerRef.current.parentElement.scrollTop = chatContainerRef.current.scrollHeight;
+    console.log(chatContainerRef.current.scrollHeight);
+  };
 
     useEffect(() => {
       if (chatId !== null) {
@@ -39,12 +46,11 @@ const Chat = () => {
     }, [isLoading, messages])
 
     useEffect(() => {
-      
-        const scrollToBottom = () => {
-          chatContainerRef.current.scrollTop = chatContainerRef.current.offsetHeight + 700;
-          console.log(chatContainerRef.current.scrollHeight);
-        };
-        scrollToBottom();
+      if (chatContainerRef.current) {
+        chatContainerRef.current.parentElement.scrollIntoView();
+        //scrollToBottom();
+      }
+        
       
     }, [isLoading, messages]);
 
@@ -113,17 +119,10 @@ const Chat = () => {
     }
   };
 
-
-  const chatContainerRef = useRef(null);
-  console.log(chatContainerRef);
-  
-
-  
-
   return (
     <>
-      <div className="message-container"  ref={chatContainerRef}>
-        <div className="chat-messages">
+      <div className="message-container">
+        <div className="chat-messages" ref={chatContainerRef}>
           {chatId && messagesData.map((message, index) => (
             <div key={index} className={cx('message-item', { 'user': message.senderId === userId }, { "bot": message.senderId !== userId })}>
               <div className={cx(messages[index - 1] === undefined || { 'message-avatar': (messages[index - 1].senderId !== userId) })}></div>
@@ -144,7 +143,8 @@ const Chat = () => {
           ))}
           {!chatId && <span className="no-chats">Select a chat to start messaging</span>}
         </div>
-        <div className="chat-input">
+      </div>
+      <div className="chat-input">
           <input
             type="text"
             placeholder="Type your message..."
@@ -152,7 +152,6 @@ const Chat = () => {
             onChange={(e) => setNewMessage(e.target.value)}
             onKeyDown={handleSendMessage}
           />
-        </div>
       </div>
     </>
   )

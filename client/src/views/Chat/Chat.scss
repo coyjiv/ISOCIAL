@@ -12,7 +12,7 @@
 }
   
   .message-container {
-    //width: 800px;
+    width: 100%;
     max-width: 90%;
     height: 100%;
     margin: 30px auto;
@@ -22,12 +22,11 @@
     flex-direction: column;
     justify-content: space-around;
     text-align: center;
-    position: relative;
   }
   
   .chat-messages {
     
-    //overflow-y: auto;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
     font-size: 16px;
@@ -124,17 +123,19 @@
       }
   } 
   
-  .chat-input input {
-    position: absolute;
-    left: 15%;
+  .chat-input {
     width: 70%;
-    padding: 5px 10px;
-    margin-top: 10px;  
-    background-color: #f1f2f6;
-    border: none;
-    height: 2em;
-    border-radius: 1.5em;
-    font-size: 16px;
+    input {
+      width: 100%;
+      padding: 5px 10px;
+      margin-top: 5px;  
+      background-color: #f1f2f6;
+      border: none;
+      height: 2em;
+      border-radius: 1.5em;
+      font-size: 16px;
+
+  } 
 
     &:focus {
         outline: none;
@@ -146,7 +147,7 @@
 
 
 .chats {
-  width: 500px;
+  width: 300px;
   
 .chat-list {
   display: flex;
@@ -199,7 +200,7 @@
 
   h3 {
     font-size: 20px;
-    font-weight: 600;
+    font-weight: 400;
     margin: 5px 10px;
     font-family: 'Segoe UI',sans-serif;
 

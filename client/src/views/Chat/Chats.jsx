@@ -105,9 +105,9 @@ const MiniDrawer = () => {
   };
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: 'flex', alignItems: 'stretch'}}>
       <CssBaseline />
-      <AppBar  position="static" color="transparent" style={{maxHeight: '64px'}} open={open}>
+      <AppBar  position="absolute" color="transparent" sx={{maxHeight: '64px', marginTop: '54px'}} open={open}>
         <Toolbar>
           <IconButton
             color="inherit"
@@ -136,7 +136,7 @@ const MiniDrawer = () => {
         <Divider />
         <ChatList />
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3, height: '80vh', overflowY: 'scroll' }}>
+      <Box component="main" sx={{height: '75vh', display: 'flex', flexGrow: 3, flexDirection: 'column', justifyContent: 'flex-end', alignItems: 'center', p: 3, overflowY: 'hidden', marginTop: '64px' }}>
         <DrawerHeader />
         <Chat />
       </Box>
