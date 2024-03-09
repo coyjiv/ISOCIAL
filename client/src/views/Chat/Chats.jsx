@@ -48,6 +48,7 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'flex-end',
+  marginTop: '54px',
   padding: theme.spacing(0, 1),
   // necessary for content to be below app bar
   ...theme.mixins.toolbar,
@@ -77,6 +78,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
     flexShrink: 0,
     whiteSpace: 'nowrap',
     boxSizing: 'border-box',
+    zIndex: '50',
     ...(open && {
       ...openedMixin(theme),
       '& .MuiDrawer-paper': openedMixin(theme),
@@ -89,8 +91,6 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 const MiniDrawer = () => {
-
-
 
     
   const theme = useTheme();
@@ -107,7 +107,7 @@ const MiniDrawer = () => {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar position="fixed" open={open}>
+      <AppBar  position="static" color="transparent" style={{maxHeight: '64px'}} open={open}>
         <Toolbar>
           <IconButton
             color="inherit"
@@ -116,13 +116,14 @@ const MiniDrawer = () => {
             edge="start"
             sx={{
               marginRight: 5,
+              backgroundColor: '#fff',
               ...(open && { display: 'none' }),
             }}
           >
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            Mini variant drawer
+            Friend's avatar
           </Typography>
         </Toolbar>
       </AppBar>
