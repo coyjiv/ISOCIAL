@@ -33,7 +33,7 @@ public class LikeService implements ILikeService {
 
   @Transactional
   @Override
-  public int countLikesByEntity(Long entityId, LikeableEntity entityType) throws EntityNotFoundException {
+  public long countLikesByEntity(Long entityId, LikeableEntity entityType) throws EntityNotFoundException {
     if (entityType == null) {
       throw new EntityNotFoundException("Entity type is required");
     }
