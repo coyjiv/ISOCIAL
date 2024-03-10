@@ -1,13 +1,13 @@
-import PropTypes from "prop-types";
-import {Avatar, Stack, Typography } from "@mui/material";
-import Box from "@mui/material/Box";
+import PropTypes from 'prop-types'
+import { Avatar, Stack, Typography } from '@mui/material'
+import Box from '@mui/material/Box'
 
-import { ButtonMain } from "../../buttons";
-import { CardContentWrapper, CardWrapper } from "./FriendCard.styled.js";
-import {useState} from "react";
+import { ButtonMain } from '../../buttons'
+import { CardContentWrapper, CardWrapper } from './FriendCard.styled.js'
+import { useState } from 'react'
 
 const FriendCard = ({
-    id,
+  id,
   variant,
   fullName,
   images,
@@ -16,21 +16,36 @@ const FriendCard = ({
   onAddFriend,
   onClick,
 }) => {
-    const [msg, setMsg] = useState('');
-  const isRequestVariant = variant === "requests";
+  const [msg, setMsg] = useState('')
+  const isRequestVariant = variant === 'requests'
+  const [isRequesting, setIsRequesting] = useState(false)
 
-  const handleAddFriend =  async (e) => {
-    e.stopPropagation();
+  const handleClick = async (e) => {
+    e.stopPropagation()
 
-    const data = await onAddFriend({userId: id});
-
-    if (data.error) {
-        setMsg(data?.error?.response?.data);
+    if (!isRequesting) {
+      const data = await onAddFriend({ userId: id })
+      if (data.error) {
+        setIsRequesting(false)
+        setMsg(data?.error?.response?.data)
+      } else {
+        setIsRequesting(true)
+        setMsg(data?.data)
+      }
     } else {
-        setMsg(data?.data);
-    }
+      const data = await onAddFriend({ userId: id })
+      if (data.error) {
+        setMsg(data?.error?.response?.data)
+        setIsRequesting(false)
+      } else {
+        setIsRequesting(true)
+        setMsg(data?.data)
+      }
 
-  };
+      onDelete(e, id)
+      setMsg('')
+    }
+  }
 
   return (
     <CardWrapper onClick={onClick}>
@@ -40,47 +55,56 @@ const FriendCard = ({
           alt={fullName}
           variant="square"
           sx={{
-            width: "100%",
-            height: "100%",
-            fontSize: "60px",
+            width: '100%',
+            height: '100%',
+            fontSize: '60px',
           }}
         />
       </Box>
       <CardContentWrapper>
-        <Typography fontSize="17px" fontWeight="600" marginBottom={!msg ? '30px' : '0'}>
+        <Typography
+          fontSize="17px"
+          fontWeight="600"
+          marginBottom={!msg ? '30px' : '0'}
+        >
           {fullName}
         </Typography>
 
-          <Typography fontSize="14px" marginBottom={!msg ? '0' : '9px'}>
-              {msg}
-          </Typography>
+        <Typography fontSize="14px" marginBottom={!msg ? '0' : '9px'}>
+          {msg}
+        </Typography>
         {isRequestVariant && (
           <Stack gap="8px">
             <ButtonMain onClick={onConfirm}>Confirm</ButtonMain>
-            <ButtonMain color="grey" onClick={onDelete}>
+            <ButtonMain color="grey" onClick={(e) => onDelete(e, id)}>
               Delete
             </ButtonMain>
           </Stack>
         )}
         {!isRequestVariant && (
-          <ButtonMain onClick={(e) => handleAddFriend(e)}>Add to friends</ButtonMain>
+          <ButtonMain
+            color={isRequesting ? 'grey' : 'blue'}
+            onClick={(e) => handleClick(e)}
+          >
+            {isRequesting ? 'Cancel request' : 'Add to friends'}
+          </ButtonMain>
         )}
       </CardContentWrapper>
     </CardWrapper>
-  );
-};
+  )
+}
 
 FriendCard.propTypes = {
-    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  variant: PropTypes.oneOf(["friends", "requests"]),
+  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  variant: PropTypes.oneOf(['friends', 'requests']),
   fullName: PropTypes.string,
   images: PropTypes.array,
   onDelete: PropTypes.func,
-    onClick: PropTypes.func,
-	onConfirm: PropTypes.func,
-    onAddFriend: PropTypes.func,
-};
+  onClick: PropTypes.func,
+  onConfirm: PropTypes.func,
+	onAddFriend: PropTypes.func,
+}
 
-FriendCard.displayName = "FriendCard";
+FriendCard.displayName = 'FriendCard'
 
-export default FriendCard;
+export default FriendCard

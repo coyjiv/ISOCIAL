@@ -22,14 +22,14 @@ const FriendsList = ({
   link,
   isLoading,
   onDecline,
-  onConfirm, onAddFriend,
-
+	onConfirm,
+	onAddFriend,
 }) => {
   const range = [...Array(5).keys()];
   const isUsers = users?.length > 0;
-  const { breakpoints } = useTheme();
+	const { breakpoints } = useTheme();
   const isMatches = useMediaQuery(breakpoints.up(1200));
-  const navigate = useNavigate();
+	const navigate = useNavigate();
 
   const isShowButton = users?.length < 4 && isMatches;
 
@@ -61,7 +61,7 @@ const FriendsList = ({
             {heading}
           </Typography>
           <Link href={link} underline="none">
-            All
+					See All
           </Link>
         </Stack>
         <Stack direction="row" flexWrap="wrap" gap="20px">
@@ -80,7 +80,7 @@ const FriendsList = ({
           {heading}
         </Typography>
         <Link href={link} underline="none">
-          All
+          See All
         </Link>
       </Stack>
       <ExpandedWrapper active={expanded ? "expanded" : undefined}>
@@ -90,10 +90,10 @@ const FriendsList = ({
               variant={variant}
               key={id}
               id={id}
-              fullName={`${firstName} ${lastName}`}
-              images={avatarsUrl}
+							fullName={`${firstName} ${lastName}`}
+							images={avatarsUrl}
               onConfirm={(e) => onConfirm(e, id)}
-              onDelete={(e) => onDecline(e, id)}
+              onDelete={onDecline}
               onAddFriend={onAddFriend}
               onClick={() => handleShowUser(id)}
             />
@@ -124,7 +124,7 @@ FriendsList.propTypes = {
   isLoading: PropTypes.bool,
   onDecline: PropTypes.func,
   onConfirm: PropTypes.func,
-  onAddFriend: PropTypes.func,
+	onAddFriend: PropTypes.func,
 };
 
 FriendsList.displayName = "FriendsList";

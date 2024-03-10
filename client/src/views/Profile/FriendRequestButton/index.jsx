@@ -23,7 +23,7 @@ const FriendRequestButton = ({ isPersonalProfile, profile, id }) => {
 
     const handleAction = () => {
         if (isFriend) {
-            removeFriend({ userId: id });
+            removeFriend({ friendUserId: id });
         } else if (haveSentFriendRequest) {
             declineFriendRequest({ userId: id });
         } else if (isIncomingFriendRequest) {

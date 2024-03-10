@@ -8,8 +8,8 @@ export const FriendsListWrapper = styled(Stack)({
 export const ExpandedWrapper = styled(Stack)(({ active }) => ({
   flexDirection: "row",
   flexWrap: "wrap",
-  gap: "20px",
+  gap: "12px",
   transition: "all 0.45s ease",
-  maxHeight: active ? "100%" : "690px",
+  maxHeight: active ? "100%" : "750px",
   overflowY: !active ? "hidden" : "auto",
 }));

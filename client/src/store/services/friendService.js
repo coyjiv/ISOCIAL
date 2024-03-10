@@ -23,9 +23,9 @@ export const friendsApi = profileApi.injectEndpoints({
       ],
     }),
     removeFriend: builder.mutation({
-      query: ({ userId }) => {
+      query: ({ friendUserId }) => {
         return {
-          url: `friends?friendId=${userId}`,
+          url: `friends?friendUserId=${friendUserId}`,
           method: 'DELETE',
         }
       },

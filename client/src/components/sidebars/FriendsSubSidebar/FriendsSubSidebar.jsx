@@ -1,17 +1,18 @@
-/* eslint-disable no-unused-vars */
-import PropTypes from "prop-types";
-import { useState } from "react";
-import { Stack, Typography } from "@mui/material";
+import PropTypes from 'prop-types'
+import { useState } from 'react'
+import { Stack, Typography } from '@mui/material'
 
-import { SubSidebarHeader } from "./SubSidebarHeader";
-import { FriendsSidebarUserCard } from "../../friends-page-components";
-import { SidebarSearch } from "../../index";
-import { SidebarItemsList, SidebarWrapper } from "./FriendsSubSidebar.styled";
-import { useSearchParams } from "react-router-dom";
+import { SubSidebarHeader } from './SubSidebarHeader'
+import { FriendsSidebarUserCard } from '../../friends-page-components'
+import { SidebarSearch } from '../../index'
+import { SidebarItemsList, SidebarWrapper } from './FriendsSubSidebar.styled'
+import { useSearchParams } from 'react-router-dom'
 import {
   useAcceptFriendRequestMutation,
   useDeclineFriendRequestMutation,
-} from "../../../store/services/friendService.js";
+  useRemoveFriendMutation,
+  useSendFriendRequestMutation,
+} from '../../../store/services/friendService.js'
 
 const FriendsSubSidebar = ({
   variant,
@@ -20,47 +21,63 @@ const FriendsSubSidebar = ({
   heading,
   subTitle,
 }) => {
-  const [searchValue, setSearchValue] = useState("");
-  let [searchParams, setSearchParams] = useSearchParams();
+  const [searchValue, setSearchValue] = useState('')
+  let [, setSearchParams] = useSearchParams()
 
-  const [acceptFriendRequest] = useAcceptFriendRequestMutation();
-  const [declineFriendRequest] = useDeclineFriendRequestMutation();
+  const [acceptFriendRequest] = useAcceptFriendRequestMutation()
+  const [declineFriendRequest] = useDeclineFriendRequestMutation()
+  const [removeFriend] = useRemoveFriendMutation()
+  const [sendFriendRequest] = useSendFriendRequestMutation()
 
   if (!Array.isArray(users)) {
     return (
       <SidebarWrapper>
-        <SubSidebarHeader heading={heading} link={"/friends"} />
+        <SubSidebarHeader heading={heading} link={'/friends'} />
       </SidebarWrapper>
-    );
+    )
   }
+
+  const isSuggestions = variant === 'suggestions'
 
   const filteredUsers = users?.filter((user) => {
     return (
       user.firstName.toLowerCase().includes(searchValue.toLowerCase()) ||
       user.lastName.toLowerCase().includes(searchValue.toLowerCase())
-    );
-  });
+    )
+  })
 
-  const handleChange = (value) => setSearchValue(value);
-  const handleChooseUser = (id) => setSearchParams({ id });
-  const handleDeclineRequest = (e, id) => {
-    e.stopPropagation();
-    declineFriendRequest({ userId: id });
-  };
+  const handleChange = (value) => setSearchValue(value)
+  const handleChooseUser = (id) => setSearchParams({ id })
 
-  const handleConfirmRequest = (e, id) => {
-    console.log(id);
-    e.stopPropagation();
-    acceptFriendRequest({ userId: id });
-  };
+  const handleDeclineRequest = (id) => {
+    declineFriendRequest({ userId: id })
+  }
+
+  const handleConfirmRequest = (id) => {
+    acceptFriendRequest({ userId: id })
+  }
+
+  const handleRemoveFriend = (e, id) => {
+    e.stopPropagation()
+    removeFriend({ friendUserId: id })
+  }
+
+  const handleAddToFriend = (id) => {
+    sendFriendRequest({ userId: id })
+  }
+
+  const handleHideSuggestion = (id) => {
+    console.log(id)
+    // declineFriendRequest({ userId: id })
+  }
 
   return (
     <SidebarWrapper>
-      <SubSidebarHeader heading={heading} link={"/friends"}>
+      <SubSidebarHeader heading={heading} link={'/friends'}>
         {withSearch && (
           <SidebarSearch
             value={searchValue}
-            placeholder="Search friends"
+            placeholder={isSuggestions ? 'Search users' : 'Search friends'}
             marginBottom="6px"
             onChange={handleChange}
           />
@@ -72,7 +89,7 @@ const FriendsSubSidebar = ({
           fontWeight="600"
           marginLeft="12px"
           marginBottom="12px"
-        >{`${users?.length ?? "0"} ${subTitle}`}</Typography>
+        >{`${users?.length ?? '0'} ${subTitle}`}</Typography>
         <Stack width="100%" gap="10px">
           {filteredUsers?.map(({ id, firstName, lastName, avatarsUrl }) => (
             <FriendsSidebarUserCard
@@ -80,25 +97,28 @@ const FriendsSubSidebar = ({
               userImage={avatarsUrl}
               fullName={`${firstName} ${lastName}`}
               variant={variant}
-              onConfirm={(e) => handleConfirmRequest(e, id)}
-              onDelete={(e) => handleDeclineRequest(e, id)}
+              onConfirm={() => handleConfirmRequest(id)}
+              onDecline={() => handleDeclineRequest(id)}
               onClick={() => handleChooseUser(id)}
+              onRemove={(e) => handleRemoveFriend(e, id)}
+              onAddToFriends={() => handleAddToFriend(id)}
+              onHideSuggestion={() => handleHideSuggestion(id)}
             />
           ))}
         </Stack>
       </SidebarItemsList>
     </SidebarWrapper>
-  );
-};
+  )
+}
 
 FriendsSubSidebar.propTypes = {
   withSearch: PropTypes.bool,
-  variant: PropTypes.oneOf(["friends", "requests"]),
+  variant: PropTypes.oneOf(['friends', 'requests', 'suggestions']),
   subTitle: PropTypes.string,
   heading: PropTypes.string,
   users: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
-};
+}
 
-FriendsSubSidebar.displayName = "FriendsSubSidebar";
+FriendsSubSidebar.displayName = 'FriendsSubSidebar'
 
-export default FriendsSubSidebar;
+export default FriendsSubSidebar

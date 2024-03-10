@@ -10,7 +10,12 @@ import Settings from "../Settings/Settings";
 import ForgotPassword from "../Forgot-password/ForgotPassword";
 import Groups from "../Groups/Groups";
 import Videos from "../Videos/Videos";
-import { Friends, FriendsAll, FriendsRequests } from "../Friends";
+import {
+	Friends,
+	FriendsAll,
+	FriendsRequests,
+	FriendsSuggestions,
+} from "../Friends";
 import Confirmation from "../Confirmation/Confirmation";
 
 import Post from "../Post";
@@ -60,6 +65,10 @@ const router = createBrowserRouter([
   {
     path: "/friends/requests",
     element: <FriendsRequests />,
+	},
+	{
+    path: '/friends/suggestions',
+    element: <FriendsSuggestions />,
   },
   {
     path: "/friends/all",
