@@ -83,7 +83,7 @@ public class User extends AbstractEntity {
   private String premiumEmoji;
 
   public String getAvatar() {
-    return avatarsUrl.size() > 0 ? avatarsUrl.get(0) : "";
+    return !avatarsUrl.isEmpty() ? avatarsUrl.get(0) : "";
   }
 
   public String getFullName() {
