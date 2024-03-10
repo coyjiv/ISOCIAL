@@ -121,13 +121,13 @@ const ChatPage = ({ id }) => {
           {!chatId && <span className="no-chats">Select a chat to start messaging</span>}
         </div>
       </div>
-      <div className="chat-input">
+      {chatId && <div className="chat-input">
           <AutosizeTextareaSend
             onSubmit={handleSendMessage}
             placeholder={"Type your message..."}
             validationScheme={validationScheme}
           />
-      </div>
+      </div>}
     </>
   )
 }

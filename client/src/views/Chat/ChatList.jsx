@@ -17,11 +17,13 @@ const ChatList = () => {
   const dispatch = useDispatch();
   // const chatStore = useSelector((state) => state.chat.chats);
   const [page, setPage] = useState(0);
-  const [receiverId, setReceiverId] = useState(2);
+  const [receiverId, setReceiverId] = useState(7);
   const [text, setText] = useState('asasasd');
   const [attachments, setAttachments] = useState([]);
   const { data: chats, isLoading } = useGetChatsQuery(page);
   const [addChat] = useCreateChatMutation();
+  const chatResponse = {"text": "string","attachments": ["string"]};
+  console.log(chatResponse.attachments);
 
   // useEffect(() => {
   //   if (!isLoading && chats && chats.length > 0 && !chatStore.length) {
@@ -29,10 +31,21 @@ const ChatList = () => {
   //   }
   // }, [isLoading, chats, dispatch, chatStore.length]);
 
+  const handleCreateChat = async (values) => {
+    try {
+      const response = await addChat({receiverId, text: values.text, attachments: values.attachments});
+      console.log(response);
+      //setMessages([...messagesData, response.data]);
+    } catch (error) {
+      console.error('Create chat error:', error);
+    }
+
+  }
+
 
   return (
     <div className="chats">
-      <div className="chats-head"><div className="add-chat" onClick={() => addChat({ receiverId, data: { text: "string", attachments: "string" } })}><AiOutlinePlus className="add-chat__plus" /></div>
+      <div className="chats-head"><div className="add-chat" onClick={() => handleCreateChat(chatResponse)}><AiOutlinePlus className="add-chat__plus" /></div>
       <Autocomplete spacing={2} size="small" sx={{marginLeft: '15px', backgroundColor: '#ccc', outlineColor: 'transparent/', width: '60%', borderRadius: '22px', underline: 'none' }}
         freeSolo
         disableClearable

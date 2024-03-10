@@ -7,7 +7,7 @@ export const chatApi = friendsApi.injectEndpoints({
         return {
           url: `chats?receiverId=${receiverId}`,
           method: 'POST',
-          data,
+          data: {text, attachments}
         }
       },
       invalidatesTags: () => [{ type: 'Chats' }],
