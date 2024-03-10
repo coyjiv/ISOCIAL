@@ -22,6 +22,8 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
 
 const drawerWidth = 300;
 
@@ -96,7 +98,7 @@ const MiniDrawer = () => {
 
     
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -124,9 +126,11 @@ const MiniDrawer = () => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Friend's avatar
-          </Typography>
+          <div className='message-avatar'><img alt="" /></div>
+          <div className="chat-info">
+            <h3>User</h3>
+            <span className="last-info"> Last visit ago  </span>
+            </div>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>

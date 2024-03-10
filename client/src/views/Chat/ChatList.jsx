@@ -2,6 +2,9 @@
 //libs
 import { useState } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
+import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/material/Autocomplete';
+
 
 
 import ChatItem from './ChatItem';
@@ -29,14 +32,35 @@ const ChatList = () => {
 
   return (
     <div className="chats">
-      <div className="add-chat" onClick={() => addChat({ receiverId, data: { text, attachments } })}><AiOutlinePlus className="add-chat__plus" /></div>
+      <div className="chats-head"><div className="add-chat" onClick={() => addChat({ receiverId, data: { text: "string", attachments: "string" } })}><AiOutlinePlus className="add-chat__plus" /></div>
+      <Autocomplete spacing={2} size="small" sx={{marginLeft: '15px', backgroundColor: '#ccc', outlineColor: 'transparent/', width: '60%', borderRadius: '22px', underline: 'none' }}
+        freeSolo
+        disableClearable
+        options={chats && chats.map((friend) => friend.id)}
+        renderInput={(params) => (
+          <TextField sx={{ fontSize: '16px', lineHeight: '1.5em'}}
+            {...params}
+            label="Search input"
+            InputProps={{
+              ...params.InputProps,
+              disableUnderline: true,
+              type: 'search',
+            }
+          }
+          />
+        )}
+      /></div>
       <div className="chat-list">
         {chats && chats.map((chat, i) => (
           <ChatItem
+            chats={chats}
+            chat={chat}
             key={i}
             chatId={chat.id}
             chatName={chat.chatName}
             lastMessage={chat.lastMessage}
+            lastMessageBy={chat.lastMessageBy}
+            lastMessageDate={chat.lastMessageDate}
             chatAvatar={chat.avatarUrl}
           />
         ))}
