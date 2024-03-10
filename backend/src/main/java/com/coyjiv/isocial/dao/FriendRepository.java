@@ -53,5 +53,7 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
 
   Optional<Friend> findByRequesterAndAddresserAndStatusAndIsActive(User requester, User addresser, 
 	                                                                 UserFriendStatus status, boolean isActive);
+
+	List<Friend> findAllByRequesterIdOrAddresserIdAndStatus(Long requesterId, Long addresserId, UserFriendStatus status);
 }
 
