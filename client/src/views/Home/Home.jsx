@@ -9,7 +9,7 @@ const HomePage = () => {
         <main className={styles.container}>
             <h1 className={styles.title}>Feed</h1>
             <Container maxWidth={'sm'}>
-                <PostsWrapper type="saved" />
+                <PostsWrapper type="recommendations" />
             </Container>
         </main>
 
