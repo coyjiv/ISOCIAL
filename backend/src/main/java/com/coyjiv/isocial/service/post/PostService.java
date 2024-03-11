@@ -95,21 +95,6 @@ public class PostService implements IPostService {
     }
   }
 
-  //  public PageWrapper<PostResponseDto> findRecommendedPosts(int page, int size) {
-  //    List<Long> recommendedPosts = postRepository
-  //    .findRecommendedPosts(emailPasswordAuthProvider.getAuthenticationPrincipal());
-  //    if (recommendedPosts.isEmpty()) {
-  //      return new PageWrapper<>(List.of(), false);
-  //    } else {
-  //      Sort sort = Sort.by(Sort.Direction.DESC, "creationDate").and(Sort.by(Sort.Direction.ASC, "id"));
-  //      Pageable pageable = PageRequest.of(page, size, sort);
-  //      Page<Post> postPage = postRepository.findActiveByIdIn(recommendedPosts, pageable);
-  //      List<PostResponseDto> dtos = postPage.getContent().stream().map(postResponseMapper::convertToDto).toList();
-  //      boolean hasNext = postPage.hasNext();
-  //      return new PageWrapper<>(dtos, hasNext);
-  //    }
-  //  }
-
   @Override
   @Transactional(readOnly = true)
   public PageWrapper<PostResponseDto> findActiveByAuthorId(int page, int size, Long id) {
@@ -255,7 +240,7 @@ public class PostService implements IPostService {
 
   @Transactional(readOnly = true)
   @Override
-  public List<PostResponseDto> getRecommendation(int page, int size) throws EntityNotFoundException {
+  public PageWrapper<PostResponseDto> getRecommendation(int page, int size) throws EntityNotFoundException {
     List<Friend> friends = friendRepository.findAllByRequesterIdOrAddresserIdAndStatus(
             emailPasswordAuthProvider.getAuthenticationPrincipal(),
             emailPasswordAuthProvider.getAuthenticationPrincipal(), UserFriendStatus.FRIEND);
@@ -271,6 +256,7 @@ public class PostService implements IPostService {
     Sort sort = Sort.by(Sort.Direction.DESC, "creationDate").and(Sort.by(Sort.Direction.ASC, "id"));
     Pageable pageable = PageRequest.of(page, size, sort);
 
+
     for (Friend f : friends) {
       if (Objects.equals(f.getAddresser().getId(), emailPasswordAuthProvider.getAuthenticationPrincipal())) {
         ids.add(f.getRequester().getId());
@@ -283,9 +269,12 @@ public class PostService implements IPostService {
       ids.add(s.getId());
     }
 
-    List<Post> p = postRepository.findRecommendations(ids, date, pageable);
-    Collections.shuffle(p);
-    Set<Post> posts = new HashSet<>(p);
-    return posts.stream().map(postResponseMapper::convertToDto).toList();
+    Page<Post> p = postRepository.findRecommendations(ids, date, pageable);
+    Collections.shuffle(p.getContent());
+    Set<Post> posts = new HashSet<>(p.getContent());
+
+    boolean hasNext = p.hasNext();
+    List<PostResponseDto> dtos = posts.stream().map(postResponseMapper::convertToDto).toList();
+    return new PageWrapper<>(dtos, hasNext);
   }
 }

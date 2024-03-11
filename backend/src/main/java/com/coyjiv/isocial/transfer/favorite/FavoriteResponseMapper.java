@@ -31,28 +31,13 @@ public class FavoriteResponseMapper extends DtoMapperFacade<Favorite, FavoriteRe
   }
 
   protected void decorateDto(FavoriteResponseDto dto, Favorite entity) {
-    dto.setId(entity.getId());
-    dto.setSelectedPostId(entity.getSelectedPostId());
-    dto.setSelectorId(entity.getSelectorId());
-    try {
-      Post post = postRepository.findActiveById(entity.getSelectedPostId()).get();
-      dto.setTextContent(post.getTextContent());
-      dto.setEdited(post.isEdited());
-      dto.setOriginalPostId(post.getOriginalPostId());
-      dto.setAuthorId(post.getAuthorId());
-      dto.setAttachments(post.getAttachments());
-      User author = userRepository.findActiveById(post.getAuthorId()).get();
-      if (!author.getAvatarsUrl().isEmpty()) {
-        dto.setAuthorAvatar(author.getAvatarsUrl().get(0));
-      }
-      dto.setAuthorFullName(author.getFirstName() + " " + author.getLastName());
-      dto.setAuthorLastSeen(author.getLastSeen());
-      dto.setAuthorPremium(author.isPremium());
-      dto.setAuthorPremiumNickname(author.getPremiumNickname());
-      dto.setAuthorPremiumEmoji(author.getPremiumEmoji());
-    } catch (Exception exception) {
-      exception.printStackTrace();
-    }
-
+    Post post = postRepository.findActiveById(entity.getSelectedPostId()).orElseThrow();
+    User author = userRepository.findActiveById(post.getAuthorId()).orElseThrow();
+    dto.setAuthorAvatar(author.getAvatar());
+    dto.setAuthorFullName(author.getFullName());
+    dto.setAuthorLastSeen(author.getLastSeen());
+    dto.setAuthorPremium(author.isPremium());
+    dto.setAuthorPremiumNickname(author.getPremiumNickname());
+    dto.setAuthorPremiumEmoji(author.getPremiumEmoji());
   }
 }
