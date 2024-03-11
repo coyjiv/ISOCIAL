@@ -107,7 +107,6 @@ const FriendsList = ({
           variant="text"
           endIcon={<IoMdArrowDropdown />}
           onClick={handleExpand}
-          sx={{ marginTop: "12px" }}
         >
           See more
         </Button>

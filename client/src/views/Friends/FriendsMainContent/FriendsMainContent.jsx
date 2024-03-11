@@ -39,8 +39,8 @@ const FriendsMainContent = () => {
   }
 
   return (
-    <MainContentWrapper>
-      <FriendsList
+		<MainContentWrapper sx={{ display: { xs: 'none', sm: 'none', md: 'block' }}}>
+			<FriendsList
         variant="requests"
         users={requests?.content}
         isLoading={isRequestsLoading}
@@ -49,7 +49,7 @@ const FriendsMainContent = () => {
         onConfirm={handleConfirm}
         onDecline={handleDecline}
       />
-			<Divider orientation="horizontal" />
+			<Divider orientation="horizontal" sx={{ margin: "12px 0" }}/>
       <FriendsList
         variant="friends"
         users={knownUsers}

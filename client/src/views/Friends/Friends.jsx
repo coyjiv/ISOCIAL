@@ -7,7 +7,7 @@ const FriendsPage = () => {
   return (
     <FriendsPageWrapper>
       <FriendsMainSidebar />
-      <FriendsMainContent />
+			<FriendsMainContent />
     </FriendsPageWrapper>
   );
 };

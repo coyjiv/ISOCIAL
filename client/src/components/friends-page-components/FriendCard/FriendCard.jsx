@@ -18,7 +18,11 @@ const FriendCard = ({
 }) => {
   const [msg, setMsg] = useState('')
   const isRequestVariant = variant === 'requests'
-  const [isRequesting, setIsRequesting] = useState(false)
+	const [isRequesting, setIsRequesting] = useState(false)
+	
+	const truncateText = (text, maxLength) => {
+		return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
+	};
 
   const handleClick = async (e) => {
     e.stopPropagation()
@@ -49,7 +53,7 @@ const FriendCard = ({
 
   return (
     <CardWrapper onClick={onClick}>
-      <Box width="252px" height="208px">
+      <Box width="194px" height="190px">
         <Avatar
           src={images[0]}
           alt={fullName}
@@ -63,11 +67,11 @@ const FriendCard = ({
       </Box>
       <CardContentWrapper>
         <Typography
-          fontSize="17px"
+          fontSize="20px"
           fontWeight="600"
           marginBottom={!msg ? '30px' : '0'}
         >
-          {fullName}
+          {truncateText(fullName, 14)}
         </Typography>
 
         <Typography fontSize="14px" marginBottom={!msg ? '0' : '9px'}>

@@ -19,7 +19,7 @@ const FriendsAllPage = () => {
         withSearch
         isLoading={isLoading}
       />
-      <FriendsUserProfileSection />
+			<FriendsUserProfileSection />
     </Stack>
   );
 };

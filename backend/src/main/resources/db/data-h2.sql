@@ -471,6 +471,16 @@ INSERT INTO public.friends (requester_id, addresser_id, status, creation_date, l
 VALUES (19, 1, 'REQUEST_SENT', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE);
 INSERT INTO public.friends (requester_id, addresser_id, status, creation_date, last_modified_date, is_active)
 VALUES (20, 1, 'REQUEST_SENT', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE);
+INSERT INTO public.friends (requester_id, addresser_id, status, creation_date, last_modified_date, is_active)
+VALUES (24, 1, 'REQUEST_SENT', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE);
+INSERT INTO public.friends (requester_id, addresser_id, status, creation_date, last_modified_date, is_active)
+VALUES (25, 1, 'REQUEST_SENT', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE);
+INSERT INTO public.friends (requester_id, addresser_id, status, creation_date, last_modified_date, is_active)
+VALUES (27, 1, 'REQUEST_SENT', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE);
+INSERT INTO public.friends (requester_id, addresser_id, status, creation_date, last_modified_date, is_active)
+VALUES (29, 1, 'REQUEST_SENT', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE);
+INSERT INTO public.friends (requester_id, addresser_id, status, creation_date, last_modified_date, is_active)
+VALUES (30, 1, 'REQUEST_SENT', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE);
 
 -- friends of Alice Johnson
 INSERT INTO public.friends (requester_id, addresser_id, status, creation_date, last_modified_date, is_active)

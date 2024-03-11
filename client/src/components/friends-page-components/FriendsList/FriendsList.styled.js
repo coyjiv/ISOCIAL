@@ -11,5 +11,6 @@ export const ExpandedWrapper = styled(Stack)(({ active }) => ({
   gap: "12px",
   transition: "all 0.45s ease",
   maxHeight: active ? "100%" : "750px",
-  overflowY: !active ? "hidden" : "auto",
+	overflowY: !active ? "hidden" : "auto",
+	paddingBottom: "12px"
 }));
