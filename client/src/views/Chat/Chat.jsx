@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import './Chat.scss';
 import cx from 'classnames';
 import { AiOutlineDelete, AiFillEdit } from "react-icons/ai";
-import { useDeleteMessageMutation, useGetMessagesQuery, useSendMessageMutation } from '../../store/services/chatService';
+import { useDeleteMessageMutation, useGetMessagesQuery, useSendMessageMutation, useGetChatRecipientQuery } from '../../store/services/chatService';
 import { AutosizeTextareaSend } from '../../components/AutosizeTextareaSend';
 import * as Yup from 'yup';
 import { useParams } from 'react-router';
@@ -30,6 +30,9 @@ const ChatPage = ({ id }) => {
   const [sendMessage] = useSendMessageMutation();
   const [deleteMessage] = useDeleteMessageMutation();
   const userId = Number(localStorage.getItem('userId'));
+
+  const { data: chat } = useGetChatRecipientQuery(id);
+  const avatarUrl = chat ? chat.avatarUrl : "";
 
   console.log(messages);
 
@@ -100,7 +103,7 @@ const ChatPage = ({ id }) => {
         <div className="chat-messages" ref={chatContainerRef}>
           {messagesData.map((message, index) => (
             <div key={index} className={cx('message-item', { 'user': message.senderId === userId }, { "bot": message.senderId !== userId })}>
-              <div className={cx({ 'message-avatar': ((message.senderId !== userId) && (!messages[index + 1] || messages[index + 1].senderId === userId)) })}><img src={TbSquareRoundedNumber3Filled} alt="" /></div>
+              <div className={cx({ 'message-avatar': ((message.senderId !== userId) && (!messages[index + 1] || messages[index + 1].senderId === userId)) })}><img src={avatarUrl} alt="" /></div>
               <div className="message-body">
                 <div className='message-text'>
                   {message.text}

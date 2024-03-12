@@ -11,10 +11,12 @@ import { styled, useTheme } from '@mui/material/styles';
 import ChatItem from './ChatItem';
 import "./Chat.scss"
 import { useGetChatsQuery, useCreateChatMutation, useDeleteChatMutation } from "../../store/services/chatService";
+import { useGetFriendsListQuery } from "../../store/services/friendService";
 import { useSelector, useDispatch } from "react-redux";
 import { setChats } from "../../store/chatSlice";
 
 const ChatList = () => {
+  const userId = Number(localStorage.getItem('userId'));
   const dispatch = useDispatch();
   // const chatStore = useSelector((state) => state.chat.chats);
   const [chatData, setChats] = useState([]);
@@ -25,11 +27,10 @@ const ChatList = () => {
   const { data: chats, isLoading } = useGetChatsQuery(page);
   const [addChat] = useCreateChatMutation();
   const [deleteChat] = useDeleteChatMutation();
+  const { data: friends } = useGetFriendsListQuery(userId);
   const [value, setValue] = useState("");
   const chatResponse = {"text": "string", "attachments": ["string"]};
   console.log(chatResponse.text);
-
-  const theme = useTheme();
 
   useEffect(() => {
     if (!isLoading && chats && chats.length > 0) {
@@ -67,14 +68,10 @@ const ChatList = () => {
     setValue(value);
   };
 
-  
-  
-
-
   return (
     <div className="chats">
       <div className="chats-head"><div className="add-chat" onClick={() => handleCreateChat(chatResponse)}><AiOutlinePlus className="add-chat__plus" /></div>
-      <MainSearch value={value} searchItems={chatData} onChange={handleChange} /></div>
+      <MainSearch value={value} searchItems={friends} onChange={handleChange} /></div>
       <div className="chat-list">
         {chats && chatData.map((chat, i) => (
           <ChatItem

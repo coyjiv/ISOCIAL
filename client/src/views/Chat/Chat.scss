@@ -261,7 +261,7 @@
     .chat-options {
       position: absolute;
       top: 25%;
-      right: 15px;
+      right: -15px;
       display: none;
 
       .chat-options-option {
@@ -274,3 +274,39 @@
     }
   }
 }
+
+/*   ---   Message Header   ---   */
+
+.message-header {
+  display: flex;
+  justify-content: flex-start;
+  padding: 7px;
+  gap: 5px;
+  transition: color .2s linear;
+  border-radius: 5px;
+
+  &:hover {
+    background-color: $lightGrey;
+  }
+
+  .user-avatar {
+    width: 40px;
+    @include message-avatar;
+  }
+
+  .chat-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    h3 {
+      font-size: 20px;
+      font-weight: 400;
+    }
+    .last-info {
+      font-size: 12px;
+      opacity: 0.8;
+    }
+  }
+
+}
+

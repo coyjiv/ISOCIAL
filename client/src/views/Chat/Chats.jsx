@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { withLayout } from "../../hooks/withLayout"
 import { useParams } from "react-router-dom";
+import { useGetChatRecipientQuery } from "../../store/services/chatService";
 
 import ChatList from "./ChatList";
 import { Chat } from './Chat'
@@ -108,6 +109,12 @@ const MiniDrawer = () => {
     setOpen(false);
   };
 
+  const { id } = useParams();
+  console.log(id);
+  const { data: chat } = useGetChatRecipientQuery(id);
+  //console.log(chat.avatarUrl);
+  const avatarUrl = chat ? chat.avatarUrl : "";
+
   return (
     <Box sx={{ display: 'flex', alignItems: 'stretch'}}>
       <CssBaseline />
@@ -126,11 +133,11 @@ const MiniDrawer = () => {
           >
             <MenuIcon />
           </IconButton>
-          <div className='message-avatar'><img alt="" /></div>
+          {chat && <div className="message-header"><div className='user-avatar'><img src={avatarUrl}  alt="" /></div>
           <div className="chat-info">
-            <h3>User</h3>
+            <h3>{chat.chatName}</h3>
             <span className="last-info"> Last visit ago  </span>
-            </div>
+            </div></div>}
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
