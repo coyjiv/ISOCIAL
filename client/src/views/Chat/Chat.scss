@@ -75,8 +75,9 @@
 
   .message-avatar {
     position: absolute;
-    left: -36px;
-    top: 10px;
+    left: -50px;
+    width: 30px;
+    @include message-avatar;
   }
 
   .message-options {
@@ -192,6 +193,15 @@
         &:hover {
           background-color: #999;
         }
+      }
+
+      .logo-input {
+        display: none;
+      }
+
+      .search-menu {
+        background-color: #fff;
+        opacity: 1;
       }
 
   }

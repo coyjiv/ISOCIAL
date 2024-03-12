@@ -5,28 +5,14 @@ import "./Chat.scss";
 import { AiOutlineDelete } from "react-icons/ai";
 import PropTypes from "prop-types";
 import { useState } from "react";
-import { useDeleteChatMutation, useGetChatsQuery } from '../../store/services/chatService';
-import { useDispatch } from "react-redux";
 
 
-const ChatItem = ({ chat, chatId, chatName, lastMessage, lastMessageBy, lastMessageDate, chatAvatar }) => {
+
+const ChatItem = ({ handleDeleteChat, chatId, chatName, lastMessage, lastMessageBy, lastMessageDate, chatAvatar }) => {
   console.log(chatAvatar);
   const userId = Number(localStorage.getItem('userId'));
-  const [deleteChat] = useDeleteChatMutation();
-  const dispatch = useDispatch();
-  const [page, setPage] = useState(0);
-  const { data: chats, isLoading } = useGetChatsQuery(page);
-
-  const handleDeleteChat = async (item) => {
-
-    try {
-      console.log(item.id);
-      await deleteChat({ chatId: item.id })
-      dispatch(useGetChatsQuery(page))
-    } catch (error) {
-      console.error('Delete message error:', error);
-    }
-  };
+ 
+  
 
  /*const currentDate = new Date();
  const timeDif = lastMessageDate.getDay();
@@ -42,14 +28,14 @@ const ChatItem = ({ chat, chatId, chatName, lastMessage, lastMessageBy, lastMess
       </div>
       
       <div className='chat-options'>
-        <div className='chat-options-option' onClick={() => handleDeleteChat(chat)}><AiOutlineDelete /></div>
+        <div className='chat-options-option' onClick={() => handleDeleteChat(chatId)}><AiOutlineDelete /></div>
       </div>
     </Link>
   );
 };
 
 ChatItem.propTypes = {
-  chatId: PropTypes.string.isRequired,
+  chatId: PropTypes.number.isRequired,
   chatName: PropTypes.string.isRequired,
   lastMessage: PropTypes.string.isRequired,
   chatAvatar: PropTypes.string.isRequired,

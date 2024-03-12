@@ -9,6 +9,7 @@ import { useParams } from 'react-router';
 import PropTypes from 'prop-types'
 import { withWebsocket } from '../../hooks/withWebsocket'
 import { TbSquareRoundedNumber3Filled } from 'react-icons/tb';
+import { useDispatch } from 'react-redux';
 
 const validationScheme = Yup.object().shape({
   text: Yup.string().required('Message is required').max(260, 'Message is too long'),
@@ -24,11 +25,10 @@ const ChatPage = ({ id }) => {
   const [messagesData, setMessages] = useState([]);
   // eslint-disable-next-line no-unused-vars
   const [page, setPage] = useState(0)
-  const contentRef = useRef();
 
-  const { data: messages, isLoading } = useGetMessagesQuery({ page, chatId }, { skip: !chatId })
-  const [sendMessage] = useSendMessageMutation()
-  const [deleteMessage] = useDeleteMessageMutation()
+  const { data: messages, isLoading } = useGetMessagesQuery({ page, chatId }, { skip: !chatId });
+  const [sendMessage] = useSendMessageMutation();
+  const [deleteMessage] = useDeleteMessageMutation();
   const userId = Number(localStorage.getItem('userId'));
 
   console.log(messages);
@@ -76,20 +76,17 @@ const ChatPage = ({ id }) => {
 
 
   // eslint-disable-next-line no-unused-vars
+
+ 
+
+  const chatContainerRef = useRef();
+  console.log(chatContainerRef);
+
   const scrollBottom = () => {
-    const contentHeight = contentRef.current.clientHeight;
-    console.log(contentRef);
-    console.log(contentHeight);
-    window.scrollTo({
-      bottom: contentHeight,
-      behavior: 'smooth',
-    });
+    chatContainerRef.current.scrollTo({top: chatContainerRef.current.scrollHeight});
   }
 
-  /*useEffect(scrollBottom, []);*/
-
-  const chatContainerRef = useRef(null);
-  console.log(chatContainerRef);
+  useEffect(() => {scrollBottom()}, [messagesData?.length, chatContainerRef]);
 
   /*const scrollToBottom = () => {
     chatContainerRef.current.parentElement.scrollTop = chatContainerRef.current.scrollHeight;
@@ -103,7 +100,7 @@ const ChatPage = ({ id }) => {
         <div className="chat-messages" ref={chatContainerRef}>
           {messagesData.map((message, index) => (
             <div key={index} className={cx('message-item', { 'user': message.senderId === userId }, { "bot": message.senderId !== userId })}>
-              <div className={cx(messages[index - 1] === undefined || { 'message-avatar': ((message.senderId !== userId) && (!messages[index + 1] || messages[index + 1].senderId === userId)) })}><img src={TbSquareRoundedNumber3Filled} alt="" /></div>
+              <div className={cx({ 'message-avatar': ((message.senderId !== userId) && (!messages[index + 1] || messages[index + 1].senderId === userId)) })}><img src={TbSquareRoundedNumber3Filled} alt="" /></div>
               <div className="message-body">
                 <div className='message-text'>
                   {message.text}
