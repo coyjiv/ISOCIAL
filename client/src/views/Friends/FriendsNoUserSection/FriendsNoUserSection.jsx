@@ -1,4 +1,3 @@
-/* eslint-disable react/no-unescaped-entities */
 import { Box, Typography } from "@mui/material";
 import { SectionWrapper } from "./FriendsNoUserSection.styled";
 
@@ -38,7 +37,7 @@ const FriendsNoUserSection = () => {
         </svg>
       </Box>
       <Typography fontSize="20px" fontWeight="700" color="text.grey">
-        Select people's names to preview their profile.
+        Select people&apos;s names to preview their profile.
       </Typography>
     </SectionWrapper>
   );
