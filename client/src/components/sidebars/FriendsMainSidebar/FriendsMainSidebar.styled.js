@@ -7,7 +7,10 @@ export const SidebarWrapper = styled(Stack)(({ theme }) => ({
   backgroundColor: theme.palette?.white,
   boxShadow:
     "5px 0 5px -5px rgba(0, 0, 0, 0.2), -2px 0 2px -2px rgba(0, 0, 0, 0.2)",
-  padding: "8px",
+	padding: "8px",
+	[theme.breakpoints.down(660)]: {
+    minWidth: '100%',
+  },
 }));
 
 export const SidebarHeaderWrapper = styled(Stack)({

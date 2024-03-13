@@ -8,10 +8,16 @@ const useGetSuggestions = (userId, users, requests, friends) => {
   return useMemo(() => {
     if (users) {
       const usersWithoutMe = users?.filter(user => user.id !== Number(userId));
-      const usersWithoutRequests = usersWithoutMe.filter(user => !requests?.content.find(request => request.id === user.id));
-      const usersWithoutFriends = usersWithoutRequests.filter(user => !friends?.find(friend => friend.id === user.id));
+      const usersWithoutRequests = usersWithoutMe.filter(
+        (user) => !requests?.content.find((request) => request.id === user.id),
+      )
+      const usersWithoutFriends = usersWithoutRequests.filter(
+        (user) => !friends?.find((friend) => friend.id === user.id),
+      )
 
-      return usersWithoutFriends.filter(user => !hiddenUsersId.includes(user.id));
+      return usersWithoutFriends.filter(
+        (user) => !hiddenUsersId.includes(user.id),
+      )
     }
   }, [userId, users, requests?.content, friends, hiddenUsersId]);
 };

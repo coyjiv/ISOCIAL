@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types'
 import { useState } from 'react'
-import { useLocalStorage } from 'usehooks-ts'
+import { useLocalStorage, useMediaQuery } from 'usehooks-ts'
 import { Stack, Typography } from '@mui/material'
-import { useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 
 import { SubSidebarHeader } from './SubSidebarHeader'
 import { FriendsSidebarUserCard } from '../../friends-page-components'
@@ -14,7 +14,7 @@ import {
   useRemoveFriendMutation,
   useSendFriendRequestMutation,
 } from '../../../store/services/friendService.js'
-import { LS_KEYS } from '../../../utils/constants'
+import { LS_KEYS, MQ } from '../../../utils/constants'
 
 const FriendsSubSidebar = ({
   variant,
@@ -25,6 +25,8 @@ const FriendsSubSidebar = ({
 }) => {
   const [searchValue, setSearchValue] = useState('')
   let [, setSearchParams] = useSearchParams()
+  const navigate = useNavigate()
+  const isMobile = useMediaQuery(MQ.TABLET)
   const [hiddenUsersId, setHiddenUsersId] = useLocalStorage(
     LS_KEYS.HIDDEN_USERS,
     [],
@@ -53,7 +55,10 @@ const FriendsSubSidebar = ({
   })
 
   const handleChange = (value) => setSearchValue(value)
-  const handleChooseUser = (id) => setSearchParams({ id })
+
+  const handleChooseUser = (id) => {
+    isMobile ? navigate(`/profile/${id}`) : setSearchParams({ id })
+  }
 
   const handleDeclineRequest = (id) => {
     declineFriendRequest({ userId: id })
@@ -73,13 +78,14 @@ const FriendsSubSidebar = ({
   }
 
   const handleHideSuggestion = (id) => {
+    console.log(id)
     setHiddenUsersId([...hiddenUsersId, id])
-	}
-	
-	const handleOpenMessage = (e, id) => {
-		e.stopPropagation()
-		console.log('start messages with user id:', id)
-	}
+  }
+
+  const handleMessage = (e, id) => {
+    e.stopPropagation()
+    console.log(`start messages with user ${id}`)
+  }
 
   return (
     <SidebarWrapper>
@@ -109,11 +115,11 @@ const FriendsSubSidebar = ({
               variant={variant}
               onConfirm={() => handleConfirmRequest(id)}
               onDecline={() => handleDeclineRequest(id)}
-							onClick={() => handleChooseUser(id)}
-							onMessage={(e) => handleOpenMessage(e, id)}
+              onClick={() => handleChooseUser(id)}
               onRemove={(e) => handleRemoveFriend(e, id)}
               onAddToFriends={() => handleAddToFriend(id)}
               onHideSuggestion={() => handleHideSuggestion(id)}
+              onMessage={(e) => handleMessage(e, id)}
             />
           ))}
         </Stack>

@@ -51,7 +51,7 @@ const FriendsMainContent = () => {
 	}
 
 	return (
-		<MainContentWrapper sx={{ display: { xs: 'none', sm: 'none', md: 'block' } }}>
+		<MainContentWrapper>
 			<FriendsList
 				variant="requests"
 				users={requests?.content}

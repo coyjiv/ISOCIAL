@@ -1,10 +1,19 @@
-import { useEffect, useState } from 'react';
-import { Avatar, Box, Container, Divider, Grid, Input, Stack, Typography } from '@mui/material'
+import { useState } from 'react';
+import {
+	Avatar,
+	Box,
+	Container,
+	Divider,
+	Grid,
+	Input,
+	Stack,
+	Typography,
+} from '@mui/material'
 import { Link } from 'react-router-dom'
 import { AiFillHome } from "react-icons/ai";
 import { useGetProfileByIdQuery } from '../../../store/services/profileService';
 import { useSubscribersCountQuery } from '../../../store/services/friendService';
-import { useParams } from 'react-router-dom'
+// import { useParams } from 'react-router-dom'
 import styles from '../profile.module.scss'
 import CreatePostModal from '../../../components/modals/CreatePost';
 import { placeholderAvatar } from '../../../data/placeholders';
@@ -13,41 +22,48 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import Post from '../../../components/Post/Post';
 import classNames from 'classnames';
 import { PostSkeleton } from '../skeletons/PostSkeleton';
+import { useGetCurrentUserId } from '../../../hooks/index.js'
 // import PostsWrapper from '../../../components/PostsWrapper';
 
 const Posts = () => {
-  const { id } = useParams();
+  // const { id } = useParams()
+  const id = useGetCurrentUserId()
 
   const fetchProfileId = id ?? localStorage.getItem('userId')
-  // eslint-disable-next-line no-unused-vars
-  const { data: profile, isLoading } = useGetProfileByIdQuery(fetchProfileId);
-  const { data: loggedUserProfile, isLoading: isLoggedUserLoading } = useGetProfileByIdQuery(localStorage.getItem('userId'))
-  const { data: subscribersCount } = useSubscribersCountQuery(fetchProfileId);
+
+  const { data: profile } = useGetProfileByIdQuery(fetchProfileId)
+  const { data: loggedUserProfile, isLoading: isLoggedUserLoading } =
+    useGetProfileByIdQuery(localStorage.getItem('userId'))
+  const { data: subscribersCount } = useSubscribersCountQuery(fetchProfileId)
 
   const [isCreatePostModalOpen, setIsCreatePostModalOpen] = useState(false)
   const triggerPostModal = () => setIsCreatePostModalOpen(true)
 
   const [page, setPage] = useState(0)
-  const { data: postQueryData } = useGetPostsByUserQuery({ id: fetchProfileId, page, size: 5 });
+  const { data: postQueryData } = useGetPostsByUserQuery({
+    id: fetchProfileId,
+    page,
+    size: 5,
+  })
 
   const { content: posts, hasNext } = postQueryData ?? { content: [] }
 
   const [postsData, setPostsData] = useState([])
 
-  useEffect(() => {
-    if (posts && posts.length > 0) {
-      if (page === 0) {
-        setPostsData(posts);
-      } else {
-        const existingPostIds = new Set(postsData.map(post => post.id));
+  // useEffect(() => {
+  //   if (posts && posts.length > 0) {
+  //     if (page === 0) {
+  //       setPostsData(posts);
+  //     } else {
+  //       const existingPostIds = new Set(postsData.map(post => post.id));
 
-        const newPosts = posts.filter(post => !existingPostIds.has(post.id));
+  //       const newPosts = posts.filter(post => !existingPostIds.has(post.id));
 
-        setPostsData([...postsData, ...newPosts]);
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [posts, page]);
+  //       setPostsData([...postsData, ...newPosts]);
+  //     }
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [posts, page]);
 
 
   const onClose = () => {
@@ -113,15 +129,15 @@ const Posts = () => {
               </div>}
 
               <section>
-                {postsData.length > 0 && <InfiniteScroll
-                  dataLength={postsData?.length ?? 0}
+                {posts.length > 0 && <InfiniteScroll
+                  dataLength={posts?.length ?? 0}
                   next={fetchData}
                   hasMore={hasNext}
                   loader={<div style={{ display: 'flex', width: '100%' }}><PostSkeleton /></div>}
                   className={styles.postWrapper}
                   style={{ overflow: 'hidden' }}
                 >
-                  {postsData?.map((post) => <Post key={post.id}
+                  {posts?.map((post) => <Post key={post.id}
                     postId={post.id}
                     authorId={post.authorId}
                     avatarUrl={post.authorAvatar}

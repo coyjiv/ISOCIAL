@@ -1,13 +1,16 @@
 import { Stack } from '@mui/material'
-import { FriendsSubSidebar } from '../../../components/sidebars/index.js'
-import { FriendsUserProfileSection } from '../FriendsUserProfileSection/index.js'
+import { useMediaQuery } from 'usehooks-ts'
+
+import { FriendsSubSidebar } from '../../../components/sidebars'
+import { FriendsUserProfileSection } from '../FriendsUserProfileSection'
 import {
   useAvailableFriendRequestsQuery,
   useGetFriendsListQuery,
-} from '../../../store/services/friendService.js'
-import { useGetUsersQuery } from '../../../store/services/usersService.js'
-import { useGetSuggestions } from '../../../hooks/index'
+} from '../../../store/services/friendService'
+import { useGetUsersQuery } from '../../../store/services/usersService'
+import { useGetSuggestions } from '../../../hooks'
 import { withLayout } from '../../../hooks/withLayout'
+import { MQ } from '../../../utils/constants'
 
 const FriendsSuggestionsPage = () => {
   const userId = localStorage.getItem('userId')
@@ -16,7 +19,8 @@ const FriendsSuggestionsPage = () => {
   const { data: requests } = useAvailableFriendRequestsQuery()
 
   const suggestions = useGetSuggestions(userId, users, requests, friends)
-		
+  const isMatch = useMediaQuery(MQ.TABLET)
+
   return (
     <Stack width="100%" direction="row" height="calc(100vh - 54px)">
       <FriendsSubSidebar
@@ -27,7 +31,7 @@ const FriendsSuggestionsPage = () => {
         withSearch
         isLoading={isLoading}
       />
-      <FriendsUserProfileSection />
+      {!isMatch && <FriendsUserProfileSection />}
     </Stack>
   )
 }

@@ -16,7 +16,8 @@ const CardActionsPopover = ({ name, onMessage, onRemove }) => {
 
   const handleClick = (e) => {
     e.stopPropagation()
-    setAnchorEl(e.currentTarget);}
+		setAnchorEl(e.currentTarget);
+	}
 
 	const handleClose = (e) => {
 		e.stopPropagation()
