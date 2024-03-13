@@ -90,7 +90,7 @@ public class FriendService implements IFriendService {
         requester.get(),
         addresser.get(),
         true
-      ) 
+      )
 			|| friendRepository.existsByRequesterAndAddresserAndIsActive(
         addresser.get(),
         requester.get(),
@@ -122,19 +122,12 @@ public class FriendService implements IFriendService {
       friendUserId
     );
 
-    if (
-      user.isEmpty() 
-			|| friend.isEmpty() 
-			|| user.get().equals(friend.get()) 
-			|| friendRequest.isEmpty()
-    ) {
+    if (user.isEmpty() || friend.isEmpty() || user.get().equals(friend.get())	|| friendRequest.isEmpty()) {
       return false;
     }
 
     if (
-      friendRequest.get().getStatus() == UserFriendStatus.REQUEST_SENT 
-			|| friendRequest.get().getStatus() == UserFriendStatus.REQUEST_RECEIVED
-    ) {
+      friendRequest.get().getStatus() == UserFriendStatus.REQUEST_SENT || friendRequest.get().getStatus() == UserFriendStatus.REQUEST_RECEIVED) {
       friendRequest.get().setStatus(UserFriendStatus.FRIEND);
       friendRepository.save(friendRequest.get());
 
@@ -164,8 +157,7 @@ public class FriendService implements IFriendService {
     Friend friend = friendRequest.get();
 
     boolean isUserInvolved =
-      userId.equals(friend.getRequester().getId()) 
-			|| userId.equals(friend.getAddresser().getId());
+      userId.equals(friend.getRequester().getId()) || userId.equals(friend.getAddresser().getId());
     if (!isUserInvolved) {
       return false; // The current user is not part of this friend request.
     }
