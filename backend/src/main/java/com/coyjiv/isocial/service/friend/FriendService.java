@@ -294,7 +294,7 @@ public class FriendService implements IFriendService {
     boolean hasNext = recommended.hasNext();
 
     Page<Friend> recommendedNoCity;
-    if (recommended.toList().size() < size){
+    if (recommended.toList().size() < size) {
       pageable = PageRequest.of(page, size - recommended.toList().size(), sort);
       recommendedNoCity = friendRepository
               .findAllByFriendId(friendsIds, ids, pageable);
@@ -303,11 +303,11 @@ public class FriendService implements IFriendService {
 
       for (Friend f : recommendedNoCity.toList()) {
         if (ids.contains(f.getAddresser().getId())) {
-          if (!users.contains(f.getRequester())){
+          if (!users.contains(f.getRequester())) {
             users.add(f.getRequester());
           }
         } else {
-          if (!users.contains(f.getAddresser())){
+          if (!users.contains(f.getAddresser())) {
             users.add(f.getAddresser());
           }
         }
