@@ -112,6 +112,10 @@ public class FriendController {
     return ResponseEntity.ok(friendRequests);
   }
 
-
+  @GetMapping("/recommended")
+  public ResponseEntity<?> getRecommendedFriends(@RequestParam(defaultValue = "0") @Min(0) Integer page,
+                                                 @RequestParam(defaultValue = "10") @Min(0) Integer size) {
+    return ResponseEntity.ok(friendService.findRecommendedFriends(page, size));
+  }
 }
 
