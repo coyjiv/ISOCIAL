@@ -32,5 +32,5 @@ public interface IFriendService {
   Long getSubscriptionsCount(Long id);
 
 
-  PageWrapper<FriendResponseDto> findRecommendedFriends(int page, int size);
+  PageWrapper<FriendResponseDto> getRecommendations(int page, int size);
 }

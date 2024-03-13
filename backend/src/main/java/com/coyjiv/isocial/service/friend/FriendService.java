@@ -262,7 +262,7 @@ public class FriendService implements IFriendService {
   }
 
   @Override
-  public PageWrapper<FriendResponseDto> findRecommendedFriends(int page, int size) {
+  public PageWrapper<FriendResponseDto> getRecommendations(int page, int size) {
     final Long main = emailPasswordAuthProvider.getAuthenticationPrincipal();
     List<Friend> friends = friendRepository.findAllByUserId(main);
     List<Long> ids = new ArrayList<>();
