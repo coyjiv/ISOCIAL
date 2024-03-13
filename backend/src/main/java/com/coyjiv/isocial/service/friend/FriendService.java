@@ -162,10 +162,10 @@ public class FriendService implements IFriendService {
     }
 
     Optional<Friend> activeFriendship =
-		 friendRepository.findByRequesterAndAddresserAndStatusAndIsActive(user.get(),friendUser.get(),
+		  friendRepository.findByRequesterAndAddresserAndStatusAndIsActive(user.get(),friendUser.get(),
       UserFriendStatus.FRIEND, true);
     Optional<Friend> activeFriendship1 = 
-		 friendRepository.findByRequesterAndAddresserAndStatusAndIsActive(friendUser.get(),user.get(),
+		  friendRepository.findByRequesterAndAddresserAndStatusAndIsActive(friendUser.get(),user.get(),
       UserFriendStatus.FRIEND,true);
     if (activeFriendship.isPresent()) {
       Friend friend = activeFriendship.get();
