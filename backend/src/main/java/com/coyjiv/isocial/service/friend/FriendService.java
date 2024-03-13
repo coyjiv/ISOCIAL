@@ -149,7 +149,6 @@ public class FriendService implements IFriendService {
     return true;
   }
 
-
   @Transactional
   @Override
   public boolean deleteFriend(Long friendUserId) {
