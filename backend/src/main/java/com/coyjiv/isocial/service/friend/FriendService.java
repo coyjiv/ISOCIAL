@@ -127,7 +127,8 @@ public class FriendService implements IFriendService {
     }
 
     if (
-      friendRequest.get().getStatus() == UserFriendStatus.REQUEST_SENT || friendRequest.get().getStatus() == UserFriendStatus.REQUEST_RECEIVED) {
+      friendRequest.get().getStatus() == UserFriendStatus.REQUEST_SENT 
+			|| friendRequest.get().getStatus() == UserFriendStatus.REQUEST_RECEIVED) {
       friendRequest.get().setStatus(UserFriendStatus.FRIEND);
       friendRepository.save(friendRequest.get());
 
