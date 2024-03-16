@@ -5,9 +5,10 @@ import styles from "./Confirmation.module.scss";
 import { Typography } from "@mui/material";
 import { BlueRoundedButton } from '../../components/buttons';
 import { Emoji } from 'emoji-picker-react';
+import { API_URL } from "../../api";
 
 const Confirmation = () => {
-  const [confirmed, setConfirmed] = useState(true);
+  const [confirmed, setConfirmed] = useState(false);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const id = searchParams.get("id");
@@ -16,7 +17,7 @@ const Confirmation = () => {
     (async () => {
       try {
         const { status } = await axios.post(
-          `${import.meta.env.VITE_API_URL}/auth/confirmation?id=${id}`,
+          `${API_URL}/auth/confirmation?id=${id}`,
           undefined,
           { headers: { "Content-Type": "application/json" } }
         );
