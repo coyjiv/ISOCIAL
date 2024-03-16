@@ -29,4 +29,6 @@ public class UserDefaultResponseDto {
   private String premiumNickname;
   private String premiumEmoji;
   private Long friendsCount;
+  private String birthPlace;
+  private String studyPlace;
 }
