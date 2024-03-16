@@ -10,6 +10,8 @@ CREATE TABLE public.users
     avatars_url        VARCHAR ARRAY,
     banner_url         VARCHAR,
     bio                VARCHAR,
+    birth_place        VARCHAR,
+    study_place        VARCHAR,
     is_private         BOOLEAN      NOT NULL DEFAULT FALSE,
     last_seen          TIMESTAMP,
     activity_status    VARCHAR(10)  NOT NULL DEFAULT 'OFFLINE',
