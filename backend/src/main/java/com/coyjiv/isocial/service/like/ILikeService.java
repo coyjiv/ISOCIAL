@@ -14,7 +14,7 @@ public interface ILikeService {
 
   void toggleLike(Long userId, Long entityId, LikeableEntity entityType) throws EntityNotFoundException;
 
-  int countLikesByEntity(Long entityId, LikeableEntity entityType) throws EntityNotFoundException;
+  long countLikesByEntity(Long entityId, LikeableEntity entityType) throws EntityNotFoundException;
 
   boolean isLikedByUser(Long userId, Long entityId, LikeableEntity entityType) throws EntityNotFoundException;
 
