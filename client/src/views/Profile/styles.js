@@ -4,11 +4,10 @@ export const styles = (theme) => ({
     maxWidth: 360,
     backgroundColor: theme.palette.background.paper,
   },
-});
+})
 
 export const profileTabsStyles = () => ({
-    // make tabs capitalize
-    root: {
-        textTransform: 'capitalize',
-    },
-});
+  root: {
+    textTransform: 'capitalize',
+  },
+})

@@ -42,7 +42,7 @@ const FriendsSidebarUserCard = ({
     <CardWrapper variant={variant} onClick={onClick}>
       <Stack direction="row" gap="8px" alignItems="center">
         <Avatar
-          src={userImage?.[0]}
+          src={userImage}
           alt={fullName}
           sx={{ width: 60, height: 60 }}
         />
@@ -77,7 +77,7 @@ const FriendsSidebarUserCard = ({
 FriendsSidebarUserCard.propTypes = {
   variant: PropTypes.oneOf(['friends', 'requests', 'suggestions']),
   fullName: PropTypes.string,
-  userImage: PropTypes.array,
+  userImage: PropTypes.string,
   onMessage: PropTypes.func,
   onConfirm: PropTypes.func,
   onAddToFriends: PropTypes.func,

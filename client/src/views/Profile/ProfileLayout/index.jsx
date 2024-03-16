@@ -20,12 +20,12 @@ import { placeholderAvatar } from "../../../data/placeholders"
 import { MdPhotoCamera } from "react-icons/md"
 import { NotificationSubscriptionBtn } from '../NotificationSubscriptionBtn'
 import styles from '../profile.module.scss'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 
 export const ProfileLayout = ({ id }) => {
-		const theme = useTheme()
-		const navigate = useNavigate()
+    const theme = useTheme()
+    const navigate = useNavigate()
 
     const { data: profile } = useGetProfileByIdQuery(id ?? localStorage.getItem('userId'));
 
@@ -54,11 +54,11 @@ export const ProfileLayout = ({ id }) => {
 
 
     return (
-			<Box>
-				<ProfileBackButton
-        fullName={`${profile?.firstName} ${profile?.lastName}`}
-        onClick={() => navigate(-1)}
-				/>
+        <Box>
+            <ProfileBackButton
+                fullName={`${profile?.firstName} ${profile?.lastName}`}
+                onClick={() => navigate(-1)}
+            />
             <Container maxWidth={'lg'} >
                 <Box sx={{ borderRadius: '10px', position: 'relative', overflow: 'clip', minHeight: '351px', backgroundColor: profile?.bannerUrl ? theme.palette.lightGrey : 'mediumpurple' }}>
                     {profile?.bannerUrl && <img src={profile?.bannerUrl} alt='user profile banner' style={{ width: '100%', height: '351px', objectFit: 'cover' }} />}
@@ -71,8 +71,10 @@ export const ProfileLayout = ({ id }) => {
                             <Typography variant='h4' sx={{ fontWeight: 900, color: theme.palette.black, fontSize: 32 }}>
                                 {profile?.firstName + " " + profile?.lastName}
                             </Typography>
-                            <Typography variant='h5' sx={{ fontWeight: 500, color: theme.palette.greyColor, fontSize: 15, textAlign: isMobile ? 'center' : 'left' }} style={{ marginTop: '8px' }}>
-                                friends : {profile?.friendsCount}
+                            <Typography variant='h5' sx={{ '& > a:hover': { textDecoration: 'underline' }, fontWeight: 500, color: theme.palette.greyColor, fontSize: 15, textAlign: isMobile ? 'center' : 'left' }} style={{ marginTop: '8px' }}>
+                                <Link to={'?tab=Friends'}>
+                                    friends: {profile?.friendsCount}
+                                </Link>
                             </Typography>
                         </Stack>
                         <Stack direction={'row'} spacing={1} className={styles.profileActions}>

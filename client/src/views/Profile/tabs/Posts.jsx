@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import {
-	Avatar,
-	Box,
-	Container,
-	Divider,
-	Grid,
-	Input,
-	Stack,
-	Typography,
+  Avatar,
+  Box,
+  Container,
+  Divider,
+  Grid,
+  Input,
+  Stack,
+  Typography,
 } from '@mui/material'
 import { Link } from 'react-router-dom'
 import { AiFillHome } from "react-icons/ai";
@@ -98,12 +98,13 @@ const Posts = () => {
                 <Typography marginY={2}>{profile.bio}</Typography>
                 <Divider />
                 <Typography marginTop={2}><AiFillHome /> Lives in {profile.city}</Typography>
-                <Typography marginTop={2}>Subscribers : {subscribersCount}</Typography>
+                <Typography marginTop={2}>Subscribers: {subscribersCount}</Typography>
+                <Typography marginTop={2}>Subscriptions: {subscribersCount}</Typography>
               </div>
               <div className={styles.card}>
                 <div>
                   <Typography fontWeight={900} fontSize={20}>Photos</Typography>
-                  <Link to={'?tab=Photos'}><Typography>View all</Typography></Link>
+                  <Link to={'?tab=Photos'}>View all</Link>
                 </div>
                 <div>
 
@@ -113,7 +114,7 @@ const Posts = () => {
               <div className={styles.card}>
                 <div>
                   <Typography fontWeight={900} fontSize={20}>Friends</Typography>
-                  <Link to={'?tab=Friends'}><Typography>View all</Typography></Link>
+                  <Link to={'?tab=Friends'}>View all</Link>
                 </div>
 
               </div>

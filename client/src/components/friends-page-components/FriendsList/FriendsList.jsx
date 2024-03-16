@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
 	Stack,
 	Typography,
@@ -10,22 +10,33 @@ import {
 } from "@mui/material";
 import { useNavigate } from 'react-router'
 import { IoMdArrowDropdown } from "react-icons/io";
+import { useGetUsersQuery } from "../../../store/services/usersService.js";
 
 import { FriendCard } from "../index";
 import { FriendCardSkeleton } from "../FriendCard/FriendCardSkeleton";
 import { ExpandedWrapper, FriendsListWrapper } from "./FriendsList.styled.js";
+import InfiniteScroll from "react-infinite-scroll-component";
+import styles from '../../PostsWrapper/postsWrapper.module.scss'
 
 const FriendsList = ({
 	variant,
-	users,
 	heading,
 	link,
-	isLoading,
 	onDecline,
 	onConfirm,
 	onAddFriend,
 	onDontShowClick,
 }) => {
+
+	//@TODO : replace to operated data based on a variant
+	const userId = localStorage.getItem('userId')
+	const [page, setPage] = useState(0)
+	const { data: usersData, isLoading, isSuccess } = useGetUsersQuery(page)
+	const { data: friends } = useGetFriendsListQuery(userId)
+	const { data: requests, isLoading: isRequestsLoading } = useAvailableFriendRequestsQuery()
+
+	const [users, setUsers] = useState([]);
+
 	const range = [...Array(5).keys()];
 	const isUsers = users?.length > 0;
 	const { breakpoints } = useTheme();
@@ -48,7 +59,15 @@ const FriendsList = ({
 		}
 	}
 
-	const filteredUsers = users?.slice(0, 10);
+	useEffect(() => {
+		if (isSuccess && usersData?.content) {
+			setUsers(prevPosts => [...prevPosts, ...usersData.content]);
+		}
+	}, [usersData, isSuccess]);
+
+	const fetchMoreData = () => {
+		setPage(prevPage => prevPage + 1);
+	};
 
 	if (isLoading) {
 		return (
@@ -86,22 +105,32 @@ const FriendsList = ({
 			</Stack>
 			<ExpandedWrapper active={expanded ? "expanded" : undefined}>
 				{isUsers ? (
-					filteredUsers?.map(({ id, firstName, lastName, avatarsUrl }) => (
-						<FriendCard
-							variant={variant}
-							key={id}
-							id={id}
-							fullName={`${firstName} ${lastName}`}
-							images={avatarsUrl}
-							onConfirm={(e) => onConfirm(e, id)}
-							onDelete={onDecline}
-							onAddFriend={onAddFriend}
-							onClick={() => handleShowUser(id)}
-							onDontShowClick={onDontShowClick}
-						/>
-					))
+					<InfiniteScroll
+						dataLength={users.length}
+						next={fetchMoreData}
+						hasMore={usersData?.hasNext}
+						loader={<div style={{ display: 'flex', width: '100%' }}><FriendCardSkeleton /></div>}
+						className={styles.infiniteWrapper}
+					>
+						{
+							users?.map(({ id, firstName, lastName, avatarsUrl }) => (
+								<FriendCard
+									variant={variant}
+									key={id}
+									id={id}
+									fullName={`${firstName} ${lastName}`}
+									images={avatarsUrl}
+									onConfirm={(e) => onConfirm(e, id)}
+									onDelete={onDecline}
+									onAddFriend={onAddFriend}
+									onClick={() => handleShowUser(id)}
+									onDontShowClick={onDontShowClick}
+								/>
+							))
+						}
+					</InfiniteScroll>
 				) : (
-					<Typography>No one has added a friend yet</Typography>
+					<Typography>You don&apos;t have any friends yet</Typography>
 				)}
 			</ExpandedWrapper>
 			{!expanded && !isShowButton && (

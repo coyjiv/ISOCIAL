@@ -15,25 +15,23 @@ import { useGetSuggestions } from '../../../hooks'
 import { MainContentWrapper } from './FriendsMainContent.styled'
 
 const FriendsMainContent = () => {
-	const userId = localStorage.getItem('userId')
+
 	const [hiddenUsersId, setHiddenUsersId] = useLocalStorage(
 		LS_KEYS.HIDDEN_USERS,
 		[],
 	)
 
-	const { data: friends } = useGetFriendsListQuery(userId)
-	const { data: users, isLoading: isUsersLoading } = useGetUsersQuery()
-	const { data: requests, isLoading: isRequestsLoading } =
-		useAvailableFriendRequestsQuery()
+
+
 	const [acceptFriendRequest] = useAcceptFriendRequestMutation()
 	const [declineFriendRequest] = useDeclineFriendRequestMutation()
 	const [sendFriendRequest] = useSendFriendRequestMutation()
 
-	const knownUsers = useGetSuggestions(userId, users, requests, friends)
+	// const knownUsers = useGetSuggestions(userId, users, requests, friends)
 
-  const handleMessage = (id) => {
-    console.log(`start messages with user ${id}`)
-  }
+	const handleMessage = (id) => {
+		console.log(`start messages with user ${id}`)
+	}
 
 	const handleConfirm = (e, id) => {
 		e.stopPropagation()
@@ -54,8 +52,6 @@ const FriendsMainContent = () => {
 		<MainContentWrapper>
 			<FriendsList
 				variant="requests"
-				users={requests?.content}
-				isLoading={isRequestsLoading}
 				heading="Friend Requests"
 				link={'/friends/requests'}
 				onConfirm={handleConfirm}
@@ -64,8 +60,6 @@ const FriendsMainContent = () => {
 			<Divider orientation="horizontal" sx={{ margin: "12px 0" }} />
 			<FriendsList
 				variant="friends"
-				users={knownUsers}
-				isLoading={isUsersLoading}
 				heading="People you may know"
 				link={'/friends/suggestions'}
 				onAddFriend={sendFriendRequest}

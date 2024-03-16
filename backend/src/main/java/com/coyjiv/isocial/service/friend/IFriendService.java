@@ -3,10 +3,10 @@ package com.coyjiv.isocial.service.friend;
 import com.coyjiv.isocial.domain.UserFriendStatus;
 import com.coyjiv.isocial.dto.respone.friend.CustomFriendResponse;
 import com.coyjiv.isocial.dto.respone.friend.FriendResponseDto;
+import com.coyjiv.isocial.dto.respone.page.PageWrapper;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 
 import java.io.IOException;
-import java.util.List;
 
 public interface IFriendService {
   boolean sendFriendRequest(Long addresserId) throws IOException, EntityNotFoundException, IllegalAccessException;
@@ -19,7 +19,7 @@ public interface IFriendService {
 
   Long getFriendsCount(Long userId);
 
-  List<FriendResponseDto> findAllFriends(Long userId, int page, int size);
+  PageWrapper<FriendResponseDto> findAllFriends(Long userId, int page, int size);
 
   Long getSubscribersCount(Long userId);
 
@@ -29,4 +29,7 @@ public interface IFriendService {
   UserFriendStatus getFriendStatus(Long id, Long authenticationPrincipal);
 
   Long getSubscriptionsCount(Long id);
+
+
+  PageWrapper<FriendResponseDto> getRecommendations(int page, int size);
 }

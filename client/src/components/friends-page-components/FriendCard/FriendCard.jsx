@@ -5,6 +5,7 @@ import Box from '@mui/material/Box'
 import { ButtonMain } from '../../buttons'
 import { CardContentWrapper, CardWrapper } from './FriendCard.styled.js'
 import { useState } from 'react'
+import { userAvatar } from '../../../data/placeholders.js'
 
 const FriendCard = ({
 	id,
@@ -56,7 +57,7 @@ const FriendCard = ({
 		<CardWrapper onClick={onClick}>
 			<Box width="194px" height="190px">
 				<Avatar
-					src={images[0]}
+					src={userAvatar({ avatarsUrl: images }, fullName.split(' ')[0], fullName.split(' ')[1])}
 					alt={fullName}
 					variant="square"
 					sx={{

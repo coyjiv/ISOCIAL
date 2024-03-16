@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { useLocalStorage, useMediaQuery } from 'usehooks-ts'
 import { Stack, Typography } from '@mui/material'
 import { useNavigate, useSearchParams } from 'react-router-dom'
+import { userAvatar } from '../../../data/placeholders.js'
 
 import { SubSidebarHeader } from './SubSidebarHeader'
 import { FriendsSidebarUserCard } from '../../friends-page-components'
@@ -107,10 +108,10 @@ const FriendsSubSidebar = ({
           marginBottom="12px"
         >{`${users?.length ?? '0'} ${subTitle}`}</Typography>
         <Stack width="100%" gap="10px">
-          {filteredUsers?.map(({ id, firstName, lastName, avatarsUrl }) => (
+          {filteredUsers?.map(({ id, firstName, lastName, avatarsUrl, gender }) => (
             <FriendsSidebarUserCard
               key={id}
-              userImage={avatarsUrl}
+              userImage={userAvatar({ avatarsUrl, gender }, firstName, lastName)}
               fullName={`${firstName} ${lastName}`}
               variant={variant}
               onConfirm={() => handleConfirmRequest(id)}
