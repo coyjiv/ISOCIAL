@@ -19,6 +19,7 @@ import com.coyjiv.isocial.dto.respone.user.UserProfileResponseDto;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.exceptions.RequestValidationException;
 import com.coyjiv.isocial.service.favorite.IFavoriteService;
+import com.coyjiv.isocial.service.notifications.INotificationService;
 import com.coyjiv.isocial.service.websocket.IWebsocketService;
 import com.coyjiv.isocial.service.subscriber.ListSubscriberService;
 import com.coyjiv.isocial.transfer.post.PostRequestMapper;
@@ -58,7 +59,7 @@ public class PostService implements IPostService {
   private final FriendRepository friendRepository;
   private final IFavoriteService favoriteService;
   private final IWebsocketService websocketService;
-
+  private final INotificationService notificationService;
   private final CommentRepository commentRepository;
 
   private final LikeRepository likeRepository;
@@ -164,6 +165,7 @@ public class PostService implements IPostService {
     Optional<Post> postToDeactivate = postRepository.findActiveById(id);
     if (postToDeactivate.isPresent()) {
       Post post = postToDeactivate.get();
+      notificationService.delete(post.getAuthorId(),post.getId(),post.getCreationDate());
       validateRequestOwner(post.getAuthorId());
       post.setActive(false);
       postRepository.save(post);
