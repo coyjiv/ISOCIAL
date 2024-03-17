@@ -1,4 +1,4 @@
-package com.coyjiv.isocial.dto.request.postSeen;
+package com.coyjiv.isocial.dto.request.postseen;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

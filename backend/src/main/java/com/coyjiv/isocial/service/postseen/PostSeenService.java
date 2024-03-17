@@ -1,12 +1,12 @@
-package com.coyjiv.isocial.service.postSeen;
+package com.coyjiv.isocial.service.postseen;
 
 import com.coyjiv.isocial.auth.EmailPasswordAuthProvider;
-import com.coyjiv.isocial.dao.*;
+import com.coyjiv.isocial.dao.PostSeenRepository;
 import com.coyjiv.isocial.domain.PostSeen;
-import com.coyjiv.isocial.dto.request.postSeen.PostSeenRequestDto;
-import com.coyjiv.isocial.dto.respone.postSeen.PostSeenResponseDto;
-import com.coyjiv.isocial.transfer.postSeen.PostSeenRequestMapper;
-import com.coyjiv.isocial.transfer.postSeen.PostSeenResponseMapper;
+import com.coyjiv.isocial.dto.request.postseen.PostSeenRequestDto;
+import com.coyjiv.isocial.dto.respone.postseen.PostSeenResponseDto;
+import com.coyjiv.isocial.transfer.postseen.PostSeenRequestMapper;
+import com.coyjiv.isocial.transfer.postseen.PostSeenResponseMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,11 +23,11 @@ public class PostSeenService implements IPostSeenService {
 
 
   @Transactional
-  public PostSeenResponseDto create(PostSeenRequestDto postSeenRequestDto){
+  public PostSeenResponseDto create(PostSeenRequestDto postSeenRequestDto) {
     Long requestOwner = emailPasswordAuthProvider.getAuthenticationPrincipal();
     PostSeen postSeen = postSeenRequestMapper.convertToEntity(postSeenRequestDto);
     postSeen.setUserId(requestOwner);
-    if (postSeenRepository.findByUserIdPostId(requestOwner, postSeenRequestDto.getPostId()).isPresent()){
+    if (postSeenRepository.findByUserIdPostId(requestOwner, postSeenRequestDto.getPostId()).isPresent()) {
       return postSeenResponseMapper.convertToDto(
               postSeenRepository.findByUserIdPostId(requestOwner, postSeenRequestDto.getPostId()).get());
     }

@@ -1,8 +1,8 @@
-package com.coyjiv.isocial.transfer.postSeen;
+package com.coyjiv.isocial.transfer.postseen;
 
 
 import com.coyjiv.isocial.domain.PostSeen;
-import com.coyjiv.isocial.dto.request.postSeen.PostSeenRequestDto;
+import com.coyjiv.isocial.dto.request.postseen.PostSeenRequestDto;
 import com.coyjiv.isocial.transfer.DtoMapperFacade;
 import org.springframework.stereotype.Service;
 

@@ -15,7 +15,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @Entity
 @Table(name = "post_seen")
-public class PostSeen extends AbstractEntity{
+public class PostSeen extends AbstractEntity {
 
   @Column(name = "user_id")
   private Long userId;
