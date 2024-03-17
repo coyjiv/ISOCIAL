@@ -161,4 +161,14 @@ CREATE TABLE likes
     is_active          BOOLEAN NOT NULL DEFAULT TRUE
 );
 
+DROP TABLE IF EXISTS post_seen;
+CREATE TABLE post_seen
+(
+    id                 BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id            BIGINT       NOT NULL,
+    post_id            BIGINT       NOT NULL,
+    creation_date      TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_modified_date TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    is_active          BOOLEAN NOT NULL DEFAULT TRUE
+);
 
