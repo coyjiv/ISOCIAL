@@ -1,5 +1,5 @@
 //libs
-import { ThemeProvider } from '@mui/material'
+import { ThemeProvider } from '@mui/material/styles'
 import ReactDOM from 'react-dom/client'
 import { theme } from './theme'
 //routes

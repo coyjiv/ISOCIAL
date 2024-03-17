@@ -62,7 +62,7 @@ const MainSearch = ({ value, searchItems, onChange }) => {
 
   return (
     <SearchWrapper open={inputActive} ref={inputRef}>
-      <LogoContainer open={inputActive}>
+      <LogoContainer className="logo-input" open={inputActive}>
         <LogoHiddenContentWrapper open={inputActive}>
           <LogoLink to="/" open={inputActive}>
             <Typography fontSize="22px" fontWeight="bold">
@@ -81,7 +81,7 @@ const MainSearch = ({ value, searchItems, onChange }) => {
         />
       </SearchContainer>
       {menuOpen && options && (
-        <SearchMenu>
+        <SearchMenu className="search-menu">
           {options?.map(({ id, firstName, lastName, avatarsUrl }) => (
             <MainSearchItem
               key={id}
@@ -94,7 +94,7 @@ const MainSearch = ({ value, searchItems, onChange }) => {
         </SearchMenu>
       )}
       {menuOpen && options?.length === 0 && (
-        <SearchMenu>
+        <SearchMenu className="search-menu">
           <MainSearchEmptySection title="No results" user="user" />
         </SearchMenu>
       )}

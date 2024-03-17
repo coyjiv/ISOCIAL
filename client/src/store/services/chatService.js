@@ -3,11 +3,11 @@ import { friendsApi } from './friendService'
 export const chatApi = friendsApi.injectEndpoints({
   endpoints: (builder) => ({
     createChat: builder.mutation({
-      query: ({ receiverId, data }) => {
+      query: ({ receiverId, text, attachments }) => {
         return {
           url: `chats?receiverId=${receiverId}`,
           method: 'POST',
-          data,
+          data: {text, attachments}
         }
       },
       invalidatesTags: () => [{ type: 'Chats' }],

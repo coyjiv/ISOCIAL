@@ -4,23 +4,38 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import "./Chat.scss";
 import { AiOutlineDelete } from "react-icons/ai";
 import PropTypes from "prop-types";
+import { useState } from "react";
+import moment from 'moment';
 
 
-const ChatItem = ({ chatId, chatName, lastMessage, chatAvatar }) => {
+
+const ChatItem = ({ handleDeleteChat, chatId, chatName, lastMessage, lastMessageBy, lastMessageDate, chatAvatar }) => {
+  console.log(chatAvatar);
+  const userId = Number(localStorage.getItem('userId'));
+ 
+  const now = moment();
+  console.log(now.format('YYYY-MM-DD HH:mm:ss'));
+  const timeDifferent = moment(lastMessageDate).fromNow();
+  console.log(timeDifferent);
+
   return (
-    <Link to={`/chats/${chatId}`} state={{ chatId }} className="chat-item">
-      <div className='message-avatar'><img src="chatAvatar" alt="" /></div><h3>{chatName}</h3>
+    <Link to={`/chats/${chatId}`} state={{chatId}}  className="chat-item">
+      <div className='message-avatar'><img src={chatAvatar} alt="" /></div>
+      <div className="chat-info">
+       <h3>{chatName}</h3>
+       <span className="last-info">{lastMessageBy === userId ? 'You' : chatName} sent message {timeDifferent}
+       </span>
+      </div>
+      
       <div className='chat-options'>
-        <div className='chat-options-option'><AiOutlineDelete /></div>
-        <div className='chat-options-option'></div>
-        <div className='chat-options-option'></div>
+        <div className='chat-options-option' onClick={() => handleDeleteChat(chatId)}><AiOutlineDelete /></div>
       </div>
     </Link>
   );
 };
 
 ChatItem.propTypes = {
-  chatId: PropTypes.string.isRequired,
+  chatId: PropTypes.number.isRequired,
   chatName: PropTypes.string.isRequired,
   lastMessage: PropTypes.string.isRequired,
   chatAvatar: PropTypes.string.isRequired,
