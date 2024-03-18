@@ -16,7 +16,7 @@ public interface IFriendService {
 
   boolean declineOrCancelFriendRequest(Long friendId) throws IllegalAccessException;
 
-  boolean deleteFriend(Long friendId) throws IllegalAccessException;
+  boolean deleteFriend(Long friendUserId) throws IllegalAccessException;
 
   Long getFriendsCount(Long userId);
 
@@ -31,6 +31,13 @@ public interface IFriendService {
 
   Long getSubscriptionsCount(Long id);
 
-
   PageWrapper<FriendResponseDto> getRecommendations(int page, int size);
+
+  PageWrapper<FriendResponseDto> getAllFriendsWithSameBirthPlace(int page, int size);
+
+  PageWrapper<FriendResponseDto> getAllFriendsWithSamePlaceOfStudy(int page, int size);
+
+  PageWrapper<FriendResponseDto> getAllFriendsWithSameCurrentLocation(int page, int size);
+
+  PageWrapper<FriendResponseDto> getAllFriendsWithSameBirthday(int page, int size);
 }

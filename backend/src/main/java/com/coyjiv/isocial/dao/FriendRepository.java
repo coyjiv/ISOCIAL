@@ -13,6 +13,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,5 +66,46 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
   @Query("FROM Friend f WHERE f.requester.id IN :friends AND f.addresser.id NOT IN :arr AND f.status = 'FRIEND' "
           + "OR  f.requester.id  NOT IN :arr AND f.addresser.id IN :friends AND f.status = 'FRIEND'")
   Page<Friend> findAllByFriendId(@Param("friends") List<Long> friends, @Param("arr") List<Long> arr, Pageable pageable);
+
+  Optional<Friend> findByRequesterAndAddresserAndStatusAndIsActive(User requester, User addresser,
+                                                                   UserFriendStatus status, boolean isActive);
+
+
+  @Query("SELECT f FROM Friend f WHERE "
+          + "(f.requester.id IN :friends AND f.addresser.birthPlace = :birthPlace) OR "
+          + "(f.addresser.id IN :friends AND f.requester.birthPlace = :birthPlace) AND "
+          + "f.status = 'FRIEND'")
+  Page<Friend> findAllByFriendsIdAndBirthPlace(@Param("friends") List<Long> friends,
+                                              @Param("birthPlace") String birthPlace,
+                                              Pageable pageable);
+
+  @Query("SELECT f FROM Friend f WHERE "
+          + "(f.requester.id IN :friends AND f.addresser.studyPlace = :studyPlace) OR "
+          + "(f.addresser.id IN :friends AND f.requester.studyPlace = :studyPlace) AND "
+          + "f.status = 'FRIEND'")
+  Page<Friend> findAllByFriendsIdAndStudyPlace(@Param("friends") List<Long> friends,
+                                                @Param("studyPlace") String studyPlace,
+                                                Pageable pageable);
+
+  @Query("SELECT f FROM Friend f WHERE "
+          + "(f.requester.id IN :friends AND f.addresser.city = :city) OR "
+          + "(f.addresser.id IN :friends AND f.requester.city = :city) AND "
+          + "f.status = 'FRIEND'")
+  Page<Friend> findAllByFriendsIdAndCity(@Param("friends") List<Long> friends,
+                                              @Param("city") String city,
+                                              Pageable pageable);
+
+  @Query("SELECT f FROM Friend f WHERE "
+          + "(f.requester.id IN :friends AND (FUNCTION('WEEK', f.addresser.dateOfBirth) "
+          + "= FUNCTION('WEEK', f.requester.dateOfBirth) - 1 OR FUNCTION('WEEK', f.addresser.dateOfBirth) = "
+          + "FUNCTION('WEEK', f.requester.dateOfBirth) + 1)) OR "
+          + "(f.addresser.id IN :friends AND (FUNCTION('WEEK', f.requester.dateOfBirth) "
+          + "= FUNCTION('WEEK', f.addresser.dateOfBirth) - 1 OR FUNCTION('WEEK', f.requester.dateOfBirth) = "
+          + "FUNCTION('WEEK', f.addresser.dateOfBirth) + 1)) AND "
+          + "f.status = 'FRIEND'")
+  Page<Friend> findAllByFriendsIdAndDateOfBirth(@Param("friends") List<Long> friends,
+                                         @Param("dateOfBirth") Date dateOfBirth,
+                                         Pageable pageable);
+
 }
 

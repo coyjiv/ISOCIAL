@@ -3,6 +3,7 @@ package com.coyjiv.isocial.resource.rest;
 
 import com.coyjiv.isocial.dto.respone.friend.CustomFriendResponse;
 import com.coyjiv.isocial.dto.respone.friend.FriendResponseDto;
+import com.coyjiv.isocial.dto.respone.page.PageWrapper;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.service.friend.FriendService;
 
@@ -56,8 +57,8 @@ public class FriendController {
   }
 
   @DeleteMapping()
-  public ResponseEntity<String> deleteFriend(@RequestParam Long friendId) {
-    boolean result = friendService.deleteFriend(friendId);
+  public ResponseEntity<String> deleteFriend(@RequestParam Long friendUserId) {
+    boolean result = friendService.deleteFriend(friendUserId);
     if (result) {
       return ResponseEntity.ok("Deleted");
     }
@@ -116,5 +117,38 @@ public class FriendController {
                                                  @RequestParam(defaultValue = "10") @Min(0) Integer size) {
     return ResponseEntity.ok(friendService.getRecommendations(page, size));
   }
+
+  @GetMapping("/sameStudyPlace")
+  public ResponseEntity<PageWrapper<FriendResponseDto>> getAllFriendsWithSamePlaceOfStudy(
+          @RequestParam(defaultValue = "0") int page,
+          @RequestParam(defaultValue = "10") int size) {
+    PageWrapper<FriendResponseDto> friends = friendService.getAllFriendsWithSamePlaceOfStudy(page, size);
+    return ResponseEntity.ok(friends);
+  }
+
+  @GetMapping("/sameCurrentLocation")
+  public ResponseEntity<PageWrapper<FriendResponseDto>> getAllFriendsWithSameCurrentLocation(
+          @RequestParam(defaultValue = "0") int page,
+          @RequestParam(defaultValue = "10") int size) {
+    PageWrapper<FriendResponseDto> friends = friendService.getAllFriendsWithSameCurrentLocation(page, size);
+    return ResponseEntity.ok(friends);
+  }
+
+  @GetMapping("/sameBirthPlace")
+  public ResponseEntity<PageWrapper<FriendResponseDto>> getAllFriendsWithSameBirthPlace(
+          @RequestParam(defaultValue = "0") int page,
+          @RequestParam(defaultValue = "10") int size) {
+    PageWrapper<FriendResponseDto> friends = friendService.getAllFriendsWithSameBirthPlace(page, size);
+    return ResponseEntity.ok(friends);
+  }
+
+  @GetMapping("/sameBirthday")
+  public ResponseEntity<PageWrapper<FriendResponseDto>> getAllFriendsWithSameBirthday(
+          @RequestParam(defaultValue = "0") int page,
+          @RequestParam(defaultValue = "10") int size) {
+    PageWrapper<FriendResponseDto> friends = friendService.getAllFriendsWithSameBirthday(page, size);
+    return ResponseEntity.ok(friends);
+  }
+
 }
 

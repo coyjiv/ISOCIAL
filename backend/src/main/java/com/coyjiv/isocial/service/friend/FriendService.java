@@ -160,21 +160,36 @@ public class FriendService implements IFriendService {
 
   @Transactional
   @Override
-  public boolean deleteFriend(Long friendId) {
+  public boolean deleteFriend(Long friendUserId) {
     Long userId = emailPasswordAuthProvider.getAuthenticationPrincipal();
     Optional<User> user = userRepository.findById(userId);
-    Optional<Friend> friend = friendRepository.findById(friendId);
+    Optional<User> friendUser = userRepository.findById(friendUserId);
 
-    if (user.isEmpty() || friend.isEmpty() || friend.get().getStatus() != UserFriendStatus.FRIEND) {
+    if (user.isEmpty() || friendUser.isEmpty()) {
       return false;
     }
-    if (user.get().equals(friend.get().getRequester()) || user.get().equals(friend.get().getAddresser())) {
-      friend.get().setActive(false);
 
-      friend.get().setStatus(UserFriendStatus.NOT_FRIEND);
-      friendRepository.save(friend.get());
+    Optional<Friend> activeFriendship =
+            friendRepository.findByRequesterAndAddresserAndStatusAndIsActive(user.get(),
+                    friendUser.get(), UserFriendStatus.FRIEND, true);
+    Optional<Friend> activeFriendship1 =
+            friendRepository.findByRequesterAndAddresserAndStatusAndIsActive(friendUser.get(),
+                    user.get(),UserFriendStatus.FRIEND, true);
+    if (activeFriendship.isPresent()) {
+      Friend friend = activeFriendship.get();
+      friend.setActive(false);
+      friend.setStatus(UserFriendStatus.NOT_FRIEND);
+      friendRepository.save(friend);
       return true;
     }
+    if (activeFriendship1.isPresent()) {
+      Friend friend = activeFriendship1.get();
+      friend.setActive(false);
+      friend.setStatus(UserFriendStatus.NOT_FRIEND);
+      friendRepository.save(friend);
+      return true;
+    }
+
 
     return false;
   }
@@ -320,5 +335,146 @@ public class FriendService implements IFriendService {
     return new PageWrapper<>(dtos, hasNext);
   }
 
+  @Override
+  public PageWrapper<FriendResponseDto> getAllFriendsWithSameBirthPlace(int page, int size)  {
+    Long userId = emailPasswordAuthProvider.getAuthenticationPrincipal();
+    List<Friend> friends = friendRepository.findAllByUserId(userId);
+    List<Long> ids = new ArrayList<>();
+    Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "id"));
+    Pageable pageable = PageRequest.of(page, size, sort);
+
+
+    for (Friend f : friends) {
+      if (Objects.equals(f.getAddresser().getId(), userId)) {
+        ids.add(f.getRequester().getId());
+      } else if (Objects.equals(f.getRequester().getId(), userId)) {
+        ids.add(f.getAddresser().getId());
+      }
+    }
+    List<Long> friendsIds = ids;
+
+    Page<Friend> frindsSameCity = friendRepository
+            .findAllByFriendsIdAndBirthPlace(friendsIds, userRepository.findById(userId).get().getBirthPlace(), pageable);
+
+    List<User> users = new ArrayList<>();
+    for (Friend f : frindsSameCity.toList()) {
+      if (ids.contains(f.getAddresser().getId())) {
+        users.add(f.getRequester());
+      } else {
+        users.add(f.getAddresser());
+      }
+    }
+    boolean hasNext = frindsSameCity.hasNext();
+    List<FriendResponseDto>  dtos = users.stream().map(friendResponseMapper::convertToDto).toList();
+
+    return new PageWrapper<>(dtos, hasNext);
+  }
+
+  @Override
+  public PageWrapper<FriendResponseDto> getAllFriendsWithSamePlaceOfStudy(int page, int size) {
+
+    Long userId = emailPasswordAuthProvider.getAuthenticationPrincipal();
+    List<Friend> friends = friendRepository.findAllByUserId(userId);
+    List<Long> ids = new ArrayList<>();
+    Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "id"));
+    Pageable pageable = PageRequest.of(page, size, sort);
+
+
+    for (Friend f : friends) {
+      if (Objects.equals(f.getAddresser().getId(), userId)) {
+        ids.add(f.getRequester().getId());
+      } else if (Objects.equals(f.getRequester().getId(), userId)) {
+        ids.add(f.getAddresser().getId());
+      }
+    }
+    List<Long> friendsIds = ids;
+
+    Page<Friend> frindsSameCity = friendRepository
+            .findAllByFriendsIdAndStudyPlace(friendsIds, userRepository.findById(userId).get().getStudyPlace(), pageable);
+
+    List<User> users = new ArrayList<>();
+    for (Friend f : frindsSameCity.toList()) {
+      if (ids.contains(f.getAddresser().getId())) {
+        users.add(f.getRequester());
+      } else {
+        users.add(f.getAddresser());
+      }
+    }
+    boolean hasNext = frindsSameCity.hasNext();
+    List<FriendResponseDto>  dtos = users.stream().map(friendResponseMapper::convertToDto).toList();
+
+    return new PageWrapper<>(dtos, hasNext);
+  }
+
+  @Override
+  public PageWrapper<FriendResponseDto> getAllFriendsWithSameCurrentLocation(int page, int size) {
+
+    Long userId = emailPasswordAuthProvider.getAuthenticationPrincipal();
+    List<Friend> friends = friendRepository.findAllByUserId(userId);
+    List<Long> ids = new ArrayList<>();
+    Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "id"));
+    Pageable pageable = PageRequest.of(page, size, sort);
+
+
+    for (Friend f : friends) {
+      if (Objects.equals(f.getAddresser().getId(), userId)) {
+        ids.add(f.getRequester().getId());
+      } else if (Objects.equals(f.getRequester().getId(), userId)) {
+        ids.add(f.getAddresser().getId());
+      }
+    }
+    List<Long> friendsIds = ids;
+
+    Page<Friend> frindsSameCity = friendRepository
+            .findAllByFriendsIdAndCity(friendsIds, userRepository.findById(userId).get().getCity(), pageable);
+
+    List<User> users = new ArrayList<>();
+    for (Friend f : frindsSameCity.toList()) {
+      if (ids.contains(f.getAddresser().getId())) {
+        users.add(f.getRequester());
+      } else {
+        users.add(f.getAddresser());
+      }
+    }
+    boolean hasNext = frindsSameCity.hasNext();
+    List<FriendResponseDto>  dtos = users.stream().map(friendResponseMapper::convertToDto).toList();
+
+    return new PageWrapper<>(dtos, hasNext);
+  }
+
+  @Override
+  public PageWrapper<FriendResponseDto> getAllFriendsWithSameBirthday(int page, int size) {
+    Long userId = emailPasswordAuthProvider.getAuthenticationPrincipal();
+    List<Friend> friends = friendRepository.findAllByUserId(userId);
+    List<Long> ids = new ArrayList<>();
+    Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "id"));
+    Pageable pageable = PageRequest.of(page, size, sort);
+
+
+    for (Friend f : friends) {
+      if (Objects.equals(f.getAddresser().getId(), userId)) {
+        ids.add(f.getRequester().getId());
+      } else if (Objects.equals(f.getRequester().getId(), userId)) {
+        ids.add(f.getAddresser().getId());
+      }
+    }
+    List<Long> friendsIds = ids;
+
+    Page<Friend> frindsSameCity = friendRepository
+            .findAllByFriendsIdAndDateOfBirth(friendsIds, userRepository.findById(userId).get().getDateOfBirth(), pageable);
+
+    List<User> users = new ArrayList<>();
+    for (Friend f : frindsSameCity.toList()) {
+      if (ids.contains(f.getAddresser().getId())) {
+        users.add(f.getRequester());
+      } else {
+        users.add(f.getAddresser());
+      }
+    }
+    boolean hasNext = frindsSameCity.hasNext();
+    List<FriendResponseDto>  dtos = users.stream().map(friendResponseMapper::convertToDto).toList();
+
+    return new PageWrapper<>(dtos, hasNext);
+  }
 }
 
