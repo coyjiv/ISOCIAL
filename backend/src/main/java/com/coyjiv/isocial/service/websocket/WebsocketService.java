@@ -4,7 +4,15 @@ import com.coyjiv.isocial.auth.EmailPasswordAuthProvider;
 import com.coyjiv.isocial.dao.CommentRepository;
 import com.coyjiv.isocial.dao.PostRepository;
 import com.coyjiv.isocial.dao.UserRepository;
-import com.coyjiv.isocial.domain.*;
+import com.coyjiv.isocial.domain.Comment;
+import com.coyjiv.isocial.domain.Friend;
+import com.coyjiv.isocial.domain.Like;
+import com.coyjiv.isocial.domain.LikeableEntity;
+import com.coyjiv.isocial.domain.Message;
+import com.coyjiv.isocial.domain.NotificationEvent;
+import com.coyjiv.isocial.domain.Post;
+import com.coyjiv.isocial.domain.Subscription;
+import com.coyjiv.isocial.domain.User;
 import com.coyjiv.isocial.dto.respone.comment.CommentNotificationDto;
 import com.coyjiv.isocial.dto.respone.friend.FriendNotificationDto;
 import com.coyjiv.isocial.dto.respone.like.LikeNotificationDto;
@@ -73,8 +81,8 @@ public class WebsocketService implements IWebsocketService {
   @Override
   public void sendRepostNotificationToUser(Post repost, Long originalPostAuthorId) {
     RepostNotificationDto dto = repostMapper.convertToDto(repost);
-    notificationService.create(originalPostAuthorId,dto.getSenderId(),
-            dto.getSenderName(),dto.getSenderAvatarUrl(), NotificationEvent.REPOST,repost.getId());
+    notificationService.create(originalPostAuthorId, dto.getSenderId(),
+            dto.getSenderName(), dto.getSenderAvatarUrl(), NotificationEvent.REPOST, repost.getId());
     messagingTemplate.convertAndSendToUser(
             String.valueOf(originalPostAuthorId), "/reposts", dto
     );
@@ -89,8 +97,8 @@ public class WebsocketService implements IWebsocketService {
       messagingTemplate.convertAndSendToUser(
               String.valueOf(s.getSubscriberId()), "/subscriptions", dto
       );
-      notificationService.create(s.getSubscriberId(),dto.getSenderId(),
-              dto.getSenderName(),dto.getSenderAvatarUrl(), NotificationEvent.POST_LIKE,post.getId());
+      notificationService.create(s.getSubscriberId(), dto.getSenderId(),
+              dto.getSenderName(), dto.getSenderAvatarUrl(), NotificationEvent.POST_LIKE, post.getId());
     });
   }
 
@@ -101,13 +109,13 @@ public class WebsocketService implements IWebsocketService {
     if (like.getEntityType() == LikeableEntity.POST) {
       Post post = postRepository.findById(like.getEntityId()).orElseThrow();
       receiverId = post.getAuthorId();
-      notificationService.create(receiverId,like.getUserId(),
-              dto.getLikerName(),dto.getLikerAvatar(), NotificationEvent.POST_LIKE,post.getId());
+      notificationService.create(receiverId, like.getUserId(),
+              dto.getLikerName(), dto.getLikerAvatar(), NotificationEvent.POST_LIKE, post.getId());
     } else {
       Comment comment = commentRepository.findById(like.getEntityId()).orElseThrow();
       receiverId = comment.getCommenterId();
-      notificationService.create(receiverId,like.getUserId(),
-              dto.getLikerName(),dto.getLikerAvatar(), NotificationEvent.COMMENT_LIKE,comment.getId());
+      notificationService.create(receiverId, like.getUserId(),
+              dto.getLikerName(), dto.getLikerAvatar(), NotificationEvent.COMMENT_LIKE, comment.getId());
     }
 
     messagingTemplate.convertAndSendToUser(
@@ -119,8 +127,8 @@ public class WebsocketService implements IWebsocketService {
   public void sendCommentNotification(Comment comment) {
     Post post = postRepository.findById(comment.getPostId()).orElseThrow();
     CommentNotificationDto dto = commentNotificationMapper.convertToDto(comment);
-    notificationService.create(post.getAuthorId(),comment.getCommenterId(),
-            dto.getCommenterName(),dto.getCommenterAvatar(), NotificationEvent.COMMENT,post.getId());
+    notificationService.create(post.getAuthorId(), comment.getCommenterId(),
+            dto.getCommenterName(), dto.getCommenterAvatar(), NotificationEvent.COMMENT, post.getId());
     messagingTemplate.convertAndSendToUser(
             String.valueOf(post.getAuthorId()), "/comments", dto
     );

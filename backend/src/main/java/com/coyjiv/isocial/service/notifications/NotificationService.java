@@ -15,16 +15,16 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class NotificationService implements INotificationService{
+public class NotificationService implements INotificationService {
 
   private final NotificationRepository notificationRepository;
 
   @Override
-  public List<Notification> findAllForUser(Long receiverId,int page, int size) {
+  public List<Notification> findAllForUser(Long receiverId, int page, int size) {
     Sort sort = Sort.by(Sort.Direction.DESC, "creationDate");
     Pageable pageable = PageRequest.of(page, size, sort);
 
-    return notificationRepository.findAllForUser(receiverId,pageable);
+    return notificationRepository.findAllForUser(receiverId, pageable);
   }
 
   @Override
@@ -58,6 +58,6 @@ public class NotificationService implements INotificationService{
     calendar.add(Calendar.SECOND, 1);
     Date endDate = calendar.getTime();
 
-    notificationRepository.delete(senderId,entityId,startDate,endDate);
+    notificationRepository.delete(senderId, entityId, startDate, endDate);
   }
 }

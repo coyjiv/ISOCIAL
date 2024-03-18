@@ -2,7 +2,7 @@ package com.coyjiv.isocial.dao;
 
 
 import com.coyjiv.isocial.domain.Notification;
-import com.coyjiv.isocial.domain.NotificationEvent;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -21,8 +21,8 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
   List<Notification> findAllForUser(@Param("receiverId") Long receiverId, Pageable pageable);
 
   @Modifying
-  @Query("DELETE Notification n WHERE n.senderId = :senderId AND n.entityId = :entityId " +
-          " AND n.creationDate BETWEEN :startDate AND :endDate")
+  @Query("DELETE Notification n WHERE n.senderId = :senderId AND n.entityId = :entityId "
+          + " AND n.creationDate BETWEEN :startDate AND :endDate")
   void delete(@Param("senderId") Long senderId, @Param("entityId") Long entityId,
               @Param("startDate") Date startDate, @Param("endDate") Date endDate);
 
