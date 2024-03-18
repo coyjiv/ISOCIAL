@@ -36,7 +36,7 @@ public class PostRestController {
   @GetMapping
   public ResponseEntity<?> findAll(@RequestParam(defaultValue = "0") @Min(0) Integer page,
                                    @RequestParam(defaultValue = "10") @Min(0) Integer size) {
-    List<Post> posts = postService.findAllActive(page, size);
+    List<Post> posts = postService.findAllActive(page, size).getContent();
     List<PostResponseDto> dtos = posts.stream().map(postResponseMapper::convertToDto).toList();
     return ResponseEntity.ok(dtos);
   }

@@ -57,7 +57,7 @@ public class PostResponseMapper extends DtoMapperFacade<Post, PostResponseDto> {
       dto.setAuthorPremiumEmoji(author.getPremiumEmoji());
       dto.setFavourite(favoriteService.isFavorite(entity.getId()));
       dto.setCommentsCount(commentService.countByPostId(entity.getId()));
-      dto.setRecentComments(commentService.findRecentByPostId(entity.getId()));
+      dto.setRecentComments(commentService.findRecentByPostId(entity.getId()).getContent());
       dto.setLikesCount(likeService.countLikesByEntity(entity.getId(), entity.getEntityType()));
       dto.setLiked(likeService.isLikedByUser(emailPasswordAuthProvider.getAuthenticationPrincipal(), entity.getId(),
               entity.getEntityType()));

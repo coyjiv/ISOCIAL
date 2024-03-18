@@ -66,10 +66,15 @@ public class PostService implements IPostService {
 
   @Transactional(readOnly = true)
   @Override
-  public List<Post> findAllActive(int page, int size) {
+  public PageWrapper<Post> findAllActive(int page, int size) {
     Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "creationDate"));
     Pageable pageable = PageRequest.of(page, size, sort);
-    return postRepository.findAllActive(pageable);
+
+    Page<Post> posts = postRepository.findAllActive(pageable);
+
+    boolean hasNext =  posts.hasNext();
+
+    return new PageWrapper<>(posts.toList(), hasNext);
   }
 
   @Override
@@ -81,7 +86,8 @@ public class PostService implements IPostService {
   @Override
   public PageWrapper<PostResponseDto> findFavoritePosts(int page, int size) {
     List<FavoriteResponseDto> favorites =
-            favoriteService.findActiveBySelectorId(page, size, emailPasswordAuthProvider.getAuthenticationPrincipal());
+            favoriteService.findActiveBySelectorId(page, size, emailPasswordAuthProvider.getAuthenticationPrincipal())
+                    .getContent();
     if (favorites.isEmpty()) {
       return new PageWrapper<>(List.of(), false);
     } else {

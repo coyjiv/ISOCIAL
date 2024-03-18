@@ -182,22 +182,26 @@ public class FriendService implements IFriendService {
 
   @Transactional(readOnly = true)
   @Override
-  public List<FriendResponseDto> findAllFriends(Long userId, int page, int size) {
+  public PageWrapper<FriendResponseDto> findAllFriends(Long userId, int page, int size) {
     Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "id"));
     Pageable pageable = PageRequest.of(page, size, sort);
     Optional<User> user = userRepository.findById(userId);
 
     if (user.isEmpty()) {
-      return new ArrayList<>();
+      return new PageWrapper<>(new ArrayList<>(), false);
     }
 
     Page<Friend> friendsPage = friendRepository.findAllByRequesterOrAddresserAndStatus(
             user.get(), user.get(), UserFriendStatus.FRIEND, pageable);
 
-    return friendsPage.getContent().stream()
+    List<FriendResponseDto> dtos = friendsPage.getContent().stream()
             .filter(friend -> friend.getStatus() == UserFriendStatus.FRIEND)
             .map(friend -> user.get().equals(friend.getRequester()) ? friend.getAddresser() : friend.getRequester())
-            .map(friendResponseMapper::convertToDto).collect(Collectors.toList());
+            .map(friendResponseMapper::convertToDto).toList();
+
+    boolean hasNext = friendsPage.hasNext();
+
+    return new PageWrapper<>(dtos,hasNext);
   }
 
 

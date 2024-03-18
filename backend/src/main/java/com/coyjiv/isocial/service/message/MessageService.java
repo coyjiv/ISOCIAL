@@ -6,6 +6,7 @@ import com.coyjiv.isocial.domain.Chat;
 import com.coyjiv.isocial.domain.Message;
 import com.coyjiv.isocial.dto.request.message.CreateMessageRequestDto;
 import com.coyjiv.isocial.dto.request.message.UpdateMessageRequestDto;
+import com.coyjiv.isocial.dto.respone.page.PageWrapper;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.exceptions.RequestValidationException;
 import com.coyjiv.isocial.service.chat.IChatService;
@@ -13,6 +14,7 @@ import com.coyjiv.isocial.service.websocket.IWebsocketService;
 import com.coyjiv.isocial.transfer.message.CreateMessageRequestMapper;
 import com.coyjiv.isocial.utils.MessagesUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -35,14 +37,18 @@ public class MessageService implements IMessageService {
 
   @Transactional(readOnly = true)
   @Override
-  public List<Message> findAllActiveByChatId(int page, int quantity, Long chatId)
+  public PageWrapper<Message> findAllActiveByChatId(int page, int quantity, Long chatId)
           throws EntityNotFoundException, IllegalAccessException {
     Sort sort = Sort.by(Sort.Direction.ASC, "creationDate");
     Pageable pageable = PageRequest.of(page, quantity, sort);
 
     Chat chat = chatService.findActiveById(chatId);
 
-    return messageRepository.findAllActiveByChatId(chat.getId(), pageable);
+    Page<Message> messages =  messageRepository.findAllActiveByChatId(chat.getId(), pageable);
+
+    boolean hasNext = messages.hasNext();
+
+    return new PageWrapper<>(messages.toList(),hasNext);
   }
 
   @Transactional(readOnly = true)

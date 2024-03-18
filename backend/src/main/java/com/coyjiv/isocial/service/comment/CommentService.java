@@ -65,11 +65,18 @@ public class CommentService implements ICommentService {
 
   @Transactional(readOnly = true)
   @Override
-  public List<CommentResponseDto> findByCommenterId(Long id, int page, int size) {
+  public PageWrapper<CommentResponseDto> findByCommenterId(Long id, int page, int size) {
     Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "id"));
     Pageable pageable = PageRequest.of(page, size, sort);
-    return commentRepository.findByCommenterId(id, pageable).stream()
-      .map(commentResponseMapper::convertToDto).toList();
+
+    Page<Comment> comments = commentRepository.findByCommenterId(id, pageable);
+
+    List<CommentResponseDto> dtos = comments.stream()
+            .map(commentResponseMapper::convertToDto).toList();
+
+    boolean hasNext = comments.hasNext();
+
+    return new PageWrapper<>(dtos,hasNext);
   }
 
   @Transactional(readOnly = true)
@@ -137,12 +144,19 @@ public class CommentService implements ICommentService {
   }
 
   @Override
-  public List<CommentResponseDto> findRecentByPostId(Long id) throws EntityNotFoundException {
+  public PageWrapper<CommentResponseDto> findRecentByPostId(Long id) throws EntityNotFoundException {
     if (postRepository.findActiveById(id).isPresent()) {
       Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "id"));
       Pageable pageable = PageRequest.of(0, 5, sort);
-      return commentRepository.findByPostId(id, pageable).stream()
-        .map(commentResponseMapper::convertToDto).toList();
+
+      Page<Comment> comments = commentRepository.findByPostId(id, pageable);
+
+      List<CommentResponseDto> dtos = comments.stream()
+              .map(commentResponseMapper::convertToDto).toList();
+
+      boolean hasNext = comments.hasNext();
+
+      return new PageWrapper<>(dtos,hasNext);
     } else {
       throw new EntityNotFoundException("Comment not found");
     }

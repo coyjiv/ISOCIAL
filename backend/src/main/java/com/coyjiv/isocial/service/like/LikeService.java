@@ -5,6 +5,7 @@ import com.coyjiv.isocial.dao.LikeRepository;
 import com.coyjiv.isocial.domain.Like;
 import com.coyjiv.isocial.domain.LikeableEntity;
 import com.coyjiv.isocial.dto.respone.like.LikeInfoResponseDto;
+import com.coyjiv.isocial.dto.respone.page.PageWrapper;
 import com.coyjiv.isocial.dto.respone.user.UserProfileResponseDto;
 import com.coyjiv.isocial.dto.respone.user.UserSearchResponseDto;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
@@ -68,13 +69,15 @@ public class LikeService implements ILikeService {
       throw new EntityNotFoundException("Entity id is required");
     }
     Pageable topTen = PageRequest.of(0, 10);
+
+
     return likeRepository.getRecentLikes(entityId, entityType, topTen);
   }
 
   @Transactional
   @Override
-  public List<UserProfileResponseDto> getUsersWhoLikedEntity(Long entityId, LikeableEntity entityType)
-    throws EntityNotFoundException {
+  public PageWrapper<UserProfileResponseDto> getUsersWhoLikedEntity(Long entityId, LikeableEntity entityType)
+          throws EntityNotFoundException {
     if (entityType == null) {
       throw new EntityNotFoundException("Entity type is required");
     }
@@ -83,11 +86,12 @@ public class LikeService implements ILikeService {
     }
     int pageSize = 1000; // Example large enough value, adjust based on expected data size
 
-    Page<Like> page = likeRepository.findByEntityIdAndEntityType(entityId, entityType, PageRequest.of(0, pageSize));
+    Page<Like> page = likeRepository.findByEntityIdAndEntityType(entityId, entityType,
+            PageRequest.of(0, pageSize));
     List<Like> likes = page.getContent();
 
     // Convert likes to UserProfileResponseDto, handling possible EntityNotFoundException
-    return likes.stream().map(like -> {
+    List<UserProfileResponseDto> dtos = likes.stream().map(like -> {
       try {
         return userService.findActiveById(like.getUserId());
       } catch (EntityNotFoundException e) {
@@ -95,7 +99,11 @@ public class LikeService implements ILikeService {
         return null;
       }
     }).filter(Objects::nonNull) // Remove nulls in case of not found users
-      .distinct().collect(Collectors.toList());
+            .distinct().toList();
+
+    boolean hasNext = page.hasNext();
+
+    return new PageWrapper<>(dtos, hasNext);
   }
 
 
