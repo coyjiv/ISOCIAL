@@ -9,9 +9,7 @@ import {
 	useGetFriendsListQuery,
 	useSendFriendRequestMutation,
 } from '../../../store/services/friendService'
-import { useGetUsersQuery } from '../../../store/services/usersService'
 import { LS_KEYS } from '../../../utils/constants'
-import { useGetSuggestions } from '../../../hooks'
 import { MainContentWrapper } from './FriendsMainContent.styled'
 
 const FriendsMainContent = () => {
@@ -26,8 +24,6 @@ const FriendsMainContent = () => {
 	const [acceptFriendRequest] = useAcceptFriendRequestMutation()
 	const [declineFriendRequest] = useDeclineFriendRequestMutation()
 	const [sendFriendRequest] = useSendFriendRequestMutation()
-
-	// const knownUsers = useGetSuggestions(userId, users, requests, friends)
 
 	const handleMessage = (id) => {
 		console.log(`start messages with user ${id}`)

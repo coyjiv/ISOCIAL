@@ -16,6 +16,7 @@ import {
   useSendFriendRequestMutation,
 } from '../../../store/services/friendService.js'
 import { LS_KEYS, MQ } from '../../../utils/constants'
+import InfiniteScroll from 'react-infinite-scroll-component'
 
 const FriendsSubSidebar = ({
   variant,
@@ -23,6 +24,8 @@ const FriendsSubSidebar = ({
   withSearch,
   heading,
   subTitle,
+  fetchMoreData,
+  hasNext
 }) => {
   const [searchValue, setSearchValue] = useState('')
   let [, setSearchParams] = useSearchParams()
@@ -88,6 +91,8 @@ const FriendsSubSidebar = ({
     console.log(`start messages with user ${id}`)
   }
 
+  const searchActive = searchValue.length > 0
+
   return (
     <SidebarWrapper>
       <SubSidebarHeader heading={heading} link={'/friends'}>
@@ -100,14 +105,14 @@ const FriendsSubSidebar = ({
           />
         )}
       </SubSidebarHeader>
-      <SidebarItemsList>
+      <SidebarItemsList id='scrollableDiv'>
         <Typography
           fontSize="17px"
           fontWeight="600"
           marginLeft="12px"
           marginBottom="12px"
         >{`${users?.length ?? '0'} ${subTitle}`}</Typography>
-        <Stack width="100%" gap="10px">
+        {searchActive ? <Stack width="100%" gap="10px">
           {filteredUsers?.map(({ id, firstName, lastName, avatarsUrl, gender }) => (
             <FriendsSidebarUserCard
               key={id}
@@ -123,7 +128,32 @@ const FriendsSubSidebar = ({
               onMessage={(e) => handleMessage(e, id)}
             />
           ))}
-        </Stack>
+        </Stack> :
+          <InfiniteScroll
+            dataLength={users.length}
+            next={fetchMoreData}
+            hasMore={hasNext}
+            scrollableTarget="scrollableDiv"
+          // loader={<div style={{ display: 'flex', width: '100%' }}><PostSkeleton /></div>}
+          // className={styles.infiniteWrapper}
+          >
+            {users.map(({ id, firstName, lastName, avatarsUrl, gender }) => (
+              <FriendsSidebarUserCard
+                key={id}
+                userImage={userAvatar({ avatarsUrl, gender }, firstName, lastName)}
+                fullName={`${firstName} ${lastName}`}
+                variant={variant}
+                onConfirm={() => handleConfirmRequest(id)}
+                onDecline={() => handleDeclineRequest(id)}
+                onClick={() => handleChooseUser(id)}
+                onRemove={(e) => handleRemoveFriend(e, id)}
+                onAddToFriends={() => handleAddToFriend(id)}
+                onHideSuggestion={() => handleHideSuggestion(id)}
+                onMessage={(e) => handleMessage(e, id)}
+              />
+            ))}
+          </InfiniteScroll>
+        }
       </SidebarItemsList>
     </SidebarWrapper>
   )
@@ -135,6 +165,8 @@ FriendsSubSidebar.propTypes = {
   subTitle: PropTypes.string,
   heading: PropTypes.string,
   users: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
+  fetchMoreData: PropTypes.func,
+  hasNext: PropTypes.bool
 }
 
 FriendsSubSidebar.displayName = 'FriendsSubSidebar'

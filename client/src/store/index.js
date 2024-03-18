@@ -1,6 +1,5 @@
 import { profileApi } from './services/profileService'
 import { friendsApi } from './services/friendService'
-import { usersApi } from './services/usersService'
 import { searchApi } from './services/searchService'
 import { postsApi } from './services/postService'
 import { commentApi } from './services/commentService'
@@ -16,7 +15,6 @@ export const store = configureStore({
     [friendsApi.reducerPath]: friendsApi.reducer,
     [postsApi.reducerPath]: postsApi.reducer,
     [commentApi.reducerPath]: commentApi.reducer,
-    [usersApi.reducerPath]: usersApi.reducer,
     [searchApi.reducerPath]: searchApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
@@ -25,7 +23,6 @@ export const store = configureStore({
       friendsApi.middleware,
       postsApi.middleware,
       commentApi.middleware,
-      usersApi.middleware,
       searchApi.middleware
     ),
 })

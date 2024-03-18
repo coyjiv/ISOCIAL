@@ -41,10 +41,7 @@ export const friendsApi = profileApi.injectEndpoints({
           method: 'POST',
         }
       },
-      invalidatesTags: () => [
-        { type: 'Friends' },
-        { type: 'Profile' },
-      ],
+      invalidatesTags: () => [{ type: 'Friends' }, { type: 'Profile' }],
     }),
     declineFriendRequest: builder.mutation({
       query: ({ userId }) => {
@@ -53,10 +50,7 @@ export const friendsApi = profileApi.injectEndpoints({
           method: 'POST',
         }
       },
-      invalidatesTags: () => [
-        { type: 'Friends' },
-        { type: 'Profile' },
-      ],
+      invalidatesTags: () => [{ type: 'Friends' }, { type: 'Profile' }],
     }),
     subscribersCount: builder.query({
       query: (id) => `friends/subscribersCount/${id}`,
@@ -79,11 +73,13 @@ export const friendsApi = profileApi.injectEndpoints({
       ],
     }),
     availableFriendRequests: builder.query({
-      query: (id) => `friends/availableFriendRequests?userId=${id}`,
-      providesTags: (id) => [
-        { type: 'Friends', id },
-        { type: 'Profile', id },
-      ],
+      query: (page) => `friends/availableFriendRequests?page=${page}&size=10`,
+      providesTags: () => [{ type: 'Friends' }, { type: 'Profile' }],
+      keepUnusedDataFor: 0,
+    }),
+    getRecommendations: builder.query({
+      query: (page) => `friends/recommendations?page=${page}&size=10`,
+      providesTags: () => [{ type: 'Friends' }, { type: 'Profile' }],
       keepUnusedDataFor: 0,
     }),
   }),
@@ -99,4 +95,5 @@ export const {
   useSubscribersCountQuery,
   useCancelFriendRequestMutation,
   useAvailableFriendRequestsQuery,
+  useGetRecommendationsQuery,
 } = friendsApi

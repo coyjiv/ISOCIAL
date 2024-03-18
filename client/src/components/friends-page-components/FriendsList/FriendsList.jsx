@@ -4,19 +4,15 @@ import {
 	Stack,
 	Typography,
 	Link,
-	Button,
-	useMediaQuery,
-	useTheme,
 } from "@mui/material";
 import { useNavigate } from 'react-router'
-import { IoMdArrowDropdown } from "react-icons/io";
-import { useGetUsersQuery } from "../../../store/services/usersService.js";
 
 import { FriendCard } from "../index";
 import { FriendCardSkeleton } from "../FriendCard/FriendCardSkeleton";
 import { ExpandedWrapper, FriendsListWrapper } from "./FriendsList.styled.js";
 import InfiniteScroll from "react-infinite-scroll-component";
-import styles from '../../PostsWrapper/postsWrapper.module.scss'
+import { useGetFriendsListQuery, useAvailableFriendRequestsQuery } from '../../../store/services/friendService.js'
+import styles from '../FriendsList/infiniteWrapper.module.scss'
 
 const FriendsList = ({
 	variant,
@@ -28,28 +24,29 @@ const FriendsList = ({
 	onDontShowClick,
 }) => {
 
-	//@TODO : replace to operated data based on a variant
-	const userId = localStorage.getItem('userId')
 	const [page, setPage] = useState(0)
-	const { data: usersData, isLoading, isSuccess } = useGetUsersQuery(page)
-	const { data: friends } = useGetFriendsListQuery(userId)
-	const { data: requests, isLoading: isRequestsLoading } = useAvailableFriendRequestsQuery()
 
-	const [users, setUsers] = useState([]);
+	const userId = localStorage.getItem('userId')
+	const { data: friendsData, isSuccess } = useGetFriendsListQuery(userId, page, { skip: variant !== 'friends' })
+	const { data: friendRequests, isSuccess: isSuccessRecommendations } = useAvailableFriendRequestsQuery(page, { skip: variant !== 'requests' })
 
-	const range = [...Array(5).keys()];
-	const isUsers = users?.length > 0;
-	const { breakpoints } = useTheme();
-	const isMatches = useMediaQuery(breakpoints.up(1200));
+	const operatedData = variant === 'friends' ? friendsData : friendRequests;
+	const operatedSuccess = variant === 'friends' ? isSuccess : isSuccessRecommendations;
+
+	const [data, setData] = useState([]);
+
+	useEffect(() => {
+		if (operatedSuccess && operatedData?.content) {
+			setData(prevData => [...new Set([...prevData, ...operatedData.content])]);
+		}
+	}, [operatedData, operatedSuccess]);
+
+	const fetchMoreData = () => {
+		setPage(prevPage => prevPage + 1);
+	};
+
 	const navigate = useNavigate();
 
-	const isShowButton = users?.length < 4 && isMatches;
-
-	const [expanded, setExpanded] = useState(false);
-
-	const handleExpand = () => {
-		setExpanded(!expanded);
-	};
 
 	const handleShowUser = (id) => {
 		if (variant === "requests") {
@@ -58,18 +55,9 @@ const FriendsList = ({
 			navigate(`/profile/${id}`);
 		}
 	}
+	const range = [...Array(5).keys()];
 
-	useEffect(() => {
-		if (isSuccess && usersData?.content) {
-			setUsers(prevPosts => [...prevPosts, ...usersData.content]);
-		}
-	}, [usersData, isSuccess]);
-
-	const fetchMoreData = () => {
-		setPage(prevPage => prevPage + 1);
-	};
-
-	if (isLoading) {
+	if (data.length === 0) {
 		return (
 			<FriendsListWrapper>
 				<Stack
@@ -103,45 +91,31 @@ const FriendsList = ({
 					See All
 				</Link>
 			</Stack>
-			<ExpandedWrapper active={expanded ? "expanded" : undefined}>
-				{isUsers ? (
-					<InfiniteScroll
-						dataLength={users.length}
-						next={fetchMoreData}
-						hasMore={usersData?.hasNext}
-						loader={<div style={{ display: 'flex', width: '100%' }}><FriendCardSkeleton /></div>}
-						className={styles.infiniteWrapper}
-					>
-						{
-							users?.map(({ id, firstName, lastName, avatarsUrl }) => (
-								<FriendCard
-									variant={variant}
-									key={id}
-									id={id}
-									fullName={`${firstName} ${lastName}`}
-									images={avatarsUrl}
-									onConfirm={(e) => onConfirm(e, id)}
-									onDelete={onDecline}
-									onAddFriend={onAddFriend}
-									onClick={() => handleShowUser(id)}
-									onDontShowClick={onDontShowClick}
-								/>
-							))
-						}
-					</InfiniteScroll>
-				) : (
-					<Typography>You don&apos;t have any friends yet</Typography>
-				)}
-			</ExpandedWrapper>
-			{!expanded && !isShowButton && (
-				<Button
-					variant="text"
-					endIcon={<IoMdArrowDropdown />}
-					onClick={handleExpand}
+			<ExpandedWrapper>
+				<InfiniteScroll
+					dataLength={data.length}
+					next={fetchMoreData}
+					hasMore={operatedData?.hasNext}
+					loader={<div style={{ display: 'flex', width: '100%' }}><FriendCardSkeleton /></div>}
+					className={styles.infiniteWrapper}
+					height={750}
 				>
-					See more
-				</Button>
-			)}
+					{data?.map(({ id, firstName, lastName, avatarsUrl }) => (
+						<FriendCard
+							variant={variant}
+							key={id}
+							id={id}
+							fullName={`${firstName} ${lastName}`}
+							images={avatarsUrl}
+							onConfirm={(e) => onConfirm(e, id)}
+							onDelete={onDecline}
+							onAddFriend={onAddFriend}
+							onClick={() => handleShowUser(id)}
+							onDontShowClick={onDontShowClick}
+						/>
+					))}
+				</InfiniteScroll>
+			</ExpandedWrapper>
 		</FriendsListWrapper>
 	);
 };

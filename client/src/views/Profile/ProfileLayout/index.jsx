@@ -35,6 +35,7 @@ export const ProfileLayout = ({ id }) => {
     const [isProfileEditOpen, setIsProfileEditOpen] = useState(false)
     const [isBannerUploadOpen, setIsBannerUploadOpen] = useState(false)
     const isMobile = useMediaQuery('(max-width: 480px)')
+    const isLargeMobile = useMediaQuery('(max-width: 600px)')
 
     const openMessenger = () => {
         console.log('open messenger');
@@ -65,19 +66,19 @@ export const ProfileLayout = ({ id }) => {
                     {isPersonalProfile && <WhiteButton onClick={onOpenBannerUpload} className={styles.buttonWhite}><MdPhotoCamera /> {!isMobile && (profile?.bannerUrl ? "Change banner" : "Upload banner")}</WhiteButton>}
                 </Box>
                 <Container sx={{ px: '5px' }}>
-                    <Stack direction={{ xs: 'column', sm: 'row' }} justifyContent={'start'} alignItems={'center'} spacing={2} sx={{ translate: '0px -30px', marginBottom: '-10px' }}>
+                    <Stack direction={{ xs: 'column', sm: 'row' }} rowGap={{ xs: 0, sm: '40px', md: 0 }} flexWrap={{ sm: 'wrap', lg: 'nowrap' }} justifyContent={'start'} alignItems={'center'} spacing={2} sx={{ translate: '0px -30px', marginBottom: '-10px' }}>
                         <AvatarMenu avatarUrl={profile?.avatarsUrl?.[0] ?? placeholderAvatar(profile?.gender, profile?.firstName, profile?.lastName)} />
                         <Stack spacing={-1} style={{ marginTop: '30px' }}>
                             <Typography variant='h4' sx={{ fontWeight: 900, color: theme.palette.black, fontSize: 32 }}>
                                 {profile?.firstName + " " + profile?.lastName}
                             </Typography>
-                            <Typography variant='h5' sx={{ '& > a:hover': { textDecoration: 'underline' }, fontWeight: 500, color: theme.palette.greyColor, fontSize: 15, textAlign: isMobile ? 'center' : 'left' }} style={{ marginTop: '8px' }}>
+                            <Typography variant='h5' sx={{ '& > a:hover': { textDecoration: 'underline' }, fontWeight: 500, color: theme.palette.greyColor, fontSize: 15, textAlign: (isMobile || isLargeMobile) ? 'center' : 'left' }} style={{ marginTop: '8px' }}>
                                 <Link to={'?tab=Friends'}>
                                     friends: {profile?.friendsCount}
                                 </Link>
                             </Typography>
                         </Stack>
-                        <Stack direction={'row'} spacing={1} className={styles.profileActions}>
+                        <Stack direction={'row'} marginTop={{ xs: 0, md: 30, lg: 0 }} spacing={1} className={styles.profileActions}>
                             <FriendRequestButton isPersonalProfile={isPersonalProfile} profile={profile} id={id} />
                             <Button onClick={isPersonalProfile ? openProfileEdit : openMessenger} variant='outlined' sx={{ width: '180px', height: '36px', fontSize: 14 }}>{isPersonalProfile ? "Edit Profile" : "Send message"}</Button>
                             <NotificationSubscriptionBtn />
