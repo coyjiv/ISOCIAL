@@ -1,13 +1,15 @@
 import { Avatar, Badge, Card, Typography } from "@mui/material"
 import styled from "@emotion/styled";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useOnClickOutside } from "usehooks-ts";
 import classNames from "classnames";
 import { Menu, MenuItem } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
 import { IoMdSettings } from "react-icons/io";
 import { ImExit } from "react-icons/im";
-import { useGetProfileByIdQuery } from "../../../../store/services/profileService";
+// import { useGetProfileByIdQuery } from "../../../../store/services/profileService";
+import { getPersonalProfile } from "../../../../store/actions/users";
+import { useSelector, useDispatch } from "react-redux";
 import { placeholderAvatar } from "../../../../data/placeholders";
 
 
@@ -109,7 +111,18 @@ const StyledMenuItem = styled(MenuItem)(() => ({
 const AvatarButton = () => {
     const ref = useRef(null)
     const userId = localStorage.getItem('userId')
-    const { data: profile, isLoading } = useGetProfileByIdQuery(userId, { skip: !userId })
+    // const { data: profile, isLoading } = useGetProfileByIdQuery(userId, { skip: !userId })
+
+    const dispatch = useDispatch()
+
+    const profile = useSelector(state => state.profile.profile.personal)
+
+    useEffect(() => {
+        if (!profile.firstName) {
+            dispatch(getPersonalProfile())
+        }
+    }, [dispatch, profile.firstName])
+
     const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false)
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -144,7 +157,7 @@ const AvatarButton = () => {
     const avatarSrc = profile === undefined ? '' : profile?.avatarsUrl?.[0] ?? placeholderAvatar(profile?.gender, profile?.firstName, profile?.lastName)
 
     return (
-        (userId && !isLoading && profile !== undefined) &&
+        (userId && profile !== undefined) &&
         <>
             <StyledButton ref={ref} className={buttonClasses} onClick={handleClickInside}>
                 <StyledBadge

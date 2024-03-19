@@ -1,41 +1,44 @@
 import PropTypes from 'prop-types'
-import { useGetSavedPostsQuery, useGetRecommendationsQuery } from '../../store/services/postService'
+import { getPersonalPosts, getRecommendations, getSavedPosts } from '../../store/actions/posts'
 import { useState, useEffect } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import Post from '../Post/Post'
 import { PostSkeleton } from '../../views/Profile/skeletons/PostSkeleton'
+import { useSelector, useDispatch } from 'react-redux'
 import styles from './postsWrapper.module.scss'
 
 const PostsWrapper = ({ type }) => {
     const [page, setPage] = useState(0)
-    const { data: postsData, isSuccess } = useGetSavedPostsQuery({ page }, { skip: type !== 'saved' });
-    const { data: recommendations, isSuccessRecommendations } = useGetRecommendationsQuery({ page }, { skip: type !== 'recommendations' })
+    const dispatch = useDispatch();
+    const { recommendations, saved } = useSelector(state => state.posts);
 
-    const operatedData = type === 'saved' ? postsData : type === 'recommendations' ? recommendations : recommendations;
-    const operatedSuccess = type === 'saved' ? isSuccess : type === 'recommendations' ? isSuccessRecommendations : isSuccessRecommendations;
-
-    const [posts, setPosts] = useState([]);
+    const operatedData = type === 'saved' ? saved : type === 'recommendations' ? recommendations : recommendations;
+    // const operatedSuccess = type === 'saved' ? isSuccess : type === 'recommendations' ? isSuccessRecommendations : isSuccessRecommendations;
 
     useEffect(() => {
-        if (operatedSuccess && operatedData?.content) {
-            setPosts(prevPosts => [...prevPosts, ...operatedData.content]);
+        if (type === 'saved') {
+            dispatch(getSavedPosts({ page }));
+        } else if (type === 'recommendations') {
+            dispatch(getRecommendations({ page }));
+        } else {
+            dispatch(getPersonalPosts({ page }));
         }
-    }, [operatedData, operatedSuccess]);
+    }, [dispatch, page, type]);
 
     const fetchMoreData = () => {
         setPage(prevPage => prevPage + 1);
     };
     return (
         <>
-            {posts.length === 0 && operatedData?.content.length === 0 && <div className={styles.noPosts}>No posts yet</div>}
+            {operatedData?.content.length === 0 && <div className={styles.noPosts}>No posts yet</div>}
             <InfiniteScroll
-                dataLength={posts.length}
+                dataLength={operatedData.content.length}
                 next={fetchMoreData}
                 hasMore={operatedData?.hasNext}
                 loader={<div style={{ display: 'flex', width: '100%' }}><PostSkeleton /></div>}
                 className={styles.infiniteWrapper}
             >
-                {posts.map(post => (
+                {operatedData?.content.map(post => (
                     <Post key={post.id}
                         postId={post.id}
                         authorId={post.authorId}

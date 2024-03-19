@@ -11,7 +11,6 @@ import ChatItem from './ChatItem';
 import "./Chat.scss"
 import { useGetChatsQuery, useCreateChatMutation } from "../../store/services/chatService";
 import { useSelector, useDispatch } from "react-redux";
-import { setChats } from "../../store/chatSlice";
 
 const ChatList = () => {
   const dispatch = useDispatch();

@@ -4,7 +4,8 @@ import { Avatar, Stack, Typography } from "@mui/material";
 
 import fallbackAvatar from "../../assets/fallback/Ava.jpg";
 import { ButtonMain } from "../buttons";
-import { useSendFriendRequestMutation } from "../../store/services/friendService.js";
+// import { useSendFriendRequestMutation } from "../../store/services/friendService.js";
+import { useDispatch, useSelector } from "react-redux";
 
 const UserCard = ({ id, avatarUrl, fullName, city, friendsCount }) => {
   const [sendFriendRequest] = useSendFriendRequestMutation();
