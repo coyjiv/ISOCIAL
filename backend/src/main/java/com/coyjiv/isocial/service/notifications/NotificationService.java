@@ -34,8 +34,6 @@ public class NotificationService implements INotificationService {
     boolean hasNext = notificationPage.hasNext();
 
     return new PageWrapper<>(dtos, hasNext);
-
-//    return notificationRepository.findAllForUser(receiverId, pageable);
   }
 
   @Override
