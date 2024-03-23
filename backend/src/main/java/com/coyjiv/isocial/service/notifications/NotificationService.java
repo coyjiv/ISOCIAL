@@ -1,9 +1,13 @@
 package com.coyjiv.isocial.service.notifications;
 
 import com.coyjiv.isocial.dao.NotificationRepository;
+import com.coyjiv.isocial.domain.Comment;
 import com.coyjiv.isocial.domain.Notification;
 import com.coyjiv.isocial.domain.NotificationEvent;
+import com.coyjiv.isocial.dto.respone.comment.CommentResponseDto;
+import com.coyjiv.isocial.dto.respone.page.PageWrapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -20,11 +24,18 @@ public class NotificationService implements INotificationService {
   private final NotificationRepository notificationRepository;
 
   @Override
-  public List<Notification> findAllForUser(Long receiverId, int page, int size) {
+  public PageWrapper<Notification> findAllForUser(Long receiverId, int page, int size) {
     Sort sort = Sort.by(Sort.Direction.DESC, "creationDate");
     Pageable pageable = PageRequest.of(page, size, sort);
+    Page<Notification> notificationPage = notificationRepository.findAllForUser(receiverId, pageable);
 
-    return notificationRepository.findAllForUser(receiverId, pageable);
+    List<Notification> dtos = notificationRepository.findAllForUser(receiverId, pageable).stream().toList();
+
+    boolean hasNext = notificationPage.hasNext();
+
+    return new PageWrapper<>(dtos, hasNext);
+
+//    return notificationRepository.findAllForUser(receiverId, pageable);
   }
 
   @Override
