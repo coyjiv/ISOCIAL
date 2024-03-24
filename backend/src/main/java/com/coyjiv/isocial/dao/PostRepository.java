@@ -15,8 +15,8 @@ import java.util.List;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
-  @Query("SELECT p FROM Post p WHERE p.creationDate >= :startDate AND p.isActive = true AND p.authorId in :arr")
-  Page<Post> findRecommendations(@Param("arr") List<Long> arr,@Param("startDate") Date startDate, Pageable pageable);
+  @Query("SELECT p FROM Post p WHERE p.isActive = true AND p.authorId in :arr")
+  Page<Post> findRecommendations(@Param("arr") List<Long> arr, Pageable pageable);
 
   @Query("FROM Post p WHERE p.isActive = true")
   Page<Post> findAllActive(Pageable pageable);

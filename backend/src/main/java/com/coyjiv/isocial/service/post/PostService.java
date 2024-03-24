@@ -6,6 +6,7 @@ import com.coyjiv.isocial.dao.LikeRepository;
 import com.coyjiv.isocial.dao.FriendRepository;
 import com.coyjiv.isocial.dao.PostRepository;
 import com.coyjiv.isocial.dao.UserRepository;
+import com.coyjiv.isocial.domain.AbstractEntity;
 import com.coyjiv.isocial.domain.Friend;
 import com.coyjiv.isocial.domain.Post;
 import com.coyjiv.isocial.domain.UserFriendStatus;
@@ -44,6 +45,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.coyjiv.isocial.domain.LikeableEntity.POST;
 
@@ -249,40 +252,31 @@ public class PostService implements IPostService {
   @Transactional(readOnly = true)
   @Override
   public PageWrapper<PostResponseDto> getRecommendation(int page, int size) throws EntityNotFoundException {
-    List<Friend> friends = friendRepository.findAllByRequesterIdOrAddresserIdAndStatus(
-            emailPasswordAuthProvider.getAuthenticationPrincipal(),
-            emailPasswordAuthProvider.getAuthenticationPrincipal(), UserFriendStatus.FRIEND);
-    List<UserProfileResponseDto> subscriptions = listSubscriberService.getSubscriptions();
+    List<Long> friendsIds = friendRepository.findAllByUserId(emailPasswordAuthProvider.getAuthenticationPrincipal())
+      .stream().map(AbstractEntity::getId).toList();
+    List<Long> subscriptionsIds = listSubscriberService.getSubscriptions()
+      .stream().map(UserProfileResponseDto::getId).toList();
 
-    LocalDateTime now = LocalDateTime.now();
-    LocalDateTime time = now.minus(1, ChronoUnit.DAYS);
-    ZoneId zoneId = ZoneId.systemDefault();
-    Date date = Date.from(time.atZone(zoneId).toInstant());
 
-    List<Long> ids = new ArrayList<>();
+    List<Long> ids = Stream.concat(friendsIds.stream(), subscriptionsIds.stream())
+      .distinct()
+      .filter(id -> !id.equals(emailPasswordAuthProvider.getAuthenticationPrincipal()))
+      .collect(Collectors.toList());
 
     Sort sort = Sort.by(Sort.Direction.DESC, "creationDate").and(Sort.by(Sort.Direction.ASC, "id"));
     Pageable pageable = PageRequest.of(page, size, sort);
 
+    Page<Post> p = postRepository.findRecommendations(ids, pageable);
 
-    for (Friend f : friends) {
-      if (Objects.equals(f.getAddresser().getId(), emailPasswordAuthProvider.getAuthenticationPrincipal())) {
-        ids.add(f.getRequester().getId());
-      } else if (Objects.equals(f.getRequester().getId(), emailPasswordAuthProvider.getAuthenticationPrincipal())) {
-        ids.add(f.getAddresser().getId());
-      }
-    }
-
-    for (UserProfileResponseDto s : subscriptions) {
-      ids.add(s.getId());
-    }
-
-    Page<Post> p = postRepository.findRecommendations(ids, date, pageable);
-    Collections.shuffle(p.getContent());
-    Set<Post> posts = new HashSet<>(p.getContent());
+    List<Post> shuffledPosts = new ArrayList<>(p.getContent());
+    Collections.shuffle(shuffledPosts);
 
     boolean hasNext = p.hasNext();
-    List<PostResponseDto> dtos = posts.stream().map(postResponseMapper::convertToDto).toList();
+
+    List<PostResponseDto> dtos = shuffledPosts.stream()
+      .map(postResponseMapper::convertToDto)
+      .collect(Collectors.toList());
+
     return new PageWrapper<>(dtos, hasNext);
   }
 }
