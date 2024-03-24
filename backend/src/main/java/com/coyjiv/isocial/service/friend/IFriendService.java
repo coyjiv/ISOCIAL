@@ -20,7 +20,7 @@ public interface IFriendService {
 
   Long getFriendsCount(Long userId);
 
-  List<FriendResponseDto> findAllFriends(Long userId, int page, int size);
+  PageWrapper<FriendResponseDto> findAllFriends(Long userId, int page, int size);
 
   Long getSubscribersCount(Long userId);
 

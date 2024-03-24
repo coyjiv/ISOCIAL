@@ -5,6 +5,7 @@ import com.coyjiv.isocial.domain.Chat;
 import com.coyjiv.isocial.dto.request.message.CreateMessageRequestDto;
 import com.coyjiv.isocial.dto.respone.chat.ActiveChatDto;
 import com.coyjiv.isocial.dto.respone.chat.ActiveChatListDto;
+import com.coyjiv.isocial.dto.respone.page.PageWrapper;
 import com.coyjiv.isocial.exceptions.ChatAlreadyExistException;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.exceptions.RequestValidationException;
@@ -12,7 +13,7 @@ import com.coyjiv.isocial.exceptions.RequestValidationException;
 import java.util.List;
 
 public interface IChatService {
-  List<ActiveChatListDto> findAllActive(int page, int quantity);
+  PageWrapper<ActiveChatListDto> findAllActive(int page, int quantity);
 
   Chat findActiveById(Long id) throws IllegalAccessException, EntityNotFoundException;
 

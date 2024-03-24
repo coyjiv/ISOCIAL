@@ -68,7 +68,7 @@ public class FriendController {
   public ResponseEntity<List<FriendResponseDto>> getAllFriends(@PathVariable Long userId,
                                                                @RequestParam(defaultValue = "0") @Min(0) Integer page,
                                                                @RequestParam(defaultValue = "10") @Min(0) Integer size) {
-    List<FriendResponseDto> friends = friendService.findAllFriends(userId, page, size);
+    List<FriendResponseDto> friends = friendService.findAllFriends(userId, page, size).getContent();
     return ResponseEntity.ok(friends);
   }
 
