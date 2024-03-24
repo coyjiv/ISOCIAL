@@ -4,9 +4,7 @@ import { Divider } from '@mui/material'
 import { FriendsList } from '../../../components/friends-page-components'
 import {
 	useAcceptFriendRequestMutation,
-	useAvailableFriendRequestsQuery,
 	useDeclineFriendRequestMutation,
-	useGetFriendsListQuery,
 	useSendFriendRequestMutation,
 } from '../../../store/services/friendService'
 import { LS_KEYS } from '../../../utils/constants'
@@ -55,7 +53,7 @@ const FriendsMainContent = () => {
 			/>
 			<Divider orientation="horizontal" sx={{ margin: "12px 0" }} />
 			<FriendsList
-				variant="friends"
+				variant="recommendations"
 				heading="People you may know"
 				link={'/friends/suggestions'}
 				onAddFriend={sendFriendRequest}

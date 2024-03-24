@@ -1,7 +1,8 @@
 import { Box, Typography } from "@mui/material";
 import { SectionWrapper } from "./FriendsNoUserSection.styled";
+import PropTypes from "prop-types";
 
-const FriendsNoUserSection = () => {
+const FriendsNoUserSection = ({ customTitle }) => {
   return (
     <SectionWrapper>
       <Box width="112px" height="112px">
@@ -37,10 +38,14 @@ const FriendsNoUserSection = () => {
         </svg>
       </Box>
       <Typography fontSize="20px" fontWeight="700" color="text.grey">
-        Select people&apos;s names to preview their profile.
+        {customTitle ?? "Select user to preview their profile."}
       </Typography>
     </SectionWrapper>
   );
+};
+
+FriendsNoUserSection.propTypes = {
+  customTitle: PropTypes.string,
 };
 
 FriendsNoUserSection.displayName = "FriendsNoUserSection";

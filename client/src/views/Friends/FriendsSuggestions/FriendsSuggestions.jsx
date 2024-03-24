@@ -18,13 +18,35 @@ const FriendsSuggestionsPage = () => {
 
   useEffect(() => {
     if (isSuccess && data?.content) {
-      setSuggestions(prevData => [...new Set([...prevData, ...data.content])]);
+      setSuggestions(prevData => {
+        // Create a new map to ensure uniqueness based on the item's id.
+        const dataMap = new Map();
+
+        // Fill the map with the previous data.
+        prevData.forEach(item => dataMap.set(item.id, item));
+
+        // Add new items to the map, preventing duplicates.
+        data.content.forEach(item => {
+          if (!dataMap.has(item.id)) {
+            dataMap.set(item.id, item);
+          }
+        });
+
+        // Return a new array created from the map's values.
+        return Array.from(dataMap.values());
+      });
     }
   }, [data, isSuccess]);
 
   const fetchMoreData = () => {
     setPage(prevPage => prevPage + 1);
   };
+
+  const onRemove = (id) => {
+    setSuggestions(prevData => {
+      return prevData.filter(item => item.id !== id)
+    })
+  }
 
 
   return (
@@ -38,6 +60,7 @@ const FriendsSuggestionsPage = () => {
         isLoading={isLoading}
         fetchMoreData={fetchMoreData}
         hasNext={data?.hasNext}
+        onRemove={onRemove}
       />
       <FriendsUserProfileSection />
     </Stack>

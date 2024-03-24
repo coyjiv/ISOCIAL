@@ -9,7 +9,7 @@ import styles from './postsWrapper.module.scss'
 const PostsWrapper = ({ type }) => {
     const [page, setPage] = useState(0)
     const { data: postsData, isSuccess } = useGetSavedPostsQuery({ page }, { skip: type !== 'saved' });
-    const { data: recommendations, isSuccessRecommendations } = useGetRecommendationsQuery({ page }, { skip: type !== 'recommendations' })
+    const { data: recommendations, isSuccessRecommendations } = useGetRecommendationsQuery(page, { skip: type !== 'recommendations' })
 
     const operatedData = type === 'saved' ? postsData : type === 'recommendations' ? recommendations : recommendations;
     const operatedSuccess = type === 'saved' ? isSuccess : type === 'recommendations' ? isSuccessRecommendations : isSuccessRecommendations;

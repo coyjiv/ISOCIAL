@@ -54,6 +54,11 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
           + "OR f.addresser.id = :id AND f.status = 'FRIEND'")
   List<Friend> findAllByUserId(@Param("id") Long id);
 
+
+  @Query("FROM Friend f WHERE f.requester.id = :id AND f.status = 'REQUEST_SENT' "
+          + "OR f.addresser.id = :id AND f.status = 'REQUEST_SENT'")
+  List<Friend> findAllByUserIdAndStatusRequestSent(@Param("id") Long id);
+
   @Query("FROM Friend f WHERE f.requester.id IN :friends AND f.addresser.id NOT IN :arr AND f.status = 'FRIEND' "
           + "AND f.addresser.city = :city OR  f.requester.id  NOT IN :arr AND f.addresser.id IN :friends "
           + "AND f.status = 'FRIEND' AND f.requester.city = :city")

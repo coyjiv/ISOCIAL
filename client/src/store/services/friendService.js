@@ -3,12 +3,13 @@ import { profileApi } from './profileService'
 export const friendsApi = profileApi.injectEndpoints({
   endpoints: (builder) => ({
     getFriendsList: builder.query({
-      query: (id, page = 0, size = 10) =>
+      query: ({ id, page = 0, size = 10 }) =>
         `friends/${id}?page=${page}&size=${size}`,
       providesTags: (id) => [
         { type: 'Friends', id },
         { type: 'Profile', id },
       ],
+      keepUnusedDataFor: 0,
     }),
     sendFriendRequest: builder.mutation({
       query: ({ userId }) => {

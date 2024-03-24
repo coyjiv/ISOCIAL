@@ -25,7 +25,8 @@ const FriendsSubSidebar = ({
   heading,
   subTitle,
   fetchMoreData,
-  hasNext
+  hasNext,
+  onRemove
 }) => {
   const [searchValue, setSearchValue] = useState('')
   let [, setSearchParams] = useSearchParams()
@@ -60,25 +61,32 @@ const FriendsSubSidebar = ({
 
   const handleChange = (value) => setSearchValue(value)
 
+
+  console.log(hasNext, 'hasNext');
+
   const handleChooseUser = (id) => {
     isMobile ? navigate(`/profile/${id}`) : setSearchParams({ id })
   }
 
   const handleDeclineRequest = (id) => {
     declineFriendRequest({ userId: id })
+    onRemove(id)
   }
 
   const handleConfirmRequest = (id) => {
     acceptFriendRequest({ userId: id })
+    onRemove(id)
   }
 
   const handleRemoveFriend = (e, id) => {
     e.stopPropagation()
     removeFriend({ friendUserId: id })
+    onRemove(id)
   }
 
   const handleAddToFriend = (id) => {
     sendFriendRequest({ userId: id })
+    onRemove(id)
   }
 
   const handleHideSuggestion = (id) => {
@@ -166,7 +174,8 @@ FriendsSubSidebar.propTypes = {
   heading: PropTypes.string,
   users: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
   fetchMoreData: PropTypes.func,
-  hasNext: PropTypes.bool
+  hasNext: PropTypes.bool,
+  onRemove: PropTypes.func
 }
 
 FriendsSubSidebar.displayName = 'FriendsSubSidebar'

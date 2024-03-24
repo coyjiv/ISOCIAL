@@ -47,10 +47,9 @@ const FriendCard = ({
 				setIsRequesting(true)
 				setMsg(data?.data)
 			}
-
-			onDelete(e, id)
 			setMsg('')
 		}
+		onDelete(e, id)
 	}
 
 	return (
@@ -107,7 +106,7 @@ const FriendCard = ({
 
 FriendCard.propTypes = {
 	id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-	variant: PropTypes.oneOf(['friends', 'requests']),
+	variant: PropTypes.oneOf(['friends', 'requests', 'recommendations']),
 	fullName: PropTypes.string,
 	images: PropTypes.array,
 	onDelete: PropTypes.func,

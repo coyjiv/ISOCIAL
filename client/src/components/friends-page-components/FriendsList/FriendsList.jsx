@@ -11,7 +11,8 @@ import { FriendCard } from "../index";
 import { FriendCardSkeleton } from "../FriendCard/FriendCardSkeleton";
 import { ExpandedWrapper, FriendsListWrapper } from "./FriendsList.styled.js";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { useGetFriendsListQuery, useAvailableFriendRequestsQuery } from '../../../store/services/friendService.js'
+import { useGetRecommendationsQuery, useAvailableFriendRequestsQuery } from '../../../store/services/friendService.js'
+import FriendsNoUserSection from "../../../views/Friends/FriendsNoUserSection/FriendsNoUserSection.jsx";
 import styles from '../FriendsList/infiniteWrapper.module.scss'
 
 const FriendsList = ({
@@ -26,18 +27,33 @@ const FriendsList = ({
 
 	const [page, setPage] = useState(0)
 
-	const userId = localStorage.getItem('userId')
-	const { data: friendsData, isSuccess } = useGetFriendsListQuery(userId, page, { skip: variant !== 'friends' })
+	const { data: friendsData, isSuccess } = useGetRecommendationsQuery(page, { skip: variant !== 'recommendations' })
 	const { data: friendRequests, isSuccess: isSuccessRecommendations } = useAvailableFriendRequestsQuery(page, { skip: variant !== 'requests' })
 
-	const operatedData = variant === 'friends' ? friendsData : friendRequests;
-	const operatedSuccess = variant === 'friends' ? isSuccess : isSuccessRecommendations;
+	const operatedData = variant === 'recommendations' ? friendsData : friendRequests;
+	const operatedSuccess = variant === 'recommendations' ? isSuccess : isSuccessRecommendations;
 
 	const [data, setData] = useState([]);
 
 	useEffect(() => {
 		if (operatedSuccess && operatedData?.content) {
-			setData(prevData => [...new Set([...prevData, ...operatedData.content])]);
+			setData(prevData => {
+				// Create a new map to ensure uniqueness based on the item's id.
+				const dataMap = new Map();
+
+				// Fill the map with the previous data.
+				prevData.forEach(item => dataMap.set(item.id, item));
+
+				// Add new items to the map, preventing duplicates.
+				operatedData.content.forEach(item => {
+					if (!dataMap.has(item.id)) {
+						dataMap.set(item.id, item);
+					}
+				});
+
+				// Return a new array created from the map's values.
+				return Array.from(dataMap.values());
+			});
 		}
 	}, [operatedData, operatedSuccess]);
 
@@ -55,7 +71,14 @@ const FriendsList = ({
 			navigate(`/profile/${id}`);
 		}
 	}
-	const range = [...Array(5).keys()];
+
+	const onDelete = (id) => {
+		setData(prevData => {
+			return prevData.filter(item => item.id !== id)
+		})
+	}
+
+	// const range = [...Array(5).keys()];
 
 	if (data.length === 0) {
 		return (
@@ -68,15 +91,8 @@ const FriendsList = ({
 					<Typography fontSize="20px" fontWeight="700">
 						{heading}
 					</Typography>
-					<Link href={link} underline="none">
-						See All
-					</Link>
 				</Stack>
-				<Stack direction="row" flexWrap="wrap" gap="20px">
-					{range.map((item) => (
-						<FriendCardSkeleton key={item} />
-					))}
-				</Stack>
+				<FriendsNoUserSection customTitle={variant === 'recommendations' ? 'There will be your recommendations, based on your friends' : 'You have no friend requests'} />
 			</FriendsListWrapper>
 		);
 	}
@@ -98,7 +114,7 @@ const FriendsList = ({
 					hasMore={operatedData?.hasNext}
 					loader={<div style={{ display: 'flex', width: '100%' }}><FriendCardSkeleton /></div>}
 					className={styles.infiniteWrapper}
-					height={750}
+					height={770}
 				>
 					{data?.map(({ id, firstName, lastName, avatarsUrl }) => (
 						<FriendCard
@@ -107,11 +123,11 @@ const FriendsList = ({
 							id={id}
 							fullName={`${firstName} ${lastName}`}
 							images={avatarsUrl}
-							onConfirm={(e) => onConfirm(e, id)}
-							onDelete={onDecline}
-							onAddFriend={onAddFriend}
+							onConfirm={(e) => { onConfirm(e, id); onDelete(id) }}
+							onDelete={(...args) => { onDecline(...args); onDelete(id) }}
+							onAddFriend={(...args) => { onAddFriend(...args); onDelete(id) }}
 							onClick={() => handleShowUser(id)}
-							onDontShowClick={onDontShowClick}
+							onDontShowClick={(...args) => { onDontShowClick(...args); onDelete(id) }}
 						/>
 					))}
 				</InfiniteScroll>
@@ -121,7 +137,7 @@ const FriendsList = ({
 };
 
 FriendsList.propTypes = {
-	variant: PropTypes.oneOf(["friends", "requests"]),
+	variant: PropTypes.oneOf(["recommendations", "requests"]),
 	users: PropTypes.array,
 	heading: PropTypes.string,
 	link: PropTypes.string,
