@@ -1,11 +1,7 @@
 package com.coyjiv.isocial.service.post;
 
 import com.coyjiv.isocial.auth.EmailPasswordAuthProvider;
-import com.coyjiv.isocial.dao.CommentRepository;
-import com.coyjiv.isocial.dao.LikeRepository;
-import com.coyjiv.isocial.dao.FriendRepository;
-import com.coyjiv.isocial.dao.PostRepository;
-import com.coyjiv.isocial.dao.UserRepository;
+import com.coyjiv.isocial.dao.*;
 import com.coyjiv.isocial.domain.AbstractEntity;
 import com.coyjiv.isocial.domain.Friend;
 import com.coyjiv.isocial.domain.Post;
@@ -64,7 +60,7 @@ public class PostService implements IPostService {
   private final IWebsocketService websocketService;
   private final INotificationService notificationService;
   private final CommentRepository commentRepository;
-
+  private final PostSeenRepository postSeenRepository;
   private final LikeRepository likeRepository;
   private final ListSubscriberService listSubscriberService;
 
@@ -277,15 +273,22 @@ public class PostService implements IPostService {
 
     Page<Post> p = postRepository.findRecommendations(ids, pageable);
 
+
+
     List<Post> shuffledPosts = new ArrayList<>(p.getContent());
-    Collections.shuffle(shuffledPosts);
+
+    List<Post> newShuffledPosts = new ArrayList<>(shuffledPosts.stream().filter(post -> postSeenRepository.findByUserIdPostId(
+            emailPasswordAuthProvider.getAuthenticationPrincipal(), post.getId()).isEmpty()
+    ).toList());
+
+    Collections.shuffle(newShuffledPosts);
 
     System.out.println("shuffledPosts");
-    shuffledPosts.forEach(System.out::println);
+    newShuffledPosts.forEach(System.out::println);
 
     boolean hasNext = p.hasNext();
 
-    List<PostResponseDto> dtos = shuffledPosts.stream()
+    List<PostResponseDto> dtos = newShuffledPosts.stream()
       .map(postResponseMapper::convertToDto)
       .collect(Collectors.toList());
 
