@@ -1,9 +1,8 @@
 import PropTypes from 'prop-types'
 import { Avatar, Stack, Typography } from '@mui/material'
-import Box from '@mui/material/Box'
 
 import { ButtonMain } from '../../buttons'
-import { CardContentWrapper, CardWrapper } from './FriendCard.styled.js'
+import { CardContentWrapper, CardWrapper, CardAvatarWrapper } from './FriendCard.styled.js'
 import { useState } from 'react'
 import { userAvatar } from '../../../data/placeholders.js'
 
@@ -21,10 +20,6 @@ const FriendCard = ({
 	const [msg, setMsg] = useState('')
 	const isRequestVariant = variant === 'requests'
 	const [isRequesting, setIsRequesting] = useState(false)
-
-	const truncateText = (text, maxLength) => {
-		return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
-	};
 
 	const handleClick = async (e) => {
 		e.stopPropagation()
@@ -54,7 +49,7 @@ const FriendCard = ({
 
 	return (
 		<CardWrapper onClick={onClick}>
-			<Box width="194px" height="190px">
+			<CardAvatarWrapper>
 				<Avatar
 					src={userAvatar({ avatarsUrl: images }, fullName.split(' ')[0], fullName.split(' ')[1])}
 					alt={fullName}
@@ -65,14 +60,15 @@ const FriendCard = ({
 						fontSize: '60px',
 					}}
 				/>
-			</Box>
+			</CardAvatarWrapper>
 			<CardContentWrapper>
 				<Typography
 					fontSize="20px"
 					fontWeight="600"
+					sx={{ fontSize: { xs: '18px', sm: '20px' }, textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', marginBottom: { xs: '15px', sm: !msg ? '30px' : 0 } }}
 					marginBottom={!msg ? '30px' : '0'}
 				>
-					{truncateText(fullName, 14)}
+					{fullName}
 				</Typography>
 
 				<Typography fontSize="14px" marginBottom={!msg ? '0' : '9px'}>

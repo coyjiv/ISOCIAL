@@ -7,9 +7,11 @@ import {
   SidebarWrapper,
 } from "./FriendsMainSidebar.styled.js";
 
-const FriendsMainSidebar = () => {
+import PropTypes from "prop-types";
+
+const FriendsMainSidebar = ({ hidden }) => {
   return (
-    <SidebarWrapper>
+    <SidebarWrapper hidden={hidden}>
       <SidebarHeaderWrapper>
         <Stack width="100%" direction="row" justifyContent="space-between">
           <Typography fontSize="24px" fontWeight="600">
@@ -25,6 +27,10 @@ const FriendsMainSidebar = () => {
       <Divider orientation="horizontal" sx={{ my: "8px" }} />
     </SidebarWrapper>
   );
+};
+
+FriendsMainSidebar.propTypes = {
+  hidden: PropTypes.bool,
 };
 
 FriendsMainSidebar.displayName = "FriendsMainSidebar";

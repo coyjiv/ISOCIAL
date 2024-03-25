@@ -9,8 +9,9 @@ import {
 } from '../../../store/services/friendService'
 import { LS_KEYS } from '../../../utils/constants'
 import { MainContentWrapper } from './FriendsMainContent.styled'
+import PropTypes from 'prop-types'
 
-const FriendsMainContent = () => {
+const FriendsMainContent = ({ hidden }) => {
 
 	const [hiddenUsersId, setHiddenUsersId] = useLocalStorage(
 		LS_KEYS.HIDDEN_USERS,
@@ -43,7 +44,7 @@ const FriendsMainContent = () => {
 	}
 
 	return (
-		<MainContentWrapper>
+		<MainContentWrapper hidden={hidden}>
 			<FriendsList
 				variant="requests"
 				heading="Friend Requests"
@@ -63,6 +64,10 @@ const FriendsMainContent = () => {
 			/>
 		</MainContentWrapper>
 	)
+}
+
+FriendsMainContent.propTypes = {
+	hidden: PropTypes.bool,
 }
 
 FriendsMainContent.displayName = 'FriendsMainContent'

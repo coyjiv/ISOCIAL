@@ -8,6 +8,7 @@ import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
 import { GrMenu } from "react-icons/gr";
 import { useTheme } from '@mui/material/styles';
 import { Drawer, IconButton, Box, ListItemIcon, ListItemButton, ListItem, List, Divider, ListItemText, Toolbar, AppBar, Typography, useScrollTrigger, Slide } from '@mui/material'
+import { FaUserFriends } from "react-icons/fa";
 import { useState } from 'react'
 import PropTypes from 'prop-types'
 
@@ -17,8 +18,8 @@ const FriendsPage = () => {
   return (
     <FriendsPageWrapper>
       <FriendsMobileDrawer />
-      <FriendsMainSidebar />
-      <FriendsMainContent />
+      <FriendsMainSidebar hidden={true} />
+      <FriendsMainContent hidden={true} />
     </FriendsPageWrapper>
   )
 }
@@ -37,16 +38,16 @@ const FriendsMobileDrawer = () => {
   };
 
   return (
-    <Box sx={{ display: 'flex', width: '100%', flexDirection: 'column' }}>
+    <Box sx={{ display: 'flex', '@media(min-width:800px)': { display: 'none' }, width: '100%', flexDirection: 'column' }}>
       <HideOnScroll>
-        <AppBar position="static" sx={{ height: '56px', padding: 0, background: theme.palette.grey[300], '@media(min-width:768px)': { display: 'none' } }} open={open}>
-          <Toolbar sx={{ height: 'auto' }}>
+        <AppBar position="static" sx={{ height: '56px', padding: 0, zIndex: 9, background: theme.palette.grey[300], '@media(min-width:800px)': { display: 'none' } }} open={open}>
+          <Toolbar sx={{ height: '56px', '@media(min-width: 600px)': { minHeight: '56px' } }}>
             <IconButton
               aria-label="open drawer"
               onClick={toggleDrawer(true)}
-              sx={{}}
+              sx={{ mr: 2, borderRadius: '50%', border: '1px solid', borderColor: theme.palette.grey[500] }}
             >
-              <GrMenu />
+              <FaUserFriends />
             </IconButton>
             <Typography variant="h6" fontWeight={600} noWrap component="div">
               Friends
@@ -54,14 +55,10 @@ const FriendsMobileDrawer = () => {
           </Toolbar>
         </AppBar>
       </HideOnScroll>
-      <Drawer open={open} onClose={toggleDrawer(false)}>
-        {/* {DrawerList} */}
-        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Fugiat magni et enim nesciunt dolorum illum! Commodi molestiae necessitatibus voluptas odit quidem alias? Accusamus cupiditate rerum hic temporibus dolorum consequuntur velit.
+      <Drawer open={open} sx={{ translate: '0 40px' }} onClose={toggleDrawer(false)}>
+        <FriendsMainSidebar />
       </Drawer>
-      <p>
-        yesdagag
-        sdfsd
-      </p>
+      <FriendsMainContent />
     </Box>
   )
 }

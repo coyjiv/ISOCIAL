@@ -1,7 +1,9 @@
 import styled from '@emotion/styled'
 import { Stack } from '@mui/material'
 
-export const SidebarWrapper = styled(Stack)(({ theme }) => ({
+export const SidebarWrapper = styled(Stack, {
+  shouldForwardProp: (prop) => prop !== 'hidden', // Prevent `hidden` from being passed to the DOM element as an attribute
+})(({ theme, hidden }) => ({
   minWidth: '360px',
   height: '100%',
   backgroundColor: theme.palette?.white,
@@ -12,7 +14,7 @@ export const SidebarWrapper = styled(Stack)(({ theme }) => ({
     minWidth: '100%',
   },
   '@media (max-width: 800px)': {
-    display: 'none',
+    display: hidden ? 'none' : 'block',
   },
 }))
 
@@ -20,7 +22,7 @@ export const SidebarHeaderWrapper = styled(Stack)({
   justifyContent: 'space-between',
   alignItems: 'center',
   padding: '6px 8px',
-  '@media (max-width: 660px)': {
+  '@media (max-width: 800px)': {
     display: 'none',
   },
 })
