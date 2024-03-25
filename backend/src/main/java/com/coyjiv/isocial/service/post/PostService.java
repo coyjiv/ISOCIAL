@@ -252,16 +252,25 @@ public class PostService implements IPostService {
   @Transactional(readOnly = true)
   @Override
   public PageWrapper<PostResponseDto> getRecommendation(int page, int size) throws EntityNotFoundException {
-    List<Long> friendsIds = friendRepository.findAllByUserId(emailPasswordAuthProvider.getAuthenticationPrincipal())
-      .stream().map(AbstractEntity::getId).toList();
+    Long principal = emailPasswordAuthProvider.getAuthenticationPrincipal();
+    List<Long> friendsIds = friendRepository.findAllByUserId(principal)
+      .stream().map(f -> principal ==  f.getAddresser().getId() ? f.getRequester().getId(): f.getAddresser().getId()).toList();
+
     List<Long> subscriptionsIds = listSubscriberService.getSubscriptions()
       .stream().map(UserProfileResponseDto::getId).toList();
 
+    System.out.println("friendsIds");
+    friendsIds.forEach(System.out::println);
+    System.out.println("subscriptionsIds");
+    subscriptionsIds.forEach(System.out::println);
 
     List<Long> ids = Stream.concat(friendsIds.stream(), subscriptionsIds.stream())
       .distinct()
-      .filter(id -> !id.equals(emailPasswordAuthProvider.getAuthenticationPrincipal()))
+      .filter(id -> !id.equals(principal))
       .collect(Collectors.toList());
+
+    System.out.println("ids");
+    ids.forEach(System.out::println);
 
     Sort sort = Sort.by(Sort.Direction.DESC, "creationDate").and(Sort.by(Sort.Direction.ASC, "id"));
     Pageable pageable = PageRequest.of(page, size, sort);
@@ -270,6 +279,9 @@ public class PostService implements IPostService {
 
     List<Post> shuffledPosts = new ArrayList<>(p.getContent());
     Collections.shuffle(shuffledPosts);
+
+    System.out.println("shuffledPosts");
+    shuffledPosts.forEach(System.out::println);
 
     boolean hasNext = p.hasNext();
 
