@@ -4,6 +4,7 @@ import { AiOutlineDelete } from "react-icons/ai";
 import PropTypes from "prop-types";
 import { useDeleteChatMutation } from "../../store/services/chatService.js";
 import { useEffect } from "react";
+
 const ChatItem = ({ chatId, chatName, lastMessage, chatAvatar }) => {
   const [deleteChat, { error }] = useDeleteChatMutation();
 
@@ -25,7 +26,10 @@ const ChatItem = ({ chatId, chatName, lastMessage, chatAvatar }) => {
       <div className="message-avatar">
         <img className="avatar-img" src={chatAvatar} alt="" />
       </div>
-      <h3>{chatName}</h3>
+      <div className="chat-info-wrapper">
+        <h3>{chatName}</h3>
+        <p className="last-message">{lastMessage}</p>
+      </div>
       <div className="chat-options">
         <button
           className="delete-button"
@@ -41,7 +45,7 @@ const ChatItem = ({ chatId, chatName, lastMessage, chatAvatar }) => {
 ChatItem.propTypes = {
   chatId: PropTypes.number.isRequired,
   chatName: PropTypes.string.isRequired,
-  lastMessage: PropTypes.string.isRequired,
+  lastMessage: PropTypes.string,
   chatAvatar: PropTypes.string.isRequired,
 };
 

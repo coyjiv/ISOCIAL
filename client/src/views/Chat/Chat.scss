@@ -59,11 +59,7 @@
     position: absolute;
     left: -36px;
     top: 10px;
-  }
 
-  .message-avatar {
-    display: none;
-    width: 10px;
   }
 
   .message-options {
@@ -127,8 +123,8 @@
 }
 
 .chat-input {
-    border: 1px solid #000;
-    border-radius: 15px;
+  border: 1px solid #000;
+  border-radius: 15px;
 }
 
 .chat-input input {
@@ -155,8 +151,8 @@
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    margin: 10px;
-    width: 90%;
+    width: 100%;
+    padding-right: 5px;
 
     .no-chats {
       font-size: 24px;
@@ -191,10 +187,15 @@
     align-items: center;
     position: relative;
 
+
+
+    &:hover {
+      background-color: #d2d6de;
+    }
+
     h3 {
       font-size: 20px;
       font-weight: 600;
-      margin: 5px 10px;
       font-family: 'Segoe UI', sans-serif;
     }
 
@@ -202,6 +203,7 @@
       position: absolute;
       top: 25%;
       right: 0;
+      padding-right: 3px;
       display: block;
 
       .chat-options-option {
@@ -230,17 +232,42 @@
   gap: 5px;
 }
 
-.delete-icon:hover {
-  color: black;
+.delete-icon {
+  width: 20px;
+  height: 20px;
+
+  &:hover {
+    color: black;
+  }
 }
 
 .delete-button {
   padding: 10px;
   cursor: pointer;
+  transition: all 0.2s ease;
+  background: none;
+
   &:hover {
     border-radius: 20px;
     background-color: #999;
   }
+
+  &:active {
+    background-color: #7c7777;
+  }
 }
+
+.chat-info-wrapper {
+  display: grid;
+  gap: 5px;
+  margin: 5px 10px;
+}
+
+.last-message {
+  font-size: 18px;
+  font-weight: 500;
+  color: #939090;
+}
+
 
 

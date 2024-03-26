@@ -127,7 +127,7 @@ const ChatPage = ({ id }) => {
 };
 
 ChatPage.propTypes = {
-  id: PropTypes.number,
+  id: PropTypes.string,
 };
 
 export const Chat = withWebsocket(ChatPage);
