@@ -18,12 +18,13 @@
   height: 80vh;
   overflow-y: scroll;
   margin: 30px auto;
-  border: 0 solid #ccc;
+  //border: 0 solid #ccc;
   padding: 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   text-align: center;
+  border: 1px solid #ccc;
 }
 
 .chat-messages {
@@ -60,11 +61,15 @@
     top: 10px;
   }
 
+  .message-avatar {
+    display: none;
+    width: 10px;
+  }
+
   .message-options {
     position: absolute;
     top: 25%;
     left: 100%;
-    display: none;
 
     .message-options-option {
       @include message-option;
@@ -74,6 +79,11 @@
   &:hover .message-options {
     display: block;
   }
+}
+
+.avatar-img {
+  width: 30px;
+  border-radius: 20px;
 }
 
 .user {
@@ -99,10 +109,6 @@
     }
   }
 
-  .message-avatar {
-    display: none;
-  }
-
   /* stylelint-disable-next-line no-descending-specificity */
   .message-options {
     position: absolute;
@@ -118,6 +124,11 @@
   &:hover .message-options {
     display: block;
   }
+}
+
+.chat-input {
+    border: 1px solid #000;
+    border-radius: 15px;
 }
 
 .chat-input input {
@@ -190,16 +201,46 @@
     .chat-options {
       position: absolute;
       top: 25%;
-      right: 30px;
-      display: none;
+      right: 0;
+      display: block;
 
       .chat-options-option {
         @include message-option;
       }
     }
 
-    &:hover .chat-options {
-      display: block;
-    }
   }
 }
+
+.chat-modal-button {
+  background-color: #FFFFFF;
+  padding: 10px;
+  height: 40px;
+  border-radius: 20px;
+
+  & :hover {
+    color: #0084ff;
+    cursor: pointer;
+    transition: 0.3s color ease;
+  }
+}
+
+.friends-wrapper {
+  display: grid;
+  gap: 5px;
+}
+
+.delete-icon:hover {
+  color: black;
+}
+
+.delete-button {
+  padding: 10px;
+  cursor: pointer;
+  &:hover {
+    border-radius: 20px;
+    background-color: #999;
+  }
+}
+
+
