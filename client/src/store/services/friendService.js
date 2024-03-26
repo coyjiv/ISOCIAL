@@ -9,7 +9,6 @@ export const friendsApi = profileApi.injectEndpoints({
         { type: 'Friends', id },
         { type: 'Profile', id },
       ],
-      keepUnusedDataFor: 0,
     }),
     sendFriendRequest: builder.mutation({
       query: ({ userId }) => {

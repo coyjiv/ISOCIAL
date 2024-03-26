@@ -22,12 +22,13 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import Post from '../../../components/Post/Post';
 import classNames from 'classnames';
 import { PostSkeleton } from '../skeletons/PostSkeleton';
-import { useGetCurrentUserId } from '../../../hooks/index.js'
+// import { useGetCurrentUserId } from '../../../hooks/index.js'
 // import PostsWrapper from '../../../components/PostsWrapper';
+import PropTypes from 'prop-types';
 
-const Posts = () => {
+const Posts = ({ id }) => {
   // const { id } = useParams()
-  const id = useGetCurrentUserId()
+  // const id = useGetCurrentUserId()
 
   const fetchProfileId = id ?? localStorage.getItem('userId')
 
@@ -167,6 +168,10 @@ const Posts = () => {
       <CreatePostModal open={isCreatePostModalOpen} onClose={onClose} onSuccess={addNewPost} />
     </>
   )
+}
+
+Posts.propTypes = {
+  id: PropTypes.number
 }
 
 export default Posts

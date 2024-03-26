@@ -78,8 +78,6 @@ const FriendsList = ({
 		})
 	}
 
-	// const range = [...Array(5).keys()];
-
 	if (data.length === 0) {
 		return (
 			<FriendsListWrapper>

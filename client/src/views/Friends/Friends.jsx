@@ -3,11 +3,8 @@ import { FriendsMainSidebar } from '../../components/sidebars'
 import { FriendsMainContent } from './FriendsMainContent'
 import { FriendsPageWrapper } from './Friends.styled'
 
-
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa'
-import { GrMenu } from "react-icons/gr";
 import { useTheme } from '@mui/material/styles';
-import { Drawer, IconButton, Box, ListItemIcon, ListItemButton, ListItem, List, Divider, ListItemText, Toolbar, AppBar, Typography, useScrollTrigger, Slide } from '@mui/material'
+import { Drawer, IconButton, Box, Toolbar, AppBar, Typography, useScrollTrigger, Slide } from '@mui/material'
 import { FaUserFriends } from "react-icons/fa";
 import { useState } from 'react'
 import PropTypes from 'prop-types'
@@ -40,12 +37,12 @@ const FriendsMobileDrawer = () => {
   return (
     <Box sx={{ display: 'flex', '@media(min-width:800px)': { display: 'none' }, width: '100%', flexDirection: 'column' }}>
       <HideOnScroll>
-        <AppBar position="static" sx={{ height: '56px', padding: 0, zIndex: 9, background: theme.palette.grey[300], '@media(min-width:800px)': { display: 'none' } }} open={open}>
+        <AppBar position="static" sx={{ height: '56px', padding: 0, zIndex: 9, background: theme.palette.grey[100], '@media(min-width:800px)': { display: 'none' } }} open={open}>
           <Toolbar sx={{ height: '56px', '@media(min-width: 600px)': { minHeight: '56px' } }}>
             <IconButton
               aria-label="open drawer"
               onClick={toggleDrawer(true)}
-              sx={{ mr: 2, borderRadius: '50%', border: '1px solid', borderColor: theme.palette.grey[500] }}
+              sx={{ mr: 2, borderRadius: '50%', background: theme.palette.grey[300], transition: "background 0.3s ease", ":hover": { background: theme.palette.grey[600] }, ':focus-visible': { background: theme.palette.grey[600] } }}
             >
               <FaUserFriends />
             </IconButton>

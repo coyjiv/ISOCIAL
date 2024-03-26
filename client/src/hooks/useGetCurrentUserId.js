@@ -7,9 +7,11 @@ const useGetCurrentUserId = () => {
   const pathSegments = pathname.split('/')
   const profileId = pathSegments[pathSegments.length - 1]
   const searchParamsId = searchParams.get('id')
-  const isMyProfile = pathname === '/profile'
+  const isMyProfile = pathname.includes('profile') && !searchParamsId
 
-  return isMyProfile ? undefined : searchParamsId || profileId
+  return isMyProfile
+    ? localStorage.getItem('userId')
+    : searchParamsId || profileId
 }
 
 export default useGetCurrentUserId

@@ -1,5 +1,7 @@
 import PropTypes from 'prop-types'
-import { Avatar, Stack, Typography } from '@mui/material'
+import { Avatar, IconButton, Stack, Typography } from '@mui/material'
+import { useTheme } from '@mui/material/styles'
+import { FaEllipsis } from "react-icons/fa6";
 
 import { ButtonMain } from '../../buttons'
 import { CardContentWrapper, CardWrapper, CardAvatarWrapper } from './FriendCard.styled.js'
@@ -17,6 +19,7 @@ const FriendCard = ({
 	onDontShowClick,
 	onClick,
 }) => {
+	const theme = useTheme()
 	const [msg, setMsg] = useState('')
 	const isRequestVariant = variant === 'requests'
 	const [isRequesting, setIsRequesting] = useState(false)
@@ -45,6 +48,29 @@ const FriendCard = ({
 			setMsg('')
 		}
 		onDelete(e, id)
+	}
+
+	if (variant === 'horizontal') {
+		return (
+			<Stack sx={{ padding: '16px', height: 'fit-content', border: '1px solid', borderColor: theme.palette.grey[100], borderRadius: '8px' }} direction="row" spacing={2} alignItems="center">
+				<Avatar
+					src={userAvatar({ avatarsUrl: images }, fullName.split(' ')[0], fullName.split(' ')[1])}
+					alt={fullName}
+					variant="rounded"
+					sx={{
+						width: '80px',
+						height: '80px',
+						fontSize: '60px',
+					}}
+				/>
+				<Stack>
+					<Typography fontSize="17px" fontWeight="600">
+						{fullName}
+					</Typography>
+				</Stack>
+				<IconButton style={{ marginLeft: 'auto' }}><FaEllipsis size={18} /></IconButton>
+			</Stack>
+		)
 	}
 
 	return (
@@ -91,7 +117,7 @@ const FriendCard = ({
 							{isRequesting ? 'Cancel request' : 'Add to friends'}
 						</ButtonMain>
 						<ButtonMain color="grey" onClick={(e) => onDontShowClick(e, id)}>
-							Dont Show
+							Don&apos;t Show
 						</ButtonMain>
 					</Stack>
 				)}

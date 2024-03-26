@@ -35,7 +35,7 @@
   row-gap: 10px;
   column-gap: 10px;
   justify-content: center;
-  @include breakpoints.media("sm") {
+  @include breakpoints.media('sm') {
     margin-left: auto !important;
   }
 }
@@ -50,4 +50,26 @@
 
 .mt10 {
   margin-bottom: 30px;
+}
+
+.card-padding {
+  padding: 22px;
+}
+
+.flex {
+  display: flex;
+}
+
+.space-between {
+  justify-content: space-between;
+}
+
+.link-wrapper {
+  & a {
+    color: colors.$primaryButtonBackground;
+    display: none;
+    @include breakpoints.media('sm') {
+      display: block;
+    }
+  }
 }

@@ -8,6 +8,7 @@ import Tab from '@mui/material/Tab';
 import TabPanel from '../../components/TabPanel';
 import { a11yProps } from '../../helpers/a11y';
 import { idFromTabLabel } from '../../helpers/misc';
+import PropTypes from 'prop-types';
 
 const ProfileTabs = () => {
   const [searchParams, setSearchParams] = useSearchParams({ tab: profileTabs[0].label });
@@ -37,6 +38,10 @@ const ProfileTabs = () => {
       ))}
     </Box>
   );
+}
+
+ProfileTabs.propTypes = {
+  id: PropTypes.number
 }
 
 export default ProfileTabs
