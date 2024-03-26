@@ -18,7 +18,7 @@ public interface CommentRepository extends JpaRepository<Comment,Long> {
   Page<Comment> findByPostId(@Param("postId") Long postId, Pageable pageable);
 
   @Query("FROM Comment c WHERE c.commenterId = :commenterId AND c.isActive = true")
-  List<Comment> findByCommenterId(@Param("commenterId") Long commenterId, Pageable pageable);
+  Page<Comment> findByCommenterId(@Param("commenterId") Long commenterId, Pageable pageable);
 
   @Query("FROM Comment c WHERE c.postId = :postId AND c.isActive = true")
   List<Comment> findAllActiveByPostIdNonPageable(@Param("postId") Long postId);

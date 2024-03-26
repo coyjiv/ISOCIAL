@@ -3,6 +3,7 @@ package com.coyjiv.isocial.service.user;
 import com.coyjiv.isocial.domain.User;
 import com.coyjiv.isocial.dto.request.auth.PasswordResetRequestDto;
 import com.coyjiv.isocial.dto.request.user.UserRegistrationRequestDto;
+import com.coyjiv.isocial.dto.respone.page.PageWrapper;
 import com.coyjiv.isocial.dto.respone.user.UserDefaultResponseDto;
 import com.coyjiv.isocial.dto.respone.user.UserProfileResponseDto;
 import com.coyjiv.isocial.dto.respone.user.UserSearchResponseDto;
@@ -19,7 +20,7 @@ public interface IUserService {
   /*
    * Find all users with pagination
    * */
-  List<UserDefaultResponseDto> findAllActive(int page, int quantity);
+  PageWrapper<UserDefaultResponseDto> findAllActive(int page, int quantity);
 
   List<UserDefaultResponseDto> findAllActive();
 
@@ -37,7 +38,7 @@ public interface IUserService {
 
   void confirmUser(String email) throws AccountNotFoundException;
 
-  List<UserSearchResponseDto> findByName(String name, int page, int size);
+  PageWrapper<UserSearchResponseDto> findByName(String name, int page, int size);
 
   void delete(Long id) throws IllegalAccessException, EntityNotFoundException;
 

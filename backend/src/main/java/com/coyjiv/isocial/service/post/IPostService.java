@@ -14,7 +14,7 @@ import java.util.Optional;
 
 public interface IPostService {
 
-  List<Post> findAllActive(int page, int size);
+  PageWrapper<Post> findAllActive(int page, int size);
 
   Optional<Post> findActiveById(Long id);
 
