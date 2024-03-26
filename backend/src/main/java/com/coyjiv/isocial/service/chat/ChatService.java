@@ -11,6 +11,7 @@ import com.coyjiv.isocial.domain.User;
 import com.coyjiv.isocial.dto.request.message.CreateMessageRequestDto;
 import com.coyjiv.isocial.dto.respone.chat.ActiveChatDto;
 import com.coyjiv.isocial.dto.respone.chat.ActiveChatListDto;
+import com.coyjiv.isocial.dto.respone.page.PageWrapper;
 import com.coyjiv.isocial.exceptions.ChatAlreadyExistException;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.exceptions.RequestValidationException;
@@ -20,6 +21,7 @@ import com.coyjiv.isocial.transfer.chat.ActiveChatListDtoMapper;
 import com.coyjiv.isocial.transfer.message.CreateMessageRequestMapper;
 import com.coyjiv.isocial.utils.MessagesUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -47,13 +49,21 @@ public class ChatService implements IChatService {
 
   @Transactional(readOnly = true)
   @Override
-  public List<ActiveChatListDto> findAllActive(int page, int quantity) {
+  public PageWrapper<ActiveChatListDto> findAllActive(int page, int quantity) {
     Long requestOwnerId = authProvider.getAuthenticationPrincipal();
 
     Sort sort = Sort.by(Sort.Direction.DESC, "lastModifiedDate");
     Pageable pageable = PageRequest.of(page, quantity, sort);
-    return userRepository.findAllActiveChats(requestOwnerId, pageable)
+
+    Page<Chat> chats = userRepository.findAllActiveChats(requestOwnerId, pageable);
+
+    List<ActiveChatListDto> dtos = chats
             .stream().filter(AbstractEntity::isActive).map(activeChatListDtoMapper::convertToDto).toList();
+
+    boolean hasNext = chats.hasNext();
+
+    return new PageWrapper<>(dtos,hasNext);
+
   }
 
   @Transactional(readOnly = true)
@@ -168,7 +178,7 @@ public class ChatService implements IChatService {
       chatRepository.save(chat);
 
       List<Message> messages = messageRepository.findAllActiveByChatId(chat.getId(),
-              PageRequest.of(0, Integer.MAX_VALUE));
+              PageRequest.of(0, Integer.MAX_VALUE)).toList();
 
       messages.forEach(message -> message.setActive(false));
       messageRepository.saveAll(messages);

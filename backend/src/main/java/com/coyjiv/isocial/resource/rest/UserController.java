@@ -42,8 +42,7 @@ public class UserController {
   @GetMapping("/search")
   public ResponseEntity<?> findByName(@RequestParam String name, @RequestParam(defaultValue = "0") @Min(0) int page,
                                       @RequestParam(defaultValue = "10") @Min(0) int size) {
-    List<UserSearchResponseDto> dtos = userService.findByName(name, page, size);
-    return ResponseEntity.ok(dtos);
+    return ResponseEntity.ok(userService.findByName(name, page, size));
   }
 
   @PatchMapping("/{id}")

@@ -38,6 +38,12 @@ public class User extends AbstractEntity {
   @Column(name = "city")
   private String city;
 
+  @Column(name = "birth_place")
+  private String birthPlace;
+
+  @Column(name = "study_place")
+  private String studyPlace;
+
   @Column(name = "password")
   private String password;
 
