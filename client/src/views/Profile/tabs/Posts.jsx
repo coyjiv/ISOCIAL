@@ -1,19 +1,10 @@
-import { useState } from 'react';
-import {
-  Avatar,
-  Box,
-  Container,
-  Divider,
-  Grid,
-  Input,
-  Stack,
-  Typography,
-} from '@mui/material'
+import { useEffect, useState } from 'react';
+import { Avatar, Box, Container, Divider, Grid, Input, Stack, Typography } from '@mui/material'
 import { Link } from 'react-router-dom'
 import { AiFillHome } from "react-icons/ai";
 import { useGetProfileByIdQuery } from '../../../store/services/profileService';
 import { useSubscribersCountQuery } from '../../../store/services/friendService';
-// import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import styles from '../profile.module.scss'
 import CreatePostModal from '../../../components/modals/CreatePost';
 import { placeholderAvatar } from '../../../data/placeholders';
@@ -22,49 +13,41 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import Post from '../../../components/Post/Post';
 import classNames from 'classnames';
 import { PostSkeleton } from '../skeletons/PostSkeleton';
-// import { useGetCurrentUserId } from '../../../hooks/index.js'
 // import PostsWrapper from '../../../components/PostsWrapper';
-import PropTypes from 'prop-types';
 
-const Posts = ({ id }) => {
-  // const { id } = useParams()
-  // const id = useGetCurrentUserId()
+const Posts = () => {
+  const { id } = useParams();
 
   const fetchProfileId = id ?? localStorage.getItem('userId')
-
-  const { data: profile } = useGetProfileByIdQuery(fetchProfileId)
-  const { data: loggedUserProfile, isLoading: isLoggedUserLoading } =
-    useGetProfileByIdQuery(localStorage.getItem('userId'))
-  const { data: subscribersCount } = useSubscribersCountQuery(fetchProfileId)
+  // eslint-disable-next-line no-unused-vars
+  const { data: profile, isLoading } = useGetProfileByIdQuery(fetchProfileId);
+  const { data: loggedUserProfile, isLoading: isLoggedUserLoading } = useGetProfileByIdQuery(localStorage.getItem('userId'))
+  const { data: subscribersCount } = useSubscribersCountQuery(fetchProfileId);
 
   const [isCreatePostModalOpen, setIsCreatePostModalOpen] = useState(false)
   const triggerPostModal = () => setIsCreatePostModalOpen(true)
 
   const [page, setPage] = useState(0)
-  const { data: postQueryData } = useGetPostsByUserQuery({
-    id: fetchProfileId,
-    page,
-    size: 5,
-  })
+  const { data: postQueryData } = useGetPostsByUserQuery({ id: fetchProfileId, page, size: 5 });
 
   const { content: posts, hasNext } = postQueryData ?? { content: [] }
 
   const [postsData, setPostsData] = useState([])
 
-  // useEffect(() => {
-  //   if (posts && posts.length > 0) {
-  //     if (page === 0) {
-  //       setPostsData(posts);
-  //     } else {
-  //       const existingPostIds = new Set(postsData.map(post => post.id));
+  useEffect(() => {
+    if (posts && posts.length > 0) {
+      if (page === 0) {
+        setPostsData(posts);
+      } else {
+        const existingPostIds = new Set(postsData.map(post => post.id));
 
-  //       const newPosts = posts.filter(post => !existingPostIds.has(post.id));
+        const newPosts = posts.filter(post => !existingPostIds.has(post.id));
 
-  //       setPostsData([...postsData, ...newPosts]);
-  //     }
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [posts, page]);
+        setPostsData([...postsData, ...newPosts]);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [posts, page]);
 
 
   const onClose = () => {
@@ -99,13 +82,12 @@ const Posts = ({ id }) => {
                 <Typography marginY={2}>{profile.bio}</Typography>
                 <Divider />
                 <Typography marginTop={2}><AiFillHome /> Lives in {profile.city}</Typography>
-                <Typography marginTop={2}>Subscribers: {subscribersCount}</Typography>
-                <Typography marginTop={2}>Subscriptions: {subscribersCount}</Typography>
+                <Typography marginTop={2}>Subscribers : {subscribersCount}</Typography>
               </div>
               <div className={styles.card}>
                 <div>
                   <Typography fontWeight={900} fontSize={20}>Photos</Typography>
-                  <Link to={'?tab=Photos'}>View all</Link>
+                  <Link to={'?tab=Photos'}><Typography>View all</Typography></Link>
                 </div>
                 <div>
 
@@ -115,7 +97,7 @@ const Posts = ({ id }) => {
               <div className={styles.card}>
                 <div>
                   <Typography fontWeight={900} fontSize={20}>Friends</Typography>
-                  <Link to={'?tab=Friends'}>View all</Link>
+                  <Link to={'?tab=Friends'}><Typography>View all</Typography></Link>
                 </div>
 
               </div>
@@ -131,15 +113,15 @@ const Posts = ({ id }) => {
               </div>}
 
               <section>
-                {posts.length > 0 && <InfiniteScroll
-                  dataLength={posts?.length ?? 0}
+                {postsData.length > 0 && <InfiniteScroll
+                  dataLength={postsData?.length ?? 0}
                   next={fetchData}
                   hasMore={hasNext}
                   loader={<div style={{ display: 'flex', width: '100%' }}><PostSkeleton /></div>}
                   className={styles.postWrapper}
                   style={{ overflow: 'hidden' }}
                 >
-                  {posts?.map((post) => <Post key={post.id}
+                  {postsData?.map((post) => <Post key={post.id}
                     postId={post.id}
                     authorId={post.authorId}
                     avatarUrl={post.authorAvatar}
@@ -168,10 +150,6 @@ const Posts = ({ id }) => {
       <CreatePostModal open={isCreatePostModalOpen} onClose={onClose} onSuccess={addNewPost} />
     </>
   )
-}
-
-Posts.propTypes = {
-  id: PropTypes.number
 }
 
 export default Posts
