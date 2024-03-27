@@ -3,7 +3,7 @@ import Birthdays from '../views/Profile/tabs/FriendTabs/Birthdays'
 import SameBirthplace from '../views/Profile/tabs/FriendTabs/SameBirthplace'
 import SameEducation from '../views/Profile/tabs/FriendTabs/SameEducation'
 import SamePlace from '../views/Profile/tabs/FriendTabs/SamePlace'
-import Subscriptions from '../views/Profile/tabs/FriendTabs/Subscriptions'
+// import Subscriptions from '../views/Profile/tabs/FriendTabs/Subscriptions'
 
 export const friendTabs = [
   {
@@ -36,10 +36,10 @@ export const friendTabs = [
     path: '/profile/videos',
     component: SamePlace,
   },
-  {
-    id: 6,
-    label: 'Subscriptions',
-    path: '/profile/videos',
-    component: Subscriptions,
-  },
+  // {
+  //   id: 6,
+  //   label: 'Subscriptions',
+  //   path: '/profile/videos',
+  //   component: Subscriptions,
+  // },
 ]

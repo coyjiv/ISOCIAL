@@ -24,7 +24,7 @@ const Friends = () => {
   };
 
   return (
-    <Box sx={{ width: '100%', backgroundColor: (theme) => theme.palette.wash }}>
+    <Box sx={{ width: '100%', marginBottom: '100px', backgroundColor: (theme) => theme.palette.wash }}>
       <Container maxWidth={'lg'} sx={{ p: 2 }}>
         <div className={cardClasses}>
           <div className={classNames(styles.flex, styles.spaceBetween)}>

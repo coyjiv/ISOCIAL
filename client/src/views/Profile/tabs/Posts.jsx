@@ -73,7 +73,7 @@ const Posts = () => {
   return (
     profile &&
     <>
-      <Box sx={{ backgroundColor: (theme) => theme.palette.wash }}>
+      <Box sx={{ marginBottom: '100px', backgroundColor: (theme) => theme.palette.wash }}>
         <Container maxWidth={'lg'} sx={{ p: 2 }}>
           <Grid container spacing={4} >
             <Grid item xs={12} sm={6} md={5}>

@@ -15,7 +15,7 @@ const TabPanel = (props) => {
             {...other}
         >
             {value === index && (
-                <Box width={'100%'} marginTop={'20px'}>
+                <Box width={'100%'} marginTop={'20px'} minHeight={'140px'}>
                     {children}
                 </Box>
             )}

@@ -1,12 +1,14 @@
 import PropTypes from 'prop-types'
-import { Avatar, IconButton, Stack, Typography } from '@mui/material'
+import { Avatar, Stack, Typography } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
-import { FaEllipsis } from "react-icons/fa6";
 
 import { ButtonMain } from '../../buttons'
 import { CardContentWrapper, CardWrapper, CardAvatarWrapper } from './FriendCard.styled.js'
 import { useState } from 'react'
 import { userAvatar } from '../../../data/placeholders.js'
+import CardActionsPopover from '../FriendsSidebarUserCard/CardActionsPopover/CardActionsPopover.jsx';
+
+
 
 const FriendCard = ({
 	id,
@@ -18,11 +20,13 @@ const FriendCard = ({
 	onAddFriend,
 	onDontShowClick,
 	onClick,
+	additionalInfo
 }) => {
 	const theme = useTheme()
 	const [msg, setMsg] = useState('')
 	const isRequestVariant = variant === 'requests'
 	const [isRequesting, setIsRequesting] = useState(false)
+
 
 	const handleClick = async (e) => {
 		e.stopPropagation()
@@ -52,7 +56,7 @@ const FriendCard = ({
 
 	if (variant === 'horizontal') {
 		return (
-			<Stack sx={{ padding: '16px', height: 'fit-content', border: '1px solid', borderColor: theme.palette.grey[100], borderRadius: '8px' }} direction="row" spacing={2} alignItems="center">
+			<Stack onClick={onClick} sx={{ cursor: 'pointer', padding: '16px', height: 'fit-content', border: '1px solid', borderColor: theme.palette.grey[100], borderRadius: '8px' }} direction="row" spacing={2} alignItems="center">
 				<Avatar
 					src={userAvatar({ avatarsUrl: images }, fullName.split(' ')[0], fullName.split(' ')[1])}
 					alt={fullName}
@@ -67,8 +71,16 @@ const FriendCard = ({
 					<Typography fontSize="17px" fontWeight="600">
 						{fullName}
 					</Typography>
+					<Typography fontSize="13px" fontWeight="400">
+						{additionalInfo}
+					</Typography>
 				</Stack>
-				<IconButton style={{ marginLeft: 'auto' }}><FaEllipsis size={18} /></IconButton>
+				<CardActionsPopover
+					name={fullName}
+					onRemove={onDelete}
+					onMessage={() => console.log('start messages with user')}
+					boxProps={{ style: { marginLeft: 'auto' } }}
+				/>
 			</Stack>
 		)
 	}
@@ -128,7 +140,7 @@ const FriendCard = ({
 
 FriendCard.propTypes = {
 	id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-	variant: PropTypes.oneOf(['friends', 'requests', 'recommendations']),
+	variant: PropTypes.oneOf(['friends', 'requests', 'recommendations', 'horizontal']),
 	fullName: PropTypes.string,
 	images: PropTypes.array,
 	onDelete: PropTypes.func,
@@ -136,6 +148,7 @@ FriendCard.propTypes = {
 	onConfirm: PropTypes.func,
 	onDontShowClick: PropTypes.func,
 	onAddFriend: PropTypes.func,
+	additionalInfo: PropTypes.string
 }
 
 FriendCard.displayName = 'FriendCard'

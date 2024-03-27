@@ -15,7 +15,7 @@ import { useGetProfileByIdQuery } from '../../../store/services/profileService'
 import { Box, Typography, Button, Stack, Container, Divider, useTheme } from '@mui/material'
 import { useMediaQuery } from 'usehooks-ts';
 
-import { placeholderAvatar } from "../../../data/placeholders"
+import { userAvatar } from "../../../data/placeholders"
 
 import { MdPhotoCamera } from "react-icons/md"
 import { NotificationSubscriptionBtn } from '../NotificationSubscriptionBtn'
@@ -67,7 +67,7 @@ export const ProfileLayout = ({ id }) => {
                 </Box>
                 <Container sx={{ px: '5px' }}>
                     <Stack direction={{ xs: 'column', sm: 'row' }} rowGap={{ xs: 0, sm: '40px', md: 0 }} flexWrap={{ sm: 'wrap', lg: 'nowrap' }} justifyContent={'start'} alignItems={'center'} spacing={2} sx={{ translate: '0px -30px', marginBottom: '-10px' }}>
-                        <AvatarMenu avatarUrl={profile?.avatarsUrl?.[0] ?? placeholderAvatar(profile?.gender, profile?.firstName, profile?.lastName)} />
+                        <AvatarMenu avatarUrl={userAvatar(profile)} />
                         <Stack spacing={-1} style={{ marginTop: '30px' }}>
                             <Typography variant='h4' sx={{ fontWeight: 900, color: theme.palette.black, fontSize: 32 }}>
                                 {profile?.firstName + " " + profile?.lastName}

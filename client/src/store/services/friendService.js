@@ -82,6 +82,26 @@ export const friendsApi = profileApi.injectEndpoints({
       providesTags: () => [{ type: 'Friends' }, { type: 'Profile' }],
       keepUnusedDataFor: 0,
     }),
+    getUpcomingBirthdays: builder.query({
+      query: ({ userId, page = 0 }) =>
+        `friends/birthdays/${userId}?page=${page}&size=10`,
+      providesTags: () => [{ type: 'Friends' }, { type: 'Profile' }],
+    }),
+    getFriendsWithSameBirthPlace: builder.query({
+      query: ({ userId, page = 0 }) =>
+        `friends/birthplace/${userId}?page=${page}&size=10`,
+      providesTags: () => [{ type: 'Friends' }, { type: 'Profile' }],
+    }),
+    getFriendsWithSameEducation: builder.query({
+      query: ({ userId, page = 0 }) =>
+        `friends/education/${userId}?page=${page}&size=10`,
+      providesTags: () => [{ type: 'Friends' }, { type: 'Profile' }],
+    }),
+    getFriendsWithSameLocation: builder.query({
+      query: ({ userId, page = 0 }) =>
+        `friends/location/${userId}?page=${page}&size=10`,
+      providesTags: () => [{ type: 'Friends' }, { type: 'Profile' }],
+    }),
   }),
 })
 
@@ -96,4 +116,8 @@ export const {
   useCancelFriendRequestMutation,
   useAvailableFriendRequestsQuery,
   useGetRecommendationsQuery,
+  useGetUpcomingBirthdaysQuery,
+  useGetFriendsWithSameBirthPlaceQuery,
+  useGetFriendsWithSameEducationQuery,
+  useGetFriendsWithSameLocationQuery,
 } = friendsApi
