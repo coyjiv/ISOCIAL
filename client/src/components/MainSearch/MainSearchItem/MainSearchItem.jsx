@@ -2,12 +2,17 @@ import PropTypes from "prop-types";
 import { Stack, Avatar, Typography } from "@mui/material";
 
 import { SearchItemWrapper } from "./MainSearchItem.styled";
+import { userAvatar } from "../../../data/placeholders";
 
 const MainSearchItem = ({ fullName, avatars, onClick }) => {
   return (
     <SearchItemWrapper onClick={onClick}>
       <Avatar
-        src={avatars[0]}
+        src={userAvatar({
+          avatarsUrl: avatars,
+          firstName: fullName.split(" ")[0],
+          lastName: fullName.split(" ")[1],
+        })}
         alt={fullName}
         sx={{ width: 45, height: 45 }}
       />

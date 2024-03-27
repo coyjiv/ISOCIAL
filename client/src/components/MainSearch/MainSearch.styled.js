@@ -28,9 +28,9 @@ export const LogoHiddenContentWrapper = styled(Stack)(({ open }) => ({
 export const SearchWrapper = styled(Stack)(({ open }) => ({
   padding: '7px 8px 7px 0',
   flexDirection: 'row',
-	gap: open ? '2px' : '8px',
-	maxWidth: "360px",
-  minWidth: "360px",
+  gap: open ? '2px' : '8px',
+  maxWidth: '360px',
+  minWidth: '360px',
   alignItems: 'center',
   position: 'relative',
   transition: 'all 0.15s ease-in-out',
