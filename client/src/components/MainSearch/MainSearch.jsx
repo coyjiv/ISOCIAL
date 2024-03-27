@@ -43,9 +43,11 @@ const MainSearch = () => {
   const navigate = useNavigate();
 
   const handleBlur = () => {
-    setInputActive(false);
-    setValue("");
-    setOptions([]);
+    setTimeout(() => {
+      setInputActive(false);
+      setValue("");
+      setOptions([]);
+    }, 150);
   };
 
   const handleGoToUser = (id) => {

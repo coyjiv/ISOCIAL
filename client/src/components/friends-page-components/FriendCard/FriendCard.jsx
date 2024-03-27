@@ -58,7 +58,7 @@ const FriendCard = ({
 		return (
 			<Stack onClick={onClick} sx={{ cursor: 'pointer', padding: '16px', height: 'fit-content', border: '1px solid', borderColor: theme.palette.grey[100], borderRadius: '8px' }} direction="row" spacing={2} alignItems="center">
 				<Avatar
-					src={userAvatar({ avatarsUrl: images }, fullName.split(' ')[0], fullName.split(' ')[1])}
+					src={userAvatar({ avatarsUrl: images, firstName: fullName.split(' ')[0], lastName: fullName.split(' ')[1] }, fullName.split(' ')[0], fullName.split(' ')[1])}
 					alt={fullName}
 					variant="rounded"
 					sx={{
