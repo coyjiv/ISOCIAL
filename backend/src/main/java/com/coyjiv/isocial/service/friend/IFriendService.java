@@ -7,6 +7,7 @@ import com.coyjiv.isocial.dto.respone.page.PageWrapper;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 
 import java.io.IOException;
+import java.util.List;
 
 public interface IFriendService {
   boolean sendFriendRequest(Long addresserId) throws IOException, EntityNotFoundException, IllegalAccessException;
@@ -30,6 +31,13 @@ public interface IFriendService {
 
   Long getSubscriptionsCount(Long id);
 
+  List<FriendResponseDto> getFriendsWithUpcomingBirthdays(Long userId, int page, int size);
+
+  PageWrapper<FriendResponseDto> getFriendsWithSameBirthplace(Long userId, int page, int size);
+
+  PageWrapper<FriendResponseDto> getFriendsWithSameEducation(Long userId, int page, int size);
+
+  PageWrapper<FriendResponseDto> getFriendsWithSameLocation(Long userId, int page, int size);
 
   PageWrapper<FriendResponseDto> getRecommendations(int page, int size);
 }
