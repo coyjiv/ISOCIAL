@@ -78,7 +78,7 @@
 }
 
 .avatar-img {
-  width: 30px;
+  width: 40px;
   border-radius: 20px;
 }
 
@@ -180,14 +180,11 @@
 
   .chat-item {
     width: 100%;
-    margin-bottom: 5px;
-    padding: 5px;
+    padding: 10px 20px;
     display: flex;
     justify-content: flex-start;
     align-items: center;
     position: relative;
-
-
 
     &:hover {
       background-color: #d2d6de;
@@ -215,12 +212,17 @@
 }
 
 .chat-modal-button {
-  background-color: #FFFFFF;
-  padding: 10px;
-  height: 40px;
+  background: none;
   border-radius: 20px;
+  width: 100%;
+  padding: 8px 30px 8px 10px;
+  transition: 0.3s color ease;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
 
-  & :hover {
+  &:hover {
     color: #0084ff;
     cursor: pointer;
     transition: 0.3s color ease;
@@ -242,7 +244,7 @@
 }
 
 .delete-button {
-  padding: 10px;
+  padding: 8px 10px;
   cursor: pointer;
   transition: all 0.2s ease;
   background: none;
@@ -267,6 +269,23 @@
   font-size: 18px;
   font-weight: 500;
   color: #939090;
+}
+
+.active-link {
+  background-color: #dbe5ff;
+}
+
+.modal-item-wrapper {
+  display: flex;
+  align-items: center;
+  border-radius: 20px;
+  background-color: #f1f2f6;
+}
+
+.modal-avatar-img {
+  width: 40px;
+  border-radius: 20px;
+
 }
 
 

@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import "./Chat.scss";
 import { AiOutlineDelete } from "react-icons/ai";
 import PropTypes from "prop-types";
@@ -22,10 +22,14 @@ const ChatItem = ({ chatId, chatName, lastMessage, chatAvatar }) => {
   };
 
   return (
-    <Link to={`/chats/${chatId}`} state={{ chatId }} className="chat-item">
-      <div className="message-avatar">
-        <img className="avatar-img" src={chatAvatar} alt="" />
-      </div>
+    <NavLink
+      to={`/chats/${chatId}`}
+      state={{ chatId }}
+      className={({ isActive }) =>
+        isActive ? "chat-item active-link" : "chat-item"
+      }
+    >
+      <img className="avatar-img" src={chatAvatar} alt="avatar" />
       <div className="chat-info-wrapper">
         <h3>{chatName}</h3>
         <p className="last-message">{lastMessage}</p>
@@ -38,7 +42,7 @@ const ChatItem = ({ chatId, chatName, lastMessage, chatAvatar }) => {
           <AiOutlineDelete className="delete-icon" />
         </button>
       </div>
-    </Link>
+    </NavLink>
   );
 };
 

@@ -18,18 +18,19 @@ import { useGetFriendsListQuery } from "../../store/services/friendService.js";
 import { ChatModal } from "./ChatModal.jsx";
 
 const ChatList = () => {
-  const dispatch = useDispatch();
-  // const chatStore = useSelector((state) => state.chat.chats);
-  const [page, setPage] = useState(0);
-  const [receiverId, setReceiverId] = useState(1);
-  const [text, setText] = useState("asasasd");
-  const [attachments, setAttachments] = useState([]);
-  const { data: chats, isLoading } = useGetChatsQuery(page);
+  //   Код снизу или не нужен или был закоменчен, пока не нужен, потом удалить если что
 
-  // const [addChat] = useCreateChatMutation();
+  // const dispatch = useDispatch();
+  // const chatStore = useSelector((state) => state.chat.chats);
+  // const [receiverId, setReceiverId] = useState(1);
+  // const [text, setText] = useState("asasasd");
+  // const [attachments, setAttachments] = useState([]);
+
+  const [page, setPage] = useState(0);
+  const [isOpen, setIsOpen] = useState(false);
   const { data: friends } = useGetFriendsListQuery(1);
 
-  const [isOpen, setIsOpen] = useState(false);
+  const { data: chats } = useGetChatsQuery(page);
 
   const handleOpen = () => {
     setIsOpen(true);
@@ -55,7 +56,7 @@ const ChatList = () => {
 
       <div className="chat-list">
         {chats &&
-          chats.map((chat, i) => (
+          chats.content.map((chat, i) => (
             <ChatItem
               key={i}
               chatId={chat.id}

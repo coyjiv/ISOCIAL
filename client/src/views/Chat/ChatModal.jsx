@@ -45,17 +45,22 @@ const ChatModal = ({ friends, modalText, open = false, handleClose }) => {
             {modalText}
           </Typography>
           <div className="friends-wrapper">
-            {friends.map((friend) => (
-              <button
-                className="chat-modal-button"
-                onClick={() => handleCreateChat(friend, text, attachments)}
-                key={friend.id}
-              >
-                <Typography id="modal-modal-title" variant="h6" component="h2">
-                  {friend.firstName} {friend.lastName}
-                </Typography>
-              </button>
-            ))}
+            {friends &&
+              friends.map((friend) => (
+                <div className="modal-item-wrapper" key={friend.id}>
+                  <button
+                    className="chat-modal-button"
+                    onClick={() => handleCreateChat(friend, text, attachments)}
+                  >
+                    <img
+                      className="modal-avatar-img"
+                      src={friend.avatarsUrl[0]}
+                      alt="avatar"
+                    />
+                    {friend.firstName} {friend.lastName}
+                  </button>
+                </div>
+              ))}
           </div>
         </Box>
       </Modal>
