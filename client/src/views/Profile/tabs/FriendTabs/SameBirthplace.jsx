@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react"
 import { useGetFriendsWithSameBirthPlaceQuery, useRemoveFriendMutation } from "../../../../store/services/friendService"
-import { useGetCurrentUserId } from "../../../../hooks"
 import { FriendCardSkeleton } from "../../../../components/friends-page-components/FriendCard/FriendCardSkeleton"
 import { FriendCard } from "../../../../components/friends-page-components"
 import InfiniteScroll from "react-infinite-scroll-component"
@@ -8,10 +7,11 @@ import styles from './friendTabs.module.scss'
 import { Stack } from "@mui/material"
 import { useNavigate } from "react-router-dom"
 import { FriendsNoUserSection } from "../../../Friends/FriendsNoUserSection"
+import { useParams } from "react-router-dom"
 
 
 const SameBirthplace = () => {
-    const userId = useGetCurrentUserId()
+    const { id: userId } = useParams();
 
     const navigate = useNavigate()
 

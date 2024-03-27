@@ -70,10 +70,9 @@ const FriendRequestButton = ({ isPersonalProfile, profile, id }) => {
         }
     };
 
-    // Button for declining friend requests, shown only if there's an incoming friend request
     const declineButton = isIncomingFriendRequest && (
         <Button
-            onClick={handleAction}
+            onClick={() => declineFriendRequest({ userId: id })}
             variant="outlined"
             sx={{ width: '180px', height: '36px', display: 'flex', gap: '10px', fontSize: 14 }}
         >

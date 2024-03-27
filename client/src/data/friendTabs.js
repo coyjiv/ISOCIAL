@@ -21,19 +21,19 @@ export const friendTabs = [
   {
     id: 3,
     label: 'Birthplace',
-    path: '/profile/photos',
+    path: '/profile?tab=Friends&type=Birthplace',
     component: SameBirthplace,
   },
   {
     id: 4,
     label: 'Education',
-    path: '/profile/videos',
+    path: '/profile?tab=Friends&type=Education',
     component: SameEducation,
   },
   {
     id: 5,
     label: 'Location',
-    path: '/profile/videos',
+    path: '/profile?tab=Friends&type=Location',
     component: SamePlace,
   },
   // {

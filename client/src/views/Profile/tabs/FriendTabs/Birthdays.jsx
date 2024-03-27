@@ -5,13 +5,12 @@ import { FriendCard } from "../../../../components/friends-page-components"
 import styles from './friendTabs.module.scss'
 import { timeToBirthday } from "../../../../utils/helpers/timeToBirthday"
 import { useNavigate } from "react-router-dom"
-import { useGetCurrentUserId } from "../../../../hooks"
 import { FriendsNoUserSection } from "../../../Friends/FriendsNoUserSection"
-
+import { useParams } from "react-router-dom"
 
 
 const Birthdays = () => {
-    const userId = useGetCurrentUserId()
+    const { id: userId } = useParams();
 
     const { data, isLoading } = useGetUpcomingBirthdaysQuery({ userId })
 

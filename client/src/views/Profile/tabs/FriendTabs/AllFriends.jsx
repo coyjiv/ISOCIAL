@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react"
 import { useGetFriendsListQuery, useRemoveFriendMutation } from "../../../../store/services/friendService"
-import { useGetCurrentUserId } from "../../../../hooks"
 import { FriendCardSkeleton } from "../../../../components/friends-page-components/FriendCard/FriendCardSkeleton"
 import { FriendCard } from "../../../../components/friends-page-components"
 import InfiniteScroll from "react-infinite-scroll-component"
@@ -9,10 +8,11 @@ import { Stack } from "@mui/material"
 import { useNavigate } from "react-router-dom"
 import { pickOneUserFact } from "../../../../utils/helpers/userFacts"
 import { FriendsNoUserSection } from "../../../Friends/FriendsNoUserSection"
+import { useParams } from "react-router-dom"
 
 
 const AllFriends = () => {
-    const userId = useGetCurrentUserId()
+    const { id: userId } = useParams();
 
     const navigate = useNavigate()
 

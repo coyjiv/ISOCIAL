@@ -1,5 +1,5 @@
 export const MQ = {
-  TABLET: '(max-width: 900px)',
+  TABLET: '(min-width: 500px) and (max-width: 900px)',
 }
 
 export const MQ_MUI = {

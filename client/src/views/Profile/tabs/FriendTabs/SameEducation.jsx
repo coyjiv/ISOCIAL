@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { useGetFriendsWithSameEducationQuery, useRemoveFriendMutation } from "../../../../store/services/friendService"
-import { useGetCurrentUserId } from "../../../../hooks"
+import { useParams } from "react-router-dom"
 import { FriendCardSkeleton } from "../../../../components/friends-page-components/FriendCard/FriendCardSkeleton"
 import { FriendCard } from "../../../../components/friends-page-components"
 import InfiniteScroll from "react-infinite-scroll-component"
@@ -11,7 +11,7 @@ import { FriendsNoUserSection } from "../../../Friends/FriendsNoUserSection"
 
 
 const SameEducation = () => {
-    const userId = useGetCurrentUserId()
+    const { id: userId } = useParams();
 
     const navigate = useNavigate()
 
