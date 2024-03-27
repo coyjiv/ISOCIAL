@@ -6,7 +6,7 @@ import { useMediaQuery } from 'usehooks-ts'
 import { MQ } from '../../../utils/constants'
 import { ButtonBase } from './ProfileBackButton.styled.js'
 
-const ProfileBackButton = ({ fullName, onClick }) => {
+const ProfileBackButton = ({ onClick }) => {
   const isShow = useMediaQuery(MQ.TABLET)
 
   if (!isShow) {
@@ -16,13 +16,12 @@ const ProfileBackButton = ({ fullName, onClick }) => {
   return (
     <ButtonBase onClick={onClick}>
       <FaArrowLeft size="22" color="inherit" />
-      <Typography fontSize="20px">{fullName}</Typography>
+      <Typography fontSize="20px">Back</Typography>
     </ButtonBase>
   )
 }
 
 ProfileBackButton.propTypes = {
-  fullName: PropTypes.string,
   onClick: PropTypes.func,
 }
 

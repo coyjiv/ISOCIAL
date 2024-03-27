@@ -46,7 +46,7 @@ const FriendsMobileDrawer = () => {
             >
               <FaUserFriends />
             </IconButton>
-            <Typography variant="h6" fontWeight={600} noWrap component="div">
+            <Typography onClick={toggleDrawer(true)} variant="h6" fontWeight={600} noWrap sx={{ color: theme.palette.text.base, cursor: 'pointer' }}>
               Friends
             </Typography>
           </Toolbar>

@@ -57,7 +57,6 @@ export const ProfileLayout = ({ id }) => {
     return (
         <Box>
             <ProfileBackButton
-                fullName={`${profile?.firstName} ${profile?.lastName}`}
                 onClick={() => navigate(-1)}
             />
             <Container maxWidth={'lg'} >

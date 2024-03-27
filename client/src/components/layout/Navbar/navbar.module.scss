@@ -46,9 +46,9 @@
     justify-content: flex-end;
   }
 
-	.navLinkList {
-		display: flex;
-	}
+  .navLinkList {
+    display: flex;
+  }
 }
 
 .navLinkList {
@@ -115,5 +115,27 @@
       height: 88%;
       color: colors.$primaryButtonBackground;
     }
+  }
+}
+
+.main-link-wrapper {
+  display: flex;
+  flex-direction: column;
+  margin: 16px 16px 0;
+}
+
+.main-link {
+  margin-block: 4px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1px solid transparent;
+  padding: 8px;
+  border-radius: 8px;
+  &:hover {
+    background-color: colors.$lightGrey;
+  }
+  & a {
+    font-weight: 700;
   }
 }
