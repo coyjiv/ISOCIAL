@@ -5,11 +5,21 @@ import classNames from "classnames";
 import styles from '../navbar.module.scss'
 import {useGetNotificationQuery} from "../../../../store/services/notification.js";
 import NotificationList from "./NotificationList.jsx"
-import {Scrollbars} from 'react-custom-scrollbars';
+import {Menu, MenuItem, useTheme} from "@mui/material";
+import styled from "@emotion/styled";
+
+// const StyledMenu = styled(Menu)(() => ({
+//     '& .MuiPaper-root': {
+//         minWidth: '320px',
+//         backgroundColor: `${({theme}) => theme.palette.background.paper}`,
+//         color: `${({theme}) => theme.palette.text.primary}`,
+//     }
+// }))
 
 const NotificationButton = () => {
     const [page, setPage] = useState(0)
     const [notifications, setNotifications] = useState([]);
+    const [anchorEl, setAnchorEl] = useState(null);
 
     const {data, isLoading, isSuccess} = useGetNotificationQuery({
         recieverId: localStorage.getItem('userId'),
@@ -40,10 +50,12 @@ const NotificationButton = () => {
 
     const handleClickOutside = () => {
         setIsNotificationsOpen(false)
+        setAnchorEl(null);
     }
 
     const handleClickInside = () => {
         setIsNotificationsOpen(!isNotificationsOpen)
+        setAnchorEl(ref?.current)
     }
 
     useOnClickOutside(ref, handleClickOutside)
@@ -64,11 +76,21 @@ const NotificationButton = () => {
                 {isNotificationsOpen ? <RiNotification2Fill/> : <RiNotification2Line/>}
             </button>
             {isNotificationsOpen &&
-                <Scrollbars style={{width: '100%', height: '100%'}}>
                     <NotificationList data={notifications} fetchMoreData={fetchMoreData} hasNext={data.hasNext}/>
-                </Scrollbars>
-
-
+                // <StyledMenu
+                //     id="notification"
+                //     anchorEl={ref?.current}
+                //     open={Boolean(anchorEl)}
+                //     onClose={handleClickOutside}
+                //     MenuListProps={{
+                //         'aria-labelledby': 'basic-button',
+                //     }}
+                //
+                // >
+                //     <MenuItem>
+                //             <NotificationList data={notifications} fetchMoreData={fetchMoreData} hasNext={data.hasNext}/>
+                //     </MenuItem>
+                // </StyledMenu>
             }
         </>
     )

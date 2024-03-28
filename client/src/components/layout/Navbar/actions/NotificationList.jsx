@@ -29,7 +29,6 @@ const NotificationList = (props) => {
                         )
                     }
                 </ul>
-
             </InfiniteScroll>
         </div>
     )
