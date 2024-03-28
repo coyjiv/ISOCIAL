@@ -11,10 +11,10 @@ import ForgotPassword from "../Forgot-password/ForgotPassword";
 import Groups from "../Groups/Groups";
 import Videos from "../Videos/Videos";
 import {
-	Friends,
-	FriendsAll,
-	FriendsRequests,
-	FriendsSuggestions,
+  Friends,
+  FriendsAll,
+  FriendsRequests,
+  FriendsSuggestions,
 } from "../Friends";
 import Confirmation from "../Confirmation/Confirmation";
 
@@ -65,14 +65,17 @@ const router = createBrowserRouter([
   {
     path: "/friends/requests",
     element: <FriendsRequests />,
-	},
-	{
+    errorElement: <ErrorFallback />,
+  },
+  {
     path: '/friends/suggestions',
     element: <FriendsSuggestions />,
+    errorElement: <ErrorFallback />,
   },
   {
     path: "/friends/all",
     element: <FriendsAll />,
+    errorElement: <ErrorFallback />,
   },
   {
     path: "watch",
@@ -91,6 +94,7 @@ const router = createBrowserRouter([
   {
     path: "chats",
     element: <Chats />,
+    errorElement: <ErrorChat />,
   },
   {
     path: "chats/:id",
@@ -110,6 +114,7 @@ const router = createBrowserRouter([
   {
     path: "forgot-password/:id",
     element: <UpdatePassword />,
+    errorElement: <ErrorFallback />,
   },
   {
     path: "post/:id",
