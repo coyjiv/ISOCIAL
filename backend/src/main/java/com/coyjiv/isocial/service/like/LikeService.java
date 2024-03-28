@@ -4,12 +4,10 @@ import com.coyjiv.isocial.auth.EmailPasswordAuthProvider;
 import com.coyjiv.isocial.dao.LikeRepository;
 import com.coyjiv.isocial.domain.Like;
 import com.coyjiv.isocial.domain.LikeableEntity;
-import com.coyjiv.isocial.domain.NotificationEvent;
 import com.coyjiv.isocial.dto.respone.like.LikeInfoResponseDto;
 import com.coyjiv.isocial.dto.respone.user.UserProfileResponseDto;
 import com.coyjiv.isocial.dto.respone.user.UserSearchResponseDto;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
-import com.coyjiv.isocial.service.notifications.INotificationService;
 import com.coyjiv.isocial.service.user.IUserService;
 import com.coyjiv.isocial.service.websocket.IWebsocketService;
 import com.coyjiv.isocial.transfer.like.LikeDtoResponseMapper;
@@ -22,7 +20,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -31,12 +28,12 @@ public class LikeService implements ILikeService {
   private final LikeRepository likeRepository;
   private final IUserService userService;
   private final IWebsocketService websocketService;
-  private final INotificationService notificationService;
+  private final LikeDtoResponseMapper likeDtoResponseMapper;
   private final EmailPasswordAuthProvider emailPasswordAuthProvider;
 
   @Transactional
   @Override
-  public long countLikesByEntity(Long entityId, LikeableEntity entityType) throws EntityNotFoundException {
+  public int countLikesByEntity(Long entityId, LikeableEntity entityType) throws EntityNotFoundException {
     if (entityType == null) {
       throw new EntityNotFoundException("Entity type is required");
     }
@@ -107,12 +104,9 @@ public class LikeService implements ILikeService {
   public void toggleLike(Long entityId, LikeableEntity entityType) {
     Long userId = emailPasswordAuthProvider.getAuthenticationPrincipal();
 
-    Optional<Like> optionalLike  = likeRepository.findByUserIdAndEntityIdAndEntityType(userId, entityId, entityType);
-
-    if (optionalLike.isPresent()) {
-      Like like = optionalLike.get();
+    boolean exists = likeRepository.existsByUserIdAndEntityIdAndEntityType(userId, entityId, entityType);
+    if (exists) {
       likeRepository.deleteByUserIdAndEntityIdAndEntityType(userId, entityId, entityType);
-      notificationService.delete(userId,entityId, like.getCreationDate());
     } else {
       Like like = new Like();
       like.setUserId(userId);

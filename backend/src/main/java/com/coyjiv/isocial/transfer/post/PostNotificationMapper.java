@@ -19,12 +19,19 @@ public class PostNotificationMapper extends DtoMapperFacade<Post, PostNotificati
   }
 
   protected void decorateDto(PostNotificationDto dto, Post entity) {
-    User author = userRepository.findActiveById(entity.getAuthorId()).get();
-    dto.setSenderAvatarUrl(author.getAvatar());
-    dto.setSenderName(author.getFullName());
-    dto.setAuthorPremium(author.isPremium());
-    dto.setAuthorPremiumNickname(author.getPremiumNickname());
-    dto.setAuthorPremiumEmoji(author.getPremiumEmoji());
+
+    try {
+      User author = userRepository.findActiveById(entity.getAuthorId()).get();
+      if (!author.getAvatarsUrl().isEmpty()) {
+        dto.setSenderAvatarUrl(author.getAvatar());
+      }
+      dto.setSenderName(author.getFirstName() + " " + author.getLastName());
+      dto.setAuthorPremium(author.isPremium());
+      dto.setAuthorPremiumNickname(author.getPremiumNickname());
+      dto.setAuthorPremiumEmoji(author.getPremiumEmoji());
+    } catch (Exception exception) {
+      exception.printStackTrace();
+    }
   }
 }
 

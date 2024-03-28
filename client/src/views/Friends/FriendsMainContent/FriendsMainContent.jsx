@@ -13,7 +13,7 @@ import { MainContentWrapper } from "./FriendsMainContent.styled";
 const FriendsMainContent = () => {
   const id = localStorage.getItem("userId");
   const { data: friends, isLoading } = useGetFriendsListQuery(id);
-  const { data: requests } = useAvailableFriendRequestsQuery(id);
+  const { data: requests } = useAvailableFriendRequestsQuery();
   const [acceptFriendRequest] = useAcceptFriendRequestMutation();
   const [declineFriendRequest] = useDeclineFriendRequestMutation();
 

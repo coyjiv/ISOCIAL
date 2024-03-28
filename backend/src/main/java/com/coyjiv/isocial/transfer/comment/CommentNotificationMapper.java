@@ -18,8 +18,8 @@ public class CommentNotificationMapper extends DtoMapperFacade<Comment, CommentN
 
   @Override
   protected void decorateDto(CommentNotificationDto dto, Comment entity) {
-    User commenter = userRepository.findActiveById(entity.getCommenterId()).orElseThrow();
+    User commenter = userRepository.findById(entity.getCommenterId()).orElseThrow();
     dto.setCommenterAvatar(commenter.getAvatar());
-    dto.setCommenterName(commenter.getFullName());
+    dto.setCommenterName(String.format("%s %s", commenter.getFirstName(), commenter.getLastName()));
   }
 }

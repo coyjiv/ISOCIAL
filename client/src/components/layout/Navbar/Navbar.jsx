@@ -18,7 +18,7 @@ const Navbar = () => {
   const [value, setValue] = useState("");
   const debouncedValue = useDebounce(value);
 
-  const { data } = useGetUserByNameQuery({ name: debouncedValue }, {
+  const { data } = useGetUserByNameQuery(debouncedValue, {
     skip: debouncedValue === "",
   });
 

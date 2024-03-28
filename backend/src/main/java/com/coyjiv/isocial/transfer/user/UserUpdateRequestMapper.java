@@ -7,8 +7,6 @@ import com.coyjiv.isocial.dto.request.user.UserUpdateRequestDto;
 import com.coyjiv.isocial.transfer.DtoMapperFacade;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class UserUpdateRequestMapper extends DtoMapperFacade<User, UserUpdateRequestDto> {
   private final UserRepository userRepository;
@@ -21,13 +19,13 @@ public class UserUpdateRequestMapper extends DtoMapperFacade<User, UserUpdateReq
 
   @Override
   protected void decorateEntity(User entity, UserUpdateRequestDto dto) {
-    entity = userRepository.findById(dto.getId()).orElseThrow();
-    entity.setAvatarsUrl(dto.getAvatarsUrl() == null ? List.of() : dto.getAvatarsUrl());
+    entity = userRepository.findById(dto.getId()).get();
+    entity.setAvatarsUrl(dto.getAvatarsUrl());
     entity.setBio(dto.getBio());
     entity.setCity(dto.getCity());
     entity.setFirstName(dto.getFirstName());
     entity.setLastName(dto.getLastName());
-    entity.setBannerUrl(dto.getBannerUrl() == null ? "" : dto.getBannerUrl());
+    entity.setBannerUrl(dto.getBannerUrl());
     entity.setDateOfBirth(dto.getDateOfBirth());
     entity.setGender(dto.getGender());
 

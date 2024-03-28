@@ -1,7 +1,8 @@
-import { Divider, Stack, Switch, Typography, Box } from "@mui/material";
+import { Divider, Stack, Switch, Typography } from "@mui/material";
 
 import { PopoverContentWrapper } from "./PopoverContent.styled.js";
 import { ActionIconButton } from "../../../../index.js";
+import Box from "@mui/material/Box";
 
 const PopoverContent = () => {
   return (

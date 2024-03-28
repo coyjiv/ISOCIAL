@@ -14,8 +14,7 @@ export const postsApi = friendsApi.injectEndpoints({
       ],
     }),
     getSavedPosts: builder.query({
-      query: ({ page, size = 20 }) =>
-        `posts/favorite?page=${page}&size=${size}`,
+      query: ({ page }) => `posts/favorite?page=${page}&size=20`,
       providesTags: ['Posts'],
     }),
     getPostById: builder.query({
@@ -83,11 +82,6 @@ export const postsApi = friendsApi.injectEndpoints({
         }
       },
     }),
-    getRecommendations: builder.query({
-      query: ({ page, size = 20 }) =>
-        `posts/recommendations?page=${page}&size=${size}`,
-      providesTags: ['Posts'],
-    }),
   }),
 })
 
@@ -102,5 +96,4 @@ export const {
   useToggleLikeMutation,
   useToggleSaveMutation,
   useGetSavedPostsQuery,
-  useGetRecommendationsQuery,
 } = postsApi

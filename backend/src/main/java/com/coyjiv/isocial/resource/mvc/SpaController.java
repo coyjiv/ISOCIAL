@@ -12,18 +12,15 @@ public class SpaController {
     "/home",
     "/profile",
     "/profile/*",
-    "/chats",
-    "/chats/*",
+    "/chat",
+    "/chat/*",
     "/search",
     "/feed",
     "/settings",
     "/friends",
-    "/friends/*",
     "/watch",
     "/groups",
-    "/confirmation",
-    "/saved",
-    "/post/*",
+    "/confirmation"
     })
   public String redirect() {
     return "forward:/index.html";

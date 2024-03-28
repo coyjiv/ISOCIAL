@@ -8,13 +8,8 @@ import com.coyjiv.isocial.domain.User;
 import com.coyjiv.isocial.domain.UserFriendStatus;
 import com.coyjiv.isocial.dto.respone.friend.CustomFriendResponse;
 import com.coyjiv.isocial.dto.respone.friend.FriendResponseDto;
-import com.coyjiv.isocial.dto.respone.page.PageWrapper;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
-
-import com.coyjiv.isocial.service.subscriber.ISubscriberService;
-
 import com.coyjiv.isocial.service.websocket.IWebsocketService;
-
 import com.coyjiv.isocial.transfer.friend.FriendResponseMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -27,7 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -40,11 +34,7 @@ public class FriendService implements IFriendService {
   private final FriendRepository friendRepository;
   private final FriendResponseMapper friendResponseMapper;
   private final EmailPasswordAuthProvider emailPasswordAuthProvider;
-
-  private final ISubscriberService subscriberService;
-
   private final IWebsocketService websocketService;
-
 
   @Transactional
   @Override
@@ -62,13 +52,13 @@ public class FriendService implements IFriendService {
     }
 
     Optional<Friend> existingFriendship =
-            friendRepository.findByRequesterAndAddresserAndIsActive(requester.get(), addresser.get(), true);
+      friendRepository.findByRequesterAndAddresserAndIsActive(requester.get(), addresser.get(), true);
     if (existingFriendship.isPresent()) {
       return false;
     }
 
     Optional<Friend> inactiveFriendship =
-            friendRepository.findByRequesterAndAddresserAndIsActive(requester.get(), addresser.get(), false);
+      friendRepository.findByRequesterAndAddresserAndIsActive(requester.get(), addresser.get(), false);
     if (inactiveFriendship.isEmpty()) {
       inactiveFriendship = friendRepository.findByRequesterAndAddresserAndIsActive(addresser.get(), requester.get(), false);
     }
@@ -82,20 +72,14 @@ public class FriendService implements IFriendService {
     }
 
     if (friendRepository.existsByRequesterAndAddresserAndIsActive(requester.get(), addresser.get(), true)
-            ||
-            friendRepository.existsByRequesterAndAddresserAndIsActive(addresser.get(), requester.get(), true)) {
+      ||
+      friendRepository.existsByRequesterAndAddresserAndIsActive(addresser.get(), requester.get(), true)) {
       throw new IllegalAccessException("You need to accept existing request");
     }
 
     Friend friend = new Friend(requester.get(), addresser.get());
     friendRepository.save(friend);
-
-
-    subscriberService.createSubscriber(addresserId, requesterId);
-
-
     websocketService.sendFriendNotificationToUser(friend);
-
     return true;
   }
 
@@ -115,12 +99,9 @@ public class FriendService implements IFriendService {
 
 
     if (friendRequest.get().getStatus() == UserFriendStatus.REQUEST_SENT
-            || friendRequest.get().getStatus() == UserFriendStatus.REQUEST_RECEIVED) {
+      || friendRequest.get().getStatus() == UserFriendStatus.REQUEST_RECEIVED) {
       friendRequest.get().setStatus(UserFriendStatus.FRIEND);
       friendRepository.save(friendRequest.get());
-
-      subscriberService.deleteSubscriber(userId, friendUserId);
-
       return true;
     }
 
@@ -192,12 +173,12 @@ public class FriendService implements IFriendService {
     }
 
     Page<Friend> friendsPage = friendRepository.findAllByRequesterOrAddresserAndStatus(
-            user.get(), user.get(), UserFriendStatus.FRIEND, pageable);
+      user.get(), user.get(), UserFriendStatus.FRIEND, pageable);
 
     return friendsPage.getContent().stream()
-            .filter(friend -> friend.getStatus() == UserFriendStatus.FRIEND)
-            .map(friend -> user.get().equals(friend.getRequester()) ? friend.getAddresser() : friend.getRequester())
-            .map(friendResponseMapper::convertToDto).collect(Collectors.toList());
+      .filter(friend -> friend.getStatus() == UserFriendStatus.FRIEND)
+      .map(friend -> user.get().equals(friend.getRequester()) ? friend.getAddresser() : friend.getRequester())
+      .map(friendResponseMapper::convertToDto).collect(Collectors.toList());
   }
 
 
@@ -243,6 +224,11 @@ public class FriendService implements IFriendService {
     return new CustomFriendResponse(content, hasNext);
   }
 
+
+
+
+
+
   public UserFriendStatus getFriendStatus(Long currentUserId, Long otherUserId) {
     Optional<Friend> friendship = friendRepository.findFriendshipBetweenUsers(currentUserId, otherUserId);
     return friendship.map(friend -> {
@@ -259,65 +245,6 @@ public class FriendService implements IFriendService {
   @Override
   public Long getSubscriptionsCount(Long userId) {
     return friendRepository.countByRequesterAndStatus(userId, UserFriendStatus.REQUEST_SENT);
-  }
-
-  @Override
-  public PageWrapper<FriendResponseDto> getRecommendations(int page, int size) {
-    final Long main = emailPasswordAuthProvider.getAuthenticationPrincipal();
-    List<Friend> friends = friendRepository.findAllByUserId(main);
-    List<Long> ids = new ArrayList<>();
-
-    for (Friend f : friends) {
-      if (Objects.equals(f.getAddresser().getId(), main)) {
-        ids.add(f.getRequester().getId());
-      } else if (Objects.equals(f.getRequester().getId(), main)) {
-        ids.add(f.getAddresser().getId());
-      }
-    }
-    List<Long> friendsIds = ids;
-    ids.add(main);
-
-    Sort sort = Sort.by(Sort.Direction.DESC, "lastModifiedDate").and(Sort.by(Sort.Direction.ASC, "id"));
-    Pageable pageable = PageRequest.of(page, size, sort);
-
-    Page<Friend> recommended = friendRepository
-            .findAllByFriendIdAndCity(friendsIds, ids, userRepository.findById(main).get().getCity(), pageable);
-
-    List<User> users = new ArrayList<>();
-    for (Friend f : recommended.toList()) {
-      if (ids.contains(f.getAddresser().getId())) {
-        users.add(f.getRequester());
-      } else {
-        users.add(f.getAddresser());
-      }
-    }
-    boolean hasNext = recommended.hasNext();
-
-    Page<Friend> recommendedNoCity;
-    if (recommended.toList().size() < size) {
-      pageable = PageRequest.of(page, size - recommended.toList().size(), sort);
-      recommendedNoCity = friendRepository
-              .findAllByFriendId(friendsIds, ids, pageable);
-
-      hasNext = recommendedNoCity.hasNext();
-
-      for (Friend f : recommendedNoCity.toList()) {
-        if (ids.contains(f.getAddresser().getId())) {
-          if (!users.contains(f.getRequester())) {
-            users.add(f.getRequester());
-          }
-        } else {
-          if (!users.contains(f.getAddresser())) {
-            users.add(f.getAddresser());
-          }
-        }
-      }
-    }
-
-    List<FriendResponseDto> dtos = users.stream().map(friendResponseMapper::convertToDto).toList();
-
-
-    return new PageWrapper<>(dtos, hasNext);
   }
 
 }

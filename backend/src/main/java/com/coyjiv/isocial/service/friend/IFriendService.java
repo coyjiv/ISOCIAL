@@ -3,7 +3,6 @@ package com.coyjiv.isocial.service.friend;
 import com.coyjiv.isocial.domain.UserFriendStatus;
 import com.coyjiv.isocial.dto.respone.friend.CustomFriendResponse;
 import com.coyjiv.isocial.dto.respone.friend.FriendResponseDto;
-import com.coyjiv.isocial.dto.respone.page.PageWrapper;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 
 import java.io.IOException;
@@ -30,7 +29,4 @@ public interface IFriendService {
   UserFriendStatus getFriendStatus(Long id, Long authenticationPrincipal);
 
   Long getSubscriptionsCount(Long id);
-
-
-  PageWrapper<FriendResponseDto> getRecommendations(int page, int size);
 }

@@ -50,9 +50,8 @@ const FriendsSubSidebar = ({
     cancelFriendRequest({ userId: id });
   };
   const handleConfirmRequest = (e, id) => {
-    console.log(id);
     e.stopPropagation();
-    acceptFriendRequest({ userId: id });
+    acceptFriendRequest({ userId: 2 });
   };
 
   return (
@@ -81,7 +80,7 @@ const FriendsSubSidebar = ({
               userImage={avatar}
               fullName={`${firstName} ${lastName}`}
               variant={variant}
-              onConfirm={(e) => handleConfirmRequest(e, id)}
+              onConfirm={(e) => handleConfirmRequest(id)}
               onDelete={(e) => handleDeleteRequest(e, id)}
               onClick={() => handleChooseUser(id)}
             />

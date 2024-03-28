@@ -37,6 +37,8 @@ const FriendsList = ({
     setExpanded(!expanded);
   };
 
+  const filteredUsers = users?.slice(0, 10);
+
   if (isLoading) {
     return (
       <FriendsListWrapper>
@@ -73,14 +75,14 @@ const FriendsList = ({
       </Stack>
       <ExpandedWrapper active={expanded ? "expanded" : undefined}>
         {isUsers ? (
-          users?.map(({ id, firstName, lastName, avatarsUrl }) => (
+          filteredUsers?.map(({ id, firstName, lastName, avatarsUrl }) => (
             <FriendCard
               variant={variant}
               key={id}
               fullName={`${firstName} ${lastName}`}
               images={avatarsUrl}
-              onConfirm={() => onConfirm({ userId: id })}
-              onDelete={() => onDecline({ userId: id })}
+              onConfirm={() => onConfirm({ friendId: id })}
+              onDelete={() => onDecline({ friendId: id })}
               onMessage={() => onMessage(id)}
             />
           ))

@@ -34,10 +34,6 @@ public class UserUpdateRequestDto {
 
   private String city;
 
-  private String birthPlace;
-
-  private String studyPlace;
-
   private List<String> avatarsUrl;
 
   private String bannerUrl;

@@ -1,6 +1,5 @@
 package com.coyjiv.isocial.service.websocket;
 
-import com.coyjiv.isocial.auth.EmailPasswordAuthProvider;
 import com.coyjiv.isocial.dao.CommentRepository;
 import com.coyjiv.isocial.dao.PostRepository;
 import com.coyjiv.isocial.dao.UserRepository;
@@ -9,7 +8,6 @@ import com.coyjiv.isocial.domain.Friend;
 import com.coyjiv.isocial.domain.Like;
 import com.coyjiv.isocial.domain.LikeableEntity;
 import com.coyjiv.isocial.domain.Message;
-import com.coyjiv.isocial.domain.NotificationEvent;
 import com.coyjiv.isocial.domain.Post;
 import com.coyjiv.isocial.domain.Subscription;
 import com.coyjiv.isocial.domain.User;
@@ -19,7 +17,6 @@ import com.coyjiv.isocial.dto.respone.like.LikeNotificationDto;
 import com.coyjiv.isocial.dto.respone.message.MessageNotificationDto;
 import com.coyjiv.isocial.dto.respone.post.PostNotificationDto;
 import com.coyjiv.isocial.dto.respone.post.RepostNotificationDto;
-import com.coyjiv.isocial.service.notifications.INotificationService;
 import com.coyjiv.isocial.service.subscription.ISubscriptionService;
 import com.coyjiv.isocial.transfer.comment.CommentNotificationMapper;
 import com.coyjiv.isocial.transfer.friend.FriendNotificationMapper;
@@ -47,12 +44,9 @@ public class WebsocketService implements IWebsocketService {
   private final LikeNotificationDtoMapper likeNotificationMapper;
   private final CommentNotificationMapper commentNotificationMapper;
   private final UserRepository userRepository;
-  private final EmailPasswordAuthProvider emailPasswordAuthProvider;
-  private final INotificationService notificationService;
   private final PostRepository postRepository;
   private final CommentRepository commentRepository;
   private final ISubscriptionService subscriptionService;
-
 
   @Override
   @Transactional
@@ -81,8 +75,7 @@ public class WebsocketService implements IWebsocketService {
   @Override
   public void sendRepostNotificationToUser(Post repost, Long originalPostAuthorId) {
     RepostNotificationDto dto = repostMapper.convertToDto(repost);
-    notificationService.create(originalPostAuthorId, dto.getSenderId(),
-            dto.getSenderName(), dto.getSenderAvatarUrl(), NotificationEvent.REPOST, repost.getId());
+
     messagingTemplate.convertAndSendToUser(
             String.valueOf(originalPostAuthorId), "/reposts", dto
     );
@@ -92,13 +85,10 @@ public class WebsocketService implements IWebsocketService {
   public void sendSubscriptionEventNotificationToUser(Post post) {
     List<Subscription> subscriptions = subscriptionService.findAllUserSubscribers(post.getAuthorId());
     PostNotificationDto dto = postNotificationMapper.convertToDto(post);
-    dto.setSenderId(emailPasswordAuthProvider.getAuthenticationPrincipal());
     subscriptions.forEach(s -> {
       messagingTemplate.convertAndSendToUser(
               String.valueOf(s.getSubscriberId()), "/subscriptions", dto
       );
-      notificationService.create(s.getSubscriberId(), dto.getSenderId(),
-              dto.getSenderName(), dto.getSenderAvatarUrl(), NotificationEvent.POST_LIKE, post.getId());
     });
   }
 
@@ -109,13 +99,9 @@ public class WebsocketService implements IWebsocketService {
     if (like.getEntityType() == LikeableEntity.POST) {
       Post post = postRepository.findById(like.getEntityId()).orElseThrow();
       receiverId = post.getAuthorId();
-      notificationService.create(receiverId, like.getUserId(),
-              dto.getLikerName(), dto.getLikerAvatar(), NotificationEvent.POST_LIKE, post.getId());
     } else {
       Comment comment = commentRepository.findById(like.getEntityId()).orElseThrow();
       receiverId = comment.getCommenterId();
-      notificationService.create(receiverId, like.getUserId(),
-              dto.getLikerName(), dto.getLikerAvatar(), NotificationEvent.COMMENT_LIKE, comment.getId());
     }
 
     messagingTemplate.convertAndSendToUser(
@@ -127,8 +113,6 @@ public class WebsocketService implements IWebsocketService {
   public void sendCommentNotification(Comment comment) {
     Post post = postRepository.findById(comment.getPostId()).orElseThrow();
     CommentNotificationDto dto = commentNotificationMapper.convertToDto(comment);
-    notificationService.create(post.getAuthorId(), comment.getCommenterId(),
-            dto.getCommenterName(), dto.getCommenterAvatar(), NotificationEvent.COMMENT, post.getId());
     messagingTemplate.convertAndSendToUser(
             String.valueOf(post.getAuthorId()), "/comments", dto
     );
