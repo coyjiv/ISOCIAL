@@ -8,7 +8,6 @@ import com.coyjiv.isocial.service.friend.FriendService;
 
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -112,6 +111,10 @@ public class FriendController {
     return ResponseEntity.ok(friendRequests);
   }
 
-
+  @GetMapping("/recommendations")
+  public ResponseEntity<?> getRecommendations(@RequestParam(defaultValue = "0") @Min(0) Integer page,
+                                                 @RequestParam(defaultValue = "10") @Min(0) Integer size) {
+    return ResponseEntity.ok(friendService.getRecommendations(page, size));
+  }
 }
 

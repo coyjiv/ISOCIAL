@@ -38,6 +38,12 @@ public class User extends AbstractEntity {
   @Column(name = "city")
   private String city;
 
+  @Column(name = "birth_place")
+  private String birthPlace;
+
+  @Column(name = "study_place")
+  private String studyPlace;
+
   @Column(name = "password")
   private String password;
 
@@ -83,7 +89,7 @@ public class User extends AbstractEntity {
   private String premiumEmoji;
 
   public String getAvatar() {
-    return avatarsUrl.get(0);
+    return !avatarsUrl.isEmpty() ? avatarsUrl.get(0) : "";
   }
 
   public String getFullName() {

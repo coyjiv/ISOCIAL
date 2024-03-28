@@ -1,5 +1,5 @@
 import { ActionIconButton } from "../../../index.js";
-import Box from "@mui/material/Box";
+import { Box } from "@mui/material";
 import { useState } from "react";
 import { Popover } from "@mui/material";
 import { PopoverContent } from "./PopoverContent";

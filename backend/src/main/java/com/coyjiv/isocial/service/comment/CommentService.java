@@ -3,16 +3,22 @@ package com.coyjiv.isocial.service.comment;
 import com.coyjiv.isocial.auth.EmailPasswordAuthProvider;
 import com.coyjiv.isocial.dao.CommentRepository;
 import com.coyjiv.isocial.dao.PostRepository;
+import com.coyjiv.isocial.dao.UserRepository;
 import com.coyjiv.isocial.domain.Comment;
+import com.coyjiv.isocial.domain.NotificationEvent;
 import com.coyjiv.isocial.domain.Post;
+import com.coyjiv.isocial.domain.User;
 import com.coyjiv.isocial.dto.request.comment.DefaultCommentRequestDto;
 import com.coyjiv.isocial.dto.respone.comment.CommentResponseDto;
 import com.coyjiv.isocial.dto.respone.page.PageWrapper;
 import com.coyjiv.isocial.dto.respone.post.PostResponseDto;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
+import com.coyjiv.isocial.service.notifications.INotificationService;
+import com.coyjiv.isocial.service.user.IUserService;
 import com.coyjiv.isocial.service.websocket.IWebsocketService;
 import com.coyjiv.isocial.transfer.comment.CommentResponseMapper;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.action.internal.EntityActionVetoException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -32,6 +38,8 @@ public class CommentService implements ICommentService {
   private final EmailPasswordAuthProvider emailPasswordAuthProvider;
   private final PostRepository postRepository;
   private final IWebsocketService websocketService;
+  private final INotificationService notificationService;
+  private final UserRepository userRepository;
 
   @Transactional(readOnly = true)
   @Override
@@ -53,7 +61,7 @@ public class CommentService implements ICommentService {
       Page<Comment> postPage = commentRepository.findByPostId(id, pageable);
 
       List<CommentResponseDto> dtos = commentRepository.findByPostId(id, pageable).stream()
-        .map(commentResponseMapper::convertToDto).toList();
+              .map(commentResponseMapper::convertToDto).toList();
 
       boolean hasNext = postPage.hasNext();
 
@@ -69,7 +77,7 @@ public class CommentService implements ICommentService {
     Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "id"));
     Pageable pageable = PageRequest.of(page, size, sort);
     return commentRepository.findByCommenterId(id, pageable).stream()
-      .map(commentResponseMapper::convertToDto).toList();
+            .map(commentResponseMapper::convertToDto).toList();
   }
 
   @Transactional(readOnly = true)
@@ -81,43 +89,38 @@ public class CommentService implements ICommentService {
   @Transactional
   @Override
   public void delete(Long id) throws IllegalAccessException, EntityNotFoundException {
-    Optional<Comment> comment = commentRepository.findById(id);
-    if (comment.isPresent()) {
-      Optional<Post> post = postRepository.findActiveById(comment.get().getPostId());
-      if (post.isPresent()) {
-        if (Objects.equals(comment.get().getCommenterId(), emailPasswordAuthProvider.getAuthenticationPrincipal())
-          && Objects.equals(post.get().getAuthorId(), emailPasswordAuthProvider.getAuthenticationPrincipal())) {
-          comment.get().setActive(false);
-          commentRepository.save(comment.get());
-        } else {
-          throw new IllegalAccessException("User have no authorities to do this request.");
-        }
-      } else {
-        throw new EntityNotFoundException("Post not found");
-      }
+    Comment comment = commentRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Comment not found"));
+    Post post = postRepository.findActiveById(comment.getPostId())
+            .orElseThrow(() -> new EntityNotFoundException("Post not found"));
+    if (Objects.equals(comment.getCommenterId(), emailPasswordAuthProvider.getAuthenticationPrincipal())
+            || Objects.equals(post.getAuthorId(), emailPasswordAuthProvider.getAuthenticationPrincipal())) {
+      comment.setActive(false);
+      commentRepository.save(comment);
+      notificationService.delete(comment.getCommenterId(),post.getId(),
+              comment.getCreationDate());
     } else {
-      throw new EntityNotFoundException("Comment not found");
+      throw new IllegalAccessException("User have no authorities to do this request.");
     }
+
   }
 
   @Transactional
   @Override
   public CommentResponseDto create(Long postId, DefaultCommentRequestDto dto) throws EntityNotFoundException {
-    if (postRepository.findActiveById(postId).isPresent()) {
-      Comment comment = new Comment(emailPasswordAuthProvider.getAuthenticationPrincipal(), postId, dto.getText(), false);
-      comment.setActive(true);
-      CommentResponseDto savedComment =  commentResponseMapper.convertToDto(commentRepository.save(comment));
-      websocketService.sendCommentNotification(comment);
-      return savedComment;
-    } else {
-      throw new EntityNotFoundException("Post not found");
-    }
+    Post post = postRepository.findById(postId)
+            .orElseThrow(() -> new EntityNotFoundException("Post not found"));
+    Comment comment = new Comment(emailPasswordAuthProvider.getAuthenticationPrincipal(), postId, dto.getText(), false);
+    comment.setActive(true);
+    CommentResponseDto savedComment = commentResponseMapper.convertToDto(commentRepository.save(comment));
+    websocketService.sendCommentNotification(comment);
+    return savedComment;
   }
 
   @Transactional
   @Override
   public CommentResponseDto update(Long id, DefaultCommentRequestDto dto)
-    throws EntityNotFoundException, IllegalAccessException {
+          throws EntityNotFoundException, IllegalAccessException {
     Optional<Comment> comment = commentRepository.findById(id);
     if (comment.isPresent()) {
       if (postRepository.findActiveById(comment.get().getPostId()).isPresent()) {
@@ -137,12 +140,13 @@ public class CommentService implements ICommentService {
   }
 
   @Override
+  @Transactional(readOnly = true)
   public List<CommentResponseDto> findRecentByPostId(Long id) throws EntityNotFoundException {
     if (postRepository.findActiveById(id).isPresent()) {
       Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "id"));
       Pageable pageable = PageRequest.of(0, 5, sort);
       return commentRepository.findByPostId(id, pageable).stream()
-        .map(commentResponseMapper::convertToDto).toList();
+              .map(commentResponseMapper::convertToDto).toList();
     } else {
       throw new EntityNotFoundException("Comment not found");
     }

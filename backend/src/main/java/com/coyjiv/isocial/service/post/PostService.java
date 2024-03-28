@@ -3,19 +3,25 @@ package com.coyjiv.isocial.service.post;
 import com.coyjiv.isocial.auth.EmailPasswordAuthProvider;
 import com.coyjiv.isocial.dao.CommentRepository;
 import com.coyjiv.isocial.dao.LikeRepository;
+import com.coyjiv.isocial.dao.FriendRepository;
 import com.coyjiv.isocial.dao.PostRepository;
 import com.coyjiv.isocial.dao.UserRepository;
+import com.coyjiv.isocial.domain.Friend;
 import com.coyjiv.isocial.domain.Post;
+import com.coyjiv.isocial.domain.UserFriendStatus;
 import com.coyjiv.isocial.dto.request.post.PostRequestDto;
 import com.coyjiv.isocial.dto.request.post.RePostRequestDto;
 import com.coyjiv.isocial.dto.request.post.UpdatePostRequestDto;
 import com.coyjiv.isocial.dto.respone.favorite.FavoriteResponseDto;
 import com.coyjiv.isocial.dto.respone.page.PageWrapper;
 import com.coyjiv.isocial.dto.respone.post.PostResponseDto;
+import com.coyjiv.isocial.dto.respone.user.UserProfileResponseDto;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.exceptions.RequestValidationException;
 import com.coyjiv.isocial.service.favorite.IFavoriteService;
+import com.coyjiv.isocial.service.notifications.INotificationService;
 import com.coyjiv.isocial.service.websocket.IWebsocketService;
+import com.coyjiv.isocial.service.subscriber.ListSubscriberService;
 import com.coyjiv.isocial.transfer.post.PostRequestMapper;
 import com.coyjiv.isocial.transfer.post.PostResponseMapper;
 import com.coyjiv.isocial.transfer.post.RePostRequestMapper;
@@ -27,9 +33,17 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 import static com.coyjiv.isocial.domain.LikeableEntity.POST;
 
@@ -42,12 +56,14 @@ public class PostService implements IPostService {
   private final PostResponseMapper postResponseMapper;
   private final EmailPasswordAuthProvider emailPasswordAuthProvider;
   private final UserRepository userRepository;
+  private final FriendRepository friendRepository;
   private final IFavoriteService favoriteService;
   private final IWebsocketService websocketService;
-
+  private final INotificationService notificationService;
   private final CommentRepository commentRepository;
 
   private final LikeRepository likeRepository;
+  private final ListSubscriberService listSubscriberService;
 
   @Transactional(readOnly = true)
   @Override
@@ -66,7 +82,7 @@ public class PostService implements IPostService {
   @Override
   public PageWrapper<PostResponseDto> findFavoritePosts(int page, int size) {
     List<FavoriteResponseDto> favorites =
-      favoriteService.findActiveBySelectorId(page, size, emailPasswordAuthProvider.getAuthenticationPrincipal());
+            favoriteService.findActiveBySelectorId(page, size, emailPasswordAuthProvider.getAuthenticationPrincipal());
     if (favorites.isEmpty()) {
       return new PageWrapper<>(List.of(), false);
     } else {
@@ -149,6 +165,7 @@ public class PostService implements IPostService {
     Optional<Post> postToDeactivate = postRepository.findActiveById(id);
     if (postToDeactivate.isPresent()) {
       Post post = postToDeactivate.get();
+      notificationService.delete(post.getAuthorId(),post.getId(),post.getCreationDate());
       validateRequestOwner(post.getAuthorId());
       post.setActive(false);
       postRepository.save(post);
@@ -209,17 +226,57 @@ public class PostService implements IPostService {
   private void validateCreationPostDto(PostRequestDto postRequestDto) throws RequestValidationException {
     if (postRequestDto.getAttachments() != null && !postRequestDto.getAttachments().isEmpty()) {
       if (postRequestDto.getAttachments().stream().anyMatch(Objects::isNull)
-        || postRequestDto.getAttachments().stream().anyMatch(String::isBlank)) {
+              || postRequestDto.getAttachments().stream().anyMatch(String::isBlank)) {
         throw new RequestValidationException(
-          "Post should have text or attachments, attachments should not have empty strings or nulls");
+                "Post should have text or attachments, attachments should not have empty strings or nulls");
       }
     }
 
     if (postRequestDto.getTextContent() == null || postRequestDto.getTextContent().isBlank()) {
       if (postRequestDto.getAttachments() == null || postRequestDto.getAttachments().isEmpty()) {
         throw new RequestValidationException(
-          "Post should have text or attachments, attachments should not have empty strings or nulls");
+                "Post should have text or attachments, attachments should not have empty strings or nulls");
       }
     }
+  }
+
+  @Transactional(readOnly = true)
+  @Override
+  public PageWrapper<PostResponseDto> getRecommendation(int page, int size) throws EntityNotFoundException {
+    List<Friend> friends = friendRepository.findAllByRequesterIdOrAddresserIdAndStatus(
+            emailPasswordAuthProvider.getAuthenticationPrincipal(),
+            emailPasswordAuthProvider.getAuthenticationPrincipal(), UserFriendStatus.FRIEND);
+    List<UserProfileResponseDto> subscriptions = listSubscriberService.getSubscriptions();
+
+    LocalDateTime now = LocalDateTime.now();
+    LocalDateTime time = now.minus(1, ChronoUnit.DAYS);
+    ZoneId zoneId = ZoneId.systemDefault();
+    Date date = Date.from(time.atZone(zoneId).toInstant());
+
+    List<Long> ids = new ArrayList<>();
+
+    Sort sort = Sort.by(Sort.Direction.DESC, "creationDate").and(Sort.by(Sort.Direction.ASC, "id"));
+    Pageable pageable = PageRequest.of(page, size, sort);
+
+
+    for (Friend f : friends) {
+      if (Objects.equals(f.getAddresser().getId(), emailPasswordAuthProvider.getAuthenticationPrincipal())) {
+        ids.add(f.getRequester().getId());
+      } else if (Objects.equals(f.getRequester().getId(), emailPasswordAuthProvider.getAuthenticationPrincipal())) {
+        ids.add(f.getAddresser().getId());
+      }
+    }
+
+    for (UserProfileResponseDto s : subscriptions) {
+      ids.add(s.getId());
+    }
+
+    Page<Post> p = postRepository.findRecommendations(ids, date, pageable);
+    Collections.shuffle(p.getContent());
+    Set<Post> posts = new HashSet<>(p.getContent());
+
+    boolean hasNext = p.hasNext();
+    List<PostResponseDto> dtos = posts.stream().map(postResponseMapper::convertToDto).toList();
+    return new PageWrapper<>(dtos, hasNext);
   }
 }

@@ -31,4 +31,5 @@ public interface IPostService {
   PostResponseDto repost(RePostRequestDto rePostRequestDto) throws IllegalAccessException, EntityNotFoundException;
 
 
+  PageWrapper<PostResponseDto> getRecommendation(int page, int size) throws EntityNotFoundException;
 }
