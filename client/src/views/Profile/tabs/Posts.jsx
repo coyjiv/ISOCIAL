@@ -13,12 +13,19 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import Post from '../../../components/Post/Post';
 import classNames from 'classnames';
 import { PostSkeleton } from '../skeletons/PostSkeleton';
+import { useSearchParams } from 'react-router-dom';
 // import PostsWrapper from '../../../components/PostsWrapper';
 
 const Posts = () => {
   const { id } = useParams();
+  const [params] = useSearchParams()
 
-  const fetchProfileId = id ?? localStorage.getItem('userId')
+  console.log(' POSTS id', id);
+
+  const fetchProfileId = id ?? params.get('id') ?? localStorage.getItem('userId')
+
+  console.log(' POSTS id', fetchProfileId);
+
   // eslint-disable-next-line no-unused-vars
   const { data: profile, isLoading } = useGetProfileByIdQuery(fetchProfileId);
   const { data: loggedUserProfile, isLoading: isLoggedUserLoading } = useGetProfileByIdQuery(localStorage.getItem('userId'))
@@ -56,7 +63,6 @@ const Posts = () => {
 
   const addNewPost = (post) => {
     if (post) setPostsData([post, ...postsData])
-    console.log('post', post);
   }
 
   const removePost = (postId) => {
@@ -66,14 +72,13 @@ const Posts = () => {
     setPage(page + 1);
   };
 
-  console.log('postsData', postsData, postQueryData);
 
 
 
   return (
     profile &&
     <>
-      <Box sx={{ backgroundColor: (theme) => theme.palette.wash }}>
+      <Box sx={{ marginBottom: '100px', backgroundColor: (theme) => theme.palette.wash }}>
         <Container maxWidth={'lg'} sx={{ p: 2 }}>
           <Grid container spacing={4} >
             <Grid item xs={12} sm={6} md={5}>
@@ -103,7 +108,7 @@ const Posts = () => {
               </div>
             </Grid>
             <Grid item xs={12} sm={6} md={7}>
-              {(!isLoggedUserLoading && loggedUserProfile?.id === id || !id) && <div className={classNames(styles.card, styles.mt10)}>
+              {(!isLoggedUserLoading && loggedUserProfile?.id === localStorage.getItem('userId')) && <div className={classNames(styles.card, styles.mt10)}>
                 <div onClick={triggerPostModal}>
                   <Stack width={'100%'} gap={2} direction={'row'}>
                     <Avatar src={loggedUserProfile?.avatarsUrl[0] ?? placeholderAvatar(loggedUserProfile?.gender, loggedUserProfile?.firstName, loggedUserProfile?.lastName)} sx={{ width: 40, height: 'auto' }} />

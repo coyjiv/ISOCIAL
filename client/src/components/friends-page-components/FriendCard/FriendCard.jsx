@@ -1,64 +1,156 @@
-import PropTypes from "prop-types";
-import { Avatar, Stack, Typography } from "@mui/material";
-import { Box } from "@mui/material";
-import fallbackAvatar from "../../../assets/fallback/Ava.jpg";
+import PropTypes from 'prop-types'
+import { Avatar, Stack, Typography } from '@mui/material'
+import { useTheme } from '@mui/material/styles'
 
-import { ButtonMain } from "../../buttons";
-import { CardContentWrapper, CardWrapper } from "./FriendCard.styled.js";
+import { ButtonMain } from '../../buttons'
+import { CardContentWrapper, CardWrapper, CardAvatarWrapper } from './FriendCard.styled.js'
+import { useState } from 'react'
+import { userAvatar } from '../../../data/placeholders.js'
+import CardActionsPopover from '../FriendsSidebarUserCard/CardActionsPopover/CardActionsPopover.jsx';
+
+
 
 const FriendCard = ({
-  variant,
-  fullName,
-  images,
-  onDelete,
-  onConfirm,
-  onMessage,
+	id,
+	variant,
+	fullName,
+	images,
+	onDelete,
+	onConfirm,
+	onAddFriend,
+	onDontShowClick,
+	onClick,
+	additionalInfo
 }) => {
-  const isRequestVariant = variant === "requests";
+	const theme = useTheme()
+	const [msg, setMsg] = useState('')
+	const isRequestVariant = variant === 'requests'
+	const [isRequesting, setIsRequesting] = useState(false)
 
-  return (
-    <CardWrapper>
-      <Box width="252px" height="208px">
-        <Avatar
-          src={images[0] ?? fallbackAvatar}
-          alt={fullName}
-          variant="square"
-          sx={{
-            width: "100%",
-            height: "100%",
-            fontSize: "60px",
-          }}
-        />
-      </Box>
-      <CardContentWrapper>
-        <Typography fontSize="17px" fontWeight="600" marginBottom="15px">
-          {fullName}
-        </Typography>
-        {isRequestVariant && (
-          <Stack gap="8px">
-            <ButtonMain onClick={onConfirm}>Confirm</ButtonMain>
-            <ButtonMain color="grey" onClick={onDelete}>
-              Delete
-            </ButtonMain>
-          </Stack>
-        )}
-        {!isRequestVariant && (
-          <ButtonMain onClick={onMessage}>Message</ButtonMain>
-        )}
-      </CardContentWrapper>
-    </CardWrapper>
-  );
-};
+
+	const handleClick = async (e) => {
+		e.stopPropagation()
+
+		if (!isRequesting) {
+			const data = await onAddFriend({ userId: id })
+			if (data.error) {
+				setIsRequesting(false)
+				setMsg(data?.error?.response?.data)
+			} else {
+				setIsRequesting(true)
+				setMsg(data?.data)
+			}
+		} else {
+			const data = await onAddFriend({ userId: id })
+			if (data.error) {
+				setMsg(data?.error?.response?.data)
+				setIsRequesting(false)
+			} else {
+				setIsRequesting(true)
+				setMsg(data?.data)
+			}
+			setMsg('')
+		}
+		onDelete(e, id)
+	}
+
+	if (variant === 'horizontal') {
+		return (
+			<Stack onClick={onClick} sx={{ cursor: 'pointer', padding: '16px', height: 'fit-content', border: '1px solid', borderColor: theme.palette.grey[100], borderRadius: '8px' }} direction="row" spacing={2} alignItems="center">
+				<Avatar
+					src={userAvatar({ avatarsUrl: images, firstName: fullName.split(' ')[0], lastName: fullName.split(' ')[1] }, fullName.split(' ')[0], fullName.split(' ')[1])}
+					alt={fullName}
+					variant="rounded"
+					sx={{
+						width: '80px',
+						height: '80px',
+						fontSize: '60px',
+					}}
+				/>
+				<Stack>
+					<Typography fontSize="17px" fontWeight="600">
+						{fullName}
+					</Typography>
+					<Typography fontSize="13px" fontWeight="400">
+						{additionalInfo}
+					</Typography>
+				</Stack>
+				<CardActionsPopover
+					name={fullName}
+					onRemove={onDelete}
+					onMessage={() => console.log('start messages with user')}
+					boxProps={{ style: { marginLeft: 'auto' } }}
+				/>
+			</Stack>
+		)
+	}
+
+	return (
+		<CardWrapper onClick={onClick}>
+			<CardAvatarWrapper>
+				<Avatar
+					src={userAvatar({ avatarsUrl: images }, fullName.split(' ')[0], fullName.split(' ')[1])}
+					alt={fullName}
+					variant="square"
+					sx={{
+						width: '100%',
+						height: '100%',
+						fontSize: '60px',
+					}}
+				/>
+			</CardAvatarWrapper>
+			<CardContentWrapper>
+				<Typography
+					fontSize="20px"
+					fontWeight="600"
+					sx={{ fontSize: { xs: '18px', sm: '20px' }, textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', marginBottom: { xs: '15px', sm: !msg ? '30px' : 0 } }}
+					marginBottom={!msg ? '30px' : '0'}
+				>
+					{fullName}
+				</Typography>
+
+				<Typography fontSize="14px" marginBottom={!msg ? '0' : '9px'}>
+					{msg}
+				</Typography>
+				{isRequestVariant && (
+					<Stack gap="8px">
+						<ButtonMain onClick={onConfirm}>Confirm</ButtonMain>
+						<ButtonMain color="grey" onClick={(e) => onDelete(e, id)}>
+							Delete
+						</ButtonMain>
+					</Stack>
+				)}
+				{!isRequestVariant && (
+					<Stack gap="8px">
+						<ButtonMain
+							color={isRequesting ? 'grey' : 'blue'}
+							onClick={(e) => handleClick(e)}
+						>
+							{isRequesting ? 'Cancel request' : 'Add to friends'}
+						</ButtonMain>
+						<ButtonMain color="grey" onClick={(e) => onDontShowClick(e, id)}>
+							Don&apos;t Show
+						</ButtonMain>
+					</Stack>
+				)}
+			</CardContentWrapper>
+		</CardWrapper>
+	)
+}
 
 FriendCard.propTypes = {
-  variant: PropTypes.oneOf(["friends", "requests"]),
-  fullName: PropTypes.string,
-  images: PropTypes.array,
-  onDelete: PropTypes.func,
-  onConfirm: PropTypes.func,
-  onMessage: PropTypes.func,
-};
+	id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+	variant: PropTypes.oneOf(['friends', 'requests', 'recommendations', 'horizontal']),
+	fullName: PropTypes.string,
+	images: PropTypes.array,
+	onDelete: PropTypes.func,
+	onClick: PropTypes.func,
+	onConfirm: PropTypes.func,
+	onDontShowClick: PropTypes.func,
+	onAddFriend: PropTypes.func,
+	additionalInfo: PropTypes.string
+}
 
-FriendCard.displayName = "FriendCard";
+FriendCard.displayName = 'FriendCard'
 
-export default FriendCard;
+export default FriendCard

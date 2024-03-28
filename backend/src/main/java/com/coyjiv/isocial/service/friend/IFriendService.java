@@ -31,6 +31,13 @@ public interface IFriendService {
 
   Long getSubscriptionsCount(Long id);
 
+  List<FriendResponseDto> getFriendsWithUpcomingBirthdays(Long userId, int page, int size);
+
+  PageWrapper<FriendResponseDto> getFriendsWithSameBirthplace(Long userId, int page, int size);
+
+  PageWrapper<FriendResponseDto> getFriendsWithSameEducation(Long userId, int page, int size);
+
+  PageWrapper<FriendResponseDto> getFriendsWithSameLocation(Long userId, int page, int size);
 
   PageWrapper<FriendResponseDto> getRecommendations(int page, int size);
 }

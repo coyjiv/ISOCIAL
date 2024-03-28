@@ -1,9 +1,10 @@
 import { BsPeopleFill } from "react-icons/bs";
 import { RiUserSharedFill } from "react-icons/ri";
-import { PATH } from "../../../utils/constants";
+import { RiUserAddFill } from "react-icons/ri";
 
 export const sidebarItemsMap = [
-  { title: "Home", icon: <BsPeopleFill />, to: PATH.FRIENDS },
-  { title: "Friend Requests", icon: <RiUserSharedFill />, to: PATH.FRIENDS_REQUESTS },
-  { title: "All friends", icon: <BsPeopleFill />, to: PATH.FRIENDS_ALL },
+  { title: "Home", icon: <BsPeopleFill />, to: "/friends" },
+	{ title: "Friend Requests", icon: <RiUserSharedFill />, to: "/friends/requests" },
+	{ title: 'Suggestions', icon: <RiUserAddFill />, to: '/friends/suggestions' },
+	{ title: "All friends", icon: <BsPeopleFill />, to: "/friends/all" },
 ];

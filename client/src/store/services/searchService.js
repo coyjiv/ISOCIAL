@@ -2,7 +2,8 @@ import { createApi } from '@reduxjs/toolkit/query/react'
 import { instance } from '../../api/index.js'
 
 export const searchApi = createApi({
-  reducerPath: 'searchApi',
+  reducerPath: "searchApi",
+  tagTypes: ["Search"],
   baseQuery: async (args) => {
     try {
       const response = await instance(args)
