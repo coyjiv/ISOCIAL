@@ -7,16 +7,20 @@ import styles from './friendTabs.module.scss'
 import { Stack } from "@mui/material"
 import { useNavigate } from "react-router-dom"
 import { FriendsNoUserSection } from "../../../Friends/FriendsNoUserSection"
-import { useParams } from "react-router-dom"
+import { useParams, useSearchParams } from "react-router-dom"
 
 
 const SameBirthplace = () => {
     const { id: userId } = useParams();
+    const [searchParams] = useSearchParams()
+
+
+    const fetchUserId = userId ?? searchParams.get('id') ?? localStorage.getItem('userId')
 
     const navigate = useNavigate()
 
     const [page, setPage] = useState(0)
-    const { data, isSuccess } = useGetFriendsWithSameBirthPlaceQuery({ userId, page: page })
+    const { data, isSuccess } = useGetFriendsWithSameBirthPlaceQuery({ userId: fetchUserId, page: page })
     const [removeFriend] = useRemoveFriendMutation()
 
     const [friends, setFriends] = useState([])

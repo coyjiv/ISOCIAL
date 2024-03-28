@@ -6,13 +6,17 @@ import styles from './friendTabs.module.scss'
 import { timeToBirthday } from "../../../../utils/helpers/timeToBirthday"
 import { useNavigate } from "react-router-dom"
 import { FriendsNoUserSection } from "../../../Friends/FriendsNoUserSection"
-import { useParams } from "react-router-dom"
+import { useParams, useSearchParams } from "react-router-dom"
 
 
 const Birthdays = () => {
     const { id: userId } = useParams();
+    const [searchParams] = useSearchParams()
 
-    const { data, isLoading } = useGetUpcomingBirthdaysQuery({ userId })
+
+    const fetchUserId = userId ?? searchParams.get('id') ?? localStorage.getItem('userId')
+
+    const { data, isLoading } = useGetUpcomingBirthdaysQuery({ userId: fetchUserId })
 
     const navigate = useNavigate()
     const [removeFriend] = useRemoveFriendMutation()

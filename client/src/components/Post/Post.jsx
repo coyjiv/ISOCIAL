@@ -62,10 +62,7 @@ const Post = ({
   const [deleteDialog, setDeleteDialog] = useState(false);
   const [commentPanelOpen, setCommentPanelOpen] = useState(false);
 
-  console.log(optimisticFavourite, "favourite");
-
   const isRepost = !!originalPostId;
-  console.log(isRepost, originalPostId, "isRepost");
 
   const [toggleLike] = useToggleLikeMutation();
   const [deletePost] = useDeletePostMutation();
@@ -142,10 +139,7 @@ const Post = ({
   const handleSavePost = () => {
     const oldFavourite = optimisticFavourite;
     setOptimisticFavourite(!oldFavourite);
-    toggleSavePost(postId).then((res) => {
-      console.log(res);
-      // setOptimisticFavourite(!oldFavourite);
-    });
+    toggleSavePost(postId)
   };
 
   return (

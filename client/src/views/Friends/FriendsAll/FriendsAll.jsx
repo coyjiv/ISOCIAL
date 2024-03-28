@@ -12,8 +12,6 @@ const FriendsAllPage = () => {
 
   const { data, isLoading, isSuccess } = useGetFriendsListQuery({ id: userId, page: page });
 
-  console.log(data);
-
   const [friends, setFriends] = useState([])
 
 

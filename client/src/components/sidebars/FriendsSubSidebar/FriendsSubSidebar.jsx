@@ -62,10 +62,12 @@ const FriendsSubSidebar = ({
   const handleChange = (value) => setSearchValue(value)
 
 
-  console.log(hasNext, 'hasNext');
-
   const handleChooseUser = (id) => {
-    isMobile ? navigate(`/profile/${id}`) : setSearchParams({ id })
+    if (isMobile) {
+      navigate(`/profile/${id}`)
+    } else {
+      setSearchParams({ id })
+    }
   }
 
   const handleDeclineRequest = (id) => {

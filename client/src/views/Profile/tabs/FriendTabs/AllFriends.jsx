@@ -9,15 +9,18 @@ import { useNavigate } from "react-router-dom"
 import { pickOneUserFact } from "../../../../utils/helpers/userFacts"
 import { FriendsNoUserSection } from "../../../Friends/FriendsNoUserSection"
 import { useParams } from "react-router-dom"
+import { useSearchParams } from "react-router-dom"
 
 
 const AllFriends = () => {
     const { id: userId } = useParams();
+    const [searchParams] = useSearchParams()
+
 
     const navigate = useNavigate()
 
     const [page, setPage] = useState(0)
-    const { data, isSuccess } = useGetFriendsListQuery({ id: userId, page: page })
+    const { data, isSuccess } = useGetFriendsListQuery({ id: userId ?? searchParams.get('id') ?? localStorage.getItem('userId'), page: page })
     const [removeFriend] = useRemoveFriendMutation()
 
     const [friends, setFriends] = useState([])
