@@ -9,6 +9,7 @@ import { FaArrowLeft } from "react-icons/fa6";
 import { FaArrowRight } from "react-icons/fa6";
 import { FiSearch } from "react-icons/fi";
 import { IoMdTime } from "react-icons/io";
+import { RxHamburgerMenu } from 'react-icons/rx'
 
 export const iconsMap = (size) => ({
   dots: <BiDotsHorizontalRounded size={size} color="inherit" />,
@@ -21,5 +22,6 @@ export const iconsMap = (size) => ({
   arrowLeft: <FaArrowLeft size={size} color="inherit" />,
   arrowRight: <FaArrowRight size={size} color="inherit" />,
   search: <FiSearch size={size} color="inherit" />,
-  clock: <IoMdTime size={size} color="inherit" />,
+	clock: <IoMdTime size={size} color="inherit" />,
+	burger: <RxHamburgerMenu size={size} color="inherit" />,
 });

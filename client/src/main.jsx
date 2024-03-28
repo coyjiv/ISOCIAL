@@ -1,20 +1,19 @@
 //libs
-import { ThemeProvider } from '@mui/material'
-import ReactDOM from 'react-dom/client'
-import { theme } from './theme'
+import { ThemeProvider } from "@mui/material";
+import ReactDOM from "react-dom/client";
+import { theme } from "./theme";
 //routes
-import { App } from './views/routes/Routes'
+import { App } from "./views/routes/Routes";
 //styles
-import 'react-toastify/dist/ReactToastify.css';
-import './index.scss'
+import "react-toastify/dist/ReactToastify.css";
+import "./index.scss";
 //redux
-import { store } from './store'
-import { Provider } from 'react-redux'
+import { store } from "./store";
+import { Provider } from "react-redux";
 //configs
-import '../src/lib/firebase/firebaseConfig'
+import "../src/lib/firebase/firebaseConfig";
 
-
-ReactDOM.createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById("root")).render(
   // <React.StrictMode>
   <Provider store={store}>
     <ThemeProvider theme={theme}>
@@ -22,5 +21,4 @@ ReactDOM.createRoot(document.getElementById('root')).render(
     </ThemeProvider>
   </Provider>
   // </React.StrictMode>,
-)
-  ;
+);

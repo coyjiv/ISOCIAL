@@ -1,0 +1,13 @@
+@use "../../../../styles/mixins/breakpoints";
+
+.infinite-wrapper {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  align-content: flex-start;
+
+  gap: 8px;
+
+  @include breakpoints.media('sm') {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
