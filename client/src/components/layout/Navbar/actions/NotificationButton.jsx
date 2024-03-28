@@ -1,17 +1,17 @@
-import {RiNotification2Fill, RiNotification2Line} from "react-icons/ri";
-import {useState, useRef, useEffect} from 'react'
-import {useOnClickOutside} from "usehooks-ts";
+import { RiNotification2Fill, RiNotification2Line } from "react-icons/ri";
+import { useState, useRef, useEffect } from 'react'
+import { useOnClickOutside } from "usehooks-ts";
 import classNames from "classnames";
 import styles from '../navbar.module.scss'
-import {useGetNotificationQuery} from "../../../../store/services/notification.js";
+import { useGetNotificationQuery } from "../../../../store/services/notification.js";
 import NotificationList from "./NotificationList.jsx"
-import {Scrollbars} from 'react-custom-scrollbars';
+import { Scrollbars } from 'react-custom-scrollbars';
 
 const NotificationButton = () => {
     const [page, setPage] = useState(0)
     const [notifications, setNotifications] = useState([]);
 
-    const {data, isLoading, isSuccess} = useGetNotificationQuery({
+    const { data, isLoading, isSuccess } = useGetNotificationQuery({
         recieverId: localStorage.getItem('userId'),
         page: page,
         quantity: 10
@@ -29,7 +29,6 @@ const NotificationButton = () => {
             const uniqueNotifications = data.content.filter(newNotification => (
                 !notifications.some(existingNotification => existingNotification.id === newNotification.id)
             ));
-            console.log('unique', uniqueNotifications)
             if (uniqueNotifications.length > 0) {
                 setNotifications(prevNotifications => [...prevNotifications, ...data.content]);
             }
@@ -61,11 +60,11 @@ const NotificationButton = () => {
     return (
         <>
             <button ref={ref} className={messengerButtonClasses} onClick={handleClickInside}>
-                {isNotificationsOpen ? <RiNotification2Fill/> : <RiNotification2Line/>}
+                {isNotificationsOpen ? <RiNotification2Fill /> : <RiNotification2Line />}
             </button>
             {isNotificationsOpen &&
-                <Scrollbars style={{width: '100%', height: '100%'}}>
-                    <NotificationList data={notifications} fetchMoreData={fetchMoreData} hasNext={data.hasNext}/>
+                <Scrollbars style={{ width: '100%', height: '100%' }}>
+                    <NotificationList data={notifications} fetchMoreData={fetchMoreData} hasNext={data.hasNext} />
                 </Scrollbars>
 
 

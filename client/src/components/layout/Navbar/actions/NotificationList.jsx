@@ -1,11 +1,10 @@
 import InfiniteScroll from "react-infinite-scroll-component";
 import styles from './notificationList.module.scss'
-import {PostSkeleton} from "../../../../views/Profile/skeletons/PostSkeleton.jsx";
+import { PostSkeleton } from "../../../../views/Profile/skeletons/PostSkeleton.jsx";
 import NotificationItem from "./NotificationItem.jsx";
+import ProptTypes from 'prop-types'
 
-const NotificationList = (props) => {
-
-    const {data, fetchMoreData, hasNext} = props
+const NotificationList = ({ data, fetchMoreData, hasNext }) => {
 
     return (
         <div className={styles.notificationContainer}>
@@ -15,16 +14,16 @@ const NotificationList = (props) => {
                 dataLength={data.length}
                 next={fetchMoreData}
                 hasMore={hasNext}
-                loader={<div style={{display: 'flex', width: '100%'}}><PostSkeleton/></div>}
+                loader={<div style={{ display: 'flex', width: '100%' }}><PostSkeleton /></div>}
             >
                 <ul className={styles.notificationList}>
                     {
                         data.map(notification =>
                             <NotificationItem key={notification.id}
-                                              creationDate={notification.creationDate}
-                                              eventType={notification.eventType}
-                                              senderAvatar={notification.senderAvatar}
-                                              senderName={notification.senderName}
+                                creationDate={notification.creationDate}
+                                eventType={notification.eventType}
+                                senderAvatar={notification.senderAvatar}
+                                senderName={notification.senderName}
                             />
                         )
                     }
@@ -33,6 +32,12 @@ const NotificationList = (props) => {
             </InfiniteScroll>
         </div>
     )
+}
+
+NotificationList.propTypes = {
+    data: ProptTypes.array.isRequired,
+    fetchMoreData: ProptTypes.func.isRequired,
+    hasNext: ProptTypes.bool.isRequired
 }
 
 export default NotificationList
