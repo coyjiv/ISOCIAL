@@ -15,7 +15,7 @@ const NotificationList = (props) => {
     }, []);
 
     return (
-        <div  id="scrollableDiv" className={`${styles.notificationContainer} ${isVisible ? 'visibility' : ''}`}>
+        <div  id="scrollableDiv" className={`${styles.notificationContainer} ${isVisible ? `${styles.visibility}` : ''}`}>
             <h3 className={styles.notificationTitle}>Notifications</h3>
             {data.length === 0 && <div className={styles.noNotification}>No notification yet</div>}
             <InfiniteScroll
