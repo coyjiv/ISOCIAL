@@ -277,8 +277,8 @@ public class PostService implements IPostService {
 
     List<Post> shuffledPosts = new ArrayList<>(p.getContent());
 
-    List<Post> newShuffledPosts = new ArrayList<>(shuffledPosts.stream().filter(post -> postSeenRepository.findByUserIdPostId(
-            emailPasswordAuthProvider.getAuthenticationPrincipal(), post.getId()).isEmpty()
+    List<Post> newShuffledPosts = new ArrayList<>(shuffledPosts.stream().filter(post -> postSeenRepository
+            .findByUserIdPostId(emailPasswordAuthProvider.getAuthenticationPrincipal(), post.getId()).isEmpty()
     ).toList());
 
     Collections.shuffle(newShuffledPosts);
