@@ -1,10 +1,17 @@
 import { useSubscription } from "react-stomp-hooks";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import ToastMessage from "../components/MessageToast/MessageToast.jsx";
+import { addMessage } from "../store/chatSlice.js";
+import { useMediaQuery } from "usehooks-ts";
+import { userAvatar } from "../data/placeholders.js";
 
 const withWebsocket = (WrappedComponent) => {
     const WithWebSocket = (props) => {
+        const dispatch = useDispatch();
+        const isMobile = useMediaQuery('(max-width: 768px)');
+
         useSubscription(`/user/${localStorage.getItem("userId")}/messages`, handleMessage)
         useSubscription(`/user/${localStorage.getItem("userId")}/friends`, handleFriend)
         useSubscription(`/user/${localStorage.getItem("userId")}/reposts`, handleRepost)
@@ -17,13 +24,15 @@ const withWebsocket = (WrappedComponent) => {
             const message = await msg.body;
             const body = JSON.parse(message);
             console.log("ws", body);
+            dispatch(addMessage(body));
             toast.info(<ToastMessage link={`/chats/${body.chatId}`} msg={body} type={"MESSAGE"} />,
                 {
                     icon: () => <Link to={`/chats/${body.chatId}`}>
                         <img style={{ objectFit: 'cover', borderRadius: '50%' }} width={'100%'} height={'auto'}
-                            src={body.senderAvatarUrl}
+                            src={userAvatar({ avatarsUrl: body.senderAvatarUrl, firstName: body?.senderName?.split(' ')?.[0], lastName: body?.senderSurname?.split(' ')?.[1] })}
                             alt={'avatar'} />
-                    </Link>
+                    </Link>,
+                    position: isMobile ? "top-center" : "bottom-right"
                 });
         }
 

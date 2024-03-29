@@ -102,6 +102,11 @@ export const friendsApi = profileApi.injectEndpoints({
         `friends/location/${userId}?page=${page}&size=10`,
       providesTags: () => [{ type: 'Friends' }, { type: 'Profile' }],
     }),
+    searchByName: builder.query({
+      query: ({ name, page }) =>
+        `friends/search?query=${name}&page=${page}&size=30`,
+      providesTags: () => [{ type: 'Friends' }, { type: 'Profile' }],
+    }),
   }),
 })
 
@@ -120,4 +125,5 @@ export const {
   useGetFriendsWithSameBirthPlaceQuery,
   useGetFriendsWithSameEducationQuery,
   useGetFriendsWithSameLocationQuery,
+  useSearchByNameQuery,
 } = friendsApi

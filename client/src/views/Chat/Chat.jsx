@@ -12,6 +12,7 @@ import * as Yup from "yup";
 import { useParams } from "react-router";
 import PropTypes from "prop-types";
 import { withWebsocket } from "../../hooks/withWebsocket";
+import { withLayout } from "../../hooks/withLayout";
 
 const validationScheme = Yup.object().shape({
   text: Yup.string()
@@ -19,10 +20,10 @@ const validationScheme = Yup.object().shape({
     .max(260, "Message is too long"),
 });
 
-const ChatPage = ({ id }) => {
-  const { id: paramsId } = useParams();
+const ChatPage = () => {
+  // const { id: paramsId } = useParams();
 
-  const chatId = id || paramsId;
+  // const chatId = id || paramsId;
 
   const [messagesData, setMessages] = useState([]);
 
@@ -30,29 +31,29 @@ const ChatPage = ({ id }) => {
   const [page, setPage] = useState(0);
   const contentRef = useRef();
 
-  const { data: messages, isLoading } = useGetMessagesQuery(
-    { page, chatId },
-    { skip: !chatId },
-  );
+  // const { data: messages, isLoading } = useGetMessagesQuery(
+  //   { page, chatId },
+  //   { skip: !chatId },
+  // );
   const [sendMessage] = useSendMessageMutation();
   const [deleteMessage] = useDeleteMessageMutation();
   const userId = Number(localStorage.getItem("userId"));
 
-  useEffect(() => {
-    if (!isLoading && messages && messages.length > 0) {
-      setMessages(messages);
-    }
-  }, [isLoading, messages]);
+  // useEffect(() => {
+  //   if (!isLoading && messages && messages.length > 0) {
+  //     setMessages(messages);
+  //   }
+  // }, [isLoading, messages]);
 
-  const handleSendMessage = async (values) => {
-    try {
-      const response = await sendMessage({ chatId, text: values.text });
-      console.log(response.data);
-      setMessages([...messagesData, response.data]);
-    } catch (error) {
-      console.error("Send message error:", error);
-    }
-  };
+  // const handleSendMessage = async (values) => {
+  //   try {
+  //     const response = await sendMessage({ chatId, text: values.text });
+  //     console.log(response.data);
+  //     setMessages([...messagesData, response.data]);
+  //   } catch (error) {
+  //     console.error("Send message error:", error);
+  //   }
+  // };
 
   const handleDeleteMessage = async (item) => {
     try {
@@ -81,7 +82,7 @@ const ChatPage = ({ id }) => {
     <>
       <div className="message-container">
         <div className="chat-messages" ref={contentRef}>
-          {messagesData.map((message, index) => (
+          {/* {messagesData.map((message, index) => (
             <div
               key={index}
               className={cx(
@@ -112,11 +113,11 @@ const ChatPage = ({ id }) => {
                 <div className="message-options-option"></div>
               </div>
             </div>
-          ))}
+          ))} */}
         </div>
         <div className="chat-input">
           <AutosizeTextareaSend
-            onSubmit={handleSendMessage}
+            // onSubmit={handleSendMessage}
             placeholder={"Type your message..."}
             validationScheme={validationScheme}
           />
@@ -130,4 +131,4 @@ ChatPage.propTypes = {
   id: PropTypes.string,
 };
 
-export const Chat = withWebsocket(ChatPage);
+export const Chat = withLayout(withWebsocket(ChatPage));

@@ -32,14 +32,14 @@ public class ChatController {
 
   @GetMapping("/{id}")
   public ResponseEntity<?> findActiveById(@PathVariable(name = "id") Long id)
-          throws EntityNotFoundException, IllegalAccessException {
+    throws EntityNotFoundException, IllegalAccessException {
     return ResponseEntity.ok(chatService.findActiveDtoById(id));
   }
 
   @PostMapping
   public ResponseEntity<?> create(@RequestParam(name = "receiverId") Long receiverId,
                                   @RequestBody @Valid CreateMessageRequestDto firstMessage)
-          throws EntityNotFoundException, RequestValidationException, IllegalAccessException {
+    throws EntityNotFoundException, RequestValidationException, IllegalAccessException {
     try {
       return ResponseEntity.status(201).body(chatService.create(firstMessage, receiverId));
     } catch (ChatAlreadyExistException exception) {
@@ -49,9 +49,15 @@ public class ChatController {
 
   @DeleteMapping("/{id}")
   public ResponseEntity<?> delete(@PathVariable(name = "id") Long id)
-          throws EntityNotFoundException, IllegalAccessException {
+    throws EntityNotFoundException, IllegalAccessException {
     chatService.delete(id);
     return ResponseEntity.status(204).build();
+  }
+
+  @GetMapping("/getChatId/{userId}")
+  public ResponseEntity<?> getChatId(@PathVariable(name = "userId") Long userId)
+    throws EntityNotFoundException {
+    return ResponseEntity.ok(chatService.isUserInvolvedInChat(userId));
   }
 
 }

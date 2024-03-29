@@ -5,6 +5,9 @@ const chatSlice = createSlice({
   initialState: {
     chats: [],
     messages: [],
+    selectedChatMessages: [],
+    selectedChat: null,
+    pendingChat: null,
   },
   reducers: {
     setChats: (state, action) => {
@@ -14,10 +17,24 @@ const chatSlice = createSlice({
       state.messages = action.payload
     },
     addMessage: (state, action) => {
-      state.chats = action.payload
+      state.messages = [...state.chats, action.payload]
     },
     removeMessage: (state, action) => {
-      state.chats = action.payload
+      state.messages = state.messages.filter(
+        (message) => message.id !== action.payload
+      )
+    },
+    clearPendingChat: (state) => {
+      state.pendingChat = null
+    },
+    setPendingChat: (state, action) => {
+      state.pendingChat = action.payload
+    },
+    setSelectedChat: (state, action) => {
+      state.selectedChat = action.payload
+    },
+    setSelectedChatMessages: (state, action) => {
+      state.selectedChatMessages = action.payload
     },
   },
 })
@@ -27,6 +44,10 @@ export const {
   setMessages,
   addMessage,
   removeMessage,
+  clearPendingChat,
+  setPendingChat,
+  setSelectedChat,
+  setSelectedChatMessages,
 } = chatSlice.actions
 
 export default chatSlice.reducer

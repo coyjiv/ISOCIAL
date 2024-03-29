@@ -24,5 +24,6 @@ public class ActiveChatDtoMapper extends DtoMapperFacade<Chat, ActiveChatDto> {
     dto.setAvatarUrl(receiver.getAvatar());
     dto.setReceiverStatus(receiver.getActivityStatus());
     dto.setReceiverLastSeen(receiver.getLastSeen());
+    dto.setReceiverId(receiver.getId());
   }
 }

@@ -1,5 +1,6 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import "./Chat.scss";
+import { Avatar } from "@mui/material";
 import { AiOutlineDelete } from "react-icons/ai";
 import PropTypes from "prop-types";
 import { useDeleteChatMutation } from "../../store/services/chatService.js";
@@ -29,7 +30,7 @@ const ChatItem = ({ chatId, chatName, lastMessage, chatAvatar }) => {
         isActive ? "chat-item active-link" : "chat-item"
       }
     >
-      <img className="avatar-img" src={chatAvatar} alt="avatar" />
+      <Avatar src={chatAvatar} alt="avatar" />
       <div className="chat-info-wrapper">
         <h3>{chatName}</h3>
         <p className="last-message">{lastMessage}</p>

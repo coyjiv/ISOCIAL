@@ -13,9 +13,9 @@
 }
 
 .message-container {
-  width: 800px;
-  max-width: 90%;
-  height: 80vh;
+  // width: 800px;
+  // max-width: 90%;
+  height: calc(100svh - 120px);
   overflow-y: scroll;
   margin: 30px auto;
   //border: 0 solid #ccc;
@@ -59,7 +59,6 @@
     position: absolute;
     left: -36px;
     top: 10px;
-
   }
 
   .message-options {
@@ -145,7 +144,8 @@
 /* ---   ChatList   --- */
 
 .chats {
-  width: 500px;
+  // width: 500px;
+  height: calc(100dvh - 56px);
 
   .chat-list {
     display: flex;
@@ -207,8 +207,75 @@
         @include message-option;
       }
     }
-
   }
+}
+
+.chatmodal-search-friends-input {
+  width: 70%;
+}
+
+@keyframes moveStripes {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: -40px 100px;
+  }
+}
+
+.chat-modal-no-friends_wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  border-radius: 20px;
+  position: relative;
+  width: 100%;
+  background: linear-gradient(180deg, #f1f2f6 0%, #dbe5ff 70%);
+  overflow: hidden;
+  > div {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    p {
+      font-size: 18px;
+      font-weight: 600;
+    }
+  }
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: repeating-linear-gradient(
+      45deg,
+      rgba(255, 255, 255, 0.1),
+      rgba(255, 255, 255, 0.1) 10px,
+      transparent 10px,
+      transparent 20px
+    );
+    background-size: 100% 100%;
+    animation: moveStripes 4s linear infinite;
+    will-change: background-position;
+    z-index: 0;
+  }
+}
+
+.chat-modal-no-friends_wrapper_list {
+  list-style: disc;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: relative;
+  z-index: 2;
 }
 
 .chat-modal-button {
@@ -231,7 +298,11 @@
 
 .friends-wrapper {
   display: grid;
-  gap: 5px;
+  align-content: start;
+  gap: 15px;
+  padding: 0px 20px 20px;
+  height: 100%;
+  overflow-y: auto;
 }
 
 .delete-icon {
@@ -280,13 +351,10 @@
   align-items: center;
   border-radius: 20px;
   background-color: #f1f2f6;
+  height: fit-content;
 }
 
 .modal-avatar-img {
   width: 40px;
   border-radius: 20px;
-
 }
-
-
-

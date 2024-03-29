@@ -1,0 +1,14 @@
+@use "../../../styles/variables/colors";
+
+.chatMainWrapper {
+  display: flex;
+  flex-direction: column;
+  height: calc(100svh - 52px);
+  width: 100%;
+  background-color: colors.$disabledButtonBackground;
+}
+
+.chatTextAreaHolder {
+  background-color: colors.$lightGrey;
+  margin-top: auto;
+}

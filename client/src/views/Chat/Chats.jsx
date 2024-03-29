@@ -13,7 +13,10 @@ const ChatContainer = () => {
   const { id } = useParams();
 
   return (
-    <div className="chat-container"><ChatList />{id ? <Chat id={id} /> : <h1>No chats selected</h1>}</div>
+    <ChatList />
+    // <div className="chat-container">
+    //   {/* {id ? <Chat id={id} /> : <h1>No chats selected</h1>} */}
+    // </div>
   );
 };
 

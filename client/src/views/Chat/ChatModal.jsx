@@ -1,70 +1,143 @@
-import { Box, Modal, Typography } from "@mui/material";
-import { useCreateChatMutation } from "../../store/services/chatService.js";
+import { Dialog, DialogTitle, Avatar, Box, IconButton, Typography, Input } from "@mui/material";
 import { useState } from "react";
 import "./Chat.scss";
 import PropTypes from "prop-types";
-
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 500,
-  bgcolor: "background.paper",
-  border: "1px solid #000",
-  boxShadow: 23,
-  p: 4,
-};
+import { userAvatar } from "../../data/placeholders.js";
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
+import { FaArrowLeft, FaXmark } from "react-icons/fa6";
+import { FaSearch } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import { setPendingChat } from "../../store/chatSlice.js";
+import { useNavigate } from "react-router-dom";
+import { Emoji } from "emoji-picker-react";
+import { useGetUserByNameQuery } from "../../store/services/searchService.js";
+import { useDebounce } from "usehooks-ts";
 
 const ChatModal = ({ friends, modalText, open = false, handleClose }) => {
-  const [createChat] = useCreateChatMutation();
+  const navigate = useNavigate();
 
-  const [attachments, setAttachments] = useState([]);
-  const [text, setText] = useState("asasasd");
+  const theme = useTheme();
 
-  const handleCreateChat = (friend, text, attachments) => {
-    createChat({ receiverId: friend.id, data: { text, attachments } });
-    handleClose();
+  const dispatch = useDispatch();
+
+  const [searchActive, setSearchActive] = useState(false);
+  const [searchValue, setSearchValue] = useState('')
+
+  const debouncedValue = useDebounce(searchValue, 200);
+
+  const { data: searchFriendsData, isSuccess, isFetching } = useGetUserByNameQuery({ name: debouncedValue, page: 0 }, { skip: debouncedValue.length === 0 });
+
+  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const backAction = () => {
+    if (searchActive) {
+      setSearchActive(false);
+    } else {
+      handleClose();
+    }
+  }
+
+  const searchAction = () => {
+    if (searchValue.length > 0) {
+      setSearchValue('');
+    } else {
+      setSearchActive(true);
+    }
+  }
+
+  const goToMessageStep = (friend) => {
+    dispatch(setPendingChat({
+      receiverId: friend.id,
+      chatName: `${friend.firstName} ${friend.lastName}`,
+      avatarUrl: userAvatar(friend),
+      receiverStatus: friend?.status,
+      messages: [],
+    }));
+    navigate('/chat')
   };
 
   return (
-    <div>
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={style}>
-          <Typography
-            sx={{ textAlign: "center", mb: 1 }}
-            id="modal-modal-title"
-            variant="h5"
-            component="h2"
-          >
-            {modalText}
+    <Dialog fullScreen={fullScreen} fullWidth={fullScreen} scroll="paper" sx={{
+      '& .MuiDialog-paper': {
+        width: { sm: '500px' },
+        textAlign: 'center',
+        height: { sm: '500px' },
+      }
+    }} onClose={handleClose} open={open}>
+
+      <Box sx={{ display: 'flex', alignItems: 'center', minHeight: '50px', background: theme.palette.wash }}>
+        <IconButton onClick={backAction} sx={{ position: 'absolute', left: '20px' }}><FaArrowLeft size={'18px'} /></IconButton>
+        {searchActive ?
+          <Input disableUnderline className="chatmodal-search-friends-input" value={searchValue} onChange={e => setSearchValue(e.target.value)} placeholder="Search" sx={{ margin: '0 auto' }} /> :
+          <Typography variant="p" sx={{ margin: '0 auto', fontSize: '20px', fontWeight: 900, opacity: '0.8' }}>
+            New message
           </Typography>
-          <div className="friends-wrapper">
-            {friends &&
-              friends.map((friend) => (
-                <div className="modal-item-wrapper" key={friend.id}>
-                  <button
-                    className="chat-modal-button"
-                    onClick={() => handleCreateChat(friend, text, attachments)}
-                  >
-                    <img
-                      className="modal-avatar-img"
-                      src={friend.avatarsUrl[0]}
-                      alt="avatar"
-                    />
-                    {friend.firstName} {friend.lastName}
-                  </button>
-                </div>
-              ))}
-          </div>
-        </Box>
-      </Modal>
-    </div>
+        }
+        <IconButton onClick={searchAction} sx={{ display: searchActive && searchValue.length === 0 ? 'none' : 'inline-flex', position: 'absolute', right: '20px' }}>
+          {searchActive ? <FaXmark size={'15px'} /> : <FaSearch size={'15px'} />}
+        </IconButton>
+      </Box>
+      <DialogTitle sx={{ padding: '20px' }} fontSize={20} fontWeight={900} >
+        {modalText}
+      </DialogTitle>
+
+      <div className="friends-wrapper">
+        {searchActive ?
+          searchFriendsData && searchFriendsData?.content.map((friend) => (
+            <div className="modal-item-wrapper" key={friend.id}>
+              <button
+                className="chat-modal-button"
+                onClick={() => goToMessageStep(friend)}
+              >
+                <Avatar
+                  src={userAvatar(friend)}
+                  alt="avatar"
+                />
+                {friend.firstName} {friend.lastName}
+              </button>
+            </div>
+          ))
+          : friends &&
+          friends.map((friend) => (
+            <div className="modal-item-wrapper" key={friend.id}>
+              <button
+                className="chat-modal-button"
+                onClick={() => goToMessageStep(friend)}
+              >
+                <Avatar
+                  src={userAvatar(friend)}
+                  alt="avatar"
+                />
+                {friend.firstName} {friend.lastName}
+              </button>
+            </div>
+          ))}
+        {
+          (friends && friends.length === 0) && (
+            <div className="chat-modal-no-friends_wrapper">
+              <div>
+                <Emoji unified="1f613" size={64} />
+                <p>You have no friends yet</p>
+                <ul className="chat-modal-no-friends_wrapper_list">
+                  <li>Invite your friends to iSocial</li>
+                  <li>Send friend invites to other people</li>
+                  <li>Comeback later</li>
+                </ul>
+              </div>
+            </div>
+          )
+        }
+
+        {
+          (searchFriendsData && searchFriendsData.content.length === 0 && isSuccess && !isFetching && searchActive) && (
+            <div>
+              <p>No results</p>
+            </div>
+          )
+        }
+      </div>
+    </Dialog>
   );
 };
 

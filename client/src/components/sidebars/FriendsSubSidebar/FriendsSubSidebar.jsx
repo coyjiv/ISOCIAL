@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types'
 import { useState } from 'react'
 import { useLocalStorage, useMediaQuery } from 'usehooks-ts'
+import { useDispatch } from 'react-redux'
 import { Stack, Typography } from '@mui/material'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { userAvatar } from '../../../data/placeholders.js'
@@ -17,6 +18,7 @@ import {
 } from '../../../store/services/friendService.js'
 import { LS_KEYS, MQ } from '../../../utils/constants'
 import InfiniteScroll from 'react-infinite-scroll-component'
+import { setPendingChat } from '../../../store/chatSlice.js'
 
 const FriendsSubSidebar = ({
   variant,
@@ -28,6 +30,7 @@ const FriendsSubSidebar = ({
   hasNext,
   onRemove
 }) => {
+  const dispatch = useDispatch()
   const [searchValue, setSearchValue] = useState('')
   let [, setSearchParams] = useSearchParams()
   const navigate = useNavigate()
@@ -96,9 +99,20 @@ const FriendsSubSidebar = ({
     setHiddenUsersId([...hiddenUsersId, id])
   }
 
-  const handleMessage = (e, id) => {
+  const handleMessage = (e, friend) => {
     e.stopPropagation()
-    console.log(`start messages with user ${id}`)
+    if (friend.chatId) {
+      navigate(`/chats/${friend.chatId}`)
+    } else {
+      dispatch(setPendingChat({
+        receiverId: friend.id,
+        chatName: `${friend.firstName} ${friend.lastName}`,
+        avatarUrl: userAvatar(friend),
+        receiverStatus: friend?.activityStatus,
+        messages: [],
+      }));
+      navigate('/chat')
+    }
   }
 
   const searchActive = searchValue.length > 0
@@ -123,7 +137,7 @@ const FriendsSubSidebar = ({
           marginBottom="12px"
         >{`${users?.length ?? '0'} ${subTitle}`}</Typography>
         {searchActive ? <Stack width="100%" gap="10px">
-          {filteredUsers?.map(({ id, firstName, lastName, avatarsUrl, gender }) => (
+          {filteredUsers?.map(({ id, firstName, lastName, avatarsUrl, gender, activityStatus }) => (
             <FriendsSidebarUserCard
               key={id}
               userImage={userAvatar({ avatarsUrl, gender }, firstName, lastName)}
@@ -135,7 +149,7 @@ const FriendsSubSidebar = ({
               onRemove={(e) => handleRemoveFriend(e, id)}
               onAddToFriends={() => handleAddToFriend(id)}
               onHideSuggestion={() => handleHideSuggestion(id)}
-              onMessage={(e) => handleMessage(e, id)}
+              onMessage={(e) => handleMessage(e, { id, firstName, lastName, avatarsUrl, gender, activityStatus })}
             />
           ))}
         </Stack> :
@@ -147,7 +161,7 @@ const FriendsSubSidebar = ({
           // loader={<div style={{ display: 'flex', width: '100%' }}><PostSkeleton /></div>}
           // className={styles.infiniteWrapper}
           >
-            {users.map(({ id, firstName, lastName, avatarsUrl, gender }) => (
+            {users.map(({ id, firstName, lastName, avatarsUrl, gender, activityStatus }) => (
               <FriendsSidebarUserCard
                 key={id}
                 userImage={userAvatar({ avatarsUrl, gender }, firstName, lastName)}
@@ -159,7 +173,7 @@ const FriendsSubSidebar = ({
                 onRemove={(e) => handleRemoveFriend(e, id)}
                 onAddToFriends={() => handleAddToFriend(id)}
                 onHideSuggestion={() => handleHideSuggestion(id)}
-                onMessage={(e) => handleMessage(e, id)}
+                onMessage={(e) => handleMessage(e, { id, firstName, lastName, avatarsUrl, gender, activityStatus })}
               />
             ))}
           </InfiniteScroll>

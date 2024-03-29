@@ -23,5 +23,6 @@ public class ActiveChatListDtoMapper extends DtoMapperFacade<Chat, ActiveChatLis
     dto.setChatName(receiver.getFullName());
     dto.setAvatarUrl(receiver.getAvatar());
     dto.setReceiverStatus(receiver.getActivityStatus());
+    dto.setReceiverId(receiver.getId());
   }
 }

@@ -1,0 +1,18 @@
+@use "../../../styles/variables/colors";
+
+.chatHeader {
+  background-color: colors.$wash;
+  align-items: center;
+  padding-block: 10px;
+}
+
+.chatInfo {
+  display: flex;
+  align-items: center;
+  margin-inline: 10px;
+  gap: 15px;
+}
+
+.chatHeaderList {
+  display: flex;
+}
