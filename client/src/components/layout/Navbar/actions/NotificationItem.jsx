@@ -29,6 +29,7 @@ const NotificationItem = (props) => {
         dateMassage = seconds === 1 ? `${seconds} second ago` : `${seconds} seconds ago`;
     }
 
+
     switch (eventType) {
         case 'MESSAGE_LIKE':
             messageContent = `Liked your message`;

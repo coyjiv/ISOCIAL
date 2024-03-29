@@ -66,6 +66,7 @@ const NotificationButton = () => {
     })
 
     const fetchMoreData = () => {
+        console.log('fetchPage', page)
         setPage(prevPage => prevPage + 1);
     };
 
@@ -77,20 +78,6 @@ const NotificationButton = () => {
             </button>
             {isNotificationsOpen &&
                     <NotificationList data={notifications} fetchMoreData={fetchMoreData} hasNext={data.hasNext}/>
-                // <StyledMenu
-                //     id="notification"
-                //     anchorEl={ref?.current}
-                //     open={Boolean(anchorEl)}
-                //     onClose={handleClickOutside}
-                //     MenuListProps={{
-                //         'aria-labelledby': 'basic-button',
-                //     }}
-                //
-                // >
-                //     <MenuItem>
-                //             <NotificationList data={notifications} fetchMoreData={fetchMoreData} hasNext={data.hasNext}/>
-                //     </MenuItem>
-                // </StyledMenu>
             }
         </>
     )
