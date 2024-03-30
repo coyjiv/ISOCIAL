@@ -1,9 +1,7 @@
 import styles from './Notification.module.scss'
-import NotificationList from "../../components/layout/Navbar/actions/NotificationList.jsx";
 import {useEffect, useState} from "react";
 import {useGetNotificationQuery} from "../../store/services/notification.js";
 import {withLayout} from "../../hooks/withLayout.jsx";
-import Link from "../../components/Link/index.js";
 import InfiniteScroll from "react-infinite-scroll-component";
 import {PostSkeleton} from "../Profile/skeletons/PostSkeleton.jsx";
 import NotificationItem from "../../components/layout/Navbar/actions/NotificationItem.jsx";

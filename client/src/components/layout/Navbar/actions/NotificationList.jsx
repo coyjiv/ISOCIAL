@@ -2,7 +2,6 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import styles from './notificationList.module.scss'
 import {PostSkeleton} from "../../../../views/Profile/skeletons/PostSkeleton.jsx";
 import NotificationItem from "./NotificationItem.jsx";
-import {useState, useEffect} from "react";
 import Link from '../../../Link'
 
 const NotificationList = (props) => {

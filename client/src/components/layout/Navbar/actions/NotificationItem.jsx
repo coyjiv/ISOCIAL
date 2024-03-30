@@ -1,4 +1,5 @@
 import styles from './notificationList.module.scss'
+import {Link} from "react-router-dom";
 
 const NotificationItem = (props) => {
     const {creationDate, eventType, senderAvatar, senderName, page} = props
@@ -6,6 +7,7 @@ const NotificationItem = (props) => {
     let messageContent
     let dateMassage
 
+    const userId = localStorage.getItem('userId')
     let differenceInMilliseconds = new Date() - new Date(creationDate);
 
     if (differenceInMilliseconds >= 24 * 60 * 60 * 1000) {
@@ -53,18 +55,19 @@ const NotificationItem = (props) => {
     }
 
     return (
-        <li className={styles.notificationItem}>
-            <div className={styles.avatarImgContainer}>
-                <img className={styles.avatarImg} src={senderAvatar} alt="avatar"/>
-            </div>
-            <div className={`${page ? styles.notificationText : styles.notificationContent}`}>
-                <p className={styles.userName}>{senderName} <span
-                    className={`${page ? styles.massage : styles.massageDisplay}`}>{messageContent}</span></p>
-                <p className={`${page ? styles.massageDisplay : styles.massage}`}>{messageContent}</p>
-                <p className={styles.dateMassage}>{dateMassage}</p>
-            </div>
-
-        </li>
+        <Link to={`/profile/:${userId}`}>
+            <li className={styles.notificationItem}>
+                <div className={styles.avatarImgContainer}>
+                    <img className={styles.avatarImg} src={senderAvatar} alt="avatar"/>
+                </div>
+                <div className={`${page ? styles.notificationText : styles.notificationContent}`}>
+                    <p className={styles.userName}>{senderName} <span
+                        className={`${page ? styles.massage : styles.massageDisplay}`}>{messageContent}</span></p>
+                    <p className={`${page ? styles.massageDisplay : styles.massage}`}>{messageContent}</p>
+                    <p className={styles.dateMassage}>{dateMassage}</p>
+                </div>
+            </li>
+        </Link>
     )
 }
 
