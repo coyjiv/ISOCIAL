@@ -5,16 +5,6 @@ import classNames from "classnames";
 import styles from '../navbar.module.scss'
 import {useGetNotificationQuery} from "../../../../store/services/notification.js";
 import NotificationList from "./NotificationList.jsx"
-import {Menu, MenuItem, useTheme} from "@mui/material";
-import styled from "@emotion/styled";
-
-// const StyledMenu = styled(Menu)(() => ({
-//     '& .MuiPaper-root': {
-//         minWidth: '320px',
-//         backgroundColor: `${({theme}) => theme.palette.background.paper}`,
-//         color: `${({theme}) => theme.palette.text.primary}`,
-//     }
-// }))
 
 const NotificationButton = () => {
     const [page, setPage] = useState(0)
@@ -24,7 +14,7 @@ const NotificationButton = () => {
     const {data, isLoading, isSuccess} = useGetNotificationQuery({
         recieverId: localStorage.getItem('userId'),
         page: page,
-        quantity: 10
+        quantity: 15
     })
 
     console.log(data, isLoading, isSuccess)
