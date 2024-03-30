@@ -23,16 +23,13 @@ const Notification = () => {
             const uniqueNotifications = data.content.filter(newNotification => (
                 !notifications.some(existingNotification => existingNotification.id === newNotification.id)
             ));
-            console.log('unique', uniqueNotifications)
             if (uniqueNotifications.length > 0) {
                 setNotifications(prevNotifications => [...prevNotifications, ...data.content]);
             }
         }
-        console.log(notifications, 'useEffect')
     }, [isSuccess, data]);
 
     const fetchMoreData = () => {
-        console.log('fetchPage', page)
         setPage(prevPage => prevPage + 1);
     };
 
