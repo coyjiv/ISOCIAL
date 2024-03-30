@@ -59,6 +59,7 @@ const Notification = () => {
                                                       eventType={notification.eventType}
                                                       senderAvatar={notification.senderAvatar}
                                                       senderName={notification.senderName}
+                                                      page={true}
                                     />
                                 )
                             }

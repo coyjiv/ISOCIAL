@@ -8,7 +8,9 @@
 }
 
 .notificationContainer {
-  padding: 20px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  padding: 10px;
   width: 320px;
   background-color: #fff;
   color: rgba(0, 0, 0, 0.87);
@@ -17,13 +19,12 @@
   max-height: 100wh;
   overflow-x: hidden;
   @include media(s) {
-    width: 80%;
+    width: 100%;
+    max-width: 500px;
   }
-  @include media(sm) {
-    width: 80%;
-    max-width: 680px;
+  @include media(s) {
+    padding: 20px;
   }
-
 }
 
 
@@ -54,14 +55,9 @@
   flex-direction: column;
   gap: 20px;
   overflow: hidden !important;
-  @include media(s) {
-    gap: 30px;
-  }
+  width: 100%;
   @include media(sm) {
     margin: 0 auto 0 auto;
-  }
-  @include media(sm) {
-    gap: 30px;
   }
 }
 

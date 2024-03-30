@@ -12,7 +12,7 @@ const NotificationList = (props) => {
 
     return (
         <div id="scrollableDiv"
-             className={`${page ? styles.notificationWrapper : styles.notificationContainer}`}>
+             className={styles.notificationContainer}>
             <div className={styles.titles}>
                 <h3 className={styles.notificationTitle}>Notifications</h3>
                 <p><Link to={`/notification/`}>View All</Link></p>
@@ -33,6 +33,7 @@ const NotificationList = (props) => {
                                               eventType={notification.eventType}
                                               senderAvatar={notification.senderAvatar}
                                               senderName={notification.senderName}
+                                              page={page}
                             />
                         )
                     }

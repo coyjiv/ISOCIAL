@@ -32,7 +32,7 @@
   position: absolute;
   right: 10px;
   top: 48px;
-  padding: 10px;
+  padding: 20px;
   min-width: 320px;
   max-width: 680px;
   background-color: #fff;
@@ -55,7 +55,7 @@
   color: colors.$black;
   font-size: 20px;
   line-height: 22px;
-  font-weight:600;
+  font-weight: 600;
   margin: 10px 0 15px 0;
 }
 
@@ -63,21 +63,21 @@
   color: colors.$black;
   font-size: 15px;
   line-height: 19px;
-  font-weight:400;
+  font-weight: 400;
 }
 
 .notificationList {
   width: 100%;
   height: auto;
-  margin-bottom: 20px;
   display: flex;
   flex-direction: column;
   gap: 20px;
+  overflow: hidden !important;
   @include media(s) {
     gap: 30px;
   }
   @include media(sm) {
-    margin: 0 auto 30px auto;
+    margin: 0 auto;
   }
   @include media(sm) {
     gap: 30px;
@@ -89,9 +89,15 @@
   color: colors.$grey;
   font-size: 15px;
   line-height: 15px;
-  font-weight:400;
+  font-weight: 400;
   display: flex;
-  gap: 15px;
+  gap: 10px;
+  @include media(s) {
+    gap: 15px;
+  }
+  @include media(sm) {
+    gap: 20px;
+  }
 }
 
 .avatarImgContainer {
@@ -115,12 +121,37 @@
 .userName {
   color: colors.$black;
   font-weight: 500;
+
 }
 
 .notificationContent {
   display: flex;
   flex-direction: column;
   gap: 5px;
+
+}
+
+.notificationText {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 200px;
+  @media screen and (min-width: 370px) {
+    width: max-content;
+  }
+}
+
+.massage {
+  display: inline-block;
+  color: colors.$grey;
+  font-size: 15px;
+  line-height: 15px;
+  font-weight: 400;
+}
+
+.massageDisplay {
+  display: none;
 }
 
 .dateMassage {

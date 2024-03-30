@@ -1,7 +1,7 @@
 import styles from './notificationList.module.scss'
 
 const NotificationItem = (props) => {
-    const {creationDate, eventType, senderAvatar, senderName} = props
+    const {creationDate, eventType, senderAvatar, senderName, page} = props
 
     let messageContent
     let dateMassage
@@ -57,9 +57,10 @@ const NotificationItem = (props) => {
             <div className={styles.avatarImgContainer}>
                 <img className={styles.avatarImg} src={senderAvatar} alt="avatar"/>
             </div>
-            <div className={styles.notificationContent}>
-                <p className={styles.userName}>{senderName}</p>
-                <p>{messageContent}</p>
+            <div className={`${page ? styles.notificationText : styles.notificationContent}`}>
+                <p className={styles.userName}>{senderName} <span
+                    className={`${page ? styles.massage : styles.massageDisplay}`}>{messageContent}</span></p>
+                <p className={`${page ? styles.massageDisplay : styles.massage}`}>{messageContent}</p>
                 <p className={styles.dateMassage}>{dateMassage}</p>
             </div>
 
