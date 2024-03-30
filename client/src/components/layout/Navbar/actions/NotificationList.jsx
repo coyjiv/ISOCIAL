@@ -3,6 +3,7 @@ import styles from './notificationList.module.scss'
 import {PostSkeleton} from "../../../../views/Profile/skeletons/PostSkeleton.jsx";
 import NotificationItem from "./NotificationItem.jsx";
 import {useState, useEffect} from "react";
+import Link from '../../../Link'
 
 const NotificationList = (props) => {
 
@@ -15,8 +16,12 @@ const NotificationList = (props) => {
     }, []);
 
     return (
-        <div  id="scrollableDiv" className={`${styles.notificationContainer} ${isVisible ? `${styles.visibility}` : ''}`}>
-            <h3 className={styles.notificationTitle}>Notifications</h3>
+        <div id="scrollableDiv"
+             className={`${styles.notificationContainer} ${isVisible ? `${styles.visibility}` : ''}`}>
+            <div className={styles.titles}>
+                <h3 className={styles.notificationTitle}>Notifications</h3>
+                <p><Link to={`/notification/`}>View All</Link></p>
+            </div>
             {data.length === 0 && <div className={styles.noNotification}>No notification yet</div>}
             <InfiniteScroll
                 dataLength={data.length}

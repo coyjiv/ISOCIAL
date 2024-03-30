@@ -9,16 +9,12 @@ import NotificationList from "./NotificationList.jsx"
 const NotificationButton = () => {
     const [page, setPage] = useState(0)
     const [notifications, setNotifications] = useState([]);
-    const [anchorEl, setAnchorEl] = useState(null);
 
     const {data, isLoading, isSuccess} = useGetNotificationQuery({
         recieverId: localStorage.getItem('userId'),
         page: page,
         quantity: 15
     })
-
-    console.log(data, isLoading, isSuccess)
-
 
     const ref = useRef(null)
     const [isNotificationsOpen, setIsNotificationsOpen] = useState(false)
@@ -29,23 +25,19 @@ const NotificationButton = () => {
             const uniqueNotifications = data.content.filter(newNotification => (
                 !notifications.some(existingNotification => existingNotification.id === newNotification.id)
             ));
-            console.log('unique', uniqueNotifications)
             if (uniqueNotifications.length > 0) {
                 setNotifications(prevNotifications => [...prevNotifications, ...data.content]);
             }
         }
-        console.log(notifications, 'useEffect')
     }, [isSuccess, data]);
 
 
     const handleClickOutside = () => {
         setIsNotificationsOpen(false)
-        setAnchorEl(null);
     }
 
     const handleClickInside = () => {
         setIsNotificationsOpen(!isNotificationsOpen)
-        setAnchorEl(ref?.current)
     }
 
     useOnClickOutside(ref, handleClickOutside)
@@ -56,7 +48,6 @@ const NotificationButton = () => {
     })
 
     const fetchMoreData = () => {
-        console.log('fetchPage', page)
         setPage(prevPage => prevPage + 1);
     };
 
