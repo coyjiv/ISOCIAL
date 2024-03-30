@@ -7,17 +7,12 @@ import Link from '../../../Link'
 
 const NotificationList = (props) => {
 
-    const {data, fetchMoreData, hasNext} = props
+    const {data, fetchMoreData, hasNext, page} = props
 
-    const [isVisible, setIsVisible] = useState(false);
-
-    useEffect(() => {
-        setIsVisible(true);
-    }, []);
 
     return (
         <div id="scrollableDiv"
-             className={`${styles.notificationContainer} ${isVisible ? `${styles.visibility}` : ''}`}>
+             className={`${page ? styles.notificationWrapper : styles.notificationContainer}`}>
             <div className={styles.titles}>
                 <h3 className={styles.notificationTitle}>Notifications</h3>
                 <p><Link to={`/notification/`}>View All</Link></p>

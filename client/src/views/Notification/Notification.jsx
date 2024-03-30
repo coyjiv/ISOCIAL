@@ -2,6 +2,11 @@ import styles from './Notification.module.scss'
 import NotificationList from "../../components/layout/Navbar/actions/NotificationList.jsx";
 import {useEffect, useState} from "react";
 import {useGetNotificationQuery} from "../../store/services/notification.js";
+import {withLayout} from "../../hooks/withLayout.jsx";
+import Link from "../../components/Link/index.js";
+import InfiniteScroll from "react-infinite-scroll-component";
+import {PostSkeleton} from "../Profile/skeletons/PostSkeleton.jsx";
+import NotificationItem from "../../components/layout/Navbar/actions/NotificationItem.jsx";
 
 const Notification = () => {
     const [page, setPage] = useState(0)
@@ -35,14 +40,32 @@ const Notification = () => {
 
     return (
         <div className={styles.notificationWrapper}>
-            <div className={styles.notificationContainer}>
-                <NotificationList data={notifications}
-                                  fetchMoreData={fetchMoreData}
-                                  hasMore={data.hasMore}></NotificationList>
-
-            </div>
+                <div
+                     className={`${styles.notificationContainer}`}>
+                    <div className={styles.titles}>
+                        <h3 className={styles.notificationTitle}>Notifications</h3>
+                    </div>
+                    <InfiniteScroll
+                        dataLength={notifications.length}
+                        next={fetchMoreData}
+                        hasMore={data?.hasNext}
+                        className={styles.notificationList}
+                        loader={<div style={{display: 'flex', width: '100%'}}><PostSkeleton/></div>}
+                    >
+                            {
+                                notifications.map(notification =>
+                                    <NotificationItem key={notification.id}
+                                                      creationDate={notification.creationDate}
+                                                      eventType={notification.eventType}
+                                                      senderAvatar={notification.senderAvatar}
+                                                      senderName={notification.senderName}
+                                    />
+                                )
+                            }
+                    </InfiniteScroll>
+                </div>
         </div>
     )
 }
-
-export default Notification
+const NotificationPage = withLayout(Notification)
+export default NotificationPage

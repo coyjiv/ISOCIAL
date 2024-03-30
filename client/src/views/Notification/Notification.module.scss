@@ -1,11 +1,109 @@
+@use "../../styles/variables/colors";
+@import '../../styles/mixins/breakpoints';
+
 .notificationWrapper {
-  width: 100vw;
-  height: 100vh;
-  background-color: #f0f2f5;
+  display: flex;
+  justify-content: center;
+  overflow-x: hidden;
 }
 
 .notificationContainer {
-  min-width: 320px;
-  max-width: 680px;
+  padding: 20px;
+  width: 320px;
+  background-color: #fff;
+  color: rgba(0, 0, 0, 0.87);
+  border-radius: 4px;
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
+  max-height: 100wh;
+  overflow-x: hidden;
+  @include media(s) {
+    width: 80%;
+  }
+  @include media(sm) {
+    width: 80%;
+    max-width: 680px;
+  }
+
 }
 
+
+.titles {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.notificationTitle {
+  color: colors.$black;
+  font-size: 20px;
+  line-height: 22px;
+  font-weight: 600;
+  margin: 10px 0 15px 0;
+}
+
+.noNotification {
+  color: colors.$black;
+  font-size: 15px;
+  line-height: 19px;
+  font-weight: 400;
+}
+
+.notificationList {
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow: hidden !important;
+  @include media(s) {
+    gap: 30px;
+  }
+  @include media(sm) {
+    margin: 0 auto 0 auto;
+  }
+  @include media(sm) {
+    gap: 30px;
+  }
+}
+
+.notificationItem {
+  width: 100%;
+  color: colors.$grey;
+  font-size: 15px;
+  line-height: 15px;
+  font-weight: 400;
+  display: flex;
+  gap: 15px;
+}
+
+.avatarImgContainer {
+  width: 56px;
+  height: 56px;
+  overflow: hidden;
+  border-radius: 50%;
+  position: relative;
+  align-self: center;
+}
+
+.avatarImg {
+  width: 100%;
+  height: auto;
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.userName {
+  color: colors.$black;
+  font-weight: 500;
+}
+
+.notificationContent {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.dateMassage {
+  color: colors.$primaryDark;
+}

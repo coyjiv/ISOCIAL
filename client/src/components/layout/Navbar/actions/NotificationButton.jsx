@@ -1,5 +1,5 @@
 import {RiNotification2Fill, RiNotification2Line} from "react-icons/ri";
-import {useState, useRef, useEffect} from 'react'
+import {useState, useRef, useEffect, Fragment} from 'react'
 import {useOnClickOutside} from "usehooks-ts";
 import classNames from "classnames";
 import styles from '../navbar.module.scss'
@@ -54,11 +54,13 @@ const NotificationButton = () => {
 
     return (
         <>
-            <button ref={ref} className={messengerButtonClasses} onClick={handleClickInside}>
+            <button className={messengerButtonClasses} onClick={handleClickInside}>
                 {isNotificationsOpen ? <RiNotification2Fill/> : <RiNotification2Line/>}
             </button>
             {isNotificationsOpen &&
-                    <NotificationList data={notifications} fetchMoreData={fetchMoreData} hasNext={data.hasNext}/>
+                    <div ref={ref}>
+                        <NotificationList data={notifications} fetchMoreData={fetchMoreData} hasNext={data.hasNext} page={false}/>
+                    </div>
             }
         </>
     )
