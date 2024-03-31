@@ -33,15 +33,30 @@
 }
 
 .chatAsideWrapper {
-  display: none;
+  //   display: none;
   flex-direction: column;
-  width: 50%;
-  max-width: 350px;
+  width: 100%;
   background-color: colors.$wash;
   @include breakpoints.media('sm') {
     display: flex;
+    max-width: 350px;
+    width: 50%;
   }
 }
 
 .chatList {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 100%;
+  padding-right: 5px;
+  overflow-y: auto;
+  height: calc(100vh - 131px) !important;
+}
+
+.hideForMobile {
+  display: none;
+  @include breakpoints.media('sm') {
+    display: block;
+  }
 }

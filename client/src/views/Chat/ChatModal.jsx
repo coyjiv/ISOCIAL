@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Dialog, DialogTitle, Avatar, Box, IconButton, Typography, Input } from "@mui/material";
 import { useState } from "react";
 import "./Chat.scss";
@@ -13,8 +14,17 @@ import { useNavigate } from "react-router-dom";
 import { Emoji } from "emoji-picker-react";
 import { useGetUserByNameQuery } from "../../store/services/searchService.js";
 import { useDebounce } from "usehooks-ts";
+import { useGetFriendsListQuery } from "../../store/services/friendService.js";
+import classNames from "classnames";
 
-const ChatModal = ({ friends, modalText, open = false, handleClose }) => {
+const ChatModal = ({ modalText, open = false, handleClose }) => {
+  const [friendsPage, setFriendsPage] = useState(0);
+
+  const { data: friends, isLoading, isSuccess: friendsSuccess } = useGetFriendsListQuery({ id: localStorage.getItem('userId'), page: friendsPage });
+
+  // console.log(friends);
+
+
   const navigate = useNavigate();
 
   const theme = useTheme();
@@ -28,7 +38,13 @@ const ChatModal = ({ friends, modalText, open = false, handleClose }) => {
 
   const { data: searchFriendsData, isSuccess, isFetching } = useGetUserByNameQuery({ name: debouncedValue, page: 0 }, { skip: debouncedValue.length === 0 });
 
+  const noFriends = !searchActive && friends && friends.content.length === 0;
+
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const friendsWrapperClasses = classNames({
+    'friends-wrapper': true,
+    'mt20': !noFriends
+  })
 
   const backAction = () => {
     if (searchActive) {
@@ -69,7 +85,7 @@ const ChatModal = ({ friends, modalText, open = false, handleClose }) => {
       <Box sx={{ display: 'flex', alignItems: 'center', minHeight: '50px', background: theme.palette.wash }}>
         <IconButton onClick={backAction} sx={{ position: 'absolute', left: '20px' }}><FaArrowLeft size={'18px'} /></IconButton>
         {searchActive ?
-          <Input disableUnderline className="chatmodal-search-friends-input" value={searchValue} onChange={e => setSearchValue(e.target.value)} placeholder="Search" sx={{ margin: '0 auto' }} /> :
+          <Input autoFocus disableUnderline className="chatmodal-search-friends-input" value={searchValue} onChange={e => setSearchValue(e.target.value)} placeholder="Search" sx={{ margin: '0 auto' }} /> :
           <Typography variant="p" sx={{ margin: '0 auto', fontSize: '20px', fontWeight: 900, opacity: '0.8' }}>
             New message
           </Typography>
@@ -78,11 +94,11 @@ const ChatModal = ({ friends, modalText, open = false, handleClose }) => {
           {searchActive ? <FaXmark size={'15px'} /> : <FaSearch size={'15px'} />}
         </IconButton>
       </Box>
-      <DialogTitle sx={{ padding: '20px' }} fontSize={20} fontWeight={900} >
+      {!searchActive && <DialogTitle sx={{ padding: '20px' }} fontSize={20} fontWeight={900} >
         {modalText}
-      </DialogTitle>
+      </DialogTitle>}
 
-      <div className="friends-wrapper">
+      <div className={friendsWrapperClasses}>
         {searchActive ?
           searchFriendsData && searchFriendsData?.content.map((friend) => (
             <div className="modal-item-wrapper" key={friend.id}>
@@ -99,7 +115,7 @@ const ChatModal = ({ friends, modalText, open = false, handleClose }) => {
             </div>
           ))
           : friends &&
-          friends.map((friend) => (
+          friends.content.map((friend) => (
             <div className="modal-item-wrapper" key={friend.id}>
               <button
                 className="chat-modal-button"
@@ -114,7 +130,7 @@ const ChatModal = ({ friends, modalText, open = false, handleClose }) => {
             </div>
           ))}
         {
-          (friends && friends.length === 0) && (
+          (noFriends) && (
             <div className="chat-modal-no-friends_wrapper">
               <div>
                 <Emoji unified="1f613" size={64} />
@@ -142,7 +158,6 @@ const ChatModal = ({ friends, modalText, open = false, handleClose }) => {
 };
 
 ChatModal.propTypes = {
-  friends: PropTypes.array.isRequired,
   modalText: PropTypes.string.isRequired,
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,

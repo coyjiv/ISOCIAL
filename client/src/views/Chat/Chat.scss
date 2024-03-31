@@ -4,6 +4,8 @@
 @import '../../styles/mixins/common';
 /* stylelint-disable-next-line scss/at-import-partial-extension */
 @import '../../index.scss';
+/* stylelint-disable-next-line scss/at-import-partial-extension */
+@import '../../styles/mixins/breakpoints';
 
 /* ---   Chat   --- */
 
@@ -34,91 +36,9 @@
   font-size: 16px;
 }
 
-.message-item {
-  max-width: 50%;
-  display: flex;
-  justify-content: flex-start;
-  position: relative;
-}
-
-.bot {
-  align-self: flex-start;
-  text-align: left;
-  margin-left: 50px;
-
-  .message-text {
-    margin: 5px;
-    padding: 10px;
-    border-radius: 20px;
-    background-color: #f0f0f0;
-    color: #000;
-    font-family: 'Segoe UI', sans-serif;
-  }
-
-  .message-avatar {
-    position: absolute;
-    left: -36px;
-    top: 10px;
-  }
-
-  .message-options {
-    position: absolute;
-    top: 25%;
-    left: 100%;
-
-    .message-options-option {
-      @include message-option;
-    }
-  }
-
-  &:hover .message-options {
-    display: block;
-  }
-}
-
 .avatar-img {
   width: 40px;
   border-radius: 20px;
-}
-
-.user {
-  align-self: flex-end;
-  text-align: right;
-
-  .message-body {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-
-    .message-text {
-      margin: 5px;
-      padding: 10px;
-      border-radius: 20px;
-      background-color: #0084ff;
-      color: #fff;
-      font-family: 'Segoe UI', sans-serif;
-    }
-
-    .message-img {
-      max-width: 500px;
-    }
-  }
-
-  /* stylelint-disable-next-line no-descending-specificity */
-  .message-options {
-    position: absolute;
-    top: 25%;
-    left: -30px;
-    display: none;
-
-    .message-options-option {
-      @include message-option;
-    }
-  }
-
-  &:hover .message-options {
-    display: block;
-  }
 }
 
 .chat-input {
@@ -228,7 +148,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  height: 80svh;
   border-radius: 20px;
   position: relative;
   width: 100%;
@@ -265,6 +185,10 @@
     animation: moveStripes 4s linear infinite;
     will-change: background-position;
     z-index: 0;
+  }
+
+  @include media('sm') {
+    height: 40svh;
   }
 }
 
@@ -305,41 +229,8 @@
   overflow-y: auto;
 }
 
-.delete-icon {
-  width: 20px;
-  height: 20px;
-
-  &:hover {
-    color: black;
-  }
-}
-
-.delete-button {
-  padding: 8px 10px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  background: none;
-
-  &:hover {
-    border-radius: 20px;
-    background-color: #999;
-  }
-
-  &:active {
-    background-color: #7c7777;
-  }
-}
-
-.chat-info-wrapper {
-  display: grid;
-  gap: 5px;
-  margin: 5px 10px;
-}
-
-.last-message {
-  font-size: 18px;
-  font-weight: 500;
-  color: #939090;
+.mt20 {
+  margin-top: 20px;
 }
 
 .active-link {

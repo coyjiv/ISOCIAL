@@ -27,5 +27,7 @@ public class MessageNotificationDtoMapper extends DtoMapperFacade<Message, Messa
     User sender = userRepository.findActiveById(entity.getSenderId()).orElseThrow();
     dto.setSenderName(sender.getFullName());
     dto.setSenderAvatarUrl(sender.getAvatar());
+    dto.setSenderGender(sender.getGender());
+
   }
 }

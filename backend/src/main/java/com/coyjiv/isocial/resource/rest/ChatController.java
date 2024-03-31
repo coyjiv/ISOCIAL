@@ -4,6 +4,7 @@ import com.coyjiv.isocial.dto.request.message.CreateMessageRequestDto;
 import com.coyjiv.isocial.exceptions.ChatAlreadyExistException;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.exceptions.RequestValidationException;
+import com.coyjiv.isocial.service.chat.ChatService;
 import com.coyjiv.isocial.service.chat.IChatService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/api/chats")
 public class ChatController {
-  private final IChatService chatService;
+  private final ChatService chatService;
 
 
   @GetMapping
@@ -59,5 +60,4 @@ public class ChatController {
     throws EntityNotFoundException {
     return ResponseEntity.ok(chatService.isUserInvolvedInChat(userId));
   }
-
 }

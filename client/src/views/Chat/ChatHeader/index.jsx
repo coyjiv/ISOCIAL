@@ -5,6 +5,7 @@ import styles from './chatHeader.module.scss'
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { StyledBadge } from '../../../components/layout/Navbar/actions/actions.styled';
+import moment from 'moment';
 
 const ChatHeader = ({ mode }) => {
     const chatInfo = useSelector(state => mode === 'chat' ? state.chat.selectedChat : state.chat.pendingChat)
@@ -12,11 +13,12 @@ const ChatHeader = ({ mode }) => {
     const backAction = () => {
         navigate('/chats')
     }
+    const lastSeen = moment(chatInfo?.lastSeen).fromNow();
     return (
         <header className={styles.chatHeader}>
             <nav>
                 <ul className={styles.chatHeaderList}>
-                    <li><IconButton onClick={backAction}><FaArrowLeft size={'18px'} /></IconButton></li>
+                    <li className={styles.chatHeaderListBack}><IconButton onClick={backAction}><FaArrowLeft size={'18px'} /></IconButton></li>
                     <li>
                         <div className={styles.chatInfo}>
                             {chatInfo?.receiverStatus !== "ONLINE" ? < Avatar sx={{ width: '35px', height: '35px' }} src={chatInfo?.avatarUrl} alt='user' /> :
@@ -28,6 +30,7 @@ const ChatHeader = ({ mode }) => {
                                     <Avatar alt="User profile avatar" src={chatInfo?.avatarUrl} />
                                 </StyledBadge>}
                             <p>{chatInfo?.chatName}</p>
+                            {chatInfo?.receiverStatus !== "ONLINE" && <span className={styles.lastSeen}>last seen: {lastSeen}</span>}
                         </div>
                     </li>
                 </ul>

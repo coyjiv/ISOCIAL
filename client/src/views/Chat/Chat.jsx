@@ -1,129 +1,55 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect } from "react";
 import "./Chat.scss";
-import cx from "classnames";
-import { AiOutlineDelete } from "react-icons/ai";
 import {
-  useDeleteMessageMutation,
-  useGetMessagesQuery,
-  useSendMessageMutation,
+  useGetChatRecipientQuery,
 } from "../../store/services/chatService";
-import { AutosizeTextareaSend } from "../../components/AutosizeTextareaSend";
-import * as Yup from "yup";
-import { useParams } from "react-router";
+import { useParams, useNavigate } from "react-router";
 import PropTypes from "prop-types";
-import { withWebsocket } from "../../hooks/withWebsocket";
 import { withLayout } from "../../hooks/withLayout";
+import { useSelector, useDispatch } from "react-redux";
+import { setSelectedChat } from "../../store/chatSlice";
+import ChatView from "./ChatView";
 
-const validationScheme = Yup.object().shape({
-  text: Yup.string()
-    .required("Message is required")
-    .max(260, "Message is too long"),
-});
+
 
 const ChatPage = () => {
-  // const { id: paramsId } = useParams();
+  const navigate = useNavigate();
+  const { id: paramsId } = useParams();
+  console.log(paramsId, "paramsId in Chat component");
+  if (!paramsId) {
+    console.log("No params id");
 
-  // const chatId = id || paramsId;
+    navigate('/chats')
+  }
 
-  const [messagesData, setMessages] = useState([]);
+  const selectedChat = useSelector((state) => state.chat.selectedChat);
+  const { data: chatData, isLoading, isSuccess } = useGetChatRecipientQuery(paramsId, { skip: !paramsId });
+  console.log(chatData, "chat data");
 
-  // eslint-disable-next-line no-unused-vars
-  const [page, setPage] = useState(0);
-  const contentRef = useRef();
+  const dispatch = useDispatch();
 
-  // const { data: messages, isLoading } = useGetMessagesQuery(
-  //   { page, chatId },
-  //   { skip: !chatId },
-  // );
-  const [sendMessage] = useSendMessageMutation();
-  const [deleteMessage] = useDeleteMessageMutation();
-  const userId = Number(localStorage.getItem("userId"));
-
-  // useEffect(() => {
-  //   if (!isLoading && messages && messages.length > 0) {
-  //     setMessages(messages);
-  //   }
-  // }, [isLoading, messages]);
-
-  // const handleSendMessage = async (values) => {
-  //   try {
-  //     const response = await sendMessage({ chatId, text: values.text });
-  //     console.log(response.data);
-  //     setMessages([...messagesData, response.data]);
-  //   } catch (error) {
-  //     console.error("Send message error:", error);
-  //   }
-  // };
-
-  const handleDeleteMessage = async (item) => {
-    try {
-      console.log(item.id);
-      await deleteMessage({ messageId: item.id });
-      setMessages(messagesData.filter((message) => message.id !== item.id));
-    } catch (error) {
-      console.error("Delete message error:", error);
+  useEffect(() => {
+    if (!isLoading && !isSuccess) {
+      console.log("Chat not found");
+      navigate('/chats')
     }
-  };
+  }, [isLoading, isSuccess, navigate])
 
-  // eslint-disable-next-line no-unused-vars
-  const scrollBottom = () => {
-    const contentHeight = contentRef.current.clientHeight;
-    console.log(contentRef);
-    console.log(contentHeight);
-    window.scrollTo({
-      bottom: contentHeight,
-      behavior: "smooth",
-    });
-  };
+  useEffect(() => {
+    if (selectedChat === null && (chatData && chatData?.id)) {
+      dispatch(setSelectedChat(chatData));
+    }
+  }, [chatData, dispatch, selectedChat])
 
-  /*useEffect(scrollBottom, []);*/
+  useEffect(() => {
+    return () => {
+      dispatch(setSelectedChat(null));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
-    <>
-      <div className="message-container">
-        <div className="chat-messages" ref={contentRef}>
-          {/* {messagesData.map((message, index) => (
-            <div
-              key={index}
-              className={cx(
-                "message-item",
-                { user: message.senderId === userId },
-                { bot: message.senderId !== userId },
-              )}
-            >
-              <div
-                className={cx(
-                  messages[index - 1] === undefined || {
-                    "message-avatar": messages[index - 1].senderId !== userId,
-                  },
-                )}
-              ></div>
-              <div className="message-body">
-                <div className="message-text">{message.text}</div>
-                <div className="message-img"></div>
-              </div>
-              <div className="message-options">
-                <div
-                  className="message-options-option"
-                  onClick={() => handleDeleteMessage(message)}
-                >
-                  <AiOutlineDelete />
-                </div>
-                <div className="message-options-option"></div>
-                <div className="message-options-option"></div>
-              </div>
-            </div>
-          ))} */}
-        </div>
-        <div className="chat-input">
-          <AutosizeTextareaSend
-            // onSubmit={handleSendMessage}
-            placeholder={"Type your message..."}
-            validationScheme={validationScheme}
-          />
-        </div>
-      </div>
-    </>
+    <ChatView id={paramsId} />
   );
 };
 
@@ -131,4 +57,4 @@ ChatPage.propTypes = {
   id: PropTypes.string,
 };
 
-export const Chat = withLayout(withWebsocket(ChatPage));
+export const Chat = withLayout(ChatPage);
