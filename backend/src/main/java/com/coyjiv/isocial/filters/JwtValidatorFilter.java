@@ -1,6 +1,7 @@
 package com.coyjiv.isocial.filters;
 
 import com.coyjiv.isocial.auth.JwtTokenProvider;
+import io.sentry.Sentry;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,6 +29,7 @@ public class JwtValidatorFilter extends OncePerRequestFilter {
       try {
         jwtTokenProvider.validateAccessToken(token);
       } catch (Exception e) {
+        Sentry.captureException(e);
         response.sendError(401, "Token not valid !");
         return;
       }

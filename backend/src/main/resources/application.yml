@@ -23,6 +23,9 @@ spring:
   profiles:
     active: dev
 ---
+sentry:
+  dsn: https://254fdac55ecd748213645932e382766a@o4507007176867840.ingest.us.sentry.io/4507007238471680
+  traces-sample-rate: 1.0
 spring:
   sql:
     init:
@@ -63,6 +66,9 @@ spring:
       on-profile: dev
 ---
 ---
+sentry:
+  dsn: https://254fdac55ecd748213645932e382766a@o4507007176867840.ingest.us.sentry.io/4507007238471680
+  traces-sample-rate: 0.6
 spring:
   flyway:
     enabled: false

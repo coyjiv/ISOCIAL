@@ -26,6 +26,7 @@ import com.coyjiv.isocial.service.subscriber.ListSubscriberService;
 import com.coyjiv.isocial.transfer.post.PostRequestMapper;
 import com.coyjiv.isocial.transfer.post.PostResponseMapper;
 import com.coyjiv.isocial.transfer.post.RePostRequestMapper;
+import io.sentry.Sentry;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -182,6 +183,7 @@ public class PostService implements IPostService {
         try {
           favoriteService.delete(entry.getId(), false);
         } catch (IllegalAccessException | RequestValidationException e) {
+          Sentry.captureException(e);
           throw new RuntimeException(e);
         }
       });
@@ -206,6 +208,7 @@ public class PostService implements IPostService {
           try {
             favoriteService.delete(en.getId(), false);
           } catch (IllegalAccessException | RequestValidationException e) {
+            Sentry.captureException(e);
             throw new RuntimeException(e);
           }
         });

@@ -5,6 +5,7 @@ import com.coyjiv.isocial.exceptions.ChatAlreadyExistException;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.exceptions.RequestValidationException;
 import com.coyjiv.isocial.service.chat.IChatService;
+import io.sentry.Sentry;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -43,6 +44,7 @@ public class ChatController {
     try {
       return ResponseEntity.status(201).body(chatService.create(firstMessage, receiverId));
     } catch (ChatAlreadyExistException exception) {
+      Sentry.captureException(exception);
       return ResponseEntity.status(400).body(exception.getMessage());
     }
   }

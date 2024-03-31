@@ -7,6 +7,7 @@ import com.coyjiv.isocial.dto.respone.page.PageWrapper;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.service.friend.FriendService;
 
+import io.sentry.Sentry;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -84,6 +85,7 @@ public class FriendController {
       }
 
     } catch (Exception e) {
+      Sentry.captureException(e);
       return ResponseEntity.status(400).body(0L);
     }
 
@@ -100,6 +102,7 @@ public class FriendController {
       }
 
     } catch (Exception e) {
+      Sentry.captureException(e);
       return ResponseEntity.status(400).body(0L);
     }
   }

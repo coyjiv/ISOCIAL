@@ -7,6 +7,7 @@ import com.coyjiv.isocial.dto.request.auth.RefreshRequestDto;
 import com.coyjiv.isocial.dto.request.user.UserRegistrationRequestDto;
 import com.coyjiv.isocial.service.auth.IAuthService;
 import com.coyjiv.isocial.service.user.IUserService;
+import io.sentry.Sentry;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +38,7 @@ public class AuthenticationController {
     try {
       userService.create(requestDto);
     } catch (Exception e) {
+      Sentry.captureException(e);
       return ResponseEntity.badRequest().body(e.getMessage());
     }
     return ResponseEntity.status(201).build();
@@ -54,6 +56,7 @@ public class AuthenticationController {
       userService.confirmUser(email);
       return ResponseEntity.status(204).build();
     } catch (AccountNotFoundException exception) {
+      Sentry.captureException(exception);
       return ResponseEntity.status(404).body(exception.getMessage());
     }
   }
@@ -78,6 +81,7 @@ public class AuthenticationController {
     try {
       return ResponseEntity.ok(authService.login(loginRequestDto));
     } catch (Exception exception) {
+      Sentry.captureException(exception);
       return ResponseEntity.status(401).body(exception.getMessage());
     }
   }
@@ -87,6 +91,7 @@ public class AuthenticationController {
     try {
       return ResponseEntity.ok(authService.refresh(refreshRequestDto));
     } catch (Exception exception) {
+      Sentry.captureException(exception);
       return ResponseEntity.status(401).body(exception.getMessage());
     }
   }
@@ -99,6 +104,7 @@ public class AuthenticationController {
       userService.resetPassword(uuid, passwordResetRequestDto);
       return ResponseEntity.status(200).body("Password reset successfully");
     } catch (UsernameNotFoundException e) {
+      Sentry.captureException(e);
       return ResponseEntity.status(404).body(e.getMessage());
     }
   }
@@ -109,6 +115,7 @@ public class AuthenticationController {
       userService.requestPasswordReset(email);
       return ResponseEntity.status(200).body("Password reset request sent successfully.");
     } catch (UsernameNotFoundException ex) {
+      Sentry.captureException(ex);
       return ResponseEntity.status(404).body("Email not found.");
     }
   }
