@@ -69,18 +69,17 @@ const MainSearch = ({ value, searchItems, onChange }) => {
               iSocial
             </Typography>
           </LogoLink>
-          <ActionIconButton onClick={handleBlur} icon="arrowLeft" />
         </LogoHiddenContentWrapper>
       </LogoContainer>
       <SearchContainer>
+      <ActionIconButton onClick={handleBlur} icon="arrowLeft" />
         <SearchIcon open={inputActive} />
         <SearchBase
           value={value}
           onFocus={() => setInputActive(!inputActive)}
           onChange={(e) => handleChange(e)}
         />
-      </SearchContainer>
-      {menuOpen && options && (
+              {menuOpen && options && (
         <SearchMenu>
           {options?.map(({ id, firstName, lastName, avatarsUrl }) => (
             <MainSearchItem
@@ -98,6 +97,8 @@ const MainSearch = ({ value, searchItems, onChange }) => {
           <MainSearchEmptySection title="No results" user="user" />
         </SearchMenu>
       )}
+      </SearchContainer>
+
     </SearchWrapper>
   );
 };

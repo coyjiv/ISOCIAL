@@ -10,6 +10,7 @@ import { Typography } from "@mui/material";
 import { useGetUserByNameQuery } from "../../../store/services/searchService";
 import { useState } from "react";
 import { useDebounce, useMediaQuery } from "usehooks-ts";
+import {Box} from "@mui/material";
 
 const Navbar = () => {
 
@@ -28,13 +29,14 @@ const Navbar = () => {
 
   return (
     <header className={styles.header}>
-      {!isMobile ? <MainSearch value={value} searchItems={data} onChange={handleChange} />
-        : <Link to='/'><Typography typography={'h1'} fontSize={22} fontWeight={'bold'}>iSocial</Typography></Link>}
-
-      <nav className={styles.navWrapper}>
-        <ul className={styles.navLinkList}>
+            <nav className={styles.navWrapper}>
+              <Box>
+              {!isMobile ? <MainSearch value={value} searchItems={data} onChange={handleChange} />
+              : <Link to='/'><Typography typography={'h1'} fontSize={22} fontWeight={'bold'}>iSocial</Typography></Link>}
+              </Box>
+        <Box className={styles.navLinkList}>
           <HeaderLinks navbarLinks={navbarLinks} />
-        </ul>
+        </Box>
         <ul className={styles.actionList}>
           <li><NotificationButton /></li>
           <li><Link to='/chats'><MessengerButton /></Link></li>

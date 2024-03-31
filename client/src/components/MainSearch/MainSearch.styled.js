@@ -3,47 +3,42 @@ import { Stack } from '@mui/material'
 import { Link } from 'react-router-dom'
 import { FiSearch } from 'react-icons/fi'
 
-export const LogoContainer = styled(Stack)(({ open }) => ({
+export const LogoContainer = styled(Stack)(() => ({
   flexDirection: 'row',
   alignItems: 'center',
-  width: open ? '67px' : '109px',
-  overflow: 'hidden',
   transition: 'all 0.15s ease-in-out',
 }))
 
-export const SearchIcon = styled(FiSearch)(({ open, theme }) => ({
-  width: open ? '0px' : '20px',
+export const SearchIcon = styled(FiSearch)(({ open,theme }) => ({
+  width: '20px',
+  display: open ? 'none': 'block',
   height: '20px',
   color: theme.palette.greyColor,
   transition: 'all 0.15s ease-in-out',
 }))
 
-export const LogoHiddenContentWrapper = styled(Stack)(({ open }) => ({
+export const LogoHiddenContentWrapper = styled(Stack)(() => ({
   flexDirection: 'row',
-  transform: `translateX(${open ? '-67px' : '0'})`,
   transition: 'all 0.15s ease-in-out',
-  // paddingLeft: '16px',
+
 }))
 
-export const SearchWrapper = styled(Stack)(({ open }) => ({
+export const SearchWrapper = styled(Stack)(() => ({
   padding: '7px 8px 7px 0',
   flexDirection: 'row',
-  gap: open ? '2px' : '8px',
+  gap:'8px',
   alignItems: 'center',
   position: 'relative',
   transition: 'all 0.15s ease-in-out',
-  boxShadow: open
-    ? '0 12px 12px rgba(0, 0, 0, 0.2), inset 0 0 0 0 rgba(255, 255, 255, 0.5);'
-    : 'none',
+
 }))
 
-export const LogoLink = styled(Link)(({ open }) => ({
-  opacity: open ? '0' : '1',
+export const LogoLink = styled(Link)(() => ({
   transition: 'all 0.1s ease-in-out',
 }))
 
 export const SearchBase = styled.input(({ theme }) => ({
-  width: '100%',
+  width: '100%' ,
   height: '100%',
   border: 'none',
   outline: 'none',
@@ -56,14 +51,17 @@ export const SearchBase = styled.input(({ theme }) => ({
   },
 }))
 
-export const SearchContainer = styled(Stack)(({ theme }) => ({
+export const SearchContainer = styled(Stack)(({ open, theme }) => ({
   flexDirection: 'row',
   borderRadius: '20px',
   alignItems: 'center',
-  width: '100%',
+  width: '224px',
   gap: '4px',
   backgroundColor: theme.palette.background.field,
   padding: '8px',
+    boxShadow: open
+    ? '0 12px 12px rgba(0, 0, 0, 0.2), inset 0 0 0 0 rgba(255, 255, 255, 0.5);'
+    : 'none',
 }))
 
 export const SearchMenu = styled(Stack)(({ theme }) => ({
