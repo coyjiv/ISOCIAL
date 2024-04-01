@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "cypress:open": "cypress open",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0 && npx stylelint '**/*.{css,scss}' --ignore-path .gitignore",
     "preview": "vite preview"
   },
@@ -54,7 +55,9 @@
     "@types/react": "^18.2.43",
     "@types/react-dom": "^18.2.17",
     "@vitejs/plugin-react-swc": "^3.5.0",
+    "cypress": "^13.7.1",
     "eslint": "^8.55.0",
+    "eslint-plugin-cypress": "^2.15.1",
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
