@@ -17,6 +17,7 @@ import {
   FriendsSuggestions,
 } from "../Friends";
 import Confirmation from "../Confirmation/Confirmation";
+import Notification from "../Notification/Notification.jsx";
 
 import Post from "../Post";
 
@@ -130,6 +131,11 @@ const router = createBrowserRouter([
   {
     path: "saved",
     element: <Saved />,
+    errorElement: <ErrorFallback />,
+  },
+  {
+    path: "notification",
+    element: <Notification />,
     errorElement: <ErrorFallback />,
   }
 ]);

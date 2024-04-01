@@ -30,7 +30,34 @@ export const profileApi = createApi({
       },
       invalidatesTags: (result, error, { id }) => [{ type: 'Profile', id }],
     }),
+    subscribeToUser: builder.mutation({
+      query: ({ id }) => {
+        return {
+          url: `subscriptions`,
+          method: 'POST',
+          data: {
+            userId: id,
+          },
+        }
+      },
+    }),
+    unsubscribeFromUser: builder.mutation({
+      query: ({ id }) => {
+        return {
+          url: `subscriptions`,
+          method: 'DELETE',
+          data: {
+            userId: id,
+          },
+        }
+      },
+    }),
   }),
 })
 
-export const { useGetProfileByIdQuery, useUpdateProfileMutation } = profileApi
+export const {
+  useGetProfileByIdQuery,
+  useUpdateProfileMutation,
+  useSubscribeToUserMutation,
+  useUnsubscribeFromUserMutation,
+} = profileApi

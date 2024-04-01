@@ -1,5 +1,6 @@
 package com.coyjiv.isocial.dto.respone.post;
 
+import com.coyjiv.isocial.domain.UserGender;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,4 +16,5 @@ public class RepostNotificationDto {
   private String senderName;
   private String senderAvatarUrl;
   private String text;
+  private UserGender senderGender;
 }

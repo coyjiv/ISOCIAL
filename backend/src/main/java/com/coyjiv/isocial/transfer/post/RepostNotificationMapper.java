@@ -30,5 +30,6 @@ public class RepostNotificationMapper extends DtoMapperFacade<Post, RepostNotifi
     dto.setSenderAvatarUrl(user.getAvatar());
     dto.setSenderName(user.getFullName());
     dto.setText(entity.getTextContent());
+    dto.setSenderGender(user.getGender());
   }
 }

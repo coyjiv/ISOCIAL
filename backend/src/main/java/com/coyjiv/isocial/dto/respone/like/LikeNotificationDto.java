@@ -1,6 +1,7 @@
 package com.coyjiv.isocial.dto.respone.like;
 
 import com.coyjiv.isocial.domain.LikeableEntity;
+import com.coyjiv.isocial.domain.UserGender;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,4 +16,5 @@ public class LikeNotificationDto {
   private String likerName;
   private String likerAvatar;
   private LikeableEntity entityType;
+  private UserGender senderGender;
 }

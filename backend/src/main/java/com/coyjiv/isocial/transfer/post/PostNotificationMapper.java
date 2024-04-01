@@ -25,6 +25,8 @@ public class PostNotificationMapper extends DtoMapperFacade<Post, PostNotificati
     dto.setAuthorPremium(author.isPremium());
     dto.setAuthorPremiumNickname(author.getPremiumNickname());
     dto.setAuthorPremiumEmoji(author.getPremiumEmoji());
+    dto.setSenderGender(author.getGender());
+    dto.setPostId(entity.getId());
   }
 }
 

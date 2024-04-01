@@ -96,7 +96,7 @@ export const ProfileLayout = ({ id }) => {
                         <Stack direction={'row'} marginTop={{ xs: 0, md: 30, lg: 0 }} spacing={1} className={styles.profileActions}>
                             <FriendRequestButton isPersonalProfile={isPersonalProfile} profile={profile} id={id} />
                             <Button onClick={isPersonalProfile ? openProfileEdit : openMessenger} variant='outlined' sx={{ width: '180px', height: '36px', fontSize: 14 }}>{isPersonalProfile ? "Edit Profile" : "Send message"}</Button>
-                            <NotificationSubscriptionBtn />
+                            {!isPersonalProfile && <NotificationSubscriptionBtn />}
                         </Stack>
                     </Stack>
                     <Divider />

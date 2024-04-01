@@ -7,6 +7,7 @@ import chatSlice from './chatSlice'
 
 import { configureStore } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query'
+import {notificationApi} from "./services/notification.js";
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
     [postsApi.reducerPath]: postsApi.reducer,
     [commentApi.reducerPath]: commentApi.reducer,
     [searchApi.reducerPath]: searchApi.reducer,
+    [notificationApi.reducerPath]: notificationApi.reducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -23,7 +25,8 @@ export const store = configureStore({
       friendsApi.middleware,
       postsApi.middleware,
       commentApi.middleware,
-      searchApi.middleware
+      searchApi.middleware,
+      notificationApi.middleware
     ),
 })
 
