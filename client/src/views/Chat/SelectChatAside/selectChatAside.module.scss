@@ -1,0 +1,62 @@
+@use "../../../styles/variables/colors";
+@use "../../../styles/mixins/breakpoints";
+
+.chatMainWrapper {
+  display: flex;
+  flex-direction: column;
+  height: calc(100svh - 52px);
+  width: 100%;
+  background-color: colors.$disabledButtonBackground;
+
+  @include breakpoints.media('sm') {
+    height: calc(100svh - 56px);
+  }
+}
+
+.chatTextArea {
+  @include breakpoints.media('sm') {
+    font-size: 16px;
+  }
+}
+
+.chatTextAreaHolder {
+  background-color: colors.$lightGrey;
+  margin-top: auto;
+
+  @include breakpoints.media('sm') {
+    padding-block: 3px;
+  }
+}
+
+.chatAsideMainWrapper {
+  display: flex;
+}
+
+.chatAsideWrapper {
+  //   display: none;
+  flex-direction: column;
+  width: 100%;
+  background-color: colors.$wash;
+  @include breakpoints.media('sm') {
+    display: flex;
+    max-width: 350px;
+    width: 50%;
+  }
+}
+
+.chatList {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 100%;
+  padding-right: 5px;
+  overflow-y: auto;
+  height: calc(100vh - 131px) !important;
+}
+
+.hideForMobile {
+  display: none;
+  @include breakpoints.media('sm') {
+    display: block;
+  }
+}

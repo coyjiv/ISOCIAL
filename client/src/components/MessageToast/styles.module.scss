@@ -1,24 +1,19 @@
-
-
-.container{
-
-}
-.title{
-  overflow: hidden;
-  //white-space: nowrap;
-  //text-wrap: nowrap;
-  //text-overflow: ellipsis;
+.title {
   margin-bottom: 8px;
   font-weight: 900;
-  font-family: "Segoe UI", sans-serif;
+  font-family: 'Segoe UI', sans-serif;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-.text{
+.text {
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  font-family: "Segoe UI", sans-serif;
+  font-family: 'Segoe UI', sans-serif;
   font-size: 16px;
   line-height: 20px;
 }

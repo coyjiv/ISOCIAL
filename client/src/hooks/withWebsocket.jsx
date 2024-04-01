@@ -1,10 +1,19 @@
 import { useSubscription } from "react-stomp-hooks";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import ToastMessage from "../components/MessageToast/MessageToast.jsx";
+import { addMessage, addWSMessage } from "../store/chatSlice.js";
+import { userAvatar } from "../data/placeholders.js";
+import { Avatar } from "@mui/material";
+import { fetchChats } from "../store/actions/chat.js";
 
 const withWebsocket = (WrappedComponent) => {
     const WithWebSocket = (props) => {
+        const dispatch = useDispatch();
+        const selectedChat = useSelector(state => state.chat.selectedChat);
+        const chats = useSelector(state => state.chat.chats);
+
         useSubscription(`/user/${localStorage.getItem("userId")}/messages`, handleMessage)
         useSubscription(`/user/${localStorage.getItem("userId")}/friends`, handleFriend)
         useSubscription(`/user/${localStorage.getItem("userId")}/reposts`, handleRepost)
@@ -12,18 +21,27 @@ const withWebsocket = (WrappedComponent) => {
         useSubscription(`/user/${localStorage.getItem("userId")}/likes`, handleLike)
         useSubscription(`/user/${localStorage.getItem("userId")}/comments`, handleComment)
 
+        const avatar = body => userAvatar({ avatarsUrl: [body.senderAvatarUrl], firstName: body?.senderName?.split(' ')?.[0], lastName: body?.senderName?.split(' ')?.[1] })
 
         async function handleMessage(msg) {
             const message = await msg.body;
             const body = JSON.parse(message);
             console.log("ws", body);
+            dispatch(addMessage(body));
+            if (body?.chatId === selectedChat?.id) {
+                console.log("trying to add Websocket message");
+                dispatch(addWSMessage(body));
+            } else if (!chats.data.find(chat => chat.id === body.chatId)) {
+                dispatch(fetchChats({ page: 0 }))
+            }
             toast.info(<ToastMessage link={`/chats/${body.chatId}`} msg={body} type={"MESSAGE"} />,
                 {
                     icon: () => <Link to={`/chats/${body.chatId}`}>
-                        <img style={{ objectFit: 'cover', borderRadius: '50%' }} width={'100%'} height={'auto'}
-                            src={body.senderAvatarUrl}
-                            alt={'avatar'} />
-                    </Link>
+                        <Avatar sx={{ width: '100%', height: '100%' }} height={'auto'}
+                            src={avatar(body)}
+                            alt={`${body.senderName} avatar`} />
+                    </Link>,
+                    // position: isMobile ? "top-center" : "bottom-le"
                 });
         }
 
@@ -34,8 +52,8 @@ const withWebsocket = (WrappedComponent) => {
             toast.info(<ToastMessage link={`/friends/requests`} msg={body} type={"FRIEND"} />,
                 {
                     icon: () => <Link to={`/friends/requests`}>
-                        <img style={{ objectFit: 'cover', borderRadius: '50%' }} width={'100%'} height={'auto'}
-                            src={body.senderAvatarUrl}
+                        <Avatar width={'100%'} height={'auto'}
+                            src={avatar(body)}
                             alt={'avatar'} />
                     </Link>
                 });
@@ -47,8 +65,8 @@ const withWebsocket = (WrappedComponent) => {
             toast.info(<ToastMessage link={`/post/${body.postId}`} msg={body} type={"REPOST"} />,
                 {
                     icon: () => <Link to={`/post/${body.postId}`}>
-                        <img style={{ objectFit: 'cover', borderRadius: '50%' }} width={'100%'} height={'auto'}
-                            src={body.senderAvatarUrl}
+                        <Avatar width={'100%'} height={'auto'}
+                            src={avatar(body)}
                             alt={'avatar'} />
                     </Link>
                 });
@@ -61,8 +79,8 @@ const withWebsocket = (WrappedComponent) => {
             toast.info(<ToastMessage link={`/post/${body.postId}`} msg={body} type={"SUBSCRIPTION"} />,
                 {
                     icon: () => <Link to={`/post/${body.postId}`}>
-                        <img style={{ objectFit: 'cover', borderRadius: '50%' }} width={'100%'} height={'auto'}
-                            src={'https://sm.ign.com/ign_nordic/cover/a/avatar-gen/avatar-generations_prsz.jpg'}
+                        <Avatar width={'100%'} height={'auto'}
+                            src={avatar(body)}
                             alt={'avatar'} />
                     </Link>
                 });
@@ -75,7 +93,7 @@ const withWebsocket = (WrappedComponent) => {
                 toast.info(<ToastMessage link={`/post/${body.entityId}`} msg={body} type={"LIKE_POST"} />,
                     {
                         icon: () => <Link to={`/post/${body.entityId}`}>
-                            <img style={{ objectFit: 'cover', borderRadius: '50%' }} width={'100%'} height={'auto'}
+                            <Avatar width={'100%'} height={'auto'}
                                 src={body.likerAvatar}
                                 alt={'avatar'} />
                         </Link>
@@ -84,7 +102,7 @@ const withWebsocket = (WrappedComponent) => {
                 toast.info(<ToastMessage link={`/post/${body.entityId}`} msg={body} type={"LIKE_COMMENT"} />,
                     {
                         icon: () => <Link to={`/post/${body.entityId}`}>
-                            <img style={{ objectFit: 'cover', borderRadius: '50%' }} width={'100%'} height={'auto'}
+                            <Avatar width={'100%'} height={'auto'}
                                 src={body.likerAvatar}
                                 alt={'avatar'} />
                         </Link>
@@ -98,7 +116,7 @@ const withWebsocket = (WrappedComponent) => {
             toast.info(<ToastMessage link={`/post/${body.postId}`} msg={body} type={"COMMENT"} />,
                 {
                     icon: () => <Link to={`/post/${body.postId}`}>
-                        <img style={{ objectFit: 'cover', borderRadius: '50%' }} width={'100%'} height={'auto'}
+                        <Avatar width={'100%'} height={'auto'}
                             src={body.commenterAvatar}
                             alt={'avatar'} />
                     </Link>

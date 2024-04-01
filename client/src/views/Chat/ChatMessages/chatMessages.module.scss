@@ -1,0 +1,26 @@
+@use "../../../styles/variables/colors";
+
+.messagesWrapper {
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 160px) !important;
+  flex-direction: column-reverse;
+  overflow: auto;
+  //   background-color: red;
+}
+
+.empty {
+  margin: auto;
+  padding: 4px 10px;
+  background-color: colors.$greyBorder;
+  border-radius: 10px;
+}
+
+.messagesList {
+  display: flex;
+  flex-direction: column-reverse;
+  width: 100%;
+  padding-right: 5px;
+  // overflow-y: scroll !important;
+}

@@ -11,6 +11,7 @@ import com.coyjiv.isocial.domain.UserActivityStatus;
 import com.coyjiv.isocial.dto.request.auth.PasswordResetRequestDto;
 import com.coyjiv.isocial.domain.UserGender;
 import com.coyjiv.isocial.dto.request.user.UserRegistrationRequestDto;
+import com.coyjiv.isocial.dto.respone.page.PageWrapper;
 import com.coyjiv.isocial.dto.respone.user.UserDefaultResponseDto;
 import com.coyjiv.isocial.dto.respone.user.UserProfileResponseDto;
 import com.coyjiv.isocial.dto.respone.user.UserSearchResponseDto;
@@ -21,9 +22,11 @@ import com.coyjiv.isocial.transfer.user.UserDefaultResponseMapper;
 import com.coyjiv.isocial.transfer.user.UserProfileResponseDtoMapper;
 import com.coyjiv.isocial.transfer.user.UserRegistrationRequestMapper;
 import com.coyjiv.isocial.transfer.user.UserSearchResponseMapper;
+import io.sentry.Sentry;
 import jakarta.security.auth.message.AuthException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -62,11 +65,17 @@ public class UserService implements IUserService {
 
   @Transactional(readOnly = true)
   @Override
-  public List<UserDefaultResponseDto> findAllActive(int page, int size) {
+  public PageWrapper<UserDefaultResponseDto> findAllActive(int page, int size) {
     Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "id"));
     Pageable pageable = PageRequest.of(page, size, sort);
-    return userRepository.findAll(pageable).toList().stream()
+
+    Page<User> users = userRepository.findAll(pageable);
+
+    List<UserDefaultResponseDto> dtos = users.stream()
             .map(userDefaultResponseMapper::convertToDto).toList();
+
+    boolean hasNext = users.hasNext();
+    return new PageWrapper<>(dtos, hasNext);
   }
 
   @Transactional(readOnly = true)
@@ -108,22 +117,36 @@ public class UserService implements IUserService {
 
   @Transactional(readOnly = true)
   @Override
-  public List<UserSearchResponseDto> findByName(String name, int page, int size) {
+  public PageWrapper<UserSearchResponseDto> findByName(String name, int page, int size) {
     Set<User> result = new HashSet<>();
     String[] splittedNames = name.trim().split(" ");
 
     Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "id"));
     Pageable pageable = PageRequest.of(page, size, sort);
 
+    boolean hasNext = false;
     if (splittedNames.length > 1) {
-      result.addAll(userRepository.findByFirstNameOrLastName(splittedNames[0], pageable));
-      result.addAll(userRepository.findByFirstNameOrLastName(splittedNames[1], pageable));
+      Page<User> u = userRepository.findByFirstNameOrLastName(splittedNames[0], pageable);
+      result.addAll(u.toList());
+      if (u.hasNext()) {
+        hasNext = u.hasNext();
+      }
+
+      u = userRepository.findByFirstNameOrLastName(splittedNames[1], pageable);
+      if (u.hasNext()) {
+        hasNext = u.hasNext();
+      }
+      result.addAll(u.toList());
     } else {
-      result.addAll(userRepository.findByFirstNameOrLastName(splittedNames[0], pageable));
+      Page<User> u = userRepository.findByFirstNameOrLastName(splittedNames[0], pageable);
+      hasNext = u.hasNext();
+      result.addAll(u.toList());
     }
 
-    return result.stream()
+    List<UserSearchResponseDto> dtos = result.stream()
             .map(userSearchResponseMapper::convertToDto).toList();
+
+    return new PageWrapper<>(dtos, hasNext);
   }
 
   //  @Transactional
@@ -245,6 +268,7 @@ public class UserService implements IUserService {
     try {
       jwtTokenProvider.validateAccessToken(token);
     } catch (Exception e) {
+      Sentry.captureException(e);
       throw new IllegalAccessException("Token not valid");
     }
     Long userId = authProvider.getAuthenticationPrincipal();
@@ -303,37 +327,35 @@ public class UserService implements IUserService {
   @Override
   public String getAvatar(Long id) throws EntityNotFoundException {
     return userRepository.findActiveById(id)
-      .map(User::getAvatar)
-      .orElseThrow(() -> new EntityNotFoundException("User not found"));
+            .map(User::getAvatar)
+            .orElseThrow(() -> new EntityNotFoundException("User not found"));
   }
 
   @Override
   public String getFullName(Long id) throws EntityNotFoundException {
     return userRepository.findActiveById(id)
-      .map(User::getFullName)
-      .orElseThrow(() -> new EntityNotFoundException("User not found"));
+            .map(User::getFullName)
+            .orElseThrow(() -> new EntityNotFoundException("User not found"));
   }
 
   @Override
   public boolean isPremium(Long commenterId) {
     return userRepository.findActiveById(commenterId)
-      .map(User::isPremium)
-      .orElse(false);
+            .map(User::isPremium)
+            .orElse(false);
   }
 
   @Override
   public String getPremiumNickname(Long commenterId) {
     return userRepository.findActiveById(commenterId)
-      .map(User::getPremiumNickname)
-      .orElse("");
+            .map(User::getPremiumNickname)
+            .orElse("");
   }
 
   @Override
   public String getPremiumEmoji(Long commenterId) {
     return userRepository.findActiveById(commenterId)
-      .map(User::getPremiumEmoji)
-      .orElse("");
+            .map(User::getPremiumEmoji)
+            .orElse("");
   }
-
-
 }

@@ -3,9 +3,11 @@ package com.coyjiv.isocial.resource.rest;
 
 import com.coyjiv.isocial.dto.respone.friend.CustomFriendResponse;
 import com.coyjiv.isocial.dto.respone.friend.FriendResponseDto;
+import com.coyjiv.isocial.dto.respone.page.PageWrapper;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.service.friend.FriendService;
 
+import io.sentry.Sentry;
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -56,8 +58,8 @@ public class FriendController {
   }
 
   @DeleteMapping()
-  public ResponseEntity<String> deleteFriend(@RequestParam Long friendId) {
-    boolean result = friendService.deleteFriend(friendId);
+  public ResponseEntity<String> deleteFriend(@RequestParam Long friendUserId) {
+    boolean result = friendService.deleteFriend(friendUserId);
     if (result) {
       return ResponseEntity.ok("Deleted");
     }
@@ -65,10 +67,10 @@ public class FriendController {
   }
 
   @GetMapping("/{userId}")
-  public ResponseEntity<List<FriendResponseDto>> getAllFriends(@PathVariable Long userId,
-                                                               @RequestParam(defaultValue = "0") @Min(0) Integer page,
-                                                               @RequestParam(defaultValue = "10") @Min(0) Integer size) {
-    List<FriendResponseDto> friends = friendService.findAllFriends(userId, page, size);
+  public ResponseEntity<?> getAllFriends(@PathVariable Long userId,
+                                         @RequestParam(defaultValue = "0") @Min(0) Integer page,
+                                         @RequestParam(defaultValue = "10") @Min(0) Integer size) {
+    PageWrapper<FriendResponseDto> friends = friendService.findAllFriends(userId, page, size);
     return ResponseEntity.ok(friends);
   }
 
@@ -83,6 +85,7 @@ public class FriendController {
       }
 
     } catch (Exception e) {
+      Sentry.captureException(e);
       return ResponseEntity.status(400).body(0L);
     }
 
@@ -99,6 +102,7 @@ public class FriendController {
       }
 
     } catch (Exception e) {
+      Sentry.captureException(e);
       return ResponseEntity.status(400).body(0L);
     }
   }
@@ -106,15 +110,54 @@ public class FriendController {
   @GetMapping("/availableFriendRequests")
   public ResponseEntity<?> availableFriendRequests(@RequestParam(defaultValue = "0") @Min(0) Integer page,
                                                    @RequestParam(defaultValue = "10") @Min(0) Integer size)
-          throws EntityNotFoundException {
+    throws EntityNotFoundException {
     CustomFriendResponse friendRequests = friendService.availableFriendRequests(page, size);
     return ResponseEntity.ok(friendRequests);
   }
 
   @GetMapping("/recommendations")
   public ResponseEntity<?> getRecommendations(@RequestParam(defaultValue = "0") @Min(0) Integer page,
-                                                 @RequestParam(defaultValue = "10") @Min(0) Integer size) {
+                                              @RequestParam(defaultValue = "10") @Min(0) Integer size) {
     return ResponseEntity.ok(friendService.getRecommendations(page, size));
+  }
+
+  @GetMapping("/birthdays/{userId}")
+  public ResponseEntity<?> getFriendsWithUpcomingBirthdays(
+    @PathVariable Long userId,
+    @RequestParam(defaultValue = "0") @Min(0) Integer page,
+    @RequestParam(defaultValue = "10") @Min(0) Integer size) {
+    return ResponseEntity.ok(friendService.getFriendsWithUpcomingBirthdays(userId, page, size));
+  }
+
+  @GetMapping("/birthplace/{userId}")
+  public ResponseEntity<?> getFriendsWithTheSameBirthplace(
+    @PathVariable Long userId,
+    @RequestParam(defaultValue = "0") @Min(0) Integer page,
+    @RequestParam(defaultValue = "10") @Min(0) Integer size) {
+    return ResponseEntity.ok(friendService.getFriendsWithSameBirthplace(userId, page, size));
+  }
+
+  @GetMapping("/education/{userId}")
+  public ResponseEntity<?> getFriendsWithTheSameEducationPlace(
+    @PathVariable Long userId,
+    @RequestParam(defaultValue = "0") @Min(0) Integer page,
+    @RequestParam(defaultValue = "10") @Min(0) Integer size) {
+    return ResponseEntity.ok(friendService.getFriendsWithSameEducation(userId, page, size));
+  }
+
+  @GetMapping("/location/{userId}")
+  public ResponseEntity<?> getFriendsWithTheSameLocation(
+    @PathVariable Long userId,
+    @RequestParam(defaultValue = "0") @Min(0) Integer page,
+    @RequestParam(defaultValue = "10") @Min(0) Integer size) {
+    return ResponseEntity.ok(friendService.getFriendsWithSameLocation(userId, page, size));
+  }
+
+  @GetMapping("/search")
+  public ResponseEntity<?> searchFriends(@RequestParam String query,
+                                         @RequestParam(defaultValue = "0") @Min(0) Integer page,
+                                         @RequestParam(defaultValue = "10") @Min(0) Integer size) {
+    return ResponseEntity.ok(friendService.findByName(query, page, size));
   }
 }
 

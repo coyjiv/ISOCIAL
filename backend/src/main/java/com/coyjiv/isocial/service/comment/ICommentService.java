@@ -14,7 +14,7 @@ public interface ICommentService {
 
   PageWrapper<CommentResponseDto> findByPostId(Long id, int page, int size) throws EntityNotFoundException;
 
-  List<CommentResponseDto> findByCommenterId(Long id, int page, int size);
+  PageWrapper<CommentResponseDto> findByCommenterId(Long id, int page, int size);
 
   Long countByPostId(Long id) throws EntityNotFoundException;
 
@@ -24,5 +24,5 @@ public interface ICommentService {
 
   CommentResponseDto update(Long id, DefaultCommentRequestDto dto) throws EntityNotFoundException, IllegalAccessException;
 
-  List<CommentResponseDto> findRecentByPostId(Long id) throws EntityNotFoundException;
+  PageWrapper<CommentResponseDto> findRecentByPostId(Long id) throws EntityNotFoundException;
 }

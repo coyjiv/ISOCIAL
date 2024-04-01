@@ -2,7 +2,6 @@ import PropTypes from "prop-types";
 import { UserCardWrapper } from "./UserCard.styled.js";
 import { Avatar, Stack, Typography } from "@mui/material";
 
-import fallbackAvatar from "../../assets/fallback/Ava.jpg";
 import { ButtonMain } from "../buttons";
 import { useSendFriendRequestMutation } from "../../store/services/friendService.js";
 
@@ -17,7 +16,7 @@ const UserCard = ({ id, avatarUrl, fullName, city, friendsCount }) => {
     <UserCardWrapper>
       <Stack width="100%" direction="row" alignItems="center">
         <Avatar
-          src={avatarUrl ?? fallbackAvatar}
+          src={avatarUrl}
           sx={{ width: 60, height: 60 }}
           alt={fullName}
         />

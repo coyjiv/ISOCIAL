@@ -1,6 +1,7 @@
 package com.coyjiv.isocial.dao;
 
 import com.coyjiv.isocial.domain.Subscriber;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -23,11 +24,12 @@ public interface SubscriberRepository extends JpaRepository<Subscriber, Long> {
                                                              @Param("subscriberId") Long subscriberId);
 
   @Query("SELECT s FROM Subscriber s WHERE s.userId = :userId AND s.isActive = true")
-  List<Subscriber> getSubscribers(@Param("userId")Long userId, Pageable pageable);
+  Page<Subscriber> getSubscribers(@Param("userId")Long userId, Pageable pageable);
 
   @Query("SELECT s FROM Subscriber s WHERE s.subscriberId = :subscriberId AND s.isActive = true")
-  List<Subscriber> getSubscriptions(@Param("subscriberId")Long subscriberId, Pageable pageable);
+  Page<Subscriber> getSubscriptions(@Param("subscriberId")Long subscriberId, Pageable pageable);
 
   @Query("SELECT s FROM Subscriber s WHERE s.subscriberId = :subscriberId AND s.isActive = true")
   List<Subscriber> getSubscriptions(@Param("subscriberId")Long subscriberId);
+
 }

@@ -4,6 +4,10 @@ export const postsApi = friendsApi.injectEndpoints({
   endpoints: (builder) => ({
     getPosts: builder.query({
       query: ({ page, size }) => `posts?page=${page}&size=${size}`,
+      providesTags: (result, error, { id }) => [
+        { type: 'Posts', id },
+        { type: 'Profile', id },
+      ],
     }),
     getPostsByUser: builder.query({
       query: ({ id, page, size }) =>

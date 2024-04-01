@@ -16,6 +16,7 @@ import com.coyjiv.isocial.service.post.IPostService;
 import com.coyjiv.isocial.service.user.IUserService;
 import com.coyjiv.isocial.transfer.DtoMapperFacade;
 import com.coyjiv.isocial.transfer.user.UserSearchResponseMapper;
+import io.sentry.Sentry;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -57,7 +58,7 @@ public class PostResponseMapper extends DtoMapperFacade<Post, PostResponseDto> {
       dto.setAuthorPremiumEmoji(author.getPremiumEmoji());
       dto.setFavourite(favoriteService.isFavorite(entity.getId()));
       dto.setCommentsCount(commentService.countByPostId(entity.getId()));
-      dto.setRecentComments(commentService.findRecentByPostId(entity.getId()));
+      dto.setRecentComments(commentService.findRecentByPostId(entity.getId()).getContent());
       dto.setLikesCount(likeService.countLikesByEntity(entity.getId(), entity.getEntityType()));
       dto.setLiked(likeService.isLikedByUser(emailPasswordAuthProvider.getAuthenticationPrincipal(), entity.getId(),
               entity.getEntityType()));
@@ -69,6 +70,7 @@ public class PostResponseMapper extends DtoMapperFacade<Post, PostResponseDto> {
       dto.setOriginalPost(entity.getOriginalPostId() == null ? null :
               convertToDto(postService.findActiveById(entity.getOriginalPostId()).orElseThrow()));
     } catch (EntityNotFoundException e) {
+      Sentry.captureException(e);
       throw new RuntimeException(e);
     }
   }

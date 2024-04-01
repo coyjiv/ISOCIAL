@@ -2,6 +2,8 @@ import PropTypes from "prop-types";
 import { Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useGetUserByNameQuery } from "../../store/services/searchService.js";
+import { useDebounce } from 'usehooks-ts';
 
 import { ActionIconButton } from "../index";
 import { MainSearchItem } from "./MainSearchItem";
@@ -18,36 +20,54 @@ import {
 import { useClickOutside } from "../../hooks/index.js";
 import MainSearchEmptySection from "./MainSearchEmptySection/MainSearchEmptySection.jsx";
 
-// eslint-disable-next-line react/prop-types
-const MainSearch = ({ value, searchItems, onChange }) => {
-  const [options, setOptions] = useState(searchItems);
+
+const MainSearch = () => {
+  const [value, setValue] = useState("");
+  const [page] = useState(0);
+
+
+  const debouncedValue = useDebounce(value, 200);
+
+  const { data, isFetching: isLoading, isSuccess } = useGetUserByNameQuery(
+    { name: debouncedValue, page: page },
+    { skip: debouncedValue === "" },
+  );
+
+  const handleChange = (value) => {
+    setValue(value);
+  };
+
+  const [options, setOptions] = useState([]);
   const [inputActive, setInputActive] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   const handleBlur = () => {
-    setInputActive(false);
-    onChange("");
-    setOptions([]);
+    setTimeout(() => {
+      setInputActive(false);
+      setValue("");
+      setOptions([]);
+    }, 150);
   };
 
   const handleGoToUser = (id) => {
     if (id) {
       navigate(`/profile/${id}`);
+      handleBlur();
     }
   };
 
   const inputRef = useClickOutside(handleBlur);
 
-  const handleChange = ({ target }) => {
-    onChange(target.value);
-  };
+  useEffect(() => {
+    if (isSuccess && data?.content) {
+      setOptions(data.content);
+    }
+  }, [data?.content, isSuccess])
 
   useEffect(() => {
     if (value === "") {
       setOptions([]);
-    } else {
-      setOptions(searchItems);
     }
 
     if (inputActive) {
@@ -58,7 +78,21 @@ const MainSearch = ({ value, searchItems, onChange }) => {
       const t = setTimeout(() => setMenuOpen(false), 80);
       return () => clearTimeout(t);
     }
-  }, [inputActive, searchItems, value]);
+  }, [inputActive, value]);
+
+  const renderExpression = isLoading
+    ? <MainSearchEmptySection isLoading={isLoading} />
+    : options.length > 0
+      ? options?.map(({ id, firstName, lastName, avatarsUrl }) => (
+        <MainSearchItem
+          key={id}
+          avatars={avatarsUrl}
+          variant="search"
+          fullName={`${firstName} ${lastName}`}
+          onClick={() => handleGoToUser(id)}
+        />
+      ))
+      : <MainSearchEmptySection />;
 
   return (
     <SearchWrapper open={inputActive} ref={inputRef}>
@@ -76,33 +110,20 @@ const MainSearch = ({ value, searchItems, onChange }) => {
         <SearchIcon open={inputActive} />
         <SearchBase
           value={value}
-          onFocus={() => setInputActive(!inputActive)}
-          onChange={(e) => handleChange(e)}
+          onFocus={() => setInputActive(true)}
+          onBlur={handleBlur}
+          onChange={(e) => handleChange(e.target.value)}
         />
       </SearchContainer>
-      {menuOpen && options && (
-        <SearchMenu>
-          {options?.map(({ id, firstName, lastName, avatarsUrl }) => (
-            <MainSearchItem
-              key={id}
-              avatars={avatarsUrl}
-              variant="search"
-              fullName={`${firstName} ${lastName}`}
-              onClick={() => handleGoToUser(id)}
-            />
-          ))}
-        </SearchMenu>
-      )}
-      {menuOpen && options?.length === 0 && (
-        <SearchMenu>
-          <MainSearchEmptySection title="No results" user="user" />
-        </SearchMenu>
-      )}
+      {menuOpen && <SearchMenu>
+        {renderExpression}
+      </SearchMenu>}
     </SearchWrapper>
   );
 };
 
 MainSearch.propTypes = {
+  value: PropTypes.string,
   searchItems: PropTypes.array,
   onChange: PropTypes.func,
 };
