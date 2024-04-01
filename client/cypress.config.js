@@ -2,6 +2,7 @@
 import { defineConfig } from 'cypress'
 
 export default defineConfig({
+  projectId: '61ruke',
   e2e: {
     experimentalModifyObstructiveThirdPartyCode: true,
     setupNodeEvents(on, config) {
