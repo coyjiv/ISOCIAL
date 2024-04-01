@@ -1,8 +1,12 @@
 import styles from './notificationList.module.scss'
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
+import PropTypes from 'prop-types'
+import { Avatar } from '@mui/material';
+import { userAvatar } from '../../../../data/placeholders'
+
 
 const NotificationItem = (props) => {
-    const {creationDate, eventType, senderAvatar, senderName, page} = props
+    const { creationDate, eventType, senderAvatar, senderName, page, postId } = props
 
     let messageContent
     let dateMassage
@@ -26,7 +30,6 @@ const NotificationItem = (props) => {
         dateMassage = minutes === 1 ? `${minutes} minute ago` : `${minutes} minutes ago`;
 
     } else {
-        // Если прошла хотя бы одна секунда, выводим сколько секунд назад
         const seconds = Math.floor(differenceInMilliseconds / 1000);
         dateMassage = seconds === 1 ? `${seconds} second ago` : `${seconds} seconds ago`;
     }
@@ -54,12 +57,14 @@ const NotificationItem = (props) => {
 
     }
 
+    const link = (eventType === 'MESSAGE_LIKE') ? `/profile/${userId}` : `/post/${postId}`
+
     return (
-        <Link to={`/profile/:${userId}`}>
+        <Link to={link}>
             <li className={styles.notificationItem}>
-                <div className={styles.avatarImgContainer}>
-                    <img className={styles.avatarImg} src={senderAvatar} alt="avatar"/>
-                </div>
+                {/* <div className={styles.avatarImgContainer}> */}
+                <Avatar className={styles.avatarImg} src={userAvatar(senderAvatar)} alt="avatar" />
+                {/* </div> */}
                 <div className={`${page ? styles.notificationText : styles.notificationContent}`}>
                     <p className={styles.userName}>{senderName} <span
                         className={`${page ? styles.massage : styles.massageDisplay}`}>{messageContent}</span></p>
@@ -69,6 +74,15 @@ const NotificationItem = (props) => {
             </li>
         </Link>
     )
+}
+
+NotificationItem.propTypes = {
+    creationDate: PropTypes.string.isRequired,
+    eventType: PropTypes.string.isRequired,
+    senderAvatar: PropTypes.string.isRequired,
+    senderName: PropTypes.string.isRequired,
+    page: PropTypes.bool.isRequired,
+    postId: PropTypes.number
 }
 
 export default NotificationItem

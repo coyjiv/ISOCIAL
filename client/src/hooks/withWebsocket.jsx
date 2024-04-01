@@ -7,6 +7,45 @@ import { addMessage, addWSMessage } from "../store/chatSlice.js";
 import { userAvatar } from "../data/placeholders.js";
 import { Avatar } from "@mui/material";
 import { fetchChats } from "../store/actions/chat.js";
+import { notificationApi } from "../store/services/notification.js";
+
+const extractUserInfo = (body) => {
+    // Attempt to extract user information in a unified way across different body types
+    const gender = body.senderGender === 'MALE' ? 'MALE' : body.senderGender === 'FEMALE' ? 'FEMALE' : undefined;
+    let avatarUrl;
+    let firstName;
+    let lastName;
+
+    // Determine which fields are available in the body and use them
+    if (body.senderName || body.commenterName || body.likerName) {
+        const name = body.senderName || body.commenterName || body.likerName;
+        const nameParts = name.split(' ');
+        firstName = nameParts[0];
+        lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
+    }
+
+    if (body.senderAvatarUrl || body.commenterAvatar || body.likerAvatar) {
+        avatarUrl = body.senderAvatarUrl || body.commenterAvatar || body.likerAvatar;
+    }
+
+    return { gender, firstName, lastName, avatarUrl };
+};
+
+const avatar = (body) => {
+    const { gender, firstName, lastName, avatarUrl } = extractUserInfo(body);
+
+    // Construct a temporary user object to fit the userAvatar function's expected input
+    const user = {
+        avatarsUrl: avatarUrl ? [avatarUrl] : undefined,
+        gender: gender,
+        firstName: firstName,
+        lastName: lastName,
+    };
+
+    return userAvatar(user, firstName, lastName);
+};
+
+export default avatar;
 
 const withWebsocket = (WrappedComponent) => {
     const WithWebSocket = (props) => {
@@ -21,13 +60,15 @@ const withWebsocket = (WrappedComponent) => {
         useSubscription(`/user/${localStorage.getItem("userId")}/likes`, handleLike)
         useSubscription(`/user/${localStorage.getItem("userId")}/comments`, handleComment)
 
-        const avatar = body => userAvatar({ avatarsUrl: [body.senderAvatarUrl], firstName: body?.senderName?.split(' ')?.[0], lastName: body?.senderName?.split(' ')?.[1] })
+
 
         async function handleMessage(msg) {
             const message = await msg.body;
             const body = JSON.parse(message);
-            console.log("ws", body);
+            console.log("ws", body, avatar(body));
             dispatch(addMessage(body));
+            dispatch(notificationApi.util.prefetch('getNotification', { recieverId: localStorage.getItem('userId'), page: 0, quantity: 50 }, { force: true }))
+
             if (body?.chatId === selectedChat?.id) {
                 console.log("trying to add Websocket message");
                 dispatch(addWSMessage(body));
@@ -49,10 +90,14 @@ const withWebsocket = (WrappedComponent) => {
         async function handleFriend(msg) {
             const message = await msg.body;
             const body = JSON.parse(message);
+            console.log("ws", body);
+
+            dispatch(notificationApi.util.prefetch('getNotification', { recieverId: localStorage.getItem('userId'), page: 0, quantity: 50 }, { force: true }))
+            dispatch(notificationApi.util.invalidateTags(['Notifications']))
             toast.info(<ToastMessage link={`/friends/requests`} msg={body} type={"FRIEND"} />,
                 {
                     icon: () => <Link to={`/friends/requests`}>
-                        <Avatar width={'100%'} height={'auto'}
+                        <Avatar sx={{ width: '100%', height: '100%' }}
                             src={avatar(body)}
                             alt={'avatar'} />
                     </Link>
@@ -62,10 +107,14 @@ const withWebsocket = (WrappedComponent) => {
         async function handleRepost(msg) {
             const message = await msg.body;
             const body = JSON.parse(message);
+            console.log("ws", body, avatar(body));
+
+            dispatch(notificationApi.util.prefetch('getNotification', { recieverId: localStorage.getItem('userId'), page: 0, quantity: 50 }, { force: true }))
+            dispatch(notificationApi.util.invalidateTags(['Notifications']))
             toast.info(<ToastMessage link={`/post/${body.postId}`} msg={body} type={"REPOST"} />,
                 {
                     icon: () => <Link to={`/post/${body.postId}`}>
-                        <Avatar width={'100%'} height={'auto'}
+                        <Avatar sx={{ width: '100%', height: '100%' }}
                             src={avatar(body)}
                             alt={'avatar'} />
                     </Link>
@@ -76,10 +125,14 @@ const withWebsocket = (WrappedComponent) => {
         async function handleSubscription(msg) {
             const message = await msg.body;
             const body = JSON.parse(message);
+            console.log("ws", body, avatar(body));
+
+            dispatch(notificationApi.util.prefetch('getNotification', { recieverId: localStorage.getItem('userId'), page: 0, quantity: 50 }, { force: true }))
+            dispatch(notificationApi.util.invalidateTags(['Notifications']))
             toast.info(<ToastMessage link={`/post/${body.postId}`} msg={body} type={"SUBSCRIPTION"} />,
                 {
                     icon: () => <Link to={`/post/${body.postId}`}>
-                        <Avatar width={'100%'} height={'auto'}
+                        <Avatar sx={{ width: '100%', height: '100%' }}
                             src={avatar(body)}
                             alt={'avatar'} />
                     </Link>
@@ -89,12 +142,16 @@ const withWebsocket = (WrappedComponent) => {
         async function handleLike(msg) {
             const message = await msg.body;
             const body = JSON.parse(message);
+            console.log("ws", body, avatar(body));
+
+            dispatch(notificationApi.util.prefetch('getNotification', { recieverId: localStorage.getItem('userId'), page: 0, quantity: 50 }, { force: true }))
+            dispatch(notificationApi.util.invalidateTags(['Notifications']))
             if (body.entityType === "POST") {
                 toast.info(<ToastMessage link={`/post/${body.entityId}`} msg={body} type={"LIKE_POST"} />,
                     {
                         icon: () => <Link to={`/post/${body.entityId}`}>
-                            <Avatar width={'100%'} height={'auto'}
-                                src={body.likerAvatar}
+                            <Avatar sx={{ width: '100%', height: '100%' }}
+                                src={avatar(body)}
                                 alt={'avatar'} />
                         </Link>
                     });
@@ -102,7 +159,7 @@ const withWebsocket = (WrappedComponent) => {
                 toast.info(<ToastMessage link={`/post/${body.entityId}`} msg={body} type={"LIKE_COMMENT"} />,
                     {
                         icon: () => <Link to={`/post/${body.entityId}`}>
-                            <Avatar width={'100%'} height={'auto'}
+                            <Avatar sx={{ width: '100%', height: '100%' }}
                                 src={body.likerAvatar}
                                 alt={'avatar'} />
                         </Link>
@@ -113,11 +170,15 @@ const withWebsocket = (WrappedComponent) => {
         async function handleComment(msg) {
             const message = await msg.body;
             const body = JSON.parse(message);
+            console.log("ws", body, avatar(body));
+
+            dispatch(notificationApi.util.prefetch('getNotification', { recieverId: localStorage.getItem('userId'), page: 0, quantity: 50 }, { force: true }))
+            dispatch(notificationApi.util.invalidateTags(['Notifications']))
             toast.info(<ToastMessage link={`/post/${body.postId}`} msg={body} type={"COMMENT"} />,
                 {
                     icon: () => <Link to={`/post/${body.postId}`}>
-                        <Avatar width={'100%'} height={'auto'}
-                            src={body.commenterAvatar}
+                        <Avatar sx={{ width: '100%', height: '100%' }}
+                            src={avatar(body)}
                             alt={'avatar'} />
                     </Link>
                 });

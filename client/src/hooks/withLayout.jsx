@@ -14,7 +14,7 @@ const withLayout = (WrappedComponent) => {
                 <Layout>
                     <ToastContainer
                         position={isMobile ? "top-center" : "bottom-left"}
-                        autoClose={false}
+                        autoClose={2000}
                         hideProgressBar={true}
                         newestOnTop={false}
                         rtl={false}

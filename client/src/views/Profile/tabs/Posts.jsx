@@ -3,7 +3,7 @@ import { Avatar, Box, Container, Divider, Grid, Input, Stack, Typography } from 
 import { Link } from 'react-router-dom'
 import { AiFillHome } from "react-icons/ai";
 import { useGetProfileByIdQuery } from '../../../store/services/profileService';
-import { useSubscribersCountQuery } from '../../../store/services/friendService';
+// import { useSubscribersCountQuery } from '../../../store/services/friendService';
 import { useParams } from 'react-router-dom'
 import styles from '../profile.module.scss'
 import CreatePostModal from '../../../components/modals/CreatePost';
@@ -29,7 +29,7 @@ const Posts = () => {
   // eslint-disable-next-line no-unused-vars
   const { data: profile, isLoading } = useGetProfileByIdQuery(fetchProfileId);
   const { data: loggedUserProfile, isLoading: isLoggedUserLoading } = useGetProfileByIdQuery(localStorage.getItem('userId'))
-  const { data: subscribersCount } = useSubscribersCountQuery(fetchProfileId);
+  // const { data: subscribersCount } = useSubscribersCountQuery(fetchProfileId);
 
   const [isCreatePostModalOpen, setIsCreatePostModalOpen] = useState(false)
   const triggerPostModal = () => setIsCreatePostModalOpen(true)
@@ -87,7 +87,7 @@ const Posts = () => {
                 <Typography marginY={2}>{profile.bio}</Typography>
                 <Divider />
                 <Typography marginTop={2}><AiFillHome /> Lives in {profile.city}</Typography>
-                <Typography marginTop={2}>Subscribers : {subscribersCount}</Typography>
+                {/* <Typography marginTop={2}>Subscribers : {subscribersCount}</Typography> */}
               </div>
               <div className={styles.card}>
                 <div>
@@ -108,7 +108,7 @@ const Posts = () => {
               </div>
             </Grid>
             <Grid item xs={12} sm={6} md={7}>
-              {(!isLoggedUserLoading && loggedUserProfile?.id === localStorage.getItem('userId')) && <div className={classNames(styles.card, styles.mt10)}>
+              {(!isLoggedUserLoading && loggedUserProfile?.id === +localStorage.getItem('userId')) && <div className={classNames(styles.card, styles.mt10)}>
                 <div onClick={triggerPostModal}>
                   <Stack width={'100%'} gap={2} direction={'row'}>
                     <Avatar src={loggedUserProfile?.avatarsUrl[0] ?? placeholderAvatar(loggedUserProfile?.gender, loggedUserProfile?.firstName, loggedUserProfile?.lastName)} sx={{ width: 40, height: 'auto' }} />

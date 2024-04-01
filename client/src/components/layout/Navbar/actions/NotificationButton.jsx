@@ -1,35 +1,35 @@
-import {RiNotification2Fill, RiNotification2Line} from "react-icons/ri";
-import {useState, useRef, useEffect, Fragment} from 'react'
-import {useOnClickOutside} from "usehooks-ts";
+import { RiNotification2Fill, RiNotification2Line } from "react-icons/ri";
+import { useState, useRef } from 'react'
+import { useOnClickOutside } from "usehooks-ts";
 import classNames from "classnames";
 import styles from '../navbar.module.scss'
-import {useGetNotificationQuery} from "../../../../store/services/notification.js";
+import { useGetNotificationQuery } from "../../../../store/services/notification.js";
 import NotificationList from "./NotificationList.jsx"
 
 const NotificationButton = () => {
     const [page, setPage] = useState(0)
-    const [notifications, setNotifications] = useState([]);
+    // const [notifications, setNotifications] = useState([]);
 
-    const {data, isLoading, isSuccess} = useGetNotificationQuery({
+    const { data } = useGetNotificationQuery({
         recieverId: localStorage.getItem('userId'),
         page: page,
-        quantity: 15
+        quantity: 100
     })
 
     const ref = useRef(null)
     const [isNotificationsOpen, setIsNotificationsOpen] = useState(false)
 
 
-    useEffect(() => {
-        if (isSuccess && data?.content) {
-            const uniqueNotifications = data.content.filter(newNotification => (
-                !notifications.some(existingNotification => existingNotification.id === newNotification.id)
-            ));
-            if (uniqueNotifications.length > 0) {
-                setNotifications(prevNotifications => [...prevNotifications, ...data.content]);
-            }
-        }
-    }, [isSuccess, data]);
+    // useEffect(() => {
+    //     if (isSuccess && data?.content) {
+    //         const uniqueNotifications = data.content.filter(newNotification => (
+    //             !notifications.some(existingNotification => existingNotification.id === newNotification.id)
+    //         ));
+    //         if (uniqueNotifications.length > 0) {
+    //             setNotifications(prevNotifications => [...prevNotifications, ...data.content]);
+    //         }
+    //     }
+    // }, [isSuccess, data, notifications]);
 
 
     const handleClickOutside = () => {
@@ -55,12 +55,12 @@ const NotificationButton = () => {
     return (
         <>
             <button className={messengerButtonClasses} onClick={handleClickInside}>
-                {isNotificationsOpen ? <RiNotification2Fill/> : <RiNotification2Line/>}
+                {isNotificationsOpen ? <RiNotification2Fill /> : <RiNotification2Line />}
             </button>
-            {isNotificationsOpen &&
-                    <div ref={ref}>
-                        <NotificationList data={notifications} fetchMoreData={fetchMoreData} hasNext={data.hasNext} page={false}/>
-                    </div>
+            {isNotificationsOpen && data &&
+                <div ref={ref}>
+                    <NotificationList data={data?.content} fetchMoreData={fetchMoreData} hasNext={data?.hasNext} page={false} />
+                </div>
             }
         </>
     )
