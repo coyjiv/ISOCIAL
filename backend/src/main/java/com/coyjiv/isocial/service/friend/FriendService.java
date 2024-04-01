@@ -11,6 +11,7 @@ import com.coyjiv.isocial.dto.respone.friend.CustomFriendResponse;
 import com.coyjiv.isocial.dto.respone.friend.FriendResponseDto;
 import com.coyjiv.isocial.dto.respone.page.PageWrapper;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
+import com.coyjiv.isocial.service.chat.IChatService;
 import com.coyjiv.isocial.service.subscriber.ISubscriberService;
 import com.coyjiv.isocial.service.websocket.IWebsocketService;
 import com.coyjiv.isocial.transfer.friend.FriendResponseMapper;
@@ -18,8 +19,10 @@ import com.coyjiv.isocial.transfer.friend.FriendResponseMapper;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
@@ -42,7 +45,7 @@ public class FriendService implements IFriendService {
   private final FriendRepository friendRepository;
   private final FriendResponseMapper friendResponseMapper;
   private final EmailPasswordAuthProvider emailPasswordAuthProvider;
-
+  private final IChatService chatService;
   private final ISubscriberService subscriberService;
 
   private final IWebsocketService websocketService;
@@ -221,12 +224,12 @@ public class FriendService implements IFriendService {
     return friendRepository.countAllNonAcceptedFriends(userRepository.findById(userId).orElseThrow());
   }
 
-  @Transactional
+  @Transactional(readOnly = true)
   public CustomFriendResponse availableFriendRequests(Integer page, Integer size) throws EntityNotFoundException {
     long userId = emailPasswordAuthProvider.getAuthenticationPrincipal();
     Optional<User> user = userRepository.findById(userId);
 
-    if (!user.isPresent()) {
+    if (user.isEmpty()) {
       throw new EntityNotFoundException("User not found");
     }
 
@@ -238,9 +241,18 @@ public class FriendService implements IFriendService {
 
     List<FriendResponseDto> content = friendRequests.map(friend -> {
       User requester = friend.getRequester();
+      Long chatId = 0L;
+      try {
+        if (chatService.isUserInvolvedInChat(requester.getId()).isPresent()) {
+          chatId = chatService.isUserInvolvedInChat(requester.getId()).get();
+        }
+      } catch (EntityNotFoundException e) {
+        chatId = null;
+      }
       return new FriendResponseDto(requester.getId(), requester.getFirstName(), requester.getLastName(),
         requester.getGender(), requester.getCity(), requester.getBirthPlace(), requester.getStudyPlace(),
-        requester.getDateOfBirth(), requester.getAvatarsUrl()
+        requester.getDateOfBirth(), requester.getAvatarsUrl(), requester.getActivityStatus(),
+        chatId
 
       );
     }).getContent();
@@ -250,6 +262,7 @@ public class FriendService implements IFriendService {
     return new CustomFriendResponse(content, hasNext);
   }
 
+  @Transactional(readOnly = true)
   public UserFriendStatus getFriendStatus(Long currentUserId, Long otherUserId) {
     Optional<Friend> friendship = friendRepository.findFriendshipBetweenUsers(currentUserId, otherUserId);
     return friendship.map(friend -> {
@@ -263,11 +276,13 @@ public class FriendService implements IFriendService {
     }).orElse(UserFriendStatus.NOT_FRIEND);
   }
 
+  @Transactional(readOnly = true)
   @Override
   public Long getSubscriptionsCount(Long userId) {
     return friendRepository.countByRequesterAndStatus(userId, UserFriendStatus.REQUEST_SENT);
   }
 
+  @Transactional(readOnly = true)
   @Override
   public List<FriendResponseDto> getFriendsWithUpcomingBirthdays(Long userId, int page, int size) {
     LocalDate today = LocalDate.now();
@@ -304,7 +319,7 @@ public class FriendService implements IFriendService {
     }).collect(Collectors.toList());
   }
 
-
+  @Transactional(readOnly = true)
   @Override
   public PageWrapper<FriendResponseDto> getFriendsWithSameBirthplace(Long userId, int page, int size) {
     Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "id"));
@@ -328,6 +343,7 @@ public class FriendService implements IFriendService {
     return new PageWrapper<>(dtos, hasNext);
   }
 
+  @Transactional(readOnly = true)
   @Override
   public PageWrapper<FriendResponseDto> getFriendsWithSameEducation(Long userId, int page, int size) {
     Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "id"));
@@ -351,6 +367,7 @@ public class FriendService implements IFriendService {
     return new PageWrapper<>(dtos, hasNext);
   }
 
+  @Transactional(readOnly = true)
   @Override
   public PageWrapper<FriendResponseDto> getFriendsWithSameLocation(Long userId, int page, int size) {
     Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "id"));
@@ -374,6 +391,7 @@ public class FriendService implements IFriendService {
     return new PageWrapper<>(dtos, hasNext);
   }
 
+  @Transactional(readOnly = true)
   @Override
   public PageWrapper<FriendResponseDto> getRecommendations(int page, int size) {
     final Long main = emailPasswordAuthProvider.getAuthenticationPrincipal();
@@ -433,5 +451,45 @@ public class FriendService implements IFriendService {
     return new PageWrapper<>(dtos, hasNext);
   }
 
+  @Transactional(readOnly = true)
+  @Override
+  public PageWrapper<FriendResponseDto> findByName(String name, int page, int size) {
+    Long currentUserId = emailPasswordAuthProvider.getAuthenticationPrincipal();
+    Set<Friend> result = new HashSet<>();
+    String[] splittedNames = name.trim().split(" ");
+
+    Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "id"));
+    Pageable pageable = PageRequest.of(page, size, sort);
+
+    boolean hasNext = false;
+    if (splittedNames.length > 1) {
+      Page<Friend> friends = friendRepository.findByFirstNameOrLastName(splittedNames[0], currentUserId, pageable);
+      result.addAll(friends.toList());
+      if (friends.hasNext()) {
+        hasNext = friends.hasNext();
+      }
+
+      friends = friendRepository.findByFirstNameOrLastName(splittedNames[1], currentUserId, pageable);
+      if (friends.hasNext()) {
+        hasNext = friends.hasNext();
+      }
+      result.addAll(friends.toList());
+    } else {
+      Page<Friend> friends = friendRepository.findByFirstNameOrLastName(splittedNames[0], currentUserId, pageable);
+      hasNext = friends.hasNext();
+      result.addAll(friends.toList());
+    }
+
+    List<FriendResponseDto> dtos = result.stream()
+      .filter(friend -> friend.getStatus() == UserFriendStatus.FRIEND)
+      .map(friend -> friend.getRequester().getId().equals(currentUserId)
+        ? userRepository.findActiveById(friend.getAddresser().getId())
+        : userRepository.findActiveById(friend.getRequester().getId()))
+      .map(user -> user.map(friendResponseMapper::convertToDto).orElse(null))
+      .filter(Objects::nonNull)
+      .toList();
+
+    return new PageWrapper<>(dtos, hasNext);
+  }
 }
 

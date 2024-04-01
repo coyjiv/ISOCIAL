@@ -21,15 +21,20 @@ import { MdPhotoCamera } from "react-icons/md"
 import { NotificationSubscriptionBtn } from '../NotificationSubscriptionBtn'
 import styles from '../profile.module.scss'
 import { Link, useNavigate } from 'react-router-dom'
+import { useGetChatIdQuery } from '../../../store/services/chatService'
+import { useDispatch } from 'react-redux'
+import { setPendingChat } from '../../../store/chatSlice'
 
 
 export const ProfileLayout = ({ id }) => {
     const theme = useTheme()
     const navigate = useNavigate()
+    const dispatch = useDispatch()
 
     const { data: profile } = useGetProfileByIdQuery(id ?? localStorage.getItem('userId'));
 
     const isPersonalProfile = !id || id === localStorage.getItem('userId');
+    const { data: chatId } = useGetChatIdQuery(id, { skip: isPersonalProfile })
 
 
     const [isProfileEditOpen, setIsProfileEditOpen] = useState(false)
@@ -38,7 +43,18 @@ export const ProfileLayout = ({ id }) => {
     const isLargeMobile = useMediaQuery('(max-width: 600px)')
 
     const openMessenger = () => {
-        console.log('open messenger');
+        if (chatId) {
+            navigate(`/chats/${chatId}`)
+        } else {
+            dispatch(setPendingChat({
+                receiverId: id,
+                chatName: `${profile?.firstName} ${profile?.lastName}`,
+                avatarUrl: userAvatar(profile),
+                receiverStatus: profile?.activityStatus,
+                messages: [],
+            }))
+            navigate('/chat')
+        }
     }
 
     const openProfileEdit = () => {

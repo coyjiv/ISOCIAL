@@ -26,7 +26,7 @@ const MainSearch = () => {
   const [page] = useState(0);
 
 
-  const debouncedValue = useDebounce(value);
+  const debouncedValue = useDebounce(value, 200);
 
   const { data, isFetching: isLoading, isSuccess } = useGetUserByNameQuery(
     { name: debouncedValue, page: page },

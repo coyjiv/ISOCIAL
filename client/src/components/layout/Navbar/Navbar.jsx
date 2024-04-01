@@ -11,12 +11,10 @@ import { Typography } from "@mui/material";
 
 import { useState } from "react";
 import { useMediaQuery } from 'usehooks-ts';
-import { MQ } from '../../../utils/constants/index.js'
 import { ActionIconButton } from '../../index.js'
 
 const Navbar = () => {
   const isMobile = useMediaQuery('(max-width: 600px)');
-  const isTablet = useMediaQuery(MQ.TABLET)
 
   const [open, setOpen] = useState(false)
 
@@ -31,7 +29,7 @@ const Navbar = () => {
           <HeaderLinks navbarLinks={navbarLinks} />
         </ul>
         <ul className={styles.actionList}>
-          {isTablet && (
+          {isMobile && (
             <Box component="li" mr="10px">
               <ActionIconButton
                 size="24px"

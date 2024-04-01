@@ -89,5 +89,16 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
     + "AND f.addresser.city = f.requester.city")
   Page<Friend> findAllWithSameLocation(@Param("userId") Long userId, Pageable pageable);
 
+  @Query("FROM Friend f WHERE "
+    + "(LOWER(f.requester.firstName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) "
+    + "OR LOWER(f.requester.lastName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) "
+    + "OR LOWER(f.addresser.firstName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) "
+    + "OR LOWER(f.addresser.lastName) LIKE LOWER(CONCAT('%', :searchTerm, '%'))) "
+    + "AND (f.requester.id = :userId OR f.addresser.id = :userId) "
+    + "AND f.status = com.coyjiv.isocial.domain.UserFriendStatus.FRIEND")
+  Page<Friend> findByFirstNameOrLastName(@Param("searchTerm") String searchTerm, @Param("userId") Long userId,
+                                         Pageable pageable);
+
+
 }
 

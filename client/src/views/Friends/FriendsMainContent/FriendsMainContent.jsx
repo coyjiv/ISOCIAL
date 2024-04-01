@@ -9,9 +9,16 @@ import {
 } from '../../../store/services/friendService'
 import { LS_KEYS } from '../../../utils/constants'
 import { MainContentWrapper } from './FriendsMainContent.styled'
+import { useDispatch } from 'react-redux'
 import PropTypes from 'prop-types'
+import { useNavigate } from 'react-router-dom'
+import { setPendingChat } from '../../../store/chatSlice'
+import { userAvatar } from '../../../data/placeholders'
 
 const FriendsMainContent = ({ hidden }) => {
+
+	const dispatch = useDispatch()
+	const navigate = useNavigate()
 
 	const [hiddenUsersId, setHiddenUsersId] = useLocalStorage(
 		LS_KEYS.HIDDEN_USERS,
@@ -24,8 +31,19 @@ const FriendsMainContent = ({ hidden }) => {
 	const [declineFriendRequest] = useDeclineFriendRequestMutation()
 	const [sendFriendRequest] = useSendFriendRequestMutation()
 
-	const handleMessage = (id) => {
-		console.log(`start messages with user ${id}`)
+	const handleMessage = (friend) => {
+		if (friend?.chatId) {
+			navigate(`/chats/${friend.chatId}`)
+		} else {
+			dispatch(setPendingChat({
+				receiverId: friend.id,
+				chatName: `${friend.firstName} ${friend.lastName}`,
+				avatarUrl: userAvatar(friend),
+				receiverStatus: friend?.activityStatus,
+				messages: [],
+			}))
+			navigate('/chat')
+		}
 	}
 
 	const handleConfirm = (e, id) => {
