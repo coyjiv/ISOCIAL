@@ -192,11 +192,12 @@
 
                     <project>java-spring-boot</project>
 
-                    <!-- in case you're self hosting, provide the URL here -->
-                    <url>${env.HOSTNAME}/</url>
-
                     <!-- provide your auth token via SENTRY_AUTH_TOKEN environment variable -->
                     <authToken>${env.SENTRY_AUTH_TOKEN}</authToken>
+                    <skip>false</skip>
+                    <skipSourceBundle>false</skipSourceBundle>
+                    <skipAutoInstall>false</skipAutoInstall>
+                    <skipTelemetry>false</skipTelemetry>
                 </configuration>
                 <executions>
                     <execution>
@@ -207,6 +208,7 @@
                             code as part of your stack traces in Sentry.
                             -->
                             <goal>uploadSourceBundle</goal>
+                            <goal>reportDependencies</goal>
                         </goals>
                     </execution>
                 </executions>
