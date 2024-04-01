@@ -229,7 +229,7 @@ const Post = ({
             <ConfirmModal open={deleteDialog} onClose={() => setDeleteDialog(false)} onConfirm={handleDeletePost} title={'Delete the post?'} message={'Are you sure that you want to delete the post?'} confirmButtonText={'Yes'} cancelButtonText={'No'} />
             <CreateEditRepostPostModal type="edit" title="Edit the post" onClose={handleCloseEditModal} open={editedModal} onSuccess={handleSuccessEdit} postData={{ id: postId, textContent }} />
             <CreateEditRepostPostModal type="repost" title="Share a post" onClose={handleCloseRepostModal} open={repostModal} onSuccess={handleSuccessRepost} postData={{ id: postId, textContent }} />
-            <CommentsModal open={commentPanelOpen} onClose={() => setCommentPanelOpen(false)} postId={postId} />
+            <CommentsModal open={commentPanelOpen} onClose={() => setCommentPanelOpen(false)} postId={postId} commentsData={optimisticRecentComments} setCommentsData={setOptimisticRecentComments} handleComment={handleComment} handleDeleteComment={handleDeleteComment}/>
         </>
     );
 };
