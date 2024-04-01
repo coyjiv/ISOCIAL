@@ -12,7 +12,7 @@ import styles from '../comments.module.scss'
 import 'react-spring-bottom-sheet/dist/style.css'
 
 
-const BottomSheetWrapper = ({ open, comments, isLoading, postId, onModify, hasNext, fetchData, handleComment, onClose }) => {
+const BottomSheetWrapper = ({ open, comments, isLoading, postId, onModify, hasNext, fetchData, handleComment, onClose,handleDeleteComment }) => {
     return (
         <BottomSheet open={open} onDismiss={onClose} className={styles.bottomSheet}>
 
@@ -40,7 +40,7 @@ const BottomSheetWrapper = ({ open, comments, isLoading, postId, onModify, hasNe
                         edited={comment.edited}
                         liked={comment.liked}
                         authorPremium={comment.authorPremium}
-                        onCommentDelete={() => console.log('on comment delete')}
+                        onCommentDelete={handleDeleteComment}
                     />)}
                 </InfiniteScroll> : <p className={styles.noCommentsMobile}>There are no comments yet. You can fix it!</p>}
             </div>
@@ -65,6 +65,7 @@ BottomSheetWrapper.propTypes = {
     isLoading: PropTypes.bool.isRequired,
     hasNext: PropTypes.bool.isRequired,
     fetchData: PropTypes.func.isRequired,
+    handleDeleteComment: PropTypes.func.isRequired,
 }
 
 export default BottomSheetWrapper
