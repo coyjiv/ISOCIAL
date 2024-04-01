@@ -22,6 +22,7 @@ import com.coyjiv.isocial.transfer.user.UserDefaultResponseMapper;
 import com.coyjiv.isocial.transfer.user.UserProfileResponseDtoMapper;
 import com.coyjiv.isocial.transfer.user.UserRegistrationRequestMapper;
 import com.coyjiv.isocial.transfer.user.UserSearchResponseMapper;
+import io.sentry.Sentry;
 import jakarta.security.auth.message.AuthException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -267,6 +268,7 @@ public class UserService implements IUserService {
     try {
       jwtTokenProvider.validateAccessToken(token);
     } catch (Exception e) {
+      Sentry.captureException(e);
       throw new IllegalAccessException("Token not valid");
     }
     Long userId = authProvider.getAuthenticationPrincipal();

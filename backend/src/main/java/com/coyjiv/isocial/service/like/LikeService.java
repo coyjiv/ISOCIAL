@@ -14,6 +14,7 @@ import com.coyjiv.isocial.service.notifications.INotificationService;
 import com.coyjiv.isocial.service.user.IUserService;
 import com.coyjiv.isocial.service.websocket.IWebsocketService;
 import com.coyjiv.isocial.transfer.like.LikeDtoResponseMapper;
+import io.sentry.Sentry;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -98,6 +99,7 @@ public class LikeService implements ILikeService {
       try {
         return userService.findActiveById(like.getUserId());
       } catch (EntityNotFoundException e) {
+        Sentry.captureException(e);
         e.printStackTrace();
         return null;
       }
