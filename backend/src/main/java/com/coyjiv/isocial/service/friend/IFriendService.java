@@ -4,6 +4,7 @@ import com.coyjiv.isocial.domain.UserFriendStatus;
 import com.coyjiv.isocial.dto.respone.friend.CustomFriendResponse;
 import com.coyjiv.isocial.dto.respone.friend.FriendResponseDto;
 import com.coyjiv.isocial.dto.respone.page.PageWrapper;
+import com.coyjiv.isocial.dto.respone.user.UserSearchResponseDto;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 
 import java.io.IOException;
@@ -40,4 +41,6 @@ public interface IFriendService {
   PageWrapper<FriendResponseDto> getFriendsWithSameLocation(Long userId, int page, int size);
 
   PageWrapper<FriendResponseDto> getRecommendations(int page, int size);
+
+  PageWrapper<FriendResponseDto> findByName(String name, int page, int size);
 }

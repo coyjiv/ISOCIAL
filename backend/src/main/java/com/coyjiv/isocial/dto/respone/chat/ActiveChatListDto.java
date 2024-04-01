@@ -14,6 +14,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class ActiveChatListDto {
   private Long id;
+  private Long receiverId;
   private String chatName;
   private String lastMessage;
   private Long lastMessageBy;

@@ -14,6 +14,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class ActiveChatDto {
   private Long id;
+  private Long receiverId;
   private String chatName;
   private String avatarUrl;
   private UserActivityStatus receiverStatus;

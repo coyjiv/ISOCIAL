@@ -149,5 +149,12 @@ public class FriendController {
     @RequestParam(defaultValue = "10") @Min(0) Integer size) {
     return ResponseEntity.ok(friendService.getFriendsWithSameLocation(userId, page, size));
   }
+
+  @GetMapping("/search")
+  public ResponseEntity<?> searchFriends(@RequestParam String query,
+                                         @RequestParam(defaultValue = "0") @Min(0) Integer page,
+                                         @RequestParam(defaultValue = "10") @Min(0) Integer size) {
+    return ResponseEntity.ok(friendService.findByName(query, page, size));
+  }
 }
 

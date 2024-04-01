@@ -10,7 +10,7 @@ import com.coyjiv.isocial.exceptions.ChatAlreadyExistException;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.exceptions.RequestValidationException;
 
-import java.util.List;
+import java.util.Optional;
 
 public interface IChatService {
   PageWrapper<ActiveChatListDto> findAllActive(int page, int quantity);
@@ -27,4 +27,7 @@ public interface IChatService {
 
   void delete(Long id)
           throws IllegalAccessException, EntityNotFoundException;
+
+  Optional<Long> isUserInvolvedInChat(Long userId)
+      throws EntityNotFoundException;
 }

@@ -24,7 +24,8 @@ import UpdatePassword from "../UpdatePassword";
 import Saved from "../Saved";
 import { ErrorFallback } from "../../components/ErrorFallback/ErrorFallback";
 import Chats from "../Chat/Chats";
-import ErrorChat from "../Chat/ErrorChat";
+import { Chat } from "../Chat/Chat";
+import { PendingChat } from "../Chat/PendingChat";
 
 const router = createBrowserRouter([
   {
@@ -94,12 +95,17 @@ const router = createBrowserRouter([
   {
     path: "chats",
     element: <Chats />,
-    errorElement: <ErrorChat />,
+    errorElement: <ErrorFallback />,
+  },
+  {
+    path: "chat",
+    element: <PendingChat />,
+    errorElement: <ErrorFallback />,
   },
   {
     path: "chats/:id",
-    element: <Chats />,
-    errorElement: <ErrorChat />,
+    element: <Chat />,
+    errorElement: <ErrorFallback />,
   },
   {
     path: "confirmation",
