@@ -38,6 +38,13 @@ public class MessageController {
     return ResponseEntity.ok(messageService.findActiveById(id));
   }
 
+  @GetMapping("/search")
+  public ResponseEntity<?> search(@RequestParam("term") String term,
+                                  @RequestParam("page") Integer page,
+                                  @RequestParam("size") Integer size) {
+    return ResponseEntity.ok(messageService.search(term, page, size));
+  }
+
   @PostMapping
   public ResponseEntity<?> create(@RequestParam(name = "chatId") Long chatId,
                                   @RequestBody @Valid CreateMessageRequestDto createMessageRequestDto)

@@ -22,4 +22,8 @@ public interface MessageRepository extends JpaRepository<Message,Long> {
 
   @Query("FROM Message m where m.chatId= :chatId AND m.isActive = true")
   Optional<Message> findLastActiveById(@Param("chatId") Long chatId);
+
+  @Query("SELECT m FROM Message m JOIN Chat c ON m.chatId = c.id JOIN c.users u WHERE u.id = :requestOwnerId AND CONCAT('%',LOWER(m.text),'%') LIKE CONCAT('%',LOWER(:searchTerm),'%') ")
+  Page<Message> search(@Param("searchTerm") String searchTerm, Pageable pageable,Long requestOwnerId);
+
 }

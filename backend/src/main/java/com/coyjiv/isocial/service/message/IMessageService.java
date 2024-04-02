@@ -20,5 +20,7 @@ public interface IMessageService {
   MessageNotificationDto update(Long messageId, UpdateMessageRequestDto updateMessageRequestDto)
           throws IllegalAccessException, EntityNotFoundException;
 
+  PageWrapper<MessageNotificationDto> search(String term,int page,int size);
+
   void delete(Long id) throws IllegalAccessException, EntityNotFoundException;
 }
