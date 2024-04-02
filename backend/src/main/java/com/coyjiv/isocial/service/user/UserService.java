@@ -39,6 +39,8 @@ import org.springframework.util.ReflectionUtils;
 
 import javax.security.auth.login.AccountNotFoundException;
 import java.lang.reflect.Field;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -231,6 +233,20 @@ public class UserService implements IUserService {
             premiumUser.setPremium(false);
           }
           userRepository.save(premiumUser);
+        } else if (Objects.equals(key, "dateOfBirth")) {
+          String dateString = (String) value;
+          SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+          try {
+            Date date = dateFormat.parse(dateString);
+            Field field = ReflectionUtils.findField(User.class, (String) key);
+            if (field != null) {
+              field.setAccessible(true);
+              ReflectionUtils.setField(field, user.get(), date);
+            }
+          } catch (ParseException e) {
+            Sentry.captureException(e);
+            e.printStackTrace();
+          }
         } else {
           Field field = ReflectionUtils.findField(User.class, (String) key);
           if (field != null) {

@@ -34,5 +34,6 @@ public class UserProfileResponseDtoMapper extends DtoMapperFacade<User, UserProf
             .getCountSubscriptionsCountBySubscriberId(emailPasswordAuthProvider.getAuthenticationPrincipal()));
     dto.setSubscribersCount(subscriberRepository
             .getCountSubscribersByUserId(emailPasswordAuthProvider.getAuthenticationPrincipal()));
+    dto.setDateOfBirth(entity.getDateOfBirth());
   }
 }

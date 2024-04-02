@@ -24,6 +24,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useGetChatIdQuery } from '../../../store/services/chatService'
 import { useDispatch } from 'react-redux'
 import { setPendingChat } from '../../../store/chatSlice'
+import moment from 'moment'
 
 
 export const ProfileLayout = ({ id }) => {
@@ -68,6 +69,7 @@ export const ProfileLayout = ({ id }) => {
     const onOpenBannerUpload = () => {
         setIsBannerUploadOpen(true)
     }
+    const lastSeen = moment(profile?.lastSeen).fromNow();
 
 
     return (
@@ -84,12 +86,12 @@ export const ProfileLayout = ({ id }) => {
                     <Stack direction={{ xs: 'column', sm: 'row' }} rowGap={{ xs: 0, sm: '40px', md: 0 }} flexWrap={{ sm: 'wrap', lg: 'nowrap' }} justifyContent={'start'} alignItems={'center'} spacing={2} sx={{ translate: '0px -30px', marginBottom: '-10px' }}>
                         <AvatarMenu avatarUrl={userAvatar(profile)} />
                         <Stack spacing={-1} style={{ marginTop: '30px' }}>
-                            <Typography variant='h4' sx={{ fontWeight: 900, color: theme.palette.black, fontSize: 32 }}>
+                            <Typography variant='h4' sx={{ fontWeight: 900, textAlign: { xs: 'center', sm: 'inherit' }, color: theme.palette.black, fontSize: 32 }}>
                                 {profile?.firstName + " " + profile?.lastName}
                             </Typography>
                             <Typography variant='h5' sx={{ '& > a:hover': { textDecoration: 'underline' }, fontWeight: 500, color: theme.palette.greyColor, fontSize: 15, textAlign: (isMobile || isLargeMobile) ? 'center' : 'left' }} style={{ marginTop: '8px' }}>
                                 <Link to={'?tab=Friends'}>
-                                    friends: {profile?.friendsCount}
+                                    friends: {profile?.friendsCount} | last seen {lastSeen}
                                 </Link>
                             </Typography>
                         </Stack>
