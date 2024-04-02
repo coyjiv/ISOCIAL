@@ -32,8 +32,6 @@ const ChatView = ({ id }) => {
 
   const chats = useSelector((state) => state.chat.chats);
 
-  console.log(chats.data);
-
   const selectedChat = useSelector((state) => state.chat.selectedChat);
 
   const dispatch = useDispatch();
@@ -58,9 +56,6 @@ const ChatView = ({ id }) => {
     !chats.isLoading &&
     chats.error === null;
 
-  console.log(inputActive, "inputActive in chat view");
-  // console.log(chats);
-
   const fetchMoreData = () => {
     dispatch(fetchChats({ page: page + 1 }));
     setPage((prevPage) => prevPage + 1);
@@ -79,7 +74,6 @@ const ChatView = ({ id }) => {
     if (chats.status === "idle") {
       dispatch(fetchChats({ page: 0 }));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

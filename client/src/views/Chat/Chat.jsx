@@ -10,14 +10,8 @@ import ChatView from "./ChatView";
 
 const ChatPage = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { id: paramsId } = useParams();
-  console.log(paramsId, "paramsId in Chat component");
-  if (!paramsId) {
-    console.log("No params id");
-
-    navigate("/chats");
-  }
-
   const selectedChat = useSelector((state) => state.chat.selectedChat);
   const {
     data: chatData,
@@ -25,14 +19,12 @@ const ChatPage = () => {
     isSuccess,
   } = useGetChatRecipientQuery(paramsId, { skip: !paramsId });
 
-  console.log(paramsId);
-  console.log(chatData, "chat data");
-
-  const dispatch = useDispatch();
+  if (!paramsId) {
+    navigate("/chats");
+  }
 
   useEffect(() => {
     if (!isLoading && !isSuccess) {
-      console.log("Chat not found");
       navigate("/chats");
     }
   }, [isLoading, isSuccess, navigate]);

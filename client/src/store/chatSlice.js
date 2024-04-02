@@ -81,8 +81,6 @@ const chatSlice = createSlice({
       state.selectedChatMessages.page += 1;
     },
     removeChat: (state, action) => {
-      console.log(state.chats.data);
-
       state.chats.data = state.chats.data.filter(
         (chat) => chat.id !== action.payload,
       );
