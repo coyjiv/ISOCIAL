@@ -4,9 +4,6 @@ import { userAvatar } from '../../../data/placeholders'
 import { Link } from 'react-router-dom'
 
 export const LikedUsers = ({ recentLikedUsers, likesCount }) => {
-    recentLikedUsers.forEach(element => {
-        console.log(userAvatar(element), 'userAvatar(element)');
-    });
     return (
         <AvatarGroup total={likesCount}>
             {recentLikedUsers?.map((el, i) => <Link key={i} to={'/profile/' + el?.id}><Avatar sx={{ width: '40px', height: '40px' }} src={userAvatar(el)} /></Link>)}

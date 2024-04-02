@@ -31,7 +31,7 @@ const ChatModal = ({ modalText, open = false, handleClose }) => {
   const { data: friends } = useGetFriendsListQuery({
     id: localStorage.getItem("userId"),
     page: friendsPage,
-  });
+  }, { pollingInterval: 1000 });
 
   const navigate = useNavigate();
 
@@ -77,7 +77,7 @@ const ChatModal = ({ modalText, open = false, handleClose }) => {
     }
   };
   const goToMessageStep = (friend) => {
-    if (friend.chatId !== null) {
+    if (friend.chatId != null) {
       navigate(`/chats/${friend.chatId}`);
     } else {
       dispatch(
@@ -92,13 +92,6 @@ const ChatModal = ({ modalText, open = false, handleClose }) => {
       navigate("/chat");
     }
   };
-
-  // Список друзей с которыми ещё нет чата
-  // const chats = useSelector((state) => state.chat.chats);
-  // const friendsWithoutChat = friends?.content.filter((friend) => {
-  //   const friendFullName = `${friend.firstName} ${friend.lastName}`;
-  //   return !chats?.data.some((chat) => chat.chatName === friendFullName);
-  // });
 
   return (
     <Dialog
@@ -177,29 +170,29 @@ const ChatModal = ({ modalText, open = false, handleClose }) => {
       <div className={friendsWrapperClasses}>
         {searchActive
           ? searchFriendsData &&
-            searchFriendsData?.content.map((friend) => (
-              <div className="modal-item-wrapper" key={friend.id}>
-                <button
-                  className="chat-modal-button"
-                  onClick={() => goToMessageStep(friend)}
-                >
-                  <Avatar src={userAvatar(friend)} alt="avatar" />
-                  {friend.firstName} {friend.lastName}
-                </button>
-              </div>
-            ))
+          searchFriendsData?.content.map((friend) => (
+            <div className="modal-item-wrapper" key={friend.id}>
+              <button
+                className="chat-modal-button"
+                onClick={() => goToMessageStep(friend)}
+              >
+                <Avatar src={userAvatar(friend)} alt="avatar" />
+                {friend.firstName} {friend.lastName}
+              </button>
+            </div>
+          ))
           : friends &&
-            friends.content.map((friend) => (
-              <div className="modal-item-wrapper" key={friend.id}>
-                <button
-                  className="chat-modal-button"
-                  onClick={() => goToMessageStep(friend)}
-                >
-                  <Avatar src={userAvatar(friend)} alt="avatar" />
-                  {friend.firstName} {friend.lastName}
-                </button>
-              </div>
-            ))}
+          friends.content.map((friend) => (
+            <div className="modal-item-wrapper" key={friend.id}>
+              <button
+                className="chat-modal-button"
+                onClick={() => goToMessageStep(friend)}
+              >
+                <Avatar src={userAvatar(friend)} alt="avatar" />
+                {friend.firstName} {friend.lastName}
+              </button>
+            </div>
+          ))}
         {noFriends && (
           <div className="chat-modal-no-friends_wrapper">
             <div>

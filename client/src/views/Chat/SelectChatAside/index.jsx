@@ -1,16 +1,29 @@
+import { useState } from 'react'
 import PropTypes from 'prop-types'
 import ChatItem from '../ChatItem'
 import styles from './selectChatAside.module.scss'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useSelector } from 'react-redux'
 import classNames from 'classnames'
+import { ChatModal } from '../ChatModal'
+import Fab from "@mui/material/Fab";
+import EditIcon from "@mui/icons-material/Edit";
+import { userAvatar } from '../../../data/placeholders'
 
-const SelectChatAside = ({ chats, input, hasMore, fetchMoreData, filteredChats, searchActive }) => {
+const SelectChatAside = ({ chats, input, hasMore, fetchMoreData, filteredChats, searchActive, hideCreateChat }) => {
     const selectedChat = useSelector(state => state.chat.selectedChat);
     const asideClasses = classNames({
         [styles.chatAsideWrapper]: true,
         [styles.hideForMobile]: selectedChat !== null
     })
+
+    const [isOpen, setIsOpen] = useState(false);
+
+    const handleOpen = () => {
+        setIsOpen(true);
+    };
+
+    const handleClose = () => setIsOpen(false);
 
     return (
         <aside className={asideClasses}>
@@ -27,7 +40,7 @@ const SelectChatAside = ({ chats, input, hasMore, fetchMoreData, filteredChats, 
                                 chatName={chat?.chatName}
                                 lastMessage={chat?.lastMessage}
                                 lastMessageDate={chat?.lastMessageDate}
-                                chatAvatar={chat?.avatarUrl}
+                                chatAvatar={userAvatar({ firstName: chat?.chatName.split(' ')[0], lastName: chat?.chatName.split(' ')[1], avatarsUrl: [chat?.avatarUrl] })}
                             />
                         ))}
                 </div>
@@ -46,10 +59,27 @@ const SelectChatAside = ({ chats, input, hasMore, fetchMoreData, filteredChats, 
                                 chatName={chat?.chatName}
                                 lastMessage={chat?.lastMessage}
                                 lastMessageDate={chat?.lastMessageDate}
-                                chatAvatar={chat?.avatarUrl}
+                                chatAvatar={userAvatar({ firstName: chat?.chatName.split(' ')[0], lastName: chat?.chatName.split(' ')[1], avatarsUrl: [chat?.avatarUrl] })}
                             />
                         ))}
                 </InfiniteScroll>}
+            {!hideCreateChat &&
+                <>
+                    <ChatModal
+                        open={isOpen}
+                        handleClose={handleClose}
+                        modalText="Select Friend"
+                    />
+                    <Fab
+                        onClick={handleOpen}
+                        sx={{ position: "fixed", bottom: "20px", left: "20px" }}
+                        color="primary"
+                        aria-label="edit"
+                    >
+                        <EditIcon />
+                    </Fab>
+                </>
+            }
         </aside>
     )
 }
@@ -62,7 +92,8 @@ SelectChatAside.propTypes = {
     fetchMoreData: PropTypes.func,
     input: PropTypes.node,
     searchActive: PropTypes.bool,
-    filteredChats: PropTypes.array
+    filteredChats: PropTypes.array,
+    hideCreateChat: PropTypes.bool
 }
 
 export default SelectChatAside

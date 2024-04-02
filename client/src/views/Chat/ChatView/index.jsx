@@ -23,7 +23,7 @@ const validationScheme = Yup.object().shape({
     .max(260, "Message is too long"),
 });
 
-const ChatView = ({ id }) => {
+const ChatView = ({ id, hideCreateChat }) => {
   const wrapperClasses = classNames(
     styles.emptyWrapper,
     styles.emptyWrapperRight,
@@ -81,6 +81,7 @@ const ChatView = ({ id }) => {
       {!isEmptyScreen ? (
         <div className={styles.chatMainWrapper}>
           <SelectChatAside
+            hideCreateChat={hideCreateChat}
             filteredChats={filteredChats}
             searchActive={inputActive}
             fetchMoreData={fetchMoreData}
@@ -133,6 +134,7 @@ const ChatView = ({ id }) => {
 
 ChatView.propTypes = {
   id: PropTypes.string,
+  hideCreateChat: PropTypes.bool,
 };
 
 export default ChatView;

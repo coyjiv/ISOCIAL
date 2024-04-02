@@ -39,27 +39,56 @@ const ChatItem = ({
 
   const navigate = useNavigate();
 
+  // const handleDeleteChat = async (e) => {
+  //   e.preventDefault();
+
+  //   if (isPendingChat) {
+  //     dispatch(clearPendingChat());
+  //     return setTimeout(() => {
+  //       navigate("/chats", { replace: true });
+  //     }, 0);
+  //   }
+
+  //   dispatch(removeChat(chatId));
+  //   dispatch(deleteChat({ chatId }));
+
+  //   if (id === chatId.toString()) {
+  //     setTimeout(() => {
+  //       navigate("/chats", { replace: true });
+  //     }, 0);
+  //   }
+  // };
+
   const handleDeleteChat = async (e) => {
     e.preventDefault();
+    e.stopPropagation(); // Prevent triggering navigation to the chat
 
     if (isPendingChat) {
+      dispatch(clearPendingChat());
       navigate("/chats", { replace: true });
-      return dispatch(clearPendingChat());
-    }
-
-    dispatch(removeChat(chatId));
-    dispatch(deleteChat({ chatId }));
-
-    if (id === chatId.toString()) {
-      navigate("/chats", { replace: true });
+    } else {
+      try {
+        await dispatch(deleteChat({ chatId })).unwrap();
+        dispatch(removeChat(chatId));
+        if (id === chatId.toString()) {
+          navigate("/chats", { replace: true });
+        }
+      } catch (error) {
+        console.error("Failed to delete chat:", error);
+        // Handle error (e.g., display a notification)
+      }
     }
   };
+
 
   const changeSelectedChat = (chatId) => {
     const newChat = chats.find((el) => el.id === chatId);
     if (newChat) {
       dispatch(setSelectedChat(newChat));
-      navigate(`/chats/${chatId}`);
+
+      setTimeout(() => {
+        navigate(`/chats/${chatId}`);
+      }, 0);
     }
   };
 
@@ -92,10 +121,10 @@ const ChatItem = ({
 
 ChatItem.propTypes = {
   chatId: PropTypes.number,
-  chatName: PropTypes.string.isRequired,
+  chatName: PropTypes.string,
   lastMessage: PropTypes.string,
   lastMessageDate: PropTypes.string,
-  chatAvatar: PropTypes.string.isRequired,
+  chatAvatar: PropTypes.string,
 };
 
 export default ChatItem;

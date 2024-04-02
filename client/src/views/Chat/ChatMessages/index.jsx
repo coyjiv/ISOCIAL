@@ -6,8 +6,9 @@ import { incrementSelectedChatMessagesPage } from "../../../store/chatSlice";
 import { useEffect } from "react";
 import "../Chat.scss";
 import Message from "../Message";
+import PropTypes from "prop-types";
 
-const ChatMessages = () => {
+const ChatMessages = ({ pendingChat = false }) => {
   const dispatch = useDispatch();
 
   const selectedChat = useSelector((state) => state.chat.selectedChat);
@@ -43,7 +44,7 @@ const ChatMessages = () => {
 
   return (
     <div className={styles.messagesWrapper} id="messages">
-      {messages.data.length === 0 ? (
+      {pendingChat || messages.data.length === 0 ? (
         <p className={styles.empty}>Start by writing a message</p>
       ) : (
         <InfiniteScroll
@@ -71,6 +72,10 @@ const ChatMessages = () => {
       )}
     </div>
   );
+};
+
+ChatMessages.propTypes = {
+  pendingChat: PropTypes.bool,
 };
 
 export default ChatMessages;

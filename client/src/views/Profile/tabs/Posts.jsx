@@ -20,11 +20,7 @@ const Posts = () => {
   const { id } = useParams();
   const [params] = useSearchParams()
 
-  console.log(' POSTS id', id);
-
   const fetchProfileId = id ?? params.get('id') ?? localStorage.getItem('userId')
-
-  console.log(' POSTS id', fetchProfileId);
 
   // eslint-disable-next-line no-unused-vars
   const { data: profile, isLoading } = useGetProfileByIdQuery(fetchProfileId);

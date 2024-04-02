@@ -58,8 +58,6 @@ const FriendsAllPage = () => {
     });
   };
 
-  console.log(friends);
-
   return (
     <Stack width="100%" direction="row" height="calc(100vh - 54px)">
       <FriendsSubSidebar

@@ -16,9 +16,9 @@ import {
   useRemoveFriendMutation,
   useSendFriendRequestMutation,
 } from "../../../store/services/friendService.js";
-import { LS_KEYS, MQ } from "../../../utils/constants";
+import { LS_KEYS } from "../../../utils/constants";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { setPendingChat } from "../../../store/chatSlice.js";
+import { clearSelectedChat, setPendingChat } from "../../../store/chatSlice.js";
 
 const FriendsSubSidebar = ({
   variant,
@@ -87,18 +87,16 @@ const FriendsSubSidebar = ({
   };
 
   const handleHideSuggestion = (id) => {
-    console.log(id);
     setHiddenUsersId([...hiddenUsersId, id]);
   };
 
   const handleMessage = (friend) => {
     // e.stopPropagation();
-    console.log(friend.chatId);
     if (friend.chatId !== null) {
+      dispatch(clearSelectedChat())
       navigate(`/chats/${friend.chatId}`);
-      console.log(friend.chatId);
-      console.log("In if");
     } else {
+      dispatch(clearSelectedChat())
       dispatch(
         setPendingChat({
           receiverId: friend.id,
@@ -145,7 +143,6 @@ const FriendsSubSidebar = ({
                 activityStatus,
                 chatId,
               }) => {
-                console.log("chatID", chatId);
                 return (
                   <FriendsSidebarUserCard
                     key={id}
@@ -184,8 +181,8 @@ const FriendsSubSidebar = ({
             next={fetchMoreData}
             hasMore={hasNext}
             scrollableTarget="scrollableDiv"
-            // loader={<div style={{ display: 'flex', width: '100%' }}><PostSkeleton /></div>}
-            // className={styles.infiniteWrapper}
+          // loader={<div style={{ display: 'flex', width: '100%' }}><PostSkeleton /></div>}
+          // className={styles.infiniteWrapper}
           >
             {friends.map(
               ({
