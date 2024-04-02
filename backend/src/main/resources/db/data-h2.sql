@@ -113,62 +113,62 @@ VALUES ('This is a post by user 1 with an image.',
             'https://images.unsplash.com/photo-1708506825624-9f30964bb5cb?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'],
         FALSE, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
         TRUE);
+
+
+INSERT INTO public.posts (text_content, attachments, is_edited, user_id, creation_date, last_modified_date, is_active)
+VALUES ('This is a post by user 1 with an image.',
+        ARRAY ['https://images.unsplash.com/photo-1696176559416-ef8d7115e3ba?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'],
+        FALSE, 1, CURRENT_TIMESTAMP,
+        CURRENT_TIMESTAMP, TRUE),
+       ('User 1 post with multiple images.',
+        ARRAY ['https://images.unsplash.com/photo-1708200216325-845664d87f9a?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+            'https://images.unsplash.com/photo-1708506825624-9f30964bb5cb?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'],
+        FALSE, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
+        TRUE);
+
+INSERT INTO public.posts (text_content, attachments, is_edited, user_id, creation_date, last_modified_date, is_active)
+VALUES ('Post by user 2, no attachments here.', ARRAY [], FALSE, 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE),
+       ('Another content piece by user 2, without attachments.', ARRAY [], FALSE, 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE);
+
+INSERT INTO public.posts (text_content, attachments, is_edited, user_id, creation_date, last_modified_date, is_active)
+VALUES ('User 2 sharing a post with an image.',
+        ARRAY ['https://images.unsplash.com/photo-1708367237850-3473e63f8d42?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'],
+        FALSE, 2, CURRENT_TIMESTAMP,
+        CURRENT_TIMESTAMP, TRUE),
+       ('A post by user 2 with several images.',
+        ARRAY ['https://images.unsplash.com/photo-1498751041763-40284fe1eb66?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 'https://images.unsplash.com/photo-1682687220305-ce8a9ab237b1?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'],
+        FALSE, 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
+        TRUE);
+
+INSERT INTO public.posts (text_content, attachments, is_edited, user_id, creation_date, last_modified_date, is_active)
+VALUES ('This is a post by user 1 with an image.',
+        ARRAY ['https://images.unsplash.com/photo-1696176559416-ef8d7115e3ba?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'],
+        FALSE, 1, CURRENT_TIMESTAMP,
+        CURRENT_TIMESTAMP, TRUE),
+       ('User 1 post with multiple images.',
+        ARRAY ['https://images.unsplash.com/photo-1708200216325-845664d87f9a?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+            'https://images.unsplash.com/photo-1708506825624-9f30964bb5cb?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'],
+        FALSE, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
+        TRUE);
+
+INSERT INTO public.posts (text_content, attachments, is_edited, user_id, creation_date, last_modified_date, is_active)
+VALUES ('This is a post by user 1 with an image.',
+        ARRAY ['https://images.unsplash.com/photo-1696176559416-ef8d7115e3ba?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'],
+        FALSE, 1, CURRENT_TIMESTAMP,
+        CURRENT_TIMESTAMP, TRUE),
+       ('User 1 post with multiple images.',
+        ARRAY ['https://images.unsplash.com/photo-1708200216325-845664d87f9a?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+            'https://images.unsplash.com/photo-1708506825624-9f30964bb5cb?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'],
+        FALSE, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
+        TRUE);
 --
---
--- INSERT INTO public.posts (text_content, attachments, is_edited, user_id, creation_date, last_modified_date, is_active)
--- VALUES ('This is a post by user 1 with an image.',
---         ARRAY ['https://images.unsplash.com/photo-1696176559416-ef8d7115e3ba?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'],
---         FALSE, 1, CURRENT_TIMESTAMP,
---         CURRENT_TIMESTAMP, TRUE),
---        ('User 1 post with multiple images.',
---         ARRAY ['https://images.unsplash.com/photo-1708200216325-845664d87f9a?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
---             'https://images.unsplash.com/photo-1708506825624-9f30964bb5cb?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'],
---         FALSE, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
---         TRUE);
---
--- INSERT INTO public.posts (text_content, attachments, is_edited, user_id, creation_date, last_modified_date, is_active)
--- VALUES ('Post by user 2, no attachments here.', ARRAY [], FALSE, 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE),
---        ('Another content piece by user 2, without attachments.', ARRAY [], FALSE, 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE);
---
--- INSERT INTO public.posts (text_content, attachments, is_edited, user_id, creation_date, last_modified_date, is_active)
--- VALUES ('User 2 sharing a post with an image.',
---         ARRAY ['https://images.unsplash.com/photo-1708367237850-3473e63f8d42?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'],
---         FALSE, 2, CURRENT_TIMESTAMP,
---         CURRENT_TIMESTAMP, TRUE),
---        ('A post by user 2 with several images.',
---         ARRAY ['https://images.unsplash.com/photo-1498751041763-40284fe1eb66?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D', 'https://images.unsplash.com/photo-1682687220305-ce8a9ab237b1?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDF8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'],
---         FALSE, 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
---         TRUE);
---
--- INSERT INTO public.posts (text_content, attachments, is_edited, user_id, creation_date, last_modified_date, is_active)
--- VALUES ('This is a post by user 1 with an image.',
---         ARRAY ['https://images.unsplash.com/photo-1696176559416-ef8d7115e3ba?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'],
---         FALSE, 1, CURRENT_TIMESTAMP,
---         CURRENT_TIMESTAMP, TRUE),
---        ('User 1 post with multiple images.',
---         ARRAY ['https://images.unsplash.com/photo-1708200216325-845664d87f9a?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
---             'https://images.unsplash.com/photo-1708506825624-9f30964bb5cb?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'],
---         FALSE, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
---         TRUE);
---
--- INSERT INTO public.posts (text_content, attachments, is_edited, user_id, creation_date, last_modified_date, is_active)
--- VALUES ('This is a post by user 1 with an image.',
---         ARRAY ['https://images.unsplash.com/photo-1696176559416-ef8d7115e3ba?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'],
---         FALSE, 1, CURRENT_TIMESTAMP,
---         CURRENT_TIMESTAMP, TRUE),
---        ('User 1 post with multiple images.',
---         ARRAY ['https://images.unsplash.com/photo-1708200216325-845664d87f9a?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
---             'https://images.unsplash.com/photo-1708506825624-9f30964bb5cb?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'],
---         FALSE, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
---         TRUE);
--- --
--- INSERT INTO public.likes (user_id, entity_id, entity_type, creation_date, last_modified_date)
--- VALUES (1, 1, 'POST', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
---        (2, 1, 'POST', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
---        (1, 2, 'POST', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
---        (3, 1, 'POST', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
---        (2, 3, 'POST', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
---
+INSERT INTO public.likes (user_id, entity_id, entity_type, creation_date, last_modified_date)
+VALUES (1, 1, 'POST', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+       (2, 1, 'POST', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+       (1, 2, 'POST', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+       (3, 1, 'POST', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
+       (2, 3, 'POST', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
 INSERT INTO public.friends (requester_id, addresser_id, status, creation_date, last_modified_date, is_active)
 VALUES (4, 1, 'FRIEND', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE);
 INSERT INTO public.friends (requester_id, addresser_id, status, creation_date, last_modified_date, is_active)
