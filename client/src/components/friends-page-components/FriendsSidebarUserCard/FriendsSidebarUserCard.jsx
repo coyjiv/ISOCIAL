@@ -1,12 +1,12 @@
-import PropTypes from 'prop-types'
-import { Avatar, Stack, Typography } from '@mui/material'
+import PropTypes from "prop-types";
+import { Avatar, Stack, Typography } from "@mui/material";
 
 import {
   CardContentWrapper,
   CardWrapper,
-} from './FriendsSidebarUserCard.styled.js'
-import { CardActionsPopover } from './CardActionsPopover'
-import { ButtonMain } from '../../buttons'
+} from "./FriendsSidebarUserCard.styled.js";
+import { CardActionsPopover } from "./CardActionsPopover";
+import { ButtonMain } from "../../buttons";
 
 const FriendsSidebarUserCard = ({
   variant,
@@ -18,34 +18,29 @@ const FriendsSidebarUserCard = ({
   onDecline,
   onRemove,
   onMessage,
-  onClick,
 }) => {
-  const isFriendsVariant = variant === 'friends'
-  const isSuggestionVariant = variant === 'suggestions'
+  const isFriendsVariant = variant === "friends";
+  const isSuggestionVariant = variant === "suggestions";
 
-  const confirmBtnText = isSuggestionVariant ? 'Add friend' : 'Confirm'
-  const declineBtnText = isSuggestionVariant ? 'Dont show' : 'Delete'
+  const confirmBtnText = isSuggestionVariant ? "Add friend" : "Confirm";
+  const declineBtnText = isSuggestionVariant ? "Dont show" : "Delete";
 
   const handleConfirmBtnClick = (e) => {
-    e.stopPropagation()
+    e.stopPropagation();
 
-    isSuggestionVariant ? onAddToFriends() : onConfirm()
-  }
+    isSuggestionVariant ? onAddToFriends() : onConfirm();
+  };
 
   const handleDeclineBtnClick = (e) => {
-    e.stopPropagation()
+    e.stopPropagation();
 
-    isSuggestionVariant ? onHideSuggestion() : onDecline()
-  }
+    isSuggestionVariant ? onHideSuggestion() : onDecline();
+  };
 
   return (
-    <CardWrapper variant={variant} onClick={onClick}>
+    <CardWrapper variant={variant}>
       <Stack direction="row" gap="8px" alignItems="center">
-        <Avatar
-          src={userImage}
-          alt={fullName}
-          sx={{ width: 60, height: 60 }}
-        />
+        <Avatar src={userImage} alt={fullName} sx={{ width: 60, height: 60 }} />
         <CardContentWrapper variant={variant}>
           <Typography fontSize="17px" fontWeight="500">
             {fullName}
@@ -71,11 +66,11 @@ const FriendsSidebarUserCard = ({
         </CardContentWrapper>
       </Stack>
     </CardWrapper>
-  )
-}
+  );
+};
 
 FriendsSidebarUserCard.propTypes = {
-  variant: PropTypes.oneOf(['friends', 'requests', 'suggestions']),
+  variant: PropTypes.oneOf(["friends", "requests", "suggestions"]),
   fullName: PropTypes.string,
   userImage: PropTypes.string,
   onMessage: PropTypes.func,
@@ -85,8 +80,9 @@ FriendsSidebarUserCard.propTypes = {
   onDecline: PropTypes.func,
   onClick: PropTypes.func,
   onRemove: PropTypes.func,
-}
+  friend: PropTypes.object,
+};
 
-FriendsSidebarUserCard.displayName = 'FriendsSidebarUserCard'
+FriendsSidebarUserCard.displayName = "FriendsSidebarUserCard";
 
-export default FriendsSidebarUserCard
+export default FriendsSidebarUserCard;

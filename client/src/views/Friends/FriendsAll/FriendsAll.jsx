@@ -8,12 +8,14 @@ import { useGetFriendsListQuery } from "../../../store/services/friendService";
 
 const FriendsAllPage = () => {
   const userId = localStorage.getItem("userId");
-  const [page, setPage] = useState(0)
+  const [page, setPage] = useState(0);
 
-  const { data, isLoading, isSuccess } = useGetFriendsListQuery({ id: userId, page: page });
+  const { data, isLoading, isSuccess } = useGetFriendsListQuery({
+    id: userId,
+    page: page,
+  });
 
-  const [friends, setFriends] = useState([])
-
+  const [friends, setFriends] = useState([]);
 
   // useEffect(() => {
   //   if (isSuccess && data?.content) {
@@ -26,15 +28,15 @@ const FriendsAllPage = () => {
 
   useEffect(() => {
     if (isSuccess && data?.content) {
-      setFriends(prevData => {
+      setFriends((prevData) => {
         // Create a new map to ensure uniqueness based on the item's id.
         const dataMap = new Map();
 
         // Fill the map with the previous data.
-        prevData.forEach(item => dataMap.set(item.id, item));
+        prevData.forEach((item) => dataMap.set(item.id, item));
 
         // Add new items to the map, preventing duplicates.
-        data.content.forEach(item => {
+        data.content.forEach((item) => {
           if (!dataMap.has(item.id)) {
             dataMap.set(item.id, item);
           }
@@ -43,25 +45,26 @@ const FriendsAllPage = () => {
         // Return a new array created from the map's values.
         return Array.from(dataMap.values());
       });
-
     }
   }, [data, isSuccess]);
 
   const fetchMoreData = () => {
-    setPage(prevPage => prevPage + 1);
+    setPage((prevPage) => prevPage + 1);
   };
 
   const onRemove = (id) => {
-    setFriends(prevData => {
-      return prevData.filter(item => item.id !== id)
-    })
-  }
+    setFriends((prevData) => {
+      return prevData.filter((item) => item.id !== id);
+    });
+  };
+
+  console.log(friends);
 
   return (
     <Stack width="100%" direction="row" height="calc(100vh - 54px)">
       <FriendsSubSidebar
         variant="friends"
-        users={friends}
+        friends={friends}
         heading="All Friends"
         subTitle="Friends"
         isLoading={isLoading}

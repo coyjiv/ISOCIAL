@@ -5,9 +5,9 @@
   width: 92%;
   margin: 0 auto;
   padding: 10px 10px;
-  // padding-right: 10px;
   border-radius: 8px;
   display: flex;
+  gap: 5px;
   justify-content: flex-start;
   align-items: center;
   position: relative;
@@ -36,7 +36,7 @@
 
 .chatInfoWrapper {
   display: grid;
-  // gap: 5px;
+  text-align: left;
   margin: 5px 10px;
 }
 
