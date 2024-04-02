@@ -23,5 +23,6 @@ public class LikeNotificationDtoMapper extends DtoMapperFacade<Like, LikeNotific
     dto.setLikerAvatar(liker.getAvatar());
     dto.setLikerName(liker.getFullName());
     dto.setSenderGender(liker.getGender());
+    dto.setSenderId(liker.getId());
   }
 }

@@ -56,8 +56,6 @@ const withWebsocket = (WrappedComponent) => {
 
         const { data: settings } = useGetSettingsQuery()
 
-        console.log("settings", settings);
-
         useSubscription(`/user/${localStorage.getItem("userId")}/messages`, handleMessage)
         useSubscription(`/user/${localStorage.getItem("userId")}/friends`, handleFriend)
         useSubscription(`/user/${localStorage.getItem("userId")}/reposts`, handleRepost)
@@ -120,7 +118,7 @@ const withWebsocket = (WrappedComponent) => {
 
             dispatch(notificationApi.util.prefetch('getNotification', { recieverId: localStorage.getItem('userId'), page: 0, quantity: 50 }, { force: true }))
             dispatch(notificationApi.util.invalidateTags(['Notifications']))
-            if (settings?.receiveNotifications) {
+            if (settings?.receiveNotifications && body.senderId != localStorage.getItem('userId')) {
                 toast.info(<ToastMessage link={`/post/${body.postId}`} msg={body} type={"REPOST"} />,
                     {
                         icon: () => <Link to={`/post/${body.postId}`}>
@@ -159,7 +157,7 @@ const withWebsocket = (WrappedComponent) => {
 
             dispatch(notificationApi.util.prefetch('getNotification', { recieverId: localStorage.getItem('userId'), page: 0, quantity: 50 }, { force: true }))
             dispatch(notificationApi.util.invalidateTags(['Notifications']))
-            if (settings?.receiveNotifications) {
+            if (settings?.receiveNotifications && body.senderId != localStorage.getItem('userId')) {
                 if (body.entityType === "POST") {
                     toast.info(<ToastMessage link={`/post/${body.entityId}`} msg={body} type={"LIKE_POST"} />,
                         {
@@ -189,7 +187,7 @@ const withWebsocket = (WrappedComponent) => {
 
             dispatch(notificationApi.util.prefetch('getNotification', { recieverId: localStorage.getItem('userId'), page: 0, quantity: 50 }, { force: true }))
             dispatch(notificationApi.util.invalidateTags(['Notifications']))
-            if (settings?.receiveNotifications) {
+            if (settings?.receiveNotifications && body.senderId != localStorage.getItem('userId')) {
                 toast.info(<ToastMessage link={`/post/${body.postId}`} msg={body} type={"COMMENT"} />,
                     {
                         icon: () => <Link to={`/post/${body.postId}`}>
