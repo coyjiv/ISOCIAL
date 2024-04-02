@@ -17,4 +17,5 @@ public class LikeNotificationDto {
   private String likerAvatar;
   private LikeableEntity entityType;
   private UserGender senderGender;
+  private Long senderId;
 }

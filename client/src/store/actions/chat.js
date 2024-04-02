@@ -1,42 +1,50 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import { instance } from "../../api";
+import { createAsyncThunk } from '@reduxjs/toolkit'
+import { instance } from '../../api'
 
 const fetchChatMessages = createAsyncThunk(
-  "chat/fetchChatMessages",
+  'chat/fetchChatMessages',
   async ({ chatId, page }) => {
     const response = await instance.get(
-      `messages?page=${page}&quantity=15&chatId=${chatId}`,
-    );
-    return response.data;
-  },
-);
+      `messages?page=${page}&quantity=15&chatId=${chatId}`
+    )
+    return response.data
+  }
+)
 
-const fetchChats = createAsyncThunk("chat/fetchChats", async ({ page }) => {
-  const response = await instance.get(`chats?page=${page}&quantity=30`);
-  return response.data;
-});
+const fetchChats = createAsyncThunk('chat/fetchChats', async ({ page }) => {
+  const response = await instance.get(`chats?page=${page}&quantity=30`)
+  return response.data
+})
+
+const fetchChatInfo = createAsyncThunk(
+  'chat/fetchChatInfo',
+  async ({ chatId }) => {
+    const response = await instance.get(`chats/${chatId}`)
+    return response.data
+  }
+)
 
 const sendMessage = createAsyncThunk(
-  "chat/sendMessage",
+  'chat/sendMessage',
   async ({ chatId, data }) => {
-    const response = await instance.post(`messages?chatId=${chatId}`, data);
-    return response.data;
-  },
-);
+    const response = await instance.post(`messages?chatId=${chatId}`, data)
+    return response.data
+  }
+)
 
 const deleteMessage = createAsyncThunk(
-  "chat/deleteMessage",
+  'chat/deleteMessage',
   async ({ messageId }) => {
-    const response = await instance.delete(`messages/${messageId}`);
-    return response.data;
-  },
-);
+    const response = await instance.delete(`messages/${messageId}`)
+    return response.data
+  }
+)
 
-const deleteChat = createAsyncThunk("chat/deleteChat", async ({ chatId }) => {
-  const response = await instance.delete(`chats/${chatId}`);
+const deleteChat = createAsyncThunk('chat/deleteChat', async ({ chatId }) => {
+  const response = await instance.delete(`chats/${chatId}`)
 
-  return response.data;
-});
+  return response.data
+})
 
 export {
   fetchChatMessages,
@@ -44,4 +52,5 @@ export {
   sendMessage,
   deleteMessage,
   deleteChat,
-};
+  fetchChatInfo,
+}

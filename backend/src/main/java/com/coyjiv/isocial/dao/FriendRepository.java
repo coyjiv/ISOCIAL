@@ -38,6 +38,11 @@ public interface FriendRepository extends JpaRepository<Friend, Long> {
 
   List<Friend> findAllByAddresserAndStatus(User addresser, UserFriendStatus status);
 
+  @Query("SELECT f FROM Friend f WHERE "
+    + "(f.requester.id = :userId1 AND f.addresser.id = :userId2) OR "
+    + "(f.requester.id = :userId2 AND f.addresser.id = :userId1)"
+    + "AND f.isActive = true AND f.status = 'FRIEND'")
+  Optional<Friend> findActiveFriendship(@Param("userId1") Long userId1, @Param("userId2") Long userId2);
 
   @Query("SELECT f FROM Friend f WHERE "
     + "(f.requester.id = :userId1 AND f.addresser.id = :userId2) OR "

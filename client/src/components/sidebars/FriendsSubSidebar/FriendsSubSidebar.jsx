@@ -1,199 +1,246 @@
-import PropTypes from 'prop-types'
-import { useState } from 'react'
-import { useLocalStorage, useMediaQuery } from 'usehooks-ts'
-import { useDispatch } from 'react-redux'
-import { Stack, Typography } from '@mui/material'
-import { useNavigate, useSearchParams } from 'react-router-dom'
-import { userAvatar } from '../../../data/placeholders.js'
+import PropTypes from "prop-types";
+import { useState } from "react";
+import { useLocalStorage } from "usehooks-ts";
+import { useDispatch } from "react-redux";
+import { Stack, Typography } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import { userAvatar } from "../../../data/placeholders.js";
 
-import { SubSidebarHeader } from './SubSidebarHeader'
-import { FriendsSidebarUserCard } from '../../friends-page-components'
-import { SidebarSearch } from '../../index'
-import { SidebarItemsList, SidebarWrapper } from './FriendsSubSidebar.styled'
+import { SubSidebarHeader } from "./SubSidebarHeader";
+import { FriendsSidebarUserCard } from "../../friends-page-components";
+import { SidebarSearch } from "../../index";
+import { SidebarItemsList, SidebarWrapper } from "./FriendsSubSidebar.styled";
 import {
   useAcceptFriendRequestMutation,
   useDeclineFriendRequestMutation,
   useRemoveFriendMutation,
   useSendFriendRequestMutation,
-} from '../../../store/services/friendService.js'
-import { LS_KEYS, MQ } from '../../../utils/constants'
-import InfiniteScroll from 'react-infinite-scroll-component'
-import { setPendingChat } from '../../../store/chatSlice.js'
+} from "../../../store/services/friendService.js";
+import { LS_KEYS } from "../../../utils/constants";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { clearSelectedChat, setPendingChat } from "../../../store/chatSlice.js";
 
 const FriendsSubSidebar = ({
   variant,
-  users,
+  friends,
   withSearch,
   heading,
   subTitle,
   fetchMoreData,
   hasNext,
-  onRemove
+  onRemove,
 }) => {
-  const dispatch = useDispatch()
-  const [searchValue, setSearchValue] = useState('')
-  let [, setSearchParams] = useSearchParams()
-  const navigate = useNavigate()
-  const isMobile = useMediaQuery(MQ.TABLET)
+  const dispatch = useDispatch();
+  const [searchValue, setSearchValue] = useState("");
+  // let [, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+  // const isMobile = useMediaQuery(MQ.TABLET);
   const [hiddenUsersId, setHiddenUsersId] = useLocalStorage(
     LS_KEYS.HIDDEN_USERS,
     [],
-  )
+  );
 
-  const [acceptFriendRequest] = useAcceptFriendRequestMutation()
-  const [declineFriendRequest] = useDeclineFriendRequestMutation()
-  const [removeFriend] = useRemoveFriendMutation()
-  const [sendFriendRequest] = useSendFriendRequestMutation()
+  const [acceptFriendRequest] = useAcceptFriendRequestMutation();
+  const [declineFriendRequest] = useDeclineFriendRequestMutation();
+  const [removeFriend] = useRemoveFriendMutation();
+  const [sendFriendRequest] = useSendFriendRequestMutation();
 
-  if (!Array.isArray(users)) {
+  if (!Array.isArray(friends)) {
     return (
       <SidebarWrapper>
-        <SubSidebarHeader heading={heading} link={'/friends'} />
+        <SubSidebarHeader heading={heading} link={"/friends"} />
       </SidebarWrapper>
-    )
+    );
   }
 
-  const isSuggestions = variant === 'suggestions'
+  const isSuggestions = variant === "suggestions";
 
-  const filteredUsers = users?.filter((user) => {
-    return (
-      user.firstName.toLowerCase().includes(searchValue.toLowerCase()) ||
-      user.lastName.toLowerCase().includes(searchValue.toLowerCase())
-    )
-  })
+  const handleChange = (value) => setSearchValue(value);
 
-  const handleChange = (value) => setSearchValue(value)
-
-
-  const handleChooseUser = (id) => {
-    if (isMobile) {
-      navigate(`/profile/${id}`)
-    } else {
-      setSearchParams({ id })
-    }
-  }
+  // const handleChooseUser = (id) => {
+  //   if (isMobile) {
+  //     navigate(`/profile/${id}`);
+  //   } else {
+  //     setSearchParams({ id });
+  //   }
+  // };
 
   const handleDeclineRequest = (id) => {
-    declineFriendRequest({ userId: id })
-    onRemove(id)
-  }
+    declineFriendRequest({ userId: id });
+    onRemove(id);
+  };
 
   const handleConfirmRequest = (id) => {
-    acceptFriendRequest({ userId: id })
-    onRemove(id)
-  }
+    acceptFriendRequest({ userId: id });
+    onRemove(id);
+  };
 
   const handleRemoveFriend = (e, id) => {
-    e.stopPropagation()
-    removeFriend({ friendUserId: id })
-    onRemove(id)
-  }
+    e.stopPropagation();
+    removeFriend({ friendUserId: id });
+    onRemove(id);
+  };
 
   const handleAddToFriend = (id) => {
-    sendFriendRequest({ userId: id })
-    onRemove(id)
-  }
+    sendFriendRequest({ userId: id });
+    onRemove(id);
+  };
 
   const handleHideSuggestion = (id) => {
-    console.log(id)
-    setHiddenUsersId([...hiddenUsersId, id])
-  }
+    setHiddenUsersId([...hiddenUsersId, id]);
+  };
 
-  const handleMessage = (e, friend) => {
-    e.stopPropagation()
-    if (friend.chatId) {
-      navigate(`/chats/${friend.chatId}`)
+  const handleMessage = (friend) => {
+    // e.stopPropagation();
+    if (friend.chatId !== null) {
+      dispatch(clearSelectedChat())
+      navigate(`/chats/${friend.chatId}`);
     } else {
-      dispatch(setPendingChat({
-        receiverId: friend.id,
-        chatName: `${friend.firstName} ${friend.lastName}`,
-        avatarUrl: userAvatar(friend),
-        receiverStatus: friend?.activityStatus,
-        messages: [],
-      }));
-      navigate('/chat')
+      dispatch(clearSelectedChat())
+      dispatch(
+        setPendingChat({
+          receiverId: friend.id,
+          chatName: `${friend.firstName} ${friend.lastName}`,
+          avatarUrl: userAvatar(friend),
+          receiverStatus: friend?.activityStatus,
+          messages: [],
+        }),
+      );
+      navigate("/chat");
     }
-  }
+  };
 
-  const searchActive = searchValue.length > 0
+  const searchActive = searchValue.length > 0;
 
   return (
     <SidebarWrapper>
-      <SubSidebarHeader heading={heading} link={'/friends'}>
+      <SubSidebarHeader heading={heading} link={"/friends"}>
         {withSearch && (
           <SidebarSearch
             value={searchValue}
-            placeholder={isSuggestions ? 'Search users' : 'Search friends'}
+            placeholder={isSuggestions ? "Search users" : "Search friends"}
             marginBottom="6px"
             onChange={handleChange}
           />
         )}
       </SubSidebarHeader>
-      <SidebarItemsList id='scrollableDiv'>
+      <SidebarItemsList id="scrollableDiv">
         <Typography
           fontSize="17px"
           fontWeight="600"
           marginLeft="12px"
           marginBottom="12px"
-        >{`${users?.length ?? '0'} ${subTitle}`}</Typography>
-        {searchActive ? <Stack width="100%" gap="10px">
-          {filteredUsers?.map(({ id, firstName, lastName, avatarsUrl, gender, activityStatus }) => (
-            <FriendsSidebarUserCard
-              key={id}
-              userImage={userAvatar({ avatarsUrl, gender }, firstName, lastName)}
-              fullName={`${firstName} ${lastName}`}
-              variant={variant}
-              onConfirm={() => handleConfirmRequest(id)}
-              onDecline={() => handleDeclineRequest(id)}
-              onClick={() => handleChooseUser(id)}
-              onRemove={(e) => handleRemoveFriend(e, id)}
-              onAddToFriends={() => handleAddToFriend(id)}
-              onHideSuggestion={() => handleHideSuggestion(id)}
-              onMessage={(e) => handleMessage(e, { id, firstName, lastName, avatarsUrl, gender, activityStatus })}
-            />
-          ))}
-        </Stack> :
+        >{`${friends?.length ?? "0"} ${subTitle}`}</Typography>
+        {searchActive ? (
+          <Stack width="100%" gap="10px">
+            {friends?.map(
+              ({
+                id,
+                firstName,
+                lastName,
+                avatarsUrl,
+                gender,
+                activityStatus,
+                chatId,
+              }) => {
+                return (
+                  <FriendsSidebarUserCard
+                    key={id}
+                    userImage={userAvatar(
+                      { avatarsUrl, gender },
+                      firstName,
+                      lastName,
+                    )}
+                    fullName={`${firstName} ${lastName}`}
+                    variant={variant}
+                    onConfirm={() => handleConfirmRequest(id)}
+                    onDecline={() => handleDeclineRequest(id)}
+                    // onClick={() => handleChooseUser(id)}
+                    onRemove={(e) => handleRemoveFriend(e, id)}
+                    onAddToFriends={() => handleAddToFriend(id)}
+                    onHideSuggestion={() => handleHideSuggestion(id)}
+                    onMessage={() =>
+                      handleMessage({
+                        id,
+                        firstName,
+                        lastName,
+                        chatId,
+                        avatarsUrl,
+                        gender,
+                        activityStatus,
+                      })
+                    }
+                  />
+                );
+              },
+            )}
+          </Stack>
+        ) : (
           <InfiniteScroll
-            dataLength={users.length}
+            dataLength={friends.length}
             next={fetchMoreData}
             hasMore={hasNext}
             scrollableTarget="scrollableDiv"
           // loader={<div style={{ display: 'flex', width: '100%' }}><PostSkeleton /></div>}
           // className={styles.infiniteWrapper}
           >
-            {users.map(({ id, firstName, lastName, avatarsUrl, gender, activityStatus }) => (
-              <FriendsSidebarUserCard
-                key={id}
-                userImage={userAvatar({ avatarsUrl, gender }, firstName, lastName)}
-                fullName={`${firstName} ${lastName}`}
-                variant={variant}
-                onConfirm={() => handleConfirmRequest(id)}
-                onDecline={() => handleDeclineRequest(id)}
-                onClick={() => handleChooseUser(id)}
-                onRemove={(e) => handleRemoveFriend(e, id)}
-                onAddToFriends={() => handleAddToFriend(id)}
-                onHideSuggestion={() => handleHideSuggestion(id)}
-                onMessage={(e) => handleMessage(e, { id, firstName, lastName, avatarsUrl, gender, activityStatus })}
-              />
-            ))}
+            {friends.map(
+              ({
+                id,
+                firstName,
+                lastName,
+                avatarsUrl,
+                gender,
+                chatId,
+                activityStatus,
+              }) => (
+                <FriendsSidebarUserCard
+                  key={id}
+                  userImage={userAvatar(
+                    { avatarsUrl, gender },
+                    firstName,
+                    lastName,
+                  )}
+                  fullName={`${firstName} ${lastName}`}
+                  variant={variant}
+                  onConfirm={() => handleConfirmRequest(id)}
+                  onDecline={() => handleDeclineRequest(id)}
+                  // onClick={() => handleChooseUser(id)}
+                  onRemove={(e) => handleRemoveFriend(e, id)}
+                  onAddToFriends={() => handleAddToFriend(id)}
+                  onHideSuggestion={() => handleHideSuggestion(id)}
+                  onMessage={() =>
+                    handleMessage({
+                      id,
+                      firstName,
+                      lastName,
+                      chatId,
+                      avatarsUrl,
+                      gender,
+                      activityStatus,
+                    })
+                  }
+                />
+              ),
+            )}
           </InfiniteScroll>
-        }
+        )}
       </SidebarItemsList>
     </SidebarWrapper>
-  )
-}
+  );
+};
 
 FriendsSubSidebar.propTypes = {
   withSearch: PropTypes.bool,
-  variant: PropTypes.oneOf(['friends', 'requests', 'suggestions']),
+  variant: PropTypes.oneOf(["friends", "requests", "suggestions"]),
   subTitle: PropTypes.string,
   heading: PropTypes.string,
-  users: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
+  friends: PropTypes.oneOfType([PropTypes.array, PropTypes.string]),
   fetchMoreData: PropTypes.func,
   hasNext: PropTypes.bool,
-  onRemove: PropTypes.func
-}
+  onRemove: PropTypes.func,
+};
 
-FriendsSubSidebar.displayName = 'FriendsSubSidebar'
+FriendsSubSidebar.displayName = "FriendsSubSidebar";
 
-export default FriendsSubSidebar
+export default FriendsSubSidebar;

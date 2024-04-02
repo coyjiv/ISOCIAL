@@ -16,4 +16,5 @@ public class CommentNotificationDto {
   private String commenterName;
   private String commenterAvatar;
   private UserGender senderGender;
+  private Long senderId;
 }

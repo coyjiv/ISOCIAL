@@ -7,14 +7,14 @@ import AvatarButton from "./actions/AvatarButton";
 import { MainSearch } from "../../MainSearch";
 import styles from "./navbar.module.scss";
 import { Avatar, Box, Drawer } from '@mui/material'
-import { Typography } from "@mui/material";
+import { Typography, Divider } from "@mui/material";
 
 import { useState } from "react";
 import { useMediaQuery } from 'usehooks-ts';
 import { ActionIconButton } from '../../index.js'
 
 const Navbar = () => {
-  const isMobile = useMediaQuery('(max-width: 600px)');
+  const isMobile = useMediaQuery('(max-width: 900px)');
 
   const [open, setOpen] = useState(false)
 
@@ -44,8 +44,13 @@ const Navbar = () => {
           <li><AvatarButton /></li>
         </ul>
       </nav>
-      <Drawer anchor="left" open={open} onClose={() => setOpen(false)}>
+      <Drawer anchor="left" open={isMobile && open} onClose={() => setOpen(false)}>
         <Box width="100vw" height="100vh" paddingTop={'50px'}>
+          {isMobile && <div className={styles.mobileSearch}>
+            <Typography marginLeft={'10px'} marginBottom={'10px'} variant="h1" fontSize={18} fontWeight={'bold'}>Search users</Typography>
+            <MainSearch noLogo />
+            <Divider sx={{ marginTop: '20px' }} />
+          </div>}
           <MainLinks navbarLinks={navbarLinks} />
         </Box>
       </Drawer>
@@ -59,7 +64,7 @@ import PropTypes from 'prop-types'
 import { useGetProfileByIdQuery } from "../../../store/services/profileService.js";
 import { userAvatar } from "../../../data/placeholders.js";
 
-const MainLinks = ({ navbarLinks }) => {
+export const MainLinks = ({ navbarLinks }) => {
   const { data: profile, isLoading } = useGetProfileByIdQuery(localStorage.getItem('userId'))
   return (
     <div className={styles.mainLinkWrapper}>

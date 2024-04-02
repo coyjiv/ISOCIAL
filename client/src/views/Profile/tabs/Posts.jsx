@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Avatar, Box, Container, Divider, Grid, Input, Stack, Typography } from '@mui/material'
 import { Link } from 'react-router-dom'
 import { AiFillHome } from "react-icons/ai";
+import { BsGeoAltFill, BsFillMortarboardFill, BsFillCake2Fill } from "react-icons/bs";
 import { useGetProfileByIdQuery } from '../../../store/services/profileService';
 // import { useSubscribersCountQuery } from '../../../store/services/friendService';
 import { useParams } from 'react-router-dom'
@@ -14,17 +15,14 @@ import Post from '../../../components/Post/Post';
 import classNames from 'classnames';
 import { PostSkeleton } from '../skeletons/PostSkeleton';
 import { useSearchParams } from 'react-router-dom';
+import moment from 'moment';
 // import PostsWrapper from '../../../components/PostsWrapper';
 
 const Posts = () => {
   const { id } = useParams();
   const [params] = useSearchParams()
 
-  console.log(' POSTS id', id);
-
   const fetchProfileId = id ?? params.get('id') ?? localStorage.getItem('userId')
-
-  console.log(' POSTS id', fetchProfileId);
 
   // eslint-disable-next-line no-unused-vars
   const { data: profile, isLoading } = useGetProfileByIdQuery(fetchProfileId);
@@ -73,7 +71,7 @@ const Posts = () => {
   };
 
 
-
+  const yearsOld = moment(profile?.dateOfBirth).fromNow().split(' ')[0]
 
   return (
     profile &&
@@ -86,7 +84,10 @@ const Posts = () => {
                 <Typography fontWeight={900} fontSize={20}>About me</Typography>
                 <Typography marginY={2}>{profile.bio}</Typography>
                 <Divider />
-                <Typography marginTop={2}><AiFillHome /> Lives in {profile.city}</Typography>
+                <Typography marginTop={2}><BsGeoAltFill style={{ marginRight: '5px' }} /> Lives in {profile.city}</Typography>
+                {profile?.birthPlace && <Typography marginTop={2}><AiFillHome style={{ marginRight: '5px' }} /> From {profile.birthPlace}</Typography>}
+                {profile?.studyPlace && <Typography marginTop={2}><BsFillMortarboardFill style={{ marginRight: '5px' }} /> Studied at {profile.studyPlace}</Typography>}
+                {profile?.dateOfBirth && <Typography marginTop={2}><BsFillCake2Fill style={{ marginRight: '5px' }} /> {yearsOld} years old</Typography>}
                 {/* <Typography marginTop={2}>Subscribers : {subscribersCount}</Typography> */}
               </div>
               <div className={styles.card}>

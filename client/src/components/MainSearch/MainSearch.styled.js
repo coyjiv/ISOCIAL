@@ -6,7 +6,7 @@ import { FiSearch } from 'react-icons/fi'
 export const LogoContainer = styled(Stack)(({ open }) => ({
   flexDirection: 'row',
   alignItems: 'center',
-  width: open ? '67px' : '109px',
+  width: open ? '67px' : '113px',
   overflow: 'hidden',
   transition: 'all 0.15s ease-in-out',
 }))

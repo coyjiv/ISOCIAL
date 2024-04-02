@@ -21,7 +21,7 @@ import { useClickOutside } from "../../hooks/index.js";
 import MainSearchEmptySection from "./MainSearchEmptySection/MainSearchEmptySection.jsx";
 
 
-const MainSearch = () => {
+const MainSearch = ({ noLogo }) => {
   const [value, setValue] = useState("");
   const [page] = useState(0);
 
@@ -96,7 +96,7 @@ const MainSearch = () => {
 
   return (
     <SearchWrapper open={inputActive} ref={inputRef}>
-      <LogoContainer open={inputActive}>
+      {!noLogo && <LogoContainer open={inputActive}>
         <LogoHiddenContentWrapper open={inputActive}>
           <LogoLink to="/" open={inputActive}>
             <Typography fontSize="22px" fontWeight="bold">
@@ -105,7 +105,7 @@ const MainSearch = () => {
           </LogoLink>
           <ActionIconButton onClick={handleBlur} icon="arrowLeft" />
         </LogoHiddenContentWrapper>
-      </LogoContainer>
+      </LogoContainer>}
       <SearchContainer>
         <SearchIcon open={inputActive} />
         <SearchBase
@@ -123,6 +123,7 @@ const MainSearch = () => {
 };
 
 MainSearch.propTypes = {
+  noLogo: PropTypes.bool,
   value: PropTypes.string,
   searchItems: PropTypes.array,
   onChange: PropTypes.func,

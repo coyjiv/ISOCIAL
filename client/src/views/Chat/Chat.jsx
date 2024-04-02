@@ -1,56 +1,65 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import "./Chat.scss";
-import { useGetChatRecipientQuery } from "../../store/services/chatService";
 import { useParams, useNavigate } from "react-router";
 import PropTypes from "prop-types";
 import { withLayout } from "../../hooks/withLayout";
 import { useSelector, useDispatch } from "react-redux";
-import { setSelectedChat } from "../../store/chatSlice";
 import ChatView from "./ChatView";
+import { ChatModal } from "./ChatModal";
+import Fab from "@mui/material/Fab";
+import EditIcon from "@mui/icons-material/Edit";
+import { fetchChatInfo } from "../../store/actions/chat";
 
 const ChatPage = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { id: paramsId } = useParams();
-  console.log(paramsId, "paramsId in Chat component");
-  if (!paramsId) {
-    console.log("No params id");
+  const selectedChat = useSelector((state) => state.chat.selectedChat);
 
+
+
+
+  if (!paramsId) {
     navigate("/chats");
   }
 
-  const selectedChat = useSelector((state) => state.chat.selectedChat);
-  const {
-    data: chatData,
-    isLoading,
-    isSuccess,
-  } = useGetChatRecipientQuery(paramsId, { skip: !paramsId });
-
-  console.log(paramsId);
-  console.log(chatData, "chat data");
-
-  const dispatch = useDispatch();
+  // useEffect(() => {
+  //   if (!isLoading && !isSuccess) {
+  //     navigate("/chats");
+  //   }
+  // }, [isLoading, isSuccess, navigate]);
 
   useEffect(() => {
-    if (!isLoading && !isSuccess) {
-      console.log("Chat not found");
-      navigate("/chats");
+    if (paramsId && !selectedChat && selectedChat?.id !== paramsId) {
+      dispatch(fetchChatInfo({ chatId: paramsId }));
     }
-  }, [isLoading, isSuccess, navigate]);
+  }, [paramsId, dispatch, selectedChat]);
 
-  useEffect(() => {
-    if (selectedChat === null && chatData && chatData?.id) {
-      dispatch(setSelectedChat(chatData));
-    }
-  }, [chatData, dispatch, selectedChat]);
+  const [isOpen, setIsOpen] = useState(false);
+  const handleOpen = () => {
+    setIsOpen(true);
+  };
 
-  useEffect(() => {
-    return () => {
-      dispatch(setSelectedChat(null));
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const handleClose = () => setIsOpen(false);
 
-  return <ChatView id={paramsId} />;
+  return (
+    <div className="chats">
+      <ChatModal
+        open={isOpen}
+        handleClose={handleClose}
+        modalText="Select Friend"
+      />
+      <ChatView id={paramsId} />
+      {selectedChat?.id === paramsId && <Fab
+        onClick={handleOpen}
+        sx={{ position: "fixed", bottom: "20px", right: "20px" }}
+        color="primary"
+        aria-label="edit"
+      >
+        <EditIcon />
+      </Fab>}
+    </div>
+  );
 };
 
 ChatPage.propTypes = {

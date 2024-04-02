@@ -18,12 +18,12 @@ import com.coyjiv.isocial.dto.respone.user.UserSearchResponseDto;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.exceptions.PasswordMatchException;
 import com.coyjiv.isocial.service.email.EmailServiceImpl;
+import com.coyjiv.isocial.service.userpreference.IUserPreferenceService;
 import com.coyjiv.isocial.transfer.user.UserDefaultResponseMapper;
 import com.coyjiv.isocial.transfer.user.UserProfileResponseDtoMapper;
 import com.coyjiv.isocial.transfer.user.UserRegistrationRequestMapper;
 import com.coyjiv.isocial.transfer.user.UserSearchResponseMapper;
 import io.sentry.Sentry;
-import jakarta.security.auth.message.AuthException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -39,6 +39,8 @@ import org.springframework.util.ReflectionUtils;
 
 import javax.security.auth.login.AccountNotFoundException;
 import java.lang.reflect.Field;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -58,6 +60,7 @@ public class UserService implements IUserService {
   private final UserProfileResponseDtoMapper userProfileResponseDtoMapper;
   private final EmailPasswordAuthProvider authProvider;
   private final JwtTokenProvider jwtTokenProvider;
+  private final IUserPreferenceService userPreferenceService;
   @Value("${HOSTNAME}")
   private String hostname;
   private final BCryptPasswordEncoder passwordEncoder;
@@ -72,7 +75,7 @@ public class UserService implements IUserService {
     Page<User> users = userRepository.findAll(pageable);
 
     List<UserDefaultResponseDto> dtos = users.stream()
-            .map(userDefaultResponseMapper::convertToDto).toList();
+      .map(userDefaultResponseMapper::convertToDto).toList();
 
     boolean hasNext = users.hasNext();
     return new PageWrapper<>(dtos, hasNext);
@@ -82,7 +85,7 @@ public class UserService implements IUserService {
   @Override
   public List<UserDefaultResponseDto> findAllActive() {
     return userRepository.findAll().stream()
-            .map(userDefaultResponseMapper::convertToDto).toList();
+      .map(userDefaultResponseMapper::convertToDto).toList();
   }
 
   @Transactional(readOnly = true)
@@ -95,6 +98,12 @@ public class UserService implements IUserService {
     } else {
       throw new EntityNotFoundException("User not found");
     }
+  }
+
+  @Transactional(readOnly = true)
+  @Override
+  public Optional<User> findActiveUserById(Long id) {
+    return userRepository.findActiveById(id);
   }
 
 
@@ -144,7 +153,7 @@ public class UserService implements IUserService {
     }
 
     List<UserSearchResponseDto> dtos = result.stream()
-            .map(userSearchResponseMapper::convertToDto).toList();
+      .map(userSearchResponseMapper::convertToDto).toList();
 
     return new PageWrapper<>(dtos, hasNext);
   }
@@ -175,13 +184,20 @@ public class UserService implements IUserService {
 
 
     String text = String.format("Open link to confirm your account ! Link: %s/confirmation?id=%s",
-            hostname, uuidForConfirmationLink);
+      hostname, uuidForConfirmationLink);
 
     userRepository.save(user);
 
+    try {
+      userPreferenceService.createUserPreferences(user);
+    } catch (EntityNotFoundException e) {
+      Sentry.captureException(e);
+      e.printStackTrace();
+    }
+
     emailService.sendSimpleMessage(
-            userRegistrationDto.getEmail(), "Account confirmation",
-            text
+      userRegistrationDto.getEmail(), "Account confirmation",
+      text
     );
 
     //    sendConfirmationEmail(userRegistrationDto.getEmail(), userRegistrationDto.getFirstName(), text);
@@ -205,7 +221,7 @@ public class UserService implements IUserService {
   @Transactional
   @Override
   public void update(Long id, Map<Object, Object> fields)
-          throws IllegalAccessException, EntityNotFoundException {
+    throws IllegalAccessException, EntityNotFoundException {
     Long requestOwnerId = authProvider.getAuthenticationPrincipal();
     if (!Objects.equals(id, requestOwnerId)) {
       throw new IllegalAccessException("User have no authorities to do this request.");
@@ -216,7 +232,7 @@ public class UserService implements IUserService {
       fields.forEach((key, value) -> {
         String stringKey = (String) key;
         if (Objects.equals(stringKey, "email") || Objects.equals(stringKey, "password")
-                || Objects.equals(stringKey, "activity_status") || Objects.equals(stringKey, "last_seen")) {
+          || Objects.equals(stringKey, "activity_status") || Objects.equals(stringKey, "last_seen")) {
           return;
         }
         if (Objects.equals(key, "gender")) {
@@ -231,6 +247,20 @@ public class UserService implements IUserService {
             premiumUser.setPremium(false);
           }
           userRepository.save(premiumUser);
+        } else if (Objects.equals(key, "dateOfBirth")) {
+          String dateString = (String) value;
+          SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+          try {
+            Date date = dateFormat.parse(dateString);
+            Field field = ReflectionUtils.findField(User.class, (String) key);
+            if (field != null) {
+              field.setAccessible(true);
+              ReflectionUtils.setField(field, user.get(), date);
+            }
+          } catch (ParseException e) {
+            Sentry.captureException(e);
+            e.printStackTrace();
+          }
         } else {
           Field field = ReflectionUtils.findField(User.class, (String) key);
           if (field != null) {
@@ -327,35 +357,35 @@ public class UserService implements IUserService {
   @Override
   public String getAvatar(Long id) throws EntityNotFoundException {
     return userRepository.findActiveById(id)
-            .map(User::getAvatar)
-            .orElseThrow(() -> new EntityNotFoundException("User not found"));
+      .map(User::getAvatar)
+      .orElseThrow(() -> new EntityNotFoundException("User not found"));
   }
 
   @Override
   public String getFullName(Long id) throws EntityNotFoundException {
     return userRepository.findActiveById(id)
-            .map(User::getFullName)
-            .orElseThrow(() -> new EntityNotFoundException("User not found"));
+      .map(User::getFullName)
+      .orElseThrow(() -> new EntityNotFoundException("User not found"));
   }
 
   @Override
   public boolean isPremium(Long commenterId) {
     return userRepository.findActiveById(commenterId)
-            .map(User::isPremium)
-            .orElse(false);
+      .map(User::isPremium)
+      .orElse(false);
   }
 
   @Override
   public String getPremiumNickname(Long commenterId) {
     return userRepository.findActiveById(commenterId)
-            .map(User::getPremiumNickname)
-            .orElse("");
+      .map(User::getPremiumNickname)
+      .orElse("");
   }
 
   @Override
   public String getPremiumEmoji(Long commenterId) {
     return userRepository.findActiveById(commenterId)
-            .map(User::getPremiumEmoji)
-            .orElse("");
+      .map(User::getPremiumEmoji)
+      .orElse("");
   }
 }

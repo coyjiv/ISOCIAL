@@ -87,8 +87,8 @@ export const postsApi = friendsApi.injectEndpoints({
         }
       },
     }),
-    getRecommendations: builder.query({
-      query: ({ page, size = 20 }) =>
+    getPostRecommendations: builder.query({
+      query: ({ page, size = 3 }) =>
         `posts/recommendations?page=${page}&size=${size}`,
       providesTags: ['Posts'],
     }),
@@ -106,5 +106,5 @@ export const {
   useToggleLikeMutation,
   useToggleSaveMutation,
   useGetSavedPostsQuery,
-  useGetRecommendationsQuery,
+  useGetPostRecommendationsQuery,
 } = postsApi

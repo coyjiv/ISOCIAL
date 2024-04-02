@@ -45,3 +45,14 @@
 
 .chatList {
 }
+
+.searchWrapper {
+  width: 95%;
+  margin: 20px auto;
+  > div {
+    background-color: colors.$greyBorder;
+    input {
+      color: colors.$black;
+    }
+  }
+}

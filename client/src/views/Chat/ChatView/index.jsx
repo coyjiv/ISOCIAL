@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import SelectChatAside from "../SelectChatAside";
 import classNames from "classnames";
@@ -23,7 +24,7 @@ const validationScheme = Yup.object().shape({
     .max(260, "Message is too long"),
 });
 
-const ChatView = ({ id }) => {
+const ChatView = ({ id, hideCreateChat }) => {
   const wrapperClasses = classNames(
     styles.emptyWrapper,
     styles.emptyWrapperRight,
@@ -31,8 +32,6 @@ const ChatView = ({ id }) => {
   const [page, setPage] = useState(0);
 
   const chats = useSelector((state) => state.chat.chats);
-
-  console.log(chats.data);
 
   const selectedChat = useSelector((state) => state.chat.selectedChat);
 
@@ -58,9 +57,6 @@ const ChatView = ({ id }) => {
     !chats.isLoading &&
     chats.error === null;
 
-  console.log(inputActive, "inputActive in chat view");
-  // console.log(chats);
-
   const fetchMoreData = () => {
     dispatch(fetchChats({ page: page + 1 }));
     setPage((prevPage) => prevPage + 1);
@@ -79,7 +75,6 @@ const ChatView = ({ id }) => {
     if (chats.status === "idle") {
       dispatch(fetchChats({ page: 0 }));
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -87,6 +82,7 @@ const ChatView = ({ id }) => {
       {!isEmptyScreen ? (
         <div className={styles.chatMainWrapper}>
           <SelectChatAside
+            hideCreateChat={hideCreateChat}
             filteredChats={filteredChats}
             searchActive={inputActive}
             fetchMoreData={fetchMoreData}
@@ -139,6 +135,7 @@ const ChatView = ({ id }) => {
 
 ChatView.propTypes = {
   id: PropTypes.string,
+  hideCreateChat: PropTypes.bool,
 };
 
 export default ChatView;

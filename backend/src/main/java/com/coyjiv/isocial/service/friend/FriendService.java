@@ -4,21 +4,22 @@ import com.coyjiv.isocial.auth.EmailPasswordAuthProvider;
 import com.coyjiv.isocial.dao.FriendRepository;
 import com.coyjiv.isocial.dao.UserRepository;
 import com.coyjiv.isocial.domain.Friend;
+import com.coyjiv.isocial.domain.PrivacySetting;
 import com.coyjiv.isocial.domain.User;
 import com.coyjiv.isocial.domain.UserFriendStatus;
-import com.coyjiv.isocial.domain.UserGender;
+import com.coyjiv.isocial.domain.UserPreference;
 import com.coyjiv.isocial.dto.respone.friend.CustomFriendResponse;
 import com.coyjiv.isocial.dto.respone.friend.FriendResponseDto;
 import com.coyjiv.isocial.dto.respone.page.PageWrapper;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.service.chat.IChatService;
 import com.coyjiv.isocial.service.subscriber.ISubscriberService;
+import com.coyjiv.isocial.service.userpreference.IUserPreferenceService;
 import com.coyjiv.isocial.service.websocket.IWebsocketService;
 import com.coyjiv.isocial.transfer.friend.FriendResponseMapper;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -47,6 +48,7 @@ public class FriendService implements IFriendService {
   private final EmailPasswordAuthProvider emailPasswordAuthProvider;
   private final IChatService chatService;
   private final ISubscriberService subscriberService;
+  private final IUserPreferenceService userPreferenceService;
 
   private final IWebsocketService websocketService;
 
@@ -190,6 +192,15 @@ public class FriendService implements IFriendService {
   @Transactional(readOnly = true)
   @Override
   public PageWrapper<FriendResponseDto> findAllFriends(Long userId, int page, int size) {
+    UserPreference userPreference = userPreferenceService.getUserPreferences(userId);
+    Optional<Friend> optionalFriend = findActiveFriendship(userId, emailPasswordAuthProvider.getAuthenticationPrincipal());
+    if (userPreference != null
+      && userPreference.getFriendsListVisibility() == PrivacySetting.FRIENDS
+      && !userId.equals(emailPasswordAuthProvider.getAuthenticationPrincipal())
+      && optionalFriend.isEmpty()) {
+      return new PageWrapper<>(new ArrayList<>(), false);
+    }
+
     Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "id"));
     Pageable pageable = PageRequest.of(page, size, sort);
     Optional<User> user = userRepository.findById(userId);
@@ -490,6 +501,11 @@ public class FriendService implements IFriendService {
       .toList();
 
     return new PageWrapper<>(dtos, hasNext);
+  }
+
+  @Override
+  public Optional<Friend> findActiveFriendship(Long userId1, Long userId2) {
+    return friendRepository.findActiveFriendship(userId1, userId2);
   }
 }
 
