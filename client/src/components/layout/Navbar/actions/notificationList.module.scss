@@ -1,0 +1,145 @@
+@use "../../../../styles/variables/colors";
+@import '../../../../styles/mixins/breakpoints';
+
+@keyframes slideOutAnimation {
+  from {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  to {
+    opacity: 1;
+    width: 320px;
+    max-height: calc(100vh - 96px);
+  }
+}
+
+@keyframes slideInAnimation {
+  from {
+    opacity: 1;
+    width: 320px;
+    max-height: calc(100vh - 96px);
+  }
+  to {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+}
+
+.notificationContainer {
+  position: absolute;
+  right: 10px;
+  top: 48px;
+  padding: 20px;
+  min-width: 320px;
+  max-width: 680px;
+  background-color: #fff;
+  color: rgba(0, 0, 0, 0.87);
+  border-radius: 4px;
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+    0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
+  overflow-y: scroll;
+  animation: slideOutAnimation 280ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    transform 189ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  max-height: calc(100vh - 96px);
+}
+
+.titles {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.notificationTitle {
+  color: colors.$black;
+  font-size: 20px;
+  line-height: 22px;
+  font-weight: 600;
+  margin: 10px 0 15px 0;
+}
+
+.noNotification {
+  color: colors.$black;
+  font-size: 15px;
+  line-height: 19px;
+  font-weight: 400;
+}
+
+.notificationList {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow: hidden !important;
+  @include media(s) {
+    gap: 30px;
+  }
+  @include media(sm) {
+    margin: 0 auto;
+  }
+  @include media(sm) {
+    gap: 30px;
+  }
+}
+
+.notificationItem {
+  width: 100%;
+  color: colors.$grey;
+  font-size: 15px;
+  line-height: 15px;
+  font-weight: 400;
+  display: flex;
+  gap: 10px;
+  @include media(s) {
+    gap: 15px;
+  }
+  @include media(sm) {
+    gap: 20px;
+  }
+}
+
+.avatarImg {
+  width: 56px;
+  height: 56px;
+  margin: auto 0;
+}
+
+.userName {
+  color: colors.$black;
+  font-weight: 500;
+}
+
+.notificationContent {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.notificationText {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 200px;
+  @media screen and (min-width: 370px) {
+    width: max-content;
+  }
+}
+
+.massage {
+  display: inline-block;
+  color: colors.$grey;
+  font-size: 15px;
+  line-height: 15px;
+  font-weight: 400;
+}
+
+.massageDisplay {
+  display: none;
+}
+
+.dateMassage {
+  color: colors.$primaryDark;
+}

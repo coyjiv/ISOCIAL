@@ -1,6 +1,5 @@
 import { Divider, Stack, Typography } from "@mui/material";
 
-import { FriendsSettingsPopover } from "./FriendsSettingsPopover";
 import { FriendsSidebarItem } from "./FriendsSidebarItem";
 import { sidebarItemsMap } from "./FriendsMainSidebar.utils.jsx";
 import {
@@ -8,15 +7,16 @@ import {
   SidebarWrapper,
 } from "./FriendsMainSidebar.styled.js";
 
-const FriendsMainSidebar = () => {
+import PropTypes from "prop-types";
+
+const FriendsMainSidebar = ({ hidden }) => {
   return (
-    <SidebarWrapper>
+    <SidebarWrapper hidden={hidden}>
       <SidebarHeaderWrapper>
         <Stack width="100%" direction="row" justifyContent="space-between">
           <Typography fontSize="24px" fontWeight="600">
             Friends
           </Typography>
-          <FriendsSettingsPopover />
         </Stack>
       </SidebarHeaderWrapper>
       <Stack gap="2px" marginTop="8px">
@@ -27,6 +27,10 @@ const FriendsMainSidebar = () => {
       <Divider orientation="horizontal" sx={{ my: "8px" }} />
     </SidebarWrapper>
   );
+};
+
+FriendsMainSidebar.propTypes = {
+  hidden: PropTypes.bool,
 };
 
 FriendsMainSidebar.displayName = "FriendsMainSidebar";

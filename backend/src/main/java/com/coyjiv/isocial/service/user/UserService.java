@@ -11,19 +11,22 @@ import com.coyjiv.isocial.domain.UserActivityStatus;
 import com.coyjiv.isocial.dto.request.auth.PasswordResetRequestDto;
 import com.coyjiv.isocial.domain.UserGender;
 import com.coyjiv.isocial.dto.request.user.UserRegistrationRequestDto;
+import com.coyjiv.isocial.dto.respone.page.PageWrapper;
 import com.coyjiv.isocial.dto.respone.user.UserDefaultResponseDto;
 import com.coyjiv.isocial.dto.respone.user.UserProfileResponseDto;
 import com.coyjiv.isocial.dto.respone.user.UserSearchResponseDto;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.exceptions.PasswordMatchException;
 import com.coyjiv.isocial.service.email.EmailServiceImpl;
+import com.coyjiv.isocial.service.userpreference.IUserPreferenceService;
 import com.coyjiv.isocial.transfer.user.UserDefaultResponseMapper;
 import com.coyjiv.isocial.transfer.user.UserProfileResponseDtoMapper;
 import com.coyjiv.isocial.transfer.user.UserRegistrationRequestMapper;
 import com.coyjiv.isocial.transfer.user.UserSearchResponseMapper;
-import jakarta.security.auth.message.AuthException;
+import io.sentry.Sentry;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -36,6 +39,8 @@ import org.springframework.util.ReflectionUtils;
 
 import javax.security.auth.login.AccountNotFoundException;
 import java.lang.reflect.Field;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -55,6 +60,7 @@ public class UserService implements IUserService {
   private final UserProfileResponseDtoMapper userProfileResponseDtoMapper;
   private final EmailPasswordAuthProvider authProvider;
   private final JwtTokenProvider jwtTokenProvider;
+  private final IUserPreferenceService userPreferenceService;
   @Value("${HOSTNAME}")
   private String hostname;
   private final BCryptPasswordEncoder passwordEncoder;
@@ -62,18 +68,24 @@ public class UserService implements IUserService {
 
   @Transactional(readOnly = true)
   @Override
-  public List<UserDefaultResponseDto> findAllActive(int page, int size) {
+  public PageWrapper<UserDefaultResponseDto> findAllActive(int page, int size) {
     Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "id"));
     Pageable pageable = PageRequest.of(page, size, sort);
-    return userRepository.findAll(pageable).toList().stream()
-            .map(userDefaultResponseMapper::convertToDto).toList();
+
+    Page<User> users = userRepository.findAll(pageable);
+
+    List<UserDefaultResponseDto> dtos = users.stream()
+      .map(userDefaultResponseMapper::convertToDto).toList();
+
+    boolean hasNext = users.hasNext();
+    return new PageWrapper<>(dtos, hasNext);
   }
 
   @Transactional(readOnly = true)
   @Override
   public List<UserDefaultResponseDto> findAllActive() {
     return userRepository.findAll().stream()
-            .map(userDefaultResponseMapper::convertToDto).toList();
+      .map(userDefaultResponseMapper::convertToDto).toList();
   }
 
   @Transactional(readOnly = true)
@@ -86,6 +98,12 @@ public class UserService implements IUserService {
     } else {
       throw new EntityNotFoundException("User not found");
     }
+  }
+
+  @Transactional(readOnly = true)
+  @Override
+  public Optional<User> findActiveUserById(Long id) {
+    return userRepository.findActiveById(id);
   }
 
 
@@ -108,22 +126,36 @@ public class UserService implements IUserService {
 
   @Transactional(readOnly = true)
   @Override
-  public List<UserSearchResponseDto> findByName(String name, int page, int size) {
+  public PageWrapper<UserSearchResponseDto> findByName(String name, int page, int size) {
     Set<User> result = new HashSet<>();
     String[] splittedNames = name.trim().split(" ");
 
     Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "id"));
     Pageable pageable = PageRequest.of(page, size, sort);
 
+    boolean hasNext = false;
     if (splittedNames.length > 1) {
-      result.addAll(userRepository.findByFirstNameOrLastName(splittedNames[0], pageable));
-      result.addAll(userRepository.findByFirstNameOrLastName(splittedNames[1], pageable));
+      Page<User> u = userRepository.findByFirstNameOrLastName(splittedNames[0], pageable);
+      result.addAll(u.toList());
+      if (u.hasNext()) {
+        hasNext = u.hasNext();
+      }
+
+      u = userRepository.findByFirstNameOrLastName(splittedNames[1], pageable);
+      if (u.hasNext()) {
+        hasNext = u.hasNext();
+      }
+      result.addAll(u.toList());
     } else {
-      result.addAll(userRepository.findByFirstNameOrLastName(splittedNames[0], pageable));
+      Page<User> u = userRepository.findByFirstNameOrLastName(splittedNames[0], pageable);
+      hasNext = u.hasNext();
+      result.addAll(u.toList());
     }
 
-    return result.stream()
-            .map(userSearchResponseMapper::convertToDto).toList();
+    List<UserSearchResponseDto> dtos = result.stream()
+      .map(userSearchResponseMapper::convertToDto).toList();
+
+    return new PageWrapper<>(dtos, hasNext);
   }
 
   //  @Transactional
@@ -152,13 +184,20 @@ public class UserService implements IUserService {
 
 
     String text = String.format("Open link to confirm your account ! Link: %s/confirmation?id=%s",
-            hostname, uuidForConfirmationLink);
+      hostname, uuidForConfirmationLink);
 
     userRepository.save(user);
 
+    try {
+      userPreferenceService.createUserPreferences(user);
+    } catch (EntityNotFoundException e) {
+      Sentry.captureException(e);
+      e.printStackTrace();
+    }
+
     emailService.sendSimpleMessage(
-            userRegistrationDto.getEmail(), "Account confirmation",
-            text
+      userRegistrationDto.getEmail(), "Account confirmation",
+      text
     );
 
     //    sendConfirmationEmail(userRegistrationDto.getEmail(), userRegistrationDto.getFirstName(), text);
@@ -182,7 +221,7 @@ public class UserService implements IUserService {
   @Transactional
   @Override
   public void update(Long id, Map<Object, Object> fields)
-          throws IllegalAccessException, EntityNotFoundException {
+    throws IllegalAccessException, EntityNotFoundException {
     Long requestOwnerId = authProvider.getAuthenticationPrincipal();
     if (!Objects.equals(id, requestOwnerId)) {
       throw new IllegalAccessException("User have no authorities to do this request.");
@@ -193,7 +232,7 @@ public class UserService implements IUserService {
       fields.forEach((key, value) -> {
         String stringKey = (String) key;
         if (Objects.equals(stringKey, "email") || Objects.equals(stringKey, "password")
-                || Objects.equals(stringKey, "activity_status") || Objects.equals(stringKey, "last_seen")) {
+          || Objects.equals(stringKey, "activity_status") || Objects.equals(stringKey, "last_seen")) {
           return;
         }
         if (Objects.equals(key, "gender")) {
@@ -208,6 +247,20 @@ public class UserService implements IUserService {
             premiumUser.setPremium(false);
           }
           userRepository.save(premiumUser);
+        } else if (Objects.equals(key, "dateOfBirth")) {
+          String dateString = (String) value;
+          SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+          try {
+            Date date = dateFormat.parse(dateString);
+            Field field = ReflectionUtils.findField(User.class, (String) key);
+            if (field != null) {
+              field.setAccessible(true);
+              ReflectionUtils.setField(field, user.get(), date);
+            }
+          } catch (ParseException e) {
+            Sentry.captureException(e);
+            e.printStackTrace();
+          }
         } else {
           Field field = ReflectionUtils.findField(User.class, (String) key);
           if (field != null) {
@@ -245,6 +298,7 @@ public class UserService implements IUserService {
     try {
       jwtTokenProvider.validateAccessToken(token);
     } catch (Exception e) {
+      Sentry.captureException(e);
       throw new IllegalAccessException("Token not valid");
     }
     Long userId = authProvider.getAuthenticationPrincipal();
@@ -334,6 +388,4 @@ public class UserService implements IUserService {
       .map(User::getPremiumEmoji)
       .orElse("");
   }
-
-
 }

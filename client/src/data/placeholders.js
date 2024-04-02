@@ -8,9 +8,10 @@ export const placeholderAvatar = (gender, firstName, lastName) =>
     : `https://avatar.iran.liara.run/username?username=${firstName}+${lastName}`
 
 export const userAvatar = (user, firstName, lastName) =>
-  user?.avatarsUrl?.[0] ??
-  placeholderAvatar(
-    user?.gender,
-    user?.firstName ?? firstName,
-    user?.lastName ?? lastName
-  )
+  user?.avatarsUrl?.[0]?.length > 0
+    ? user?.avatarsUrl?.[0]
+    : placeholderAvatar(
+        user?.gender,
+        user?.firstName ?? firstName,
+        user?.lastName ?? lastName
+      )

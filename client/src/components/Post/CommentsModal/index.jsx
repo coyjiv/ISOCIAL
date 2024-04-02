@@ -13,7 +13,7 @@ import BottomSheetWrapper from './BottomSheetWrapper';
 export const CommentsModal = ({ open, onClose, postId }) => {
     const [page, setPage] = useState(0)
     const { data: commentsQueryData, isLoading } = useGetCommentsByPostQuery({ id: postId, page, size: 10 });
-    const { content: comments, hasNext } = commentsQueryData ?? { content: [] }
+    const { content: comments, hasNext } = commentsQueryData ?? { content: [], hasNext: false }
     const [commentsData, setCommentsData] = useState([])
 
     useEffect(() => {

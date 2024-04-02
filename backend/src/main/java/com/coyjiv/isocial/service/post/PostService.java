@@ -3,22 +3,31 @@ package com.coyjiv.isocial.service.post;
 import com.coyjiv.isocial.auth.EmailPasswordAuthProvider;
 import com.coyjiv.isocial.dao.CommentRepository;
 import com.coyjiv.isocial.dao.LikeRepository;
+import com.coyjiv.isocial.dao.FriendRepository;
 import com.coyjiv.isocial.dao.PostRepository;
 import com.coyjiv.isocial.dao.UserRepository;
+import com.coyjiv.isocial.domain.Friend;
 import com.coyjiv.isocial.domain.Post;
+import com.coyjiv.isocial.domain.PrivacySetting;
+import com.coyjiv.isocial.domain.UserPreference;
 import com.coyjiv.isocial.dto.request.post.PostRequestDto;
 import com.coyjiv.isocial.dto.request.post.RePostRequestDto;
 import com.coyjiv.isocial.dto.request.post.UpdatePostRequestDto;
 import com.coyjiv.isocial.dto.respone.favorite.FavoriteResponseDto;
 import com.coyjiv.isocial.dto.respone.page.PageWrapper;
 import com.coyjiv.isocial.dto.respone.post.PostResponseDto;
+import com.coyjiv.isocial.dto.respone.user.UserProfileResponseDto;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.exceptions.RequestValidationException;
 import com.coyjiv.isocial.service.favorite.IFavoriteService;
+import com.coyjiv.isocial.service.notifications.INotificationService;
+import com.coyjiv.isocial.service.userpreference.IUserPreferenceService;
 import com.coyjiv.isocial.service.websocket.IWebsocketService;
+import com.coyjiv.isocial.service.subscriber.ListSubscriberService;
 import com.coyjiv.isocial.transfer.post.PostRequestMapper;
 import com.coyjiv.isocial.transfer.post.PostResponseMapper;
 import com.coyjiv.isocial.transfer.post.RePostRequestMapper;
+import io.sentry.Sentry;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,9 +36,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.coyjiv.isocial.domain.LikeableEntity.POST;
 
@@ -42,19 +55,27 @@ public class PostService implements IPostService {
   private final PostResponseMapper postResponseMapper;
   private final EmailPasswordAuthProvider emailPasswordAuthProvider;
   private final UserRepository userRepository;
+  private final FriendRepository friendRepository;
   private final IFavoriteService favoriteService;
   private final IWebsocketService websocketService;
-
+  private final INotificationService notificationService;
   private final CommentRepository commentRepository;
+  private final IUserPreferenceService userPreferenceService;
 
   private final LikeRepository likeRepository;
+  private final ListSubscriberService listSubscriberService;
 
   @Transactional(readOnly = true)
   @Override
-  public List<Post> findAllActive(int page, int size) {
+  public PageWrapper<Post> findAllActive(int page, int size) {
     Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "creationDate"));
     Pageable pageable = PageRequest.of(page, size, sort);
-    return postRepository.findAllActive(pageable);
+
+    Page<Post> posts = postRepository.findAllActive(pageable);
+
+    boolean hasNext = posts.hasNext();
+
+    return new PageWrapper<>(posts.toList(), hasNext);
   }
 
   @Override
@@ -66,7 +87,8 @@ public class PostService implements IPostService {
   @Override
   public PageWrapper<PostResponseDto> findFavoritePosts(int page, int size) {
     List<FavoriteResponseDto> favorites =
-      favoriteService.findActiveBySelectorId(page, size, emailPasswordAuthProvider.getAuthenticationPrincipal());
+      favoriteService.findActiveBySelectorId(page, size, emailPasswordAuthProvider.getAuthenticationPrincipal())
+        .getContent();
     if (favorites.isEmpty()) {
       return new PageWrapper<>(List.of(), false);
     } else {
@@ -83,6 +105,15 @@ public class PostService implements IPostService {
   @Override
   @Transactional(readOnly = true)
   public PageWrapper<PostResponseDto> findActiveByAuthorId(int page, int size, Long id) {
+    UserPreference userPreference = userPreferenceService.getUserPreferences(id);
+    if (userPreference != null && userPreference.getPostsVisibility().equals(PrivacySetting.FRIENDS)) {
+      Optional<Friend> optionalFriend =
+        friendRepository.findActiveFriendship(emailPasswordAuthProvider.getAuthenticationPrincipal(), id);
+      if (optionalFriend.isEmpty()
+        && !Objects.equals(emailPasswordAuthProvider.getAuthenticationPrincipal(), id)) {
+        return new PageWrapper<>(List.of(), false);
+      }
+    }
     Sort sort = Sort.by(Sort.Direction.DESC, "creationDate").and(Sort.by(Sort.Direction.ASC, "id"));
     Pageable pageable = PageRequest.of(page, size, sort);
     Page<Post> postPage = postRepository.findActiveByAuthorId(id, pageable);
@@ -149,6 +180,7 @@ public class PostService implements IPostService {
     Optional<Post> postToDeactivate = postRepository.findActiveById(id);
     if (postToDeactivate.isPresent()) {
       Post post = postToDeactivate.get();
+      notificationService.delete(post.getAuthorId(), post.getId(), post.getCreationDate());
       validateRequestOwner(post.getAuthorId());
       post.setActive(false);
       postRepository.save(post);
@@ -156,6 +188,7 @@ public class PostService implements IPostService {
         try {
           favoriteService.delete(entry.getId(), false);
         } catch (IllegalAccessException | RequestValidationException e) {
+          Sentry.captureException(e);
           throw new RuntimeException(e);
         }
       });
@@ -180,6 +213,7 @@ public class PostService implements IPostService {
           try {
             favoriteService.delete(en.getId(), false);
           } catch (IllegalAccessException | RequestValidationException e) {
+            Sentry.captureException(e);
             throw new RuntimeException(e);
           }
         });
@@ -221,5 +255,43 @@ public class PostService implements IPostService {
           "Post should have text or attachments, attachments should not have empty strings or nulls");
       }
     }
+  }
+
+  @Transactional(readOnly = true)
+  @Override
+  public PageWrapper<PostResponseDto> getRecommendation(int page, int size) throws EntityNotFoundException {
+    Long principal = emailPasswordAuthProvider.getAuthenticationPrincipal();
+
+    List<Long> friendsIds = friendRepository.findAllByUserId(principal)
+      .stream().map(f -> principal == f.getAddresser().getId()
+        ? f.getRequester().getId()
+        : f.getAddresser().getId()).toList();
+
+    List<Long> subscriptionsIds = listSubscriberService.getSubscriptions()
+      .stream().map(UserProfileResponseDto::getId).toList();
+
+    List<Long> ids = Stream.concat(friendsIds.stream(), subscriptionsIds.stream())
+      .distinct()
+      .filter(id -> !id.equals(principal))
+      .collect(Collectors.toList());
+
+    System.out.println("recommendation user ids");
+    ids.forEach(System.out::println);
+
+    Sort sort = Sort.by(Sort.Direction.DESC, "creationDate").and(Sort.by(Sort.Direction.ASC, "id"));
+    Pageable pageable = PageRequest.of(page, size, sort);
+
+    Page<Post> p = postRepository.findRecommendations(ids, pageable);
+
+    List<Post> shuffledPosts = new ArrayList<>(p.getContent());
+    Collections.shuffle(shuffledPosts);
+
+    boolean hasNext = p.hasNext();
+
+    List<PostResponseDto> dtos = shuffledPosts.stream()
+      .map(postResponseMapper::convertToDto)
+      .collect(Collectors.toList());
+
+    return new PageWrapper<>(dtos, hasNext);
   }
 }

@@ -7,10 +7,13 @@ import com.coyjiv.isocial.domain.Favorite;
 import com.coyjiv.isocial.domain.Post;
 import com.coyjiv.isocial.dto.request.favorite.FavoriteRequestDto;
 import com.coyjiv.isocial.dto.respone.favorite.FavoriteResponseDto;
+import com.coyjiv.isocial.dto.respone.page.PageWrapper;
+import com.coyjiv.isocial.dto.respone.post.PostResponseDto;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.transfer.favorite.FavoriteRequestMapper;
 import com.coyjiv.isocial.transfer.favorite.FavoriteResponseMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -33,11 +36,18 @@ public class FavoriteService implements IFavoriteService {
 
   @Transactional(readOnly = true)
   @Override
-  public List<FavoriteResponseDto> findAllActive(int page, int size) {
+  public PageWrapper<FavoriteResponseDto> findAllActive(int page, int size) {
     Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "creationDate"));
     Pageable pageable = PageRequest.of(page, size, sort);
-    return favoriteRepository.findAllActive(pageable).stream()
+
+    Page<Favorite> p = favoriteRepository.findAllActive(pageable);
+
+    boolean hasNext = p.hasNext();
+
+    List<FavoriteResponseDto> dtos = p.stream()
             .map(favoriteResponseMapper::convertToDto).toList();
+
+    return new PageWrapper<>(dtos, hasNext);
   }
 
   @Override
@@ -48,17 +58,24 @@ public class FavoriteService implements IFavoriteService {
 
   @Override
   @Transactional(readOnly = true)
-  public List<FavoriteResponseDto> findActiveBySelectorId(int page, int size, Long id) {
+  public PageWrapper<FavoriteResponseDto> findActiveBySelectorId(int page, int size, Long id) {
     Sort sort = Sort.by(new Sort.Order(Sort.Direction.ASC, "creationDate"));
     Pageable pageable = PageRequest.of(page, size, sort);
-    return favoriteRepository.findAllActiveBySelectorId(id, pageable).stream()
+
+
+    Page<Favorite> p = favoriteRepository.findAllActiveBySelectorId(id, pageable);
+
+    boolean hasNext = p.hasNext();
+
+    List<FavoriteResponseDto> dtos = p.stream()
             .map(favoriteResponseMapper::convertToDto).toList();
+
+    return new PageWrapper<>(dtos, hasNext);
   }
 
   @Override
   @Transactional(readOnly = true)
-  public List<FavoriteResponseDto> findActiveByPostId( Long id) {
-
+  public List<FavoriteResponseDto> findActiveByPostId(Long id) {
     return favoriteRepository.findAllActiveByPostId(id).stream()
             .map(favoriteResponseMapper::convertToDto).toList();
   }
@@ -141,7 +158,7 @@ public class FavoriteService implements IFavoriteService {
 
   private void validatePost(Long id) throws EntityNotFoundException {
     Optional<Post> selectedPost = postRepository.findActiveById(id);
-    if (selectedPost.isEmpty() ) {
+    if (selectedPost.isEmpty()) {
       throw new EntityNotFoundException(
               "Post is not exist"
       );

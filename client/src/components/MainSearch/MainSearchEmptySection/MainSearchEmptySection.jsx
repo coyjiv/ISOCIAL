@@ -1,6 +1,8 @@
 import { Stack, Typography } from "@mui/material";
+import PropTypes from "prop-types";
+import Spinner from "../../Spinner";
 
-const MainSearchEmptySection = () => {
+const MainSearchEmptySection = ({ isLoading }) => {
   return (
     <Stack
       width="100%"
@@ -8,13 +10,18 @@ const MainSearchEmptySection = () => {
       alignItems="center"
       justifyContent="center"
     >
-      <Typography fontSize="17px" fontWeight="500">
-        Please start typing...
-      </Typography>
+      {isLoading ? <Spinner /> :
+        <Typography fontSize="17px" fontWeight="500">
+          No results found
+        </Typography>
+      }
     </Stack>
   );
 };
 
 MainSearchEmptySection.displayName = "MainSearchEmptySection";
+MainSearchEmptySection.propTypes = {
+  isLoading: PropTypes.bool,
+};
 
 export default MainSearchEmptySection;

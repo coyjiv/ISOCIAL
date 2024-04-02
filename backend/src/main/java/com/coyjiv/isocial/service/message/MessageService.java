@@ -6,13 +6,17 @@ import com.coyjiv.isocial.domain.Chat;
 import com.coyjiv.isocial.domain.Message;
 import com.coyjiv.isocial.dto.request.message.CreateMessageRequestDto;
 import com.coyjiv.isocial.dto.request.message.UpdateMessageRequestDto;
+import com.coyjiv.isocial.dto.respone.message.MessageNotificationDto;
+import com.coyjiv.isocial.dto.respone.page.PageWrapper;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.exceptions.RequestValidationException;
 import com.coyjiv.isocial.service.chat.IChatService;
 import com.coyjiv.isocial.service.websocket.IWebsocketService;
 import com.coyjiv.isocial.transfer.message.CreateMessageRequestMapper;
+import com.coyjiv.isocial.transfer.message.MessageNotificationDtoMapper;
 import com.coyjiv.isocial.utils.MessagesUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -29,31 +33,38 @@ public class MessageService implements IMessageService {
   private final MessageRepository messageRepository;
   private final IChatService chatService;
   private final CreateMessageRequestMapper createMessageRequestMapper;
+  private final MessageNotificationDtoMapper messageNotificationDtoMapper;
   private final EmailPasswordAuthProvider authProvider;
 
   private final IWebsocketService websocketChatMessageService;
 
   @Transactional(readOnly = true)
   @Override
-  public List<Message> findAllActiveByChatId(int page, int quantity, Long chatId)
+  public PageWrapper<MessageNotificationDto> findAllActiveByChatId(int page, int quantity, Long chatId)
           throws EntityNotFoundException, IllegalAccessException {
-    Sort sort = Sort.by(Sort.Direction.ASC, "creationDate");
+    Sort sort = Sort.by(Sort.Direction.DESC, "creationDate");
     Pageable pageable = PageRequest.of(page, quantity, sort);
 
     Chat chat = chatService.findActiveById(chatId);
 
-    return messageRepository.findAllActiveByChatId(chat.getId(), pageable);
+    Page<Message> messages =  messageRepository.findAllActiveByChatId(chat.getId(), pageable);
+
+    boolean hasNext = messages.hasNext();
+
+    List<MessageNotificationDto> dtos = messages.map(messageNotificationDtoMapper::convertToDto).toList();
+
+    return new PageWrapper<>(dtos,hasNext);
   }
 
   @Transactional(readOnly = true)
   @Override
-  public Message findActiveById(Long id)
+  public MessageNotificationDto findActiveById(Long id)
           throws IllegalAccessException, EntityNotFoundException {
     Long requestOwnerId = authProvider.getAuthenticationPrincipal();
     Optional<Message> messageOptional = messageRepository.findActiveById(id);
 
     if (messageOptional.isPresent() && isRequestOwnerSender(requestOwnerId, messageOptional.get())) {
-      return messageOptional.get();
+      return messageNotificationDtoMapper.convertToDto(messageOptional.get());
     } else {
       throw new EntityNotFoundException("Message not found");
     }
@@ -62,7 +73,7 @@ public class MessageService implements IMessageService {
 
   @Transactional
   @Override
-  public Message create(Long chatId, CreateMessageRequestDto createMessageRequestDto)
+  public MessageNotificationDto create(Long chatId, CreateMessageRequestDto createMessageRequestDto)
           throws EntityNotFoundException, IllegalAccessException, RequestValidationException {
 
     MessagesUtils.validateFirstMessage(createMessageRequestDto);
@@ -78,12 +89,12 @@ public class MessageService implements IMessageService {
     messageRepository.save(message);
     websocketChatMessageService.sendMessageNotificationToUsers(chat.getUsers(), message);
 
-    return message;
+    return messageNotificationDtoMapper.convertToDto(message);
   }
 
   @Transactional
   @Override
-  public Message update(Long messageId, UpdateMessageRequestDto updateMessageRequestDto)
+  public MessageNotificationDto update(Long messageId, UpdateMessageRequestDto updateMessageRequestDto)
           throws IllegalAccessException, EntityNotFoundException {
     Long requestOwnerId = authProvider.getAuthenticationPrincipal();
 
@@ -95,7 +106,7 @@ public class MessageService implements IMessageService {
       chatService.updateLastMessage(message.getChatId(),
               updateMessageRequestDto.getText(),
               message.getSenderId());
-      return message;
+      return messageNotificationDtoMapper.convertToDto(message);
     } else {
       throw new EntityNotFoundException("Message not found");
     }

@@ -3,29 +3,25 @@ import { friendsApi } from './friendService'
 export const chatApi = friendsApi.injectEndpoints({
   endpoints: (builder) => ({
     createChat: builder.mutation({
-      query: ({ receiverId, text, attachments = ["string"] }) => {
+      query: ({ receiverId, data }) => {
         return {
           url: `chats?receiverId=${receiverId}`,
           method: 'POST',
-          data: {
-            text,
-            attachements:attachments,
-          },
+          data,
         }
       },
-      invalidatesTags: (result, error, { receiverId }) => [
-        { type: 'Chats', id: receiverId },
-      ],
+      invalidatesTags: () => [{ type: 'Chats' }, { type: 'Friends' }],
     }),
     deleteChat: builder.mutation({
-      query: ({ chatId }) => {
+      query: (chatId) => {
         return {
-          url: `chats/${chatId}`,
+          url: `/chats/${chatId}`,
           method: 'DELETE',
         }
       },
       invalidatesTags: (result, error, { chatId }) => [
         { type: 'Chats', id: chatId },
+        { type: 'Friends' },
       ],
     }),
     getChatRecipient: builder.query({
@@ -41,6 +37,12 @@ export const chatApi = friendsApi.injectEndpoints({
         `messages?page=${page}&quantity=30&chatId=${chatId}`,
       providesTags: (result, error, { chatId }) => [
         { type: 'Messages', chatId },
+      ],
+    }),
+    getChatId: builder.query({
+      query: (receiverId) => `chats/getChatId/${receiverId}`,
+      providesTags: (result, error, receiverId) => [
+        { type: 'Chats', receiverId },
       ],
     }),
     sendMessage: builder.mutation({
@@ -79,4 +81,5 @@ export const {
   useGetChatRecipientQuery,
   useCreateChatMutation,
   useDeleteChatMutation,
+  useGetChatIdQuery,
 } = chatApi

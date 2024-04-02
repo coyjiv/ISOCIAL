@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class LikeNotificationDtoMapper extends DtoMapperFacade<Like, LikeNotificationDto> {
-  private UserRepository userRepository;
+  private final UserRepository userRepository;
 
   public LikeNotificationDtoMapper(UserRepository userRepository) {
     super(Like.class, LikeNotificationDto.class);
@@ -20,11 +20,9 @@ public class LikeNotificationDtoMapper extends DtoMapperFacade<Like, LikeNotific
   @Override
   protected void decorateDto(LikeNotificationDto dto, Like entity) {
     User liker = userRepository.findById(entity.getUserId()).orElseThrow();
-    try {
-      dto.setLikerAvatar(liker.getAvatar());
-    } catch (Exception e) {
-      dto.setLikerAvatar("");
-    }
-    dto.setLikerName(String.format("%s %s", liker.getFirstName(), liker.getLastName()));
+    dto.setLikerAvatar(liker.getAvatar());
+    dto.setLikerName(liker.getFullName());
+    dto.setSenderGender(liker.getGender());
+    dto.setSenderId(liker.getId());
   }
 }

@@ -1,13 +1,18 @@
 import { useUpdateProfileMutation } from '../../../store/services/profileService';
-import { Dialog, DialogContent, DialogTitle, Typography, TextField } from '@mui/material'
+import { Dialog, DialogContent, DialogTitle, Typography, TextField, FormControl, FormLabel, RadioGroup, FormControlLabel, Radio } from '@mui/material'
 import { Formik, Field, Form } from 'formik';
 import { BlueRoundedButton } from '../../buttons';
 import PropTypes from 'prop-types'
 import styles from './editProfile.module.scss'
+// import moment from 'moment';
 
 const EditProfile = ({ onClose, open, profile }) => {
 
     const id = localStorage.getItem('userId');
+
+    // const minDateOfBirth = moment().subtract(110, 'years').format('YYYY-MM-DD');
+
+    // const maxDateOfBirth = moment().subtract(5, 'years').format('YYYY-MM-DD');
 
     const handleClose = () => {
         onClose();
@@ -32,12 +37,21 @@ const EditProfile = ({ onClose, open, profile }) => {
                         lastName: profile?.lastName,
                         bio: profile?.bio,
                         city: profile?.city,
+                        gender: profile?.gender,
+                        // dateOfBirth: profile?.dateOfBirth,
+                        birthPlace: profile?.birthPlace,
+                        studyPlace: profile?.studyPlace,
                         // avatarsUrl: profile?.avatarsUrl[0],
                         // bannerUrl: profile.bannerUrl,
                     }}
                     // validationSchema={validationSchema}
                     onSubmit={(values) => {
-                        updateProfile({ body: values, id });
+                        updateProfile({
+                            body: {
+                                ...values,
+                                //  dateOfBirth: moment(values.dateOfBirth).format('YYYY-MM-DD')
+                            }, id
+                        });
                         onClose();
                     }}
                 >
@@ -75,6 +89,75 @@ const EditProfile = ({ onClose, open, profile }) => {
                                 helperText={touched.city && errors.city}
                                 fullWidth
                             />
+                            <Field
+                                as={TextField}
+                                name="birthPlace"
+                                label="Birth Place"
+                                error={touched.birthPlace && Boolean(errors.birthPlace)}
+                                helperText={touched.birthPlace && errors.birthPlace}
+                                fullWidth
+                            />
+                            <Field
+                                as={TextField}
+                                name="studyPlace"
+                                label="Study Place"
+                                error={touched.studyPlace && Boolean(errors.studyPlace)}
+                                helperText={touched.studyPlace && errors.studyPlace}
+                                fullWidth
+                            />
+
+                            {/* <Field
+                                as={TextField}
+                                name="dateOfBirth"
+                                label="Date of Birth"
+                                type="date"
+                                defaultValue="2017-05-24"
+                                InputLabelProps={{
+                                    shrink: true,
+                                    min: minDateOfBirth,
+                                    max: maxDateOfBirth,
+                                }}
+                                fullWidth
+                            /> */}
+
+                            {/* <Field name="dateOfBirth">
+                                {({
+                                    field, // { name, value, onChange, onBlur }
+                                    form: { touched, errors }, // also values, setXXXX, handleXXXX, dirty, isValid, status, etc.
+                                    meta,
+                                }) => (
+                                    <div>
+                                        <label htmlFor="dateOfBirth">Date of Birth</label>
+                                        <input
+                                            type="date"
+                                            {...field}
+                                            id="dateOfBirth"
+                                            min={minDateOfBirth}
+                                            max={maxDateOfBirth}
+                                            required
+                                        />
+                                        {meta.touched && meta.error && <div className="error">{meta.error}</div>}
+                                    </div>
+                                )}
+                            </Field> */}
+
+                            <FormControl component="fieldset">
+                                <FormLabel sx={{ textAlign: 'left' }} component="legend">Gender</FormLabel>
+                                <Field name="gender" type="radio">
+                                    {({ field }) => (
+                                        <RadioGroup
+                                            {...field}
+                                            aria-label="gender"
+                                            name="gender"
+                                            style={{ display: 'flex', flexDirection: 'column' }}
+                                        >
+                                            <FormControlLabel value="FEMALE" control={<Radio />} label="Female" />
+                                            <FormControlLabel value="MALE" control={<Radio />} label="Male" />
+                                        </RadioGroup>
+                                    )}
+                                </Field>
+                            </FormControl>
+
                             <BlueRoundedButton type='submit'>Submit</BlueRoundedButton>
                         </Form>
                     )}
@@ -98,6 +181,9 @@ EditProfile.propTypes = {
         bannerUrl: PropTypes.string,
         dateOfBirth: PropTypes.string,
         id: PropTypes.number,
+        gender: PropTypes.string,
+        birthPlace: PropTypes.string,
+        studyPlace: PropTypes.string,
     }).isRequired,
 }
 

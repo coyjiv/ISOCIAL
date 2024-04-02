@@ -1,18 +1,19 @@
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import style from './styles.module.scss'
 import PropTypes from 'prop-types';
+import { useMediaQuery } from "@mui/material";
 
-const ToastMessage = ({type, msg, link}) => {
-    console.log(msg)
+const ToastMessage = ({ type, msg, link }) => {
+    const isMobile = useMediaQuery('(max-width: 600px)');
     const title =
-        type === "MESSAGE" ? `New message from ${msg.senderName}`
+        type === "MESSAGE" ? isMobile ? msg.senderName : `New message from ${msg.senderName}`
             : type === "REPOST" ?
                 `${msg?.senderName} reposted your post`
                 : type === "FRIEND" ? `New friend request from ${msg.senderName}`
                     : type === "SUBSCRIPTION" ? `${msg?.senderName} created new post`
-                    : type === "LIKE_POST" ? `${msg?.likerName} liked your post`
-                        : type === "LIKE_COMMENT" ? `${msg?.likerName} liked your comment`
-                            : type === "COMMENT" ? `${msg?.commenterName} commented your post` : ''
+                        : type === "LIKE_POST" ? `${msg?.likerName} liked your post`
+                            : type === "LIKE_COMMENT" ? `${msg?.likerName} liked your comment`
+                                : type === "COMMENT" ? `${msg?.commenterName} commented your post` : ''
 
 
     return (

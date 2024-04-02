@@ -26,7 +26,7 @@ export const ErrorPage = ({
 };
 
 ErrorPage.propTypes = {
-  statusCode: PropTypes.number.isRequired,
+  statusCode: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   customLinkText: PropTypes.string,

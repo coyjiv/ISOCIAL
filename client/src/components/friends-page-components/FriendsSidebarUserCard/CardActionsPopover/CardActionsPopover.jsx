@@ -10,15 +10,22 @@ import {
   PopoverItemWrapper,
 } from "./CardActionsPopover.styled";
 
-const CardActionsPopover = ({ name, onMessage, onRemove }) => {
+const CardActionsPopover = ({ name, onMessage, onRemove, boxProps }) => {
   const [anchorEl, setAnchorEl] = useState();
   const id = open ? "simple-popover" : undefined;
 
-  const handleClick = (e) => setAnchorEl(e.currentTarget);
-  const handleClose = () => setAnchorEl(null);
+  const handleClick = (e) => {
+    e.stopPropagation()
+    setAnchorEl(e.currentTarget);
+  }
+
+  const handleClose = (e) => {
+    e.stopPropagation()
+    setAnchorEl(null)
+  };
 
   return (
-    <Box>
+    <Box {...boxProps}>
       <ActionIconButton
         aria-describedby={id}
         variant="iconWithBg"
@@ -52,6 +59,7 @@ CardActionsPopover.propTypes = {
   name: PropTypes.string,
   onMessage: PropTypes.func,
   onRemove: PropTypes.func,
+  boxProps: PropTypes.object,
 };
 
 CardActionsPopover.displayName = "CardActionsPopover";
