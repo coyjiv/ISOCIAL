@@ -42,6 +42,10 @@ const AvatarButton = () => {
         navigate("/login");
     }
 
+    const handleGoToSettings = () => {
+        navigate("/settings");
+    }
+
     useOnClickOutside(ref, handleClickOutside)
 
     const avatarSrc = profile === undefined ? '' : profile?.avatarsUrl?.[0] ?? placeholderAvatar(profile?.gender, profile?.firstName, profile?.lastName)
@@ -73,7 +77,7 @@ const AvatarButton = () => {
                         <Typography fontWeight='900'>{profile?.firstName + " " + profile?.lastName}</Typography>
                     </StyledCard>
                 </Link>
-                <StyledMenuItem onClick={handleClose}>
+                <StyledMenuItem onClick={handleGoToSettings}>
                     <div><IoMdSettings /></div>
                     Settings</StyledMenuItem>
                 <StyledMenuItem onClick={handleLogout}>

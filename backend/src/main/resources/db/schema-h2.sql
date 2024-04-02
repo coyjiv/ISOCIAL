@@ -165,12 +165,12 @@ DROP TABLE IF EXISTS notifications;
 CREATE TABLE notifications
 (
     id                 BIGINT AUTO_INCREMENT PRIMARY KEY,
-    receiver_id            BIGINT       NOT NULL,
-    sender_id            BIGINT       NOT NULL,
+    receiver_id        BIGINT       NOT NULL,
+    sender_id          BIGINT       NOT NULL,
     entity_id          BIGINT       NOT NULL,
     event_type         VARCHAR(100) NOT NULL,
-    sender_avatar         VARCHAR(250) NOT NULL,
-    sender_name         VARCHAR(250) NOT NULL,
+    sender_avatar      VARCHAR(250) NOT NULL,
+    sender_name        VARCHAR(250) NOT NULL,
     creation_date      TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     last_modified_date TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     is_active          BOOLEAN      NOT NULL DEFAULT TRUE
@@ -180,10 +180,24 @@ DROP TABLE IF EXISTS post_seen;
 CREATE TABLE post_seen
 (
     id                 BIGINT AUTO_INCREMENT PRIMARY KEY,
-    user_id            BIGINT       NOT NULL,
-    post_id            BIGINT       NOT NULL,
-    creation_date      TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    last_modified_date TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    is_active          BOOLEAN NOT NULL DEFAULT TRUE
+    user_id            BIGINT    NOT NULL,
+    post_id            BIGINT    NOT NULL,
+    creation_date      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    last_modified_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    is_active          BOOLEAN   NOT NULL DEFAULT TRUE
+);
+
+CREATE TABLE user_preferences
+(
+    id                      BIGINT PRIMARY KEY AUTO_INCREMENT,
+    user_id                 BIGINT UNIQUE NOT NULL,
+    friends_list_visibility VARCHAR(255)  NOT NULL DEFAULT 'ALL',
+    age_visibility          VARCHAR(255)  NOT NULL DEFAULT 'ALL',
+    posts_visibility        VARCHAR(255)  NOT NULL DEFAULT 'ALL',
+    receive_notifications   BOOLEAN       NOT NULL DEFAULT TRUE,
+    creation_date           TIMESTAMP     NOT NULL,
+    last_modified_date      TIMESTAMP     NOT NULL,
+    is_active               BOOLEAN       NOT NULL DEFAULT TRUE,
+    FOREIGN KEY (user_id) REFERENCES users (id)
 );
 

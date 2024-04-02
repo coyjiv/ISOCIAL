@@ -1,10 +1,12 @@
 INSERT INTO public.users (first_name, last_name, email, city, password, avatars_url, banner_url, bio, gender,
                           is_private, last_seen, date_of_birth, creation_date, last_modified_date, is_active,
                           is_premium, premium_nickname, premium_emoji, activity_status, birth_place, study_place)
-VALUES ('John', 'Doe', 'test@example.com', 'Los Angeles', '$2a$10$5OPwzIZ2N8CIeWUA2q9t0OzoI1kB7cvf1qDGwyxeiBFEAR3h2Psmu',
+VALUES ('John', 'Doe', 'test@example.com', 'Los Angeles',
+        '$2a$10$5OPwzIZ2N8CIeWUA2q9t0OzoI1kB7cvf1qDGwyxeiBFEAR3h2Psmu',
         ARRAY [], '',
         'A short bio about John Doe', 'MALE', FALSE, CURRENT_TIMESTAMP,
-        '1990-01-15', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, false, null, null, 'OFFLINE', 'Los Angeles', 'Harvard');
+        '1990-01-15', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, false, null, null, 'OFFLINE', 'Los Angeles',
+        'Harvard');
 INSERT INTO public.roles (user_id, name)
 VALUES (1, 'ROLE_USER');
 
@@ -25,7 +27,8 @@ INSERT INTO public.users (first_name, last_name, email, city, password, avatars_
                           is_private, last_seen, date_of_birth, creation_date, last_modified_date, is_active,
                           is_premium, premium_nickname, premium_emoji, activity_status, birth_place, study_place)
 
-VALUES ('Bob', 'Smith', 'bob.smith@example.com', 'Chicago', 'mypassword', ARRAY ['https://sm.ign.com/ign_nordic/cover/a/avatar-gen/avatar-generations_prsz.jpg'], '',
+VALUES ('Bob', 'Smith', 'bob.smith@example.com', 'Chicago', 'mypassword',
+        ARRAY ['https://sm.ign.com/ign_nordic/cover/a/avatar-gen/avatar-generations_prsz.jpg'], '',
         'Bob Smith bio', 'MALE', FALSE, CURRENT_TIMESTAMP,
         '1992-04-03', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, false, null, null, 'OFFLINE', 'Chicago', 'Harvard');
 
@@ -47,7 +50,8 @@ INSERT INTO public.users (first_name, last_name, email, city, password, avatars_
                           is_private, last_seen, date_of_birth, creation_date, last_modified_date, is_active,
                           is_premium, premium_nickname, premium_emoji, activity_status, birth_place, study_place)
 
-VALUES ('Michael', 'Williams', 'michael.williams@example.com', 'Miami', 'password123', ARRAY ['https://sm.ign.com/ign_nordic/cover/a/avatar-gen/avatar-generations_prsz.jpg'], '',
+VALUES ('Michael', 'Williams', 'michael.williams@example.com', 'Miami', 'password123',
+        ARRAY ['https://sm.ign.com/ign_nordic/cover/a/avatar-gen/avatar-generations_prsz.jpg'], '',
         'Michaels bio', 'MALE', FALSE, CURRENT_TIMESTAMP,
         '1975-06-25', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, false, null, null, 'OFFLINE', 'Miami', 'MIT');
 
@@ -60,8 +64,7 @@ INSERT INTO public.users (first_name, last_name, email, city, password, avatars_
                           is_premium, premium_nickname, premium_emoji, activity_status, birth_place, study_place)
 VALUES ('Sophia', 'Lee', 'sophia.lee@example.com', 'Seattle', 'strongpassword456', ARRAY [], '',
         'Sophias bio information', 'MALE', FALSE, CURRENT_TIMESTAMP,
-
-        '1995-04-01', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, false, null , null , 'OFFLINE', 'Seattle', 'Harvard');
+        '1995-04-01', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, false, null, null, 'OFFLINE', 'Seattle', 'Harvard');
 
 -- INSERT INTO public.comments (commenter_id, post_id, text, creation_date, last_modified_date, is_active)
 -- VALUES (1, 1, '11111111', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
@@ -128,7 +131,8 @@ VALUES ('This is a post by user 1 with an image.',
 
 INSERT INTO public.posts (text_content, attachments, is_edited, user_id, creation_date, last_modified_date, is_active)
 VALUES ('Post by user 2, no attachments here.', ARRAY [], FALSE, 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE),
-       ('Another content piece by user 2, without attachments.', ARRAY [], FALSE, 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE);
+       ('Another content piece by user 2, without attachments.', ARRAY [], FALSE, 2, CURRENT_TIMESTAMP,
+        CURRENT_TIMESTAMP, TRUE);
 
 INSERT INTO public.posts (text_content, attachments, is_edited, user_id, creation_date, last_modified_date, is_active)
 VALUES ('User 2 sharing a post with an image.',
@@ -181,4 +185,11 @@ INSERT INTO public.friends (requester_id, addresser_id, status, creation_date, l
 VALUES (6, 1, 'REQUEST_SENT', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE);
 
 
+INSERT INTO user_preferences (user_id, friends_list_visibility, age_visibility, posts_visibility, receive_notifications,
+                              creation_date, last_modified_date, is_active)
+VALUES (1, 'ALL', 'ALL', 'ALL', TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE),
+       (2, 'FRIENDS', 'ALL', 'FRIENDS', TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE),
+       (3, 'ALL', 'FRIENDS', 'ALL', TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE),
+       (4, 'FRIENDS', 'FRIENDS', 'FRIENDS', TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE),
+       (5, 'ALL', 'ALL', 'FRIENDS', FALSE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE);
 

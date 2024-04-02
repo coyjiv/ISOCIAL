@@ -20,6 +20,8 @@ public interface IUserService {
   /*
    * Find all users with pagination
    * */
+  Optional<User> findActiveUserById(Long id);
+
   PageWrapper<UserDefaultResponseDto> findAllActive(int page, int quantity);
 
   List<UserDefaultResponseDto> findAllActive();

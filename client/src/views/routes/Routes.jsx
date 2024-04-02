@@ -137,6 +137,11 @@ const router = createBrowserRouter([
     path: "notification",
     element: <Notification />,
     errorElement: <ErrorFallback />,
+  },
+  {
+    path: "settings",
+    element: <Settings />,
+    errorElement: <ErrorFallback />,
   }
 ]);
 

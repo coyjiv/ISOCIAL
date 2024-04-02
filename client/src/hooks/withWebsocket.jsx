@@ -8,6 +8,7 @@ import { userAvatar } from "../data/placeholders.js";
 import { Avatar } from "@mui/material";
 import { fetchChats } from "../store/actions/chat.js";
 import { notificationApi } from "../store/services/notification.js";
+import { useGetSettingsQuery } from "../store/services/settingsService.js";
 
 const extractUserInfo = (body) => {
     // Attempt to extract user information in a unified way across different body types
@@ -53,6 +54,10 @@ const withWebsocket = (WrappedComponent) => {
         const selectedChat = useSelector(state => state.chat.selectedChat);
         const chats = useSelector(state => state.chat.chats);
 
+        const { data: settings } = useGetSettingsQuery()
+
+        console.log("settings", settings);
+
         useSubscription(`/user/${localStorage.getItem("userId")}/messages`, handleMessage)
         useSubscription(`/user/${localStorage.getItem("userId")}/friends`, handleFriend)
         useSubscription(`/user/${localStorage.getItem("userId")}/reposts`, handleRepost)
@@ -75,15 +80,17 @@ const withWebsocket = (WrappedComponent) => {
             } else if (!chats.data.find(chat => chat.id === body.chatId)) {
                 dispatch(fetchChats({ page: 0 }))
             }
-            toast.info(<ToastMessage link={`/chats/${body.chatId}`} msg={body} type={"MESSAGE"} />,
-                {
-                    icon: () => <Link to={`/chats/${body.chatId}`}>
-                        <Avatar sx={{ width: '100%', height: '100%' }} height={'auto'}
-                            src={avatar(body)}
-                            alt={`${body.senderName} avatar`} />
-                    </Link>,
-                    // position: isMobile ? "top-center" : "bottom-le"
-                });
+            if (settings?.receiveNotifications) {
+                toast.info(<ToastMessage link={`/chats/${body.chatId}`} msg={body} type={"MESSAGE"} />,
+                    {
+                        icon: () => <Link to={`/chats/${body.chatId}`}>
+                            <Avatar sx={{ width: '100%', height: '100%' }} height={'auto'}
+                                src={avatar(body)}
+                                alt={`${body.senderName} avatar`} />
+                        </Link>,
+                        // position: isMobile ? "top-center" : "bottom-le"
+                    });
+            }
         }
 
 
@@ -94,14 +101,16 @@ const withWebsocket = (WrappedComponent) => {
 
             dispatch(notificationApi.util.prefetch('getNotification', { recieverId: localStorage.getItem('userId'), page: 0, quantity: 50 }, { force: true }))
             dispatch(notificationApi.util.invalidateTags(['Notifications']))
-            toast.info(<ToastMessage link={`/friends/requests`} msg={body} type={"FRIEND"} />,
-                {
-                    icon: () => <Link to={`/friends/requests`}>
-                        <Avatar sx={{ width: '100%', height: '100%' }}
-                            src={avatar(body)}
-                            alt={'avatar'} />
-                    </Link>
-                });
+            if (settings?.receiveNotifications) {
+                toast.info(<ToastMessage link={`/friends/requests`} msg={body} type={"FRIEND"} />,
+                    {
+                        icon: () => <Link to={`/friends/requests`}>
+                            <Avatar sx={{ width: '100%', height: '100%' }}
+                                src={avatar(body)}
+                                alt={'avatar'} />
+                        </Link>
+                    });
+            }
         }
 
         async function handleRepost(msg) {
@@ -111,14 +120,16 @@ const withWebsocket = (WrappedComponent) => {
 
             dispatch(notificationApi.util.prefetch('getNotification', { recieverId: localStorage.getItem('userId'), page: 0, quantity: 50 }, { force: true }))
             dispatch(notificationApi.util.invalidateTags(['Notifications']))
-            toast.info(<ToastMessage link={`/post/${body.postId}`} msg={body} type={"REPOST"} />,
-                {
-                    icon: () => <Link to={`/post/${body.postId}`}>
-                        <Avatar sx={{ width: '100%', height: '100%' }}
-                            src={avatar(body)}
-                            alt={'avatar'} />
-                    </Link>
-                });
+            if (settings?.receiveNotifications) {
+                toast.info(<ToastMessage link={`/post/${body.postId}`} msg={body} type={"REPOST"} />,
+                    {
+                        icon: () => <Link to={`/post/${body.postId}`}>
+                            <Avatar sx={{ width: '100%', height: '100%' }}
+                                src={avatar(body)}
+                                alt={'avatar'} />
+                        </Link>
+                    });
+            }
         }
 
 
@@ -129,14 +140,16 @@ const withWebsocket = (WrappedComponent) => {
 
             dispatch(notificationApi.util.prefetch('getNotification', { recieverId: localStorage.getItem('userId'), page: 0, quantity: 50 }, { force: true }))
             dispatch(notificationApi.util.invalidateTags(['Notifications']))
-            toast.info(<ToastMessage link={`/post/${body.postId}`} msg={body} type={"SUBSCRIPTION"} />,
-                {
-                    icon: () => <Link to={`/post/${body.postId}`}>
-                        <Avatar sx={{ width: '100%', height: '100%' }}
-                            src={avatar(body)}
-                            alt={'avatar'} />
-                    </Link>
-                });
+            if (settings?.receiveNotifications) {
+                toast.info(<ToastMessage link={`/post/${body.postId}`} msg={body} type={"SUBSCRIPTION"} />,
+                    {
+                        icon: () => <Link to={`/post/${body.postId}`}>
+                            <Avatar sx={{ width: '100%', height: '100%' }}
+                                src={avatar(body)}
+                                alt={'avatar'} />
+                        </Link>
+                    });
+            }
         }
 
         async function handleLike(msg) {
@@ -146,24 +159,26 @@ const withWebsocket = (WrappedComponent) => {
 
             dispatch(notificationApi.util.prefetch('getNotification', { recieverId: localStorage.getItem('userId'), page: 0, quantity: 50 }, { force: true }))
             dispatch(notificationApi.util.invalidateTags(['Notifications']))
-            if (body.entityType === "POST") {
-                toast.info(<ToastMessage link={`/post/${body.entityId}`} msg={body} type={"LIKE_POST"} />,
-                    {
-                        icon: () => <Link to={`/post/${body.entityId}`}>
-                            <Avatar sx={{ width: '100%', height: '100%' }}
-                                src={avatar(body)}
-                                alt={'avatar'} />
-                        </Link>
-                    });
-            } else {
-                toast.info(<ToastMessage link={`/post/${body.entityId}`} msg={body} type={"LIKE_COMMENT"} />,
-                    {
-                        icon: () => <Link to={`/post/${body.entityId}`}>
-                            <Avatar sx={{ width: '100%', height: '100%' }}
-                                src={body.likerAvatar}
-                                alt={'avatar'} />
-                        </Link>
-                    });
+            if (settings?.receiveNotifications) {
+                if (body.entityType === "POST") {
+                    toast.info(<ToastMessage link={`/post/${body.entityId}`} msg={body} type={"LIKE_POST"} />,
+                        {
+                            icon: () => <Link to={`/post/${body.entityId}`}>
+                                <Avatar sx={{ width: '100%', height: '100%' }}
+                                    src={avatar(body)}
+                                    alt={'avatar'} />
+                            </Link>
+                        });
+                } else {
+                    toast.info(<ToastMessage link={`/post/${body.entityId}`} msg={body} type={"LIKE_COMMENT"} />,
+                        {
+                            icon: () => <Link to={`/post/${body.entityId}`}>
+                                <Avatar sx={{ width: '100%', height: '100%' }}
+                                    src={body.likerAvatar}
+                                    alt={'avatar'} />
+                            </Link>
+                        });
+                }
             }
         }
 
@@ -174,14 +189,16 @@ const withWebsocket = (WrappedComponent) => {
 
             dispatch(notificationApi.util.prefetch('getNotification', { recieverId: localStorage.getItem('userId'), page: 0, quantity: 50 }, { force: true }))
             dispatch(notificationApi.util.invalidateTags(['Notifications']))
-            toast.info(<ToastMessage link={`/post/${body.postId}`} msg={body} type={"COMMENT"} />,
-                {
-                    icon: () => <Link to={`/post/${body.postId}`}>
-                        <Avatar sx={{ width: '100%', height: '100%' }}
-                            src={avatar(body)}
-                            alt={'avatar'} />
-                    </Link>
-                });
+            if (settings?.receiveNotifications) {
+                toast.info(<ToastMessage link={`/post/${body.postId}`} msg={body} type={"COMMENT"} />,
+                    {
+                        icon: () => <Link to={`/post/${body.postId}`}>
+                            <Avatar sx={{ width: '100%', height: '100%' }}
+                                src={avatar(body)}
+                                alt={'avatar'} />
+                        </Link>
+                    });
+            }
         }
 
         return (

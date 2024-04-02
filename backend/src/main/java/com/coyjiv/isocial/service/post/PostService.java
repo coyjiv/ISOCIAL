@@ -6,10 +6,10 @@ import com.coyjiv.isocial.dao.LikeRepository;
 import com.coyjiv.isocial.dao.FriendRepository;
 import com.coyjiv.isocial.dao.PostRepository;
 import com.coyjiv.isocial.dao.UserRepository;
-import com.coyjiv.isocial.domain.AbstractEntity;
 import com.coyjiv.isocial.domain.Friend;
 import com.coyjiv.isocial.domain.Post;
-import com.coyjiv.isocial.domain.UserFriendStatus;
+import com.coyjiv.isocial.domain.PrivacySetting;
+import com.coyjiv.isocial.domain.UserPreference;
 import com.coyjiv.isocial.dto.request.post.PostRequestDto;
 import com.coyjiv.isocial.dto.request.post.RePostRequestDto;
 import com.coyjiv.isocial.dto.request.post.UpdatePostRequestDto;
@@ -21,6 +21,7 @@ import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.exceptions.RequestValidationException;
 import com.coyjiv.isocial.service.favorite.IFavoriteService;
 import com.coyjiv.isocial.service.notifications.INotificationService;
+import com.coyjiv.isocial.service.userpreference.IUserPreferenceService;
 import com.coyjiv.isocial.service.websocket.IWebsocketService;
 import com.coyjiv.isocial.service.subscriber.ListSubscriberService;
 import com.coyjiv.isocial.transfer.post.PostRequestMapper;
@@ -35,17 +36,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -65,6 +60,7 @@ public class PostService implements IPostService {
   private final IWebsocketService websocketService;
   private final INotificationService notificationService;
   private final CommentRepository commentRepository;
+  private final IUserPreferenceService userPreferenceService;
 
   private final LikeRepository likeRepository;
   private final ListSubscriberService listSubscriberService;
@@ -77,7 +73,7 @@ public class PostService implements IPostService {
 
     Page<Post> posts = postRepository.findAllActive(pageable);
 
-    boolean hasNext =  posts.hasNext();
+    boolean hasNext = posts.hasNext();
 
     return new PageWrapper<>(posts.toList(), hasNext);
   }
@@ -91,8 +87,8 @@ public class PostService implements IPostService {
   @Override
   public PageWrapper<PostResponseDto> findFavoritePosts(int page, int size) {
     List<FavoriteResponseDto> favorites =
-            favoriteService.findActiveBySelectorId(page, size, emailPasswordAuthProvider.getAuthenticationPrincipal())
-                    .getContent();
+      favoriteService.findActiveBySelectorId(page, size, emailPasswordAuthProvider.getAuthenticationPrincipal())
+        .getContent();
     if (favorites.isEmpty()) {
       return new PageWrapper<>(List.of(), false);
     } else {
@@ -109,6 +105,15 @@ public class PostService implements IPostService {
   @Override
   @Transactional(readOnly = true)
   public PageWrapper<PostResponseDto> findActiveByAuthorId(int page, int size, Long id) {
+    UserPreference userPreference = userPreferenceService.getUserPreferences(id);
+    if (userPreference != null && userPreference.getPostsVisibility().equals(PrivacySetting.FRIENDS)) {
+      Optional<Friend> optionalFriend =
+        friendRepository.findActiveFriendship(emailPasswordAuthProvider.getAuthenticationPrincipal(), id);
+      if (optionalFriend.isEmpty()
+        && !Objects.equals(emailPasswordAuthProvider.getAuthenticationPrincipal(), id)) {
+        return new PageWrapper<>(List.of(), false);
+      }
+    }
     Sort sort = Sort.by(Sort.Direction.DESC, "creationDate").and(Sort.by(Sort.Direction.ASC, "id"));
     Pageable pageable = PageRequest.of(page, size, sort);
     Page<Post> postPage = postRepository.findActiveByAuthorId(id, pageable);
@@ -175,7 +180,7 @@ public class PostService implements IPostService {
     Optional<Post> postToDeactivate = postRepository.findActiveById(id);
     if (postToDeactivate.isPresent()) {
       Post post = postToDeactivate.get();
-      notificationService.delete(post.getAuthorId(),post.getId(),post.getCreationDate());
+      notificationService.delete(post.getAuthorId(), post.getId(), post.getCreationDate());
       validateRequestOwner(post.getAuthorId());
       post.setActive(false);
       postRepository.save(post);
@@ -238,16 +243,16 @@ public class PostService implements IPostService {
   private void validateCreationPostDto(PostRequestDto postRequestDto) throws RequestValidationException {
     if (postRequestDto.getAttachments() != null && !postRequestDto.getAttachments().isEmpty()) {
       if (postRequestDto.getAttachments().stream().anyMatch(Objects::isNull)
-              || postRequestDto.getAttachments().stream().anyMatch(String::isBlank)) {
+        || postRequestDto.getAttachments().stream().anyMatch(String::isBlank)) {
         throw new RequestValidationException(
-                "Post should have text or attachments, attachments should not have empty strings or nulls");
+          "Post should have text or attachments, attachments should not have empty strings or nulls");
       }
     }
 
     if (postRequestDto.getTextContent() == null || postRequestDto.getTextContent().isBlank()) {
       if (postRequestDto.getAttachments() == null || postRequestDto.getAttachments().isEmpty()) {
         throw new RequestValidationException(
-                "Post should have text or attachments, attachments should not have empty strings or nulls");
+          "Post should have text or attachments, attachments should not have empty strings or nulls");
       }
     }
   }
@@ -258,7 +263,7 @@ public class PostService implements IPostService {
     Long principal = emailPasswordAuthProvider.getAuthenticationPrincipal();
 
     List<Long> friendsIds = friendRepository.findAllByUserId(principal)
-      .stream().map(f -> principal ==  f.getAddresser().getId()
+      .stream().map(f -> principal == f.getAddresser().getId()
         ? f.getRequester().getId()
         : f.getAddresser().getId()).toList();
 
