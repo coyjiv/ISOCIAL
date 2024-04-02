@@ -35,13 +35,6 @@ const ChatPage = () => {
     }
   }, [chatData, dispatch, selectedChat]);
 
-  useEffect(() => {
-    return () => {
-      dispatch(setSelectedChat(null));
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return <ChatView id={paramsId} />;
 };
 

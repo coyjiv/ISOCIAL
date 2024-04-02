@@ -64,6 +64,14 @@ const chatSlice = createSlice({
       state.pendingChat = action.payload;
     },
     setSelectedChat: (state, action) => {
+      state.selectedChatMessages = {
+        data: [],
+        isLoading: true,
+        hasNext: false,
+        error: null,
+        page: 0,
+        status: "idle",
+      };
       state.selectedChat = action.payload;
       //check if exist in chats if not - add
       if (action.payload === null) return;
