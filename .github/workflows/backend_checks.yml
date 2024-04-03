@@ -28,4 +28,6 @@ jobs:
           java-version: '17'
 
       - name: Validate Maven
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
         run: mvn clean package

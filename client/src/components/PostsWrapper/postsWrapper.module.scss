@@ -1,5 +1,31 @@
+@use '../../styles/mixins/breakpoints';
+
 .infinite-wrapper {
   display: flex;
   flex-direction: column;
   gap: 2rem;
+}
+
+.emptyPosts {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 70vh;
+  color: #000;
+  margin: 0 25px;
+  h1 {
+    font-size: 1.2rem;
+    margin-top: 2rem;
+  }
+  p {
+    font-size: 14px;
+    margin-top: 1rem;
+    padding: 0 0.5rem;
+    text-align: center;
+  }
+
+  @include breakpoints.media(sm) {
+    margin: 0;
+  }
 }

@@ -41,6 +41,10 @@ public class UserRegistrationRequestDto {
   @NotBlank
   private String city;
 
+  private String birthPlace;
+
+  private String studyPlace;
+
   @NotBlank
   @Pattern(regexp = "^\\d{4}-\\d{2}-\\d{2}$", message = "must be longer then YYYY-MM-DD")
   private String dateOfBirth;

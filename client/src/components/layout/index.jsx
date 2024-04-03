@@ -1,10 +1,11 @@
 import Navbar from './Navbar/Navbar'
 import Footer from './Footer/Footer'
 import PropTypes from 'prop-types'
-import {useEffect} from "react";
-import {useNavigate} from "react-router-dom";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { withWebsocket } from '../../hooks/withWebsocket';
 
-const Layout = ({children, navbar = true, footer = false}) => {
+const LayoutWrapper = ({ children, navbar = true, footer = false }) => {
     const navigate = useNavigate();
     useEffect(() => {
         const access = localStorage.getItem("access");
@@ -17,17 +18,19 @@ const Layout = ({children, navbar = true, footer = false}) => {
 
     return (
         <>
-            {navbar && <Navbar/>}
+            {navbar && <Navbar />}
             {children}
-            {footer && <Footer/>}
+            {footer && <Footer />}
         </>
     )
 }
 
-Layout.propTypes = {
+LayoutWrapper.propTypes = {
     children: PropTypes.node.isRequired,
     navbar: PropTypes.bool,
     footer: PropTypes.bool
 }
+
+const Layout = withWebsocket(LayoutWrapper)
 
 export default Layout

@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
 import { Avatar, Stack, Typography } from "@mui/material";
 
-import fallbackAvatar from "../../../assets/fallback/Ava.jpg";
 import {
   CardContentWrapper,
   CardWrapper,
@@ -14,37 +13,53 @@ const FriendsSidebarUserCard = ({
   userImage,
   fullName,
   onConfirm,
-  onDelete,
+  onAddToFriends,
+  onHideSuggestion,
+  onDecline,
   onRemove,
   onMessage,
-  onClick,
 }) => {
-  const isRequestVariant = variant === "requests";
+  const isFriendsVariant = variant === "friends";
+  const isSuggestionVariant = variant === "suggestions";
+
+  const confirmBtnText = isSuggestionVariant ? "Add friend" : "Confirm";
+  const declineBtnText = isSuggestionVariant ? "Dont show" : "Delete";
+
+  const handleConfirmBtnClick = (e) => {
+    e.stopPropagation();
+
+    isSuggestionVariant ? onAddToFriends() : onConfirm();
+  };
+
+  const handleDeclineBtnClick = (e) => {
+    e.stopPropagation();
+
+    isSuggestionVariant ? onHideSuggestion() : onDecline();
+  };
 
   return (
-    <CardWrapper variant={variant} onClick={onClick}>
+    <CardWrapper variant={variant}>
       <Stack direction="row" gap="8px" alignItems="center">
-        <Avatar
-          src={userImage?.[0] ?? fallbackAvatar}
-          sx={{ width: 60, height: 60 }}
-        />
+        <Avatar src={userImage} alt={fullName} sx={{ width: 60, height: 60 }} />
         <CardContentWrapper variant={variant}>
           <Typography fontSize="17px" fontWeight="500">
             {fullName}
           </Typography>
 
-          {!isRequestVariant && (
+          {isFriendsVariant && (
             <CardActionsPopover
               name={fullName}
               onRemove={onRemove}
               onMessage={onMessage}
             />
           )}
-          {isRequestVariant && (
+          {!isFriendsVariant && (
             <Stack direction="row" gap="6px" width="100%">
-              <ButtonMain onClick={onConfirm}>Confirm</ButtonMain>
-              <ButtonMain color="grey" onClick={onDelete}>
-                Delete
+              <ButtonMain onClick={handleConfirmBtnClick}>
+                {confirmBtnText}
+              </ButtonMain>
+              <ButtonMain color="grey" onClick={handleDeclineBtnClick}>
+                {declineBtnText}
               </ButtonMain>
             </Stack>
           )}
@@ -55,14 +70,17 @@ const FriendsSidebarUserCard = ({
 };
 
 FriendsSidebarUserCard.propTypes = {
-  variant: PropTypes.oneOf(["friends", "requests"]),
+  variant: PropTypes.oneOf(["friends", "requests", "suggestions"]),
   fullName: PropTypes.string,
-  userImage: PropTypes.array,
+  userImage: PropTypes.string,
   onMessage: PropTypes.func,
   onConfirm: PropTypes.func,
-  onDelete: PropTypes.func,
+  onAddToFriends: PropTypes.func,
+  onHideSuggestion: PropTypes.func,
+  onDecline: PropTypes.func,
   onClick: PropTypes.func,
   onRemove: PropTypes.func,
+  friend: PropTypes.object,
 };
 
 FriendsSidebarUserCard.displayName = "FriendsSidebarUserCard";

@@ -1,5 +1,6 @@
 package com.coyjiv.isocial.dto.respone.friend;
 
+import com.coyjiv.isocial.domain.UserGender;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,4 +15,5 @@ public class FriendNotificationDto {
   Long senderId;
   private String senderName;
   private String senderAvatarUrl;
+  private UserGender senderGender;
 }

@@ -1,8 +1,8 @@
-/* eslint-disable react/no-unescaped-entities */
 import { Box, Typography } from "@mui/material";
 import { SectionWrapper } from "./FriendsNoUserSection.styled";
+import PropTypes from "prop-types";
 
-const FriendsNoUserSection = () => {
+const FriendsNoUserSection = ({ customTitle }) => {
   return (
     <SectionWrapper>
       <Box width="112px" height="112px">
@@ -37,11 +37,15 @@ const FriendsNoUserSection = () => {
           <circle cx="66.32" cy="35.2" r="7.55" fill="#a4a7ab" />
         </svg>
       </Box>
-      <Typography fontSize="20px" fontWeight="700" color="text.grey">
-        Select people's names to preview their profile.
+      <Typography sx={{ textAlign: 'center', fontSize: { xs: '16px', sm: '20px' }, padding: { xs: "0px 20px", sm: 0 } }} fontSize="20px" fontWeight="700" color="text.grey">
+        {customTitle ?? "Select user to preview their profile."}
       </Typography>
     </SectionWrapper>
   );
+};
+
+FriendsNoUserSection.propTypes = {
+  customTitle: PropTypes.string,
 };
 
 FriendsNoUserSection.displayName = "FriendsNoUserSection";

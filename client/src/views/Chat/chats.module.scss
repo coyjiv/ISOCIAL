@@ -1,0 +1,57 @@
+@use "../../styles/variables/colors";
+@use "../../styles/mixins/breakpoints";
+
+.empty-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  padding: 0px 40px;
+  padding-bottom: 10vh;
+  > h1 {
+    font-size: 30px;
+    text-align: center;
+    opacity: 0.5;
+    margin-bottom: 20px;
+  }
+  > p {
+    font-size: 20px;
+    text-align: center;
+    opacity: 0.5;
+    line-height: 26px;
+  }
+}
+
+.emptyWrapperRight {
+  display: none;
+  width: 100%;
+  padding-bottom: 5vh;
+
+  @include breakpoints.media('sm') {
+    display: flex;
+  }
+}
+
+.chatMainWrapper {
+  display: flex;
+  flex-direction: row;
+  height: calc(100svh - 52px);
+  width: 100%;
+  background-color: colors.$disabledButtonBackground;
+
+  @include breakpoints.media('sm') {
+    height: calc(100svh - 56px);
+  }
+}
+
+.searchWrapper {
+  width: 95%;
+  margin: 20px auto;
+  > div {
+    background-color: colors.$greyBorder;
+    input {
+      color: colors.$black;
+    }
+  }
+}

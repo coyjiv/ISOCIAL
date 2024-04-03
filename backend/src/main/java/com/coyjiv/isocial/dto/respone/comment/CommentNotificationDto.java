@@ -1,5 +1,6 @@
 package com.coyjiv.isocial.dto.respone.comment;
 
+import com.coyjiv.isocial.domain.UserGender;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,4 +15,6 @@ public class CommentNotificationDto {
   private String text;
   private String commenterName;
   private String commenterAvatar;
+  private UserGender senderGender;
+  private Long senderId;
 }

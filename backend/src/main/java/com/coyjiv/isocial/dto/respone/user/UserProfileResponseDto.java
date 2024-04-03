@@ -30,4 +30,7 @@ public class UserProfileResponseDto {
   private Long subscribersCount;
   private Long subscriptionsCount;
   private UserFriendStatus friendStatus;
+  private Date dateOfBirth;
+  private String birthPlace;
+  private String studyPlace;
 }
