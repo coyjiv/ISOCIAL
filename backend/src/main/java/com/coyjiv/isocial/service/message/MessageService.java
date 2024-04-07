@@ -52,7 +52,7 @@ public class MessageService implements IMessageService {
 
     Page<Message> messages = messageRepository.findAllActiveByChatId(chat.getId(), pageable);
     messages.forEach(m -> {
-      if (!Objects.equals(m.getSenderId(), requestOwnerId) && m.getStatus() != MessageStatus.SEEN){
+      if (!Objects.equals(m.getSenderId(), requestOwnerId) && m.getStatus() != MessageStatus.SEEN) {
         m.setStatus(MessageStatus.SEEN);
       }
     });
@@ -122,16 +122,29 @@ public class MessageService implements IMessageService {
   }
 
   @Override
-  public PageWrapper<MessageNotificationDto> search(String term,int page,int size) {
+  @Transactional(readOnly = true)
+  public PageWrapper<MessageNotificationDto> search(String term, int page, int size) {
     Sort sort = Sort.by(Sort.Direction.DESC, "creationDate");
     Pageable pageable = PageRequest.of(page, size, sort);
-    Page<Message> messages = messageRepository.search(term,pageable,authProvider.getAuthenticationPrincipal());
+    Page<Message> messages = messageRepository.search(term, pageable, authProvider.getAuthenticationPrincipal());
 
     boolean hasNext = messages.hasNext();
 
     List<MessageNotificationDto> dtos = messages.map(messageNotificationDtoMapper::convertToDto).toList();
 
     return new PageWrapper<>(dtos, hasNext);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public Long countUnreadMessages() {
+    return messageRepository.countUnreadMessages(authProvider.getAuthenticationPrincipal());
+  }
+
+  @Override
+  @Transactional
+  public void readMessages(Long chatId) {
+    messageRepository.readAllMessages(chatId, authProvider.getAuthenticationPrincipal());
   }
 
 
