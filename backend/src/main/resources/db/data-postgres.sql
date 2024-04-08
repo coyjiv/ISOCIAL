@@ -162,6 +162,12 @@ VALUES (1, 5, 'REQUEST_SENT', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE);
 INSERT INTO public.friends (requester_id, addresser_id, status, creation_date, last_modified_date, is_active)
 VALUES (6, 1, 'REQUEST_SENT', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE);
 
-
+INSERT INTO user_preferences (user_id, friends_list_visibility, age_visibility, posts_visibility, receive_notifications,
+                              creation_date, last_modified_date, is_active)
+VALUES (1, 'ALL', 'ALL', 'ALL', TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE),
+       (2, 'FRIENDS', 'ALL', 'FRIENDS', TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE),
+       (3, 'ALL', 'FRIENDS', 'ALL', TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE),
+       (4, 'FRIENDS', 'FRIENDS', 'FRIENDS', TRUE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE),
+       (5, 'ALL', 'ALL', 'FRIENDS', FALSE, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE);
 
 COMMIT;

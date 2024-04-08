@@ -8,7 +8,7 @@ import { useGetProfileByIdQuery } from '../../../store/services/profileService';
 import { useParams } from 'react-router-dom'
 import styles from '../profile.module.scss'
 import CreatePostModal from '../../../components/modals/CreatePost';
-import { placeholderAvatar } from '../../../data/placeholders';
+import { placeholderAvatar, userAvatar } from '../../../data/placeholders';
 import { useGetPostsByUserQuery } from '../../../store/services/postService';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Post from '../../../components/Post/Post';
@@ -130,7 +130,7 @@ const Posts = () => {
                   {postsData?.map((post) => <Post key={post.id}
                     postId={post.id}
                     authorId={post.authorId}
-                    avatarUrl={post.authorAvatar}
+                    avatarUrl={userAvatar(profile)}
                     username={post.authorFullName}
                     creationDate={post.creationDate}
                     textContent={post.textContent}

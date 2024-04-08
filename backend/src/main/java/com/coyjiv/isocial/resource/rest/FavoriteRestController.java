@@ -82,7 +82,7 @@ public class FavoriteRestController {
   @DeleteMapping("/{id}")
   public ResponseEntity<?> delete(@PathVariable("id") @Min(0) Long id)
     throws IllegalAccessException, RequestValidationException {
-    favoriteService.delete(id, true);
+    favoriteService.delete(id);
     return ResponseEntity.status(204).build();
   }
 

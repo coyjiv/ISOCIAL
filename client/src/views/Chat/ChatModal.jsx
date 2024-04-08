@@ -31,7 +31,7 @@ const ChatModal = ({ modalText, open = false, handleClose }) => {
   const { data: friends } = useGetFriendsListQuery({
     id: localStorage.getItem("userId"),
     page: friendsPage,
-  }, { pollingInterval: 1000 });
+  });
 
   const navigate = useNavigate();
 
