@@ -78,7 +78,6 @@ const MediaUpload = ({ modalTitle, customOptions, ...props }) => {
         setImgSrc(URL.createObjectURL(acceptedFiles[0]));
         // if (customOptions.field === 'banner') {
         // }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
 
