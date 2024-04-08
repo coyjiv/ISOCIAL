@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useState, useCallback, useRef, memo } from "react";
 import { Dialog, DialogContent, DialogTitle } from "@mui/material";
-import { useDebounceEffect } from "../../../hooks/useDebounceEffect";
+// import { useDebounceEffect } from "../../../hooks/useDebounceEffect";
 import { canvasPreview } from "./canvasPreview";
 import { Stepper } from "../../Stepper";
 import { getDownloadURL, getStorage, ref, uploadBytesResumable, deleteObject } from "firebase/storage";
@@ -9,6 +9,7 @@ import { useUpdateProfileMutation, useGetProfileByIdQuery } from '../../../store
 import CropStep from "./steps/CropStep";
 import PreviewStep from "./steps/PreviewStep";
 import Dropzone from "./steps/Dropzone";
+import { centerCrop, convertToPixelCrop, makeAspectCrop } from 'react-image-crop';
 
 const MediaUpload = ({ modalTitle, customOptions, ...props }) => {
     const id = localStorage.getItem('userId');
@@ -20,11 +21,11 @@ const MediaUpload = ({ modalTitle, customOptions, ...props }) => {
     const previewCanvasRef = useRef(null);
     const imgRef = useRef(null);
     const initialCrop = {
-        unit: 'px',
+        unit: '%',
         ...customOptions
     }
     const [crop, setCrop] = useState(initialCrop);
-    const [completedCrop, setCompletedCrop] = useState(initialCrop);
+    // const [completedCrop, setCompletedCrop] = useState(initialCrop);
     const { data: profile } = useGetProfileByIdQuery(id);
     const [updateProfile] = useUpdateProfileMutation(id);
     const [uploadProgress, setUploadProgress] = useState(0);
@@ -48,34 +49,50 @@ const MediaUpload = ({ modalTitle, customOptions, ...props }) => {
         setFile(null);
         setImgSrc("");
         setCrop(initialCrop);
-        setCompletedCrop(null);
+        // setCompletedCrop(null);
 
         onClose();
     };
 
 
-    const onImageLoad = () => {
-    }
+    const onImageLoad = (e) => {
+        const { width, height } = e.currentTarget;
+        // const cropWidthInPercent = (customOptions.minWidth / width) * 100;
+
+        const crop = makeAspectCrop(
+            {
+                unit: "%",
+                width: customOptions.minWidth,
+            },
+            customOptions.aspect,
+            width,
+            height
+        );
+        const centeredCrop = centerCrop(crop, width, height);
+        setCrop(centeredCrop);
+    };
 
 
     const onDrop = useCallback((acceptedFiles) => {
         setFile(acceptedFiles[0]);
         setImgSrc(URL.createObjectURL(acceptedFiles[0]));
         // if (customOptions.field === 'banner') {
-        setCompletedCrop({
-            ...initialCrop,
-        });
         // }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
 
     const onUploadCropAvatarClick = async () => {
         const image = imgRef.current;
         const previewCanvas = previewCanvasRef.current;
-        if (!image || !previewCanvas || !completedCrop) {
+        if (!image || !previewCanvas || !crop) {
             throw new Error("Crop canvas does not exist");
         }
+
+        const newCrop = convertToPixelCrop(
+            crop,
+            imgRef.current.width,
+            imgRef.current.height
+        )
 
         // This will size relative to the uploaded image
         // size. If you want to size according to what they
@@ -84,8 +101,8 @@ const MediaUpload = ({ modalTitle, customOptions, ...props }) => {
         const scaleY = image.naturalHeight / image.height;
 
         const offscreen = new OffscreenCanvas(
-            completedCrop.width * scaleX,
-            completedCrop.height * scaleY,
+            newCrop.width * scaleX,
+            newCrop.height * scaleY,
         );
         const ctx = offscreen.getContext("2d");
         if (!ctx) {
@@ -130,7 +147,7 @@ const MediaUpload = ({ modalTitle, customOptions, ...props }) => {
         uploadTask.on('state_changed',
             (snapshot) => {
                 const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                // console.log('Upload is ' + progress + '% done');
+                console.log('Upload is ' + progress + '% done');
                 setUploadProgress(progress);
                 // switch (snapshot.state) {
                 //     case 'paused':
@@ -152,31 +169,41 @@ const MediaUpload = ({ modalTitle, customOptions, ...props }) => {
                 });
             }
         );
+
     }
 
-    useDebounceEffect(
-        async () => {
-            if (
-                completedCrop?.width &&
-                completedCrop?.height &&
-                imgRef.current &&
-                previewCanvasRef.current
-            ) {
-                canvasPreview(
-                    imgRef.current,
-                    previewCanvasRef.current,
-                    completedCrop,
-                );
-            }
-        },
-        500,
-        [completedCrop],
-    );
+    // useDebounceEffect(
+    //     async () => {
+    //         if (
+    //             crop?.width &&
+    //             crop?.height &&
+    //             imgRef.current &&
+    //             previewCanvasRef.current
+    //         ) {
+
+    //         }
+    //     },
+    //     500,
+    //     [crop],
+    // );
+
+    const preview = useCallback(() => setTimeout(() => {
+        canvasPreview(
+            imgRef.current,
+            previewCanvasRef.current,
+            convertToPixelCrop(
+                crop,
+                imgRef.current.width,
+                imgRef.current.height
+            ),
+        )
+
+    }, 1000), [crop]);
 
     const avatarSteps = [
         <Dropzone key={1} customTitle={customOptions?.dropzoneDescription} onDrop={onDrop} file={file} resetFile={() => setFile(null)} />,
-        <CropStep key={2} customSettings={customOptions} imgSrc={imgSrc} onImageLoad={onImageLoad} imgRef={imgRef} crop={crop} setCrop={setCrop} setCompletedCrop={setCompletedCrop} />,
-        <PreviewStep key={3} completedCrop={completedCrop} previewCanvasRef={previewCanvasRef} onUploadCropAvatarClick={onUploadCropAvatarClick} uploadProgress={uploadProgress} />
+        <CropStep key={2} customSettings={customOptions} imgSrc={imgSrc} onImageLoad={onImageLoad} imgRef={imgRef} crop={crop} setCrop={setCrop} />,
+        <PreviewStep key={3} preview={preview} completedCrop={crop} previewCanvasRef={previewCanvasRef} onUploadCropAvatarClick={onUploadCropAvatarClick} uploadProgress={uploadProgress} />
     ];
 
     return (
@@ -222,8 +249,6 @@ MediaUpload.defaultProps = {
         height: 200,
         width: 200,
         field: 'avatar',
-        x: 25,
-        y: 25
     }
 }
 

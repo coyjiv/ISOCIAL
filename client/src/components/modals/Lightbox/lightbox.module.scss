@@ -8,7 +8,14 @@
   display: flex;
   filter: url(#ambilight);
   & img {
+    // height: 70svh;
+    width: auto;
+    max-width: 80svw;
     margin: auto;
+    @include breakpoints.media('sm') {
+      height: 90svh;
+      width: auto;
+    }
   }
   @include breakpoints.media('sm') {
     width: 35svw;
@@ -26,7 +33,7 @@
 
   & svg {
     transition: 0.2s ease-in-out;
-    font-size: 22px;
+    font-size: 27px;
     color: colors.$wash;
     padding: 5px;
     border-radius: 50%;
@@ -62,7 +69,7 @@
   align-self: flex-end;
   gap: 20px;
   & svg {
-    font-size: 20px;
+    font-size: 27px;
     color: colors.$wash;
     padding: 5px;
     border-radius: 50%;

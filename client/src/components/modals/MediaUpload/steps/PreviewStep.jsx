@@ -2,8 +2,13 @@ import PropTypes from 'prop-types'
 import { CircularProgress } from '@mui/material'
 import { BlueRoundedButton } from '../../../buttons'
 import styles from '../mediaUpload.module.scss'
+import { useEffect } from 'react'
 
-const PreviewStep = ({ completedCrop, previewCanvasRef, onUploadCropAvatarClick, uploadProgress }) => {
+const PreviewStep = ({ preview, completedCrop, previewCanvasRef, onUploadCropAvatarClick, uploadProgress }) => {
+    useEffect(() => {
+        preview()
+    }, [preview])
+    console.log('rerender');
     return (
         !!completedCrop && (
             <>
@@ -12,8 +17,10 @@ const PreviewStep = ({ completedCrop, previewCanvasRef, onUploadCropAvatarClick,
                         ref={previewCanvasRef}
                         className={styles.previewCanvas}
                         style={{
-                            width: completedCrop.width,
-                            height: completedCrop.height
+                            // display: "none",
+                            objectFit: "contain",
+                            width: '100%',
+                            height: '100%   ',
                         }}
                     />
                 </div>
@@ -22,7 +29,7 @@ const PreviewStep = ({ completedCrop, previewCanvasRef, onUploadCropAvatarClick,
                         {
                             uploadProgress > 0 ?
                                 uploadProgress === 100 ? "Saved" :
-                                    <CircularProgress size={'sm'} variant="determinate" value={Math.round(uploadProgress)} /> :
+                                    <CircularProgress size={'lg'} variant="determinate" color='black' value={Math.round(uploadProgress)} /> :
                                 "Save changes"
                         }
                     </BlueRoundedButton>
@@ -37,6 +44,7 @@ PreviewStep.propTypes = {
     previewCanvasRef: PropTypes.object,
     onUploadCropAvatarClick: PropTypes.func,
     uploadProgress: PropTypes.number,
+    preview: PropTypes.func
 }
 
 export default PreviewStep
