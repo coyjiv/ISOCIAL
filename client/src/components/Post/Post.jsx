@@ -11,7 +11,7 @@ import comment from "./icons/comment.svg";
 // import CommentIcon from './icons/commentIcon.svg?react'
 // import likeIcon from './icons/likeIcon.svg'
 
-import { Divider, Menu, MenuItem } from "@mui/material";
+import { Avatar, Divider, Menu, MenuItem } from "@mui/material";
 import { Link } from "react-router-dom";
 import {
   useToggleLikeMutation,
@@ -20,7 +20,6 @@ import {
 import RecentComments from "./RecentComments";
 import { useCreateCommentMutation } from "../../store/services/commentService";
 import PhotosCollage from "./PhotosCollage";
-import { placeholderAvatar } from "../../data/placeholders";
 import { useDeletePostMutation } from "../../store/services/postService";
 import ConfirmModal from "../modals/ConfirmModal";
 import { CommentsModal } from "./CommentsModal";
@@ -148,16 +147,9 @@ const Post = ({
         <header className={styles.header}>
           <div className={styles.user}>
             <Link to={`/profile/${authorId}`}>
-              <img
-                src={
-                  avatarUrl ??
-                  placeholderAvatar(
-                    "",
-                    username?.split(" ")[0],
-                    username?.split(" ")[1]
-                  )
-                }
-                alt=""
+              <Avatar
+                src={avatarUrl}
+                alt={username + "'s " + 'avatar'}
                 className={styles.userImage}
               />
             </Link>
