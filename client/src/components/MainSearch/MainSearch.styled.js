@@ -6,7 +6,7 @@ import { FiSearch } from 'react-icons/fi'
 export const LogoContainer = styled(Stack)(({ open }) => ({
   flexDirection: 'row',
   alignItems: 'center',
-  width: open ? '67px' : '109px',
+  width: open ? '67px' : '113px',
   overflow: 'hidden',
   transition: 'all 0.15s ease-in-out',
 }))
@@ -22,13 +22,15 @@ export const LogoHiddenContentWrapper = styled(Stack)(({ open }) => ({
   flexDirection: 'row',
   transform: `translateX(${open ? '-67px' : '0'})`,
   transition: 'all 0.15s ease-in-out',
-  // paddingLeft: '16px',
+  paddingLeft: '16px',
 }))
 
 export const SearchWrapper = styled(Stack)(({ open }) => ({
   padding: '7px 8px 7px 0',
   flexDirection: 'row',
   gap: open ? '2px' : '8px',
+  maxWidth: '360px',
+  minWidth: '360px',
   alignItems: 'center',
   position: 'relative',
   transition: 'all 0.15s ease-in-out',

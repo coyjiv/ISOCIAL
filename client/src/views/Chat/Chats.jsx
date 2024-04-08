@@ -1,21 +1,52 @@
-/* eslint-disable no-unused-vars */
-//libs
-import { Link, useNavigate } from "react-router-dom";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { withLayout } from "../../hooks/withLayout";
 
-import { withLayout } from "../../hooks/withLayout"
-import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 
-import ChatList from "./ChatList";
-import { Chat } from './Chat'
+import { ChatModal } from "./ChatModal";
+import Fab from "@mui/material/Fab";
+import EditIcon from "@mui/icons-material/Edit";
 import "./Chat.scss";
+import ChatView from "./ChatView/index.jsx";
+import { useDispatch, useSelector } from "react-redux";
+import { clearSelectedChat } from "../../store/chatSlice.js";
 
 const ChatContainer = () => {
-  const { id } = useParams();
+  const [isOpen, setIsOpen] = useState(false);
+  const selectedChat = useSelector((state) => state.chat.selectedChat);
+  const dispatch = useDispatch();
+
+  const handleOpen = () => {
+    setIsOpen(true);
+  };
+
+  const handleClose = () => setIsOpen(false);
+
+  useEffect(() => {
+    if (selectedChat) {
+      dispatch(clearSelectedChat())
+    }
+  }, []);
 
   return (
-    <div className="chat-container"><ChatList />{id ? <Chat id={id} /> : <h1>No chats selected</h1>}</div>
+    <div className="chats">
+      <ChatModal
+        open={isOpen}
+        handleClose={handleClose}
+        modalText="Select Friend"
+      />
+      <ChatView hideCreateChat />
+      <Fab
+        onClick={handleOpen}
+        sx={{ position: "fixed", bottom: "20px", right: "20px" }}
+        color="primary"
+        aria-label="edit"
+      >
+        <EditIcon />
+      </Fab>
+    </div>
   );
 };
 
-const Chats = withLayout(ChatContainer)
-export default Chats
+const Chats = withLayout(ChatContainer);
+export default Chats;

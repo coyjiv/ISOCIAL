@@ -2,9 +2,18 @@ import { useState } from "react";
 import { IconButton } from "../../../components/buttons";
 import { Menu, MenuItem, ListItemIcon, ListItemText, Paper, MenuList } from "@mui/material";
 import { FaBell, FaRegBell, FaBellSlash } from 'react-icons/fa6'
+import { useSubscribeToUserMutation, useUnsubscribeFromUserMutation } from "../../../store/services/profileService";
+import { useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export const NotificationSubscriptionBtn = () => {
+    const { id } = useParams();
+
     const isSubscribed = false
+
+    const [subscribe] = useSubscribeToUserMutation()
+    const [unsubscribe] = useUnsubscribeFromUserMutation()
+
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
 
@@ -14,6 +23,20 @@ export const NotificationSubscriptionBtn = () => {
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    const handleSubscribe = () => {
+        subscribe({ id }).then(() => {
+            toast.success('You have subscribed to notifications')
+            handleClose()
+        })
+    }
+
+    const handleUnsubscribe = () => {
+        unsubscribe({ id }).then(() => {
+            toast.info('You have unsubscribed from notifications')
+            handleClose()
+        })
+    }
 
 
     return (
@@ -37,13 +60,13 @@ export const NotificationSubscriptionBtn = () => {
             >
                 <Paper sx={{ width: 320, maxWidth: '100%', boxShadow: '0', padding: 0 }}>
                     <MenuList sx={{ padding: 0 }}>
-                        <MenuItem>
+                        <MenuItem onClick={handleSubscribe}>
                             <ListItemIcon>
                                 <FaBell />
                             </ListItemIcon>
                             <ListItemText>Receive notifications</ListItemText>
                         </MenuItem>
-                        <MenuItem>
+                        <MenuItem onClick={handleUnsubscribe}>
                             <ListItemIcon>
                                 <FaBellSlash />
                             </ListItemIcon>

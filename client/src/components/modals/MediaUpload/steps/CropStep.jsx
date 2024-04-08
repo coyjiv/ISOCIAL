@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import styles from '../mediaUpload.module.scss'
 import 'react-image-crop/src/ReactCrop.scss'
 
-const CropStep = ({ imgSrc, onImageLoad, imgRef, crop, setCrop, setCompletedCrop, customSettings }) => {
+const CropStep = ({ imgSrc, onImageLoad, imgRef, crop, setCrop, customSettings }) => {
     return (
         <div className={styles.cropWrapper}>
             <ReactCrop
@@ -11,8 +11,8 @@ const CropStep = ({ imgSrc, onImageLoad, imgRef, crop, setCrop, setCompletedCrop
                 minHeight={customSettings.minHeight}
                 aspect={customSettings.aspect}
                 crop={crop}
-                onChange={(newCrop) => setCrop(newCrop)}
-                onComplete={(c) => setCompletedCrop(c)}
+                onChange={(newCrop, p) => setCrop(p)}
+            // onComplete={(c) => setCompletedCrop(c)}
             >
                 <img
                     ref={imgRef}

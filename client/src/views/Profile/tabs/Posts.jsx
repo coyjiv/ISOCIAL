@@ -2,27 +2,32 @@ import { useEffect, useState } from 'react';
 import { Avatar, Box, Container, Divider, Grid, Input, Stack, Typography } from '@mui/material'
 import { Link } from 'react-router-dom'
 import { AiFillHome } from "react-icons/ai";
+import { BsGeoAltFill, BsFillMortarboardFill, BsFillCake2Fill } from "react-icons/bs";
 import { useGetProfileByIdQuery } from '../../../store/services/profileService';
-import { useSubscribersCountQuery } from '../../../store/services/friendService';
+// import { useSubscribersCountQuery } from '../../../store/services/friendService';
 import { useParams } from 'react-router-dom'
 import styles from '../profile.module.scss'
 import CreatePostModal from '../../../components/modals/CreatePost';
-import { placeholderAvatar } from '../../../data/placeholders';
+import { placeholderAvatar, userAvatar } from '../../../data/placeholders';
 import { useGetPostsByUserQuery } from '../../../store/services/postService';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Post from '../../../components/Post/Post';
 import classNames from 'classnames';
 import { PostSkeleton } from '../skeletons/PostSkeleton';
+import { useSearchParams } from 'react-router-dom';
+import moment from 'moment';
 // import PostsWrapper from '../../../components/PostsWrapper';
 
 const Posts = () => {
   const { id } = useParams();
+  const [params] = useSearchParams()
 
-  const fetchProfileId = id ?? localStorage.getItem('userId')
+  const fetchProfileId = id ?? params.get('id') ?? localStorage.getItem('userId')
+
   // eslint-disable-next-line no-unused-vars
   const { data: profile, isLoading } = useGetProfileByIdQuery(fetchProfileId);
   const { data: loggedUserProfile, isLoading: isLoggedUserLoading } = useGetProfileByIdQuery(localStorage.getItem('userId'))
-  const { data: subscribersCount } = useSubscribersCountQuery(fetchProfileId);
+  // const { data: subscribersCount } = useSubscribersCountQuery(fetchProfileId);
 
   const [isCreatePostModalOpen, setIsCreatePostModalOpen] = useState(false)
   const triggerPostModal = () => setIsCreatePostModalOpen(true)
@@ -56,7 +61,6 @@ const Posts = () => {
 
   const addNewPost = (post) => {
     if (post) setPostsData([post, ...postsData])
-    console.log('post', post);
   }
 
   const removePost = (postId) => {
@@ -66,14 +70,13 @@ const Posts = () => {
     setPage(page + 1);
   };
 
-  console.log('postsData', postsData, postQueryData);
 
-
+  const yearsOld = moment(profile?.dateOfBirth).fromNow().split(' ')[0]
 
   return (
     profile &&
     <>
-      <Box sx={{ backgroundColor: (theme) => theme.palette.wash }}>
+      <Box sx={{ marginBottom: '100px', backgroundColor: (theme) => theme.palette.wash }}>
         <Container maxWidth={'lg'} sx={{ p: 2 }}>
           <Grid container spacing={4} >
             <Grid item xs={12} sm={6} md={5}>
@@ -81,8 +84,11 @@ const Posts = () => {
                 <Typography fontWeight={900} fontSize={20}>About me</Typography>
                 <Typography marginY={2}>{profile.bio}</Typography>
                 <Divider />
-                <Typography marginTop={2}><AiFillHome /> Lives in {profile.city}</Typography>
-                <Typography marginTop={2}>Subscribers : {subscribersCount}</Typography>
+                <Typography marginTop={2}><BsGeoAltFill style={{ marginRight: '5px' }} /> Lives in {profile.city}</Typography>
+                {profile?.birthPlace && <Typography marginTop={2}><AiFillHome style={{ marginRight: '5px' }} /> From {profile.birthPlace}</Typography>}
+                {profile?.studyPlace && <Typography marginTop={2}><BsFillMortarboardFill style={{ marginRight: '5px' }} /> Studied at {profile.studyPlace}</Typography>}
+                {profile?.dateOfBirth && <Typography marginTop={2}><BsFillCake2Fill style={{ marginRight: '5px' }} /> {yearsOld} years old</Typography>}
+                {/* <Typography marginTop={2}>Subscribers : {subscribersCount}</Typography> */}
               </div>
               <div className={styles.card}>
                 <div>
@@ -103,7 +109,7 @@ const Posts = () => {
               </div>
             </Grid>
             <Grid item xs={12} sm={6} md={7}>
-              {(!isLoggedUserLoading && loggedUserProfile?.id === id || !id) && <div className={classNames(styles.card, styles.mt10)}>
+              {(!isLoggedUserLoading && loggedUserProfile?.id === +localStorage.getItem('userId')) && <div className={classNames(styles.card, styles.mt10)}>
                 <div onClick={triggerPostModal}>
                   <Stack width={'100%'} gap={2} direction={'row'}>
                     <Avatar src={loggedUserProfile?.avatarsUrl[0] ?? placeholderAvatar(loggedUserProfile?.gender, loggedUserProfile?.firstName, loggedUserProfile?.lastName)} sx={{ width: 40, height: 'auto' }} />
@@ -124,7 +130,7 @@ const Posts = () => {
                   {postsData?.map((post) => <Post key={post.id}
                     postId={post.id}
                     authorId={post.authorId}
-                    avatarUrl={post.authorAvatar}
+                    avatarUrl={userAvatar(profile)}
                     username={post.authorFullName}
                     creationDate={post.creationDate}
                     textContent={post.textContent}

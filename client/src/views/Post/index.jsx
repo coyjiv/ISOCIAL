@@ -10,10 +10,9 @@ import { ArrowBack } from '@mui/icons-material';
 const PostView = () => {
     const { id } = useParams()
 
-    const { data: post, error, isLoading } = useGetPostByIdQuery(id, { skip: !id })
+    const { data: post, isLoading } = useGetPostByIdQuery(id, { skip: !id })
     const navigate = useNavigate()
 
-    console.log('post', post, error, isLoading);
     return (
         <main className={styles.container}>
             <button onClick={() => navigate(-1)} className={styles.backBtn}><ArrowBack /></button>

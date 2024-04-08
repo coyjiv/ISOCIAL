@@ -10,6 +10,7 @@ import com.coyjiv.isocial.service.like.ILikeService;
 import com.coyjiv.isocial.service.user.IUserService;
 import com.coyjiv.isocial.transfer.DtoMapperFacade;
 import com.coyjiv.isocial.transfer.user.UserSearchResponseMapper;
+import io.sentry.Sentry;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -58,6 +59,7 @@ public class CommentResponseMapper extends DtoMapperFacade<Comment, CommentRespo
       dto.setAuthorPremiumNickname(userService.getPremiumNickname(entity.getCommenterId()));
       dto.setAuthorPremiumEmoji(userService.getPremiumEmoji(entity.getCommenterId()));
     } catch (EntityNotFoundException exception) {
+      Sentry.captureException(exception);
       throw new RuntimeException(exception);
     }
   }

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Typography from '@mui/material/Typography'
 import { RegistrationForm } from '../../components/form-components'
 import { RegisterConfirmModal } from '../../components/modals'
@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom'
 import { API_URL } from '../../api'
 import styles from '../Login/styles.module.scss'
 import { useDocumentTitle } from 'usehooks-ts'
+import { toast } from 'react-toastify'
 
 const Register = () => {
   const [isError, setIsError] = useState(false)
@@ -39,7 +40,6 @@ const Register = () => {
       )
       if (response.status != 201 && !response.ok) {
         setIsError(true)
-        console.log('Error');
       } else {
         setEmail(data.email)
         setOpenModal(true)
@@ -54,6 +54,15 @@ const Register = () => {
     navigate('/login')
   }
 
+  useEffect(() => {
+    if (isError) {
+      toast.error('Registration failed. Please try again later. Or with a different email', { autoClose: false, position: 'top-center' })
+      setTimeout(() => {
+        setIsError(false)
+      }, 3000)
+    }
+  }, [isError])
+
   useDocumentTitle('Register')
   return (
     <div className={styles.container}>
@@ -67,7 +76,6 @@ const Register = () => {
         onSubmit={handleSubmit}
       />
       {/* @TODO: send toast with error message */}
-      {isError && <div>Error</div>}
       <RegisterConfirmModal
         open={openModal}
         onClose={handleModalClose}

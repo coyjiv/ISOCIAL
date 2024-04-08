@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import { profileTabs } from '../../data/profileTabs';
 import { profileTabsStyles } from './styles';
 import { Container } from '@mui/material';
@@ -6,26 +5,34 @@ import { useSearchParams } from 'react-router-dom';
 import { Box } from '@mui/material';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
+import TabPanel from '../../components/TabPanel';
+import { a11yProps } from '../../helpers/a11y';
+import { idFromTabLabel } from '../../helpers/misc';
+import PropTypes from 'prop-types';
 
 const ProfileTabs = () => {
   const [searchParams, setSearchParams] = useSearchParams({ tab: profileTabs[0].label });
 
   const handleChange = (event, newValue) => {
     const tab = profileTabs[newValue].label;
-    setSearchParams({ tab: tab });
+    setSearchParams((currentParams) => {
+      const newParams = new URLSearchParams(currentParams);
+      newParams.set('tab', tab);
+      return newParams;
+    });
   };
 
-  const idFromTabLabel = (tabLabel) => parseInt(profileTabs.find(tab => tab.label === tabLabel).id) - 1;
+  const value = idFromTabLabel(searchParams.get('tab'), profileTabs)
 
   return (
     <Box sx={{ width: '100%' }}>
       <Container maxWidth={'lg'}>
-        <Tabs sx={profileTabsStyles} value={idFromTabLabel(searchParams.get('tab'))} onChange={handleChange} aria-label="profile tabs">
+        <Tabs sx={profileTabsStyles} value={value} onChange={handleChange} aria-label="profile tabs">
           {profileTabs.map((tab, index) => <Tab sx={{ textTransform: 'capitalize' }} key={index} label={tab.label} {...a11yProps(index)} />)}
         </Tabs>
       </Container>
       {profileTabs.map((tab, index) => (
-        <TabPanel key={index} value={idFromTabLabel(searchParams.get('tab'))} index={index}>
+        <TabPanel key={index} value={idFromTabLabel(searchParams.get('tab'), profileTabs)} index={index}>
           <tab.component />
         </TabPanel>
       ))}
@@ -33,39 +40,8 @@ const ProfileTabs = () => {
   );
 }
 
+ProfileTabs.propTypes = {
+  id: PropTypes.number
+}
+
 export default ProfileTabs
-
-
-
-function TabPanel(props) {
-  const { children, value, index, ...other } = props;
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`profile-tabpanel-${index}`}
-      aria-labelledby={`profile-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box>
-          {children}
-        </Box>
-      )}
-    </div>
-  );
-}
-
-TabPanel.propTypes = {
-  children: PropTypes.node,
-  index: PropTypes.number.isRequired,
-  value: PropTypes.number.isRequired,
-};
-
-function a11yProps(index) {
-  return {
-    id: `profile-tab-${index}`,
-    'aria-controls': `profile-tabpanel-${index}`,
-  };
-}

@@ -17,7 +17,7 @@ const FriendsUserProfileSection = () => {
   }
 
   return (
-    <FriendsUserProfileContainer>
+		<FriendsUserProfileContainer >
       <ProfileLayout id={id} />
     </FriendsUserProfileContainer>
   );
