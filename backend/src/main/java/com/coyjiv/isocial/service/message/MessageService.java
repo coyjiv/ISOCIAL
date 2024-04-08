@@ -4,6 +4,7 @@ import com.coyjiv.isocial.auth.EmailPasswordAuthProvider;
 import com.coyjiv.isocial.dao.MessageRepository;
 import com.coyjiv.isocial.domain.Chat;
 import com.coyjiv.isocial.domain.Message;
+import com.coyjiv.isocial.domain.MessageStatus;
 import com.coyjiv.isocial.dto.request.message.CreateMessageRequestDto;
 import com.coyjiv.isocial.dto.request.message.UpdateMessageRequestDto;
 import com.coyjiv.isocial.dto.respone.message.MessageNotificationDto;
@@ -24,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -35,25 +37,31 @@ public class MessageService implements IMessageService {
   private final CreateMessageRequestMapper createMessageRequestMapper;
   private final MessageNotificationDtoMapper messageNotificationDtoMapper;
   private final EmailPasswordAuthProvider authProvider;
-
+  private final EmailPasswordAuthProvider provider;
   private final IWebsocketService websocketChatMessageService;
 
-  @Transactional(readOnly = true)
+  @Transactional
   @Override
   public PageWrapper<MessageNotificationDto> findAllActiveByChatId(int page, int quantity, Long chatId)
           throws EntityNotFoundException, IllegalAccessException {
+    Long requestOwnerId = provider.getAuthenticationPrincipal();
     Sort sort = Sort.by(Sort.Direction.DESC, "creationDate");
     Pageable pageable = PageRequest.of(page, quantity, sort);
 
     Chat chat = chatService.findActiveById(chatId);
 
-    Page<Message> messages =  messageRepository.findAllActiveByChatId(chat.getId(), pageable);
-
+    Page<Message> messages = messageRepository.findAllActiveByChatId(chat.getId(), pageable);
+    messages.forEach(m -> {
+      if (!Objects.equals(m.getSenderId(), requestOwnerId) && m.getStatus() != MessageStatus.SEEN) {
+        m.setStatus(MessageStatus.SEEN);
+      }
+    });
+    messageRepository.saveAll(messages);
     boolean hasNext = messages.hasNext();
 
     List<MessageNotificationDto> dtos = messages.map(messageNotificationDtoMapper::convertToDto).toList();
 
-    return new PageWrapper<>(dtos,hasNext);
+    return new PageWrapper<>(dtos, hasNext);
   }
 
   @Transactional(readOnly = true)
@@ -79,6 +87,7 @@ public class MessageService implements IMessageService {
     MessagesUtils.validateFirstMessage(createMessageRequestDto);
 
     Message message = createMessageRequestMapper.convertToEntity(createMessageRequestDto);
+    message.setStatus(MessageStatus.SENT);
     message.setChatId(chatId);
 
     Chat chat = chatService.updateLastMessage(chatId,
@@ -111,6 +120,33 @@ public class MessageService implements IMessageService {
       throw new EntityNotFoundException("Message not found");
     }
   }
+
+  @Override
+  @Transactional(readOnly = true)
+  public PageWrapper<MessageNotificationDto> search(String term, int page, int size) {
+    Sort sort = Sort.by(Sort.Direction.DESC, "creationDate");
+    Pageable pageable = PageRequest.of(page, size, sort);
+    Page<Message> messages = messageRepository.search(term, pageable, authProvider.getAuthenticationPrincipal());
+
+    boolean hasNext = messages.hasNext();
+
+    List<MessageNotificationDto> dtos = messages.map(messageNotificationDtoMapper::convertToDto).toList();
+
+    return new PageWrapper<>(dtos, hasNext);
+  }
+
+  @Override
+  @Transactional(readOnly = true)
+  public Long countUnreadMessages() {
+    return messageRepository.countUnreadMessages(authProvider.getAuthenticationPrincipal());
+  }
+
+  @Override
+  @Transactional
+  public void readMessages(Long chatId) {
+    messageRepository.readAllMessages(chatId, authProvider.getAuthenticationPrincipal());
+  }
+
 
   @Transactional
   @Override

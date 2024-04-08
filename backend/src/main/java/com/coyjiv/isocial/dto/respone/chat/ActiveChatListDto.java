@@ -21,4 +21,5 @@ public class ActiveChatListDto {
   private Date lastMessageDate;
   private String avatarUrl;
   private UserActivityStatus receiverStatus;
+  private Long unreadMessages;
 }
