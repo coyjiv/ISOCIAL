@@ -91,7 +91,7 @@ export const ProfileLayout = ({ id }) => {
                             </Typography>
                             <Typography variant='h5' sx={{ '& > a:hover': { textDecoration: 'underline' }, fontWeight: 500, color: theme.palette.greyColor, fontSize: 15, textAlign: (isMobile || isLargeMobile) ? 'center' : 'left' }} style={{ marginTop: '8px' }}>
                                 <Link to={'?tab=Friends'}>
-                                    friends: {profile?.friendsCount} | last seen {lastSeen}
+                                    friends: {profile?.friendsCount} {lastSeen && profile?.lastSeen && `| last seen ${lastSeen}`}
                                 </Link>
                             </Typography>
                         </Stack>

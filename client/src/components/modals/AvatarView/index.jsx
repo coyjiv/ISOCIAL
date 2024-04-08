@@ -84,7 +84,7 @@ const AvatarView = ({ onClose, open }) => {
             }
         }} onClick={handleClose} open={open}>
             {!isLoading && <div className={styles.avatarWrapper}>
-                <img width={300} height={300} src={profile?.avatarsUrl[selectedAvatar] ?? placeholderAvatar(profile?.gender, profile?.firstName, profile?.lastName)} alt="avatar" />
+                <img src={profile?.avatarsUrl[selectedAvatar] ?? placeholderAvatar(profile?.gender, profile?.firstName, profile?.lastName)} alt="avatar" />
             </div>}
             <button className={leftArrow} disabled={selectedAvatar === 0} onClick={handlePrev}><FaChevronLeft /></button>
             <button className={rightArrow} disabled={selectedAvatar === profile?.avatarsUrl.length - 1} onClick={handleNext}><FaChevronRight /></button>
