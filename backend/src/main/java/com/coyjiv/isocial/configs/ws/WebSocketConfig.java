@@ -34,7 +34,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
   @Override
   public void registerStompEndpoints(StompEndpointRegistry registry) {
-    // registry.addEndpoint("/api/ws").withSockJS().setSessionCookieNeeded(false);
     registry.addEndpoint("/api/ws").setAllowedOriginPatterns("http://localhost:5173", "http://localhost:9000", "https://isocial.site", "https://www.isocial.site")
           .withSockJS().setSessionCookieNeeded(false);
   }
@@ -50,7 +49,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     return false;
   }
-
 
 }
 
