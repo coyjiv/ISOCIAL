@@ -28,7 +28,8 @@ const Comment = ({
     edited,
     liked,
     authorPremium,
-    onCommentDelete
+    onCommentDelete,
+                     onLike
 }) => {
     //like ref
     const hoverRef = useRef(null)
@@ -52,6 +53,7 @@ const Comment = ({
         setOptimisticLiked(!optimisticLiked)
         setOptimisticLikesCount(optimisticLiked ? optimisticLikesCount - 1 : optimisticLikesCount + 1)
         toggleLike({ entityId: id, entityType: 'COMMENT' })
+        onLike(id)
     }
 
     const handleDeleteComment = async (commentId) => {
@@ -110,7 +112,8 @@ Comment.propTypes = {
     authorPremium: PropTypes.bool,
     commenterId: PropTypes.number,
     onCommentChange: PropTypes.func,
-    onCommentDelete: PropTypes.func
+    onCommentDelete: PropTypes.func,
+    onLike: PropTypes.func
 }
 
 export default Comment

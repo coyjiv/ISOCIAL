@@ -99,6 +99,7 @@ const withWebsocket = (WrappedComponent) => {
 
             dispatch(notificationApi.util.prefetch('getNotification', { recieverId: localStorage.getItem('userId'), page: 0, quantity: 50 }, { force: true }))
             dispatch(notificationApi.util.invalidateTags(['Notifications']))
+            dispatch(notificationApi.util.invalidateTags(['Friends']))
             if (settings?.receiveNotifications) {
                 toast.info(<ToastMessage link={`/friends/requests`} msg={body} type={"FRIEND"} />,
                     {
