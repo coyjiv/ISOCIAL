@@ -109,11 +109,11 @@ public class FavoriteService implements IFavoriteService {
 
   @Override
   @Transactional
-  public void delete(Long postId, boolean noPermission) throws IllegalAccessException {
+  public void delete(Long postId) {
     Optional<Favorite> favoriteToDeactivate = findActiveBySelectorIdPostId(postId);
     if (favoriteToDeactivate.isPresent()) {
       Favorite favorite = favoriteToDeactivate.get();
-      validateFavoriteOwner(favorite.getSelectorId(), noPermission);
+
       favorite.setActive(false);
       favoriteRepository.save(favorite);
     }
@@ -149,9 +149,9 @@ public class FavoriteService implements IFavoriteService {
   }
 
 
-  private void validateFavoriteOwner(Long selectorId, boolean noPermission) throws IllegalAccessException {
+  private void validateFavoriteOwner(Long selectorId) throws IllegalAccessException {
     Long requestOwner = emailPasswordAuthProvider.getAuthenticationPrincipal();
-    if (!Objects.equals(selectorId, requestOwner) && noPermission) {
+    if (!Objects.equals(selectorId, requestOwner) ) {
       throw new IllegalAccessException("User have no authorities to do this request.");
     }
   }

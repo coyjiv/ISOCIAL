@@ -6,6 +6,7 @@ import com.coyjiv.isocial.dao.LikeRepository;
 import com.coyjiv.isocial.dao.FriendRepository;
 import com.coyjiv.isocial.dao.PostRepository;
 import com.coyjiv.isocial.dao.UserRepository;
+import com.coyjiv.isocial.dao.FavoriteRepository;
 import com.coyjiv.isocial.domain.Friend;
 import com.coyjiv.isocial.domain.Post;
 import com.coyjiv.isocial.domain.PrivacySetting;
@@ -61,7 +62,7 @@ public class PostService implements IPostService {
   private final INotificationService notificationService;
   private final CommentRepository commentRepository;
   private final IUserPreferenceService userPreferenceService;
-
+  private final FavoriteRepository favoriteRepository;
   private final LikeRepository likeRepository;
   private final ListSubscriberService listSubscriberService;
 
@@ -184,13 +185,9 @@ public class PostService implements IPostService {
       validateRequestOwner(post.getAuthorId());
       post.setActive(false);
       postRepository.save(post);
-      favoriteService.findActiveByPostId(id).forEach(entry -> {
-        try {
-          favoriteService.delete(entry.getId(), false);
-        } catch (IllegalAccessException | RequestValidationException e) {
-          Sentry.captureException(e);
-          throw new RuntimeException(e);
-        }
+      favoriteRepository.findAllActiveByPostId(id).forEach(entry -> {
+        entry.setActive(false);
+        favoriteRepository.save(entry);
       });
       commentRepository.findAllActiveByPostIdNonPageable(id).forEach(entry -> {
         entry.setActive(false);
@@ -209,13 +206,9 @@ public class PostService implements IPostService {
           en.setActive(false);
           commentRepository.save(en);
         });
-        favoriteService.findActiveByPostId(entry.getId()).forEach(en -> {
-          try {
-            favoriteService.delete(en.getId(), false);
-          } catch (IllegalAccessException | RequestValidationException e) {
-            Sentry.captureException(e);
-            throw new RuntimeException(e);
-          }
+        favoriteRepository.findAllActiveByPostId(entry.getId()).forEach(en -> {
+          en.setActive(false);
+          favoriteRepository.save(en);
         });
         likeRepository.findByEntityIdAndEntityTypeNonPageable(entry.getId(), POST).forEach(e -> {
           likeRepository.deleteByUserIdAndEntityIdAndEntityType(e.getUserId(), e.getEntityId(), POST);
