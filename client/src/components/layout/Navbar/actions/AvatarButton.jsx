@@ -39,6 +39,7 @@ const AvatarButton = () => {
         localStorage.removeItem("access");
         localStorage.removeItem("refresh");
         localStorage.removeItem("userId");
+        sessionStorage.removeItem("postContent")
         navigate("/login");
     }
 

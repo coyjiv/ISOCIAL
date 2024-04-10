@@ -26,7 +26,7 @@ const Posts = () => {
 
   // eslint-disable-next-line no-unused-vars
   const { data: profile, isLoading } = useGetProfileByIdQuery(fetchProfileId);
-  const { data: loggedUserProfile, isLoading: isLoggedUserLoading } = useGetProfileByIdQuery(localStorage.getItem('userId'))
+  const { data: loggedUserProfile } = useGetProfileByIdQuery(localStorage.getItem('userId'))
   // const { data: subscribersCount } = useSubscribersCountQuery(fetchProfileId);
 
   const [isCreatePostModalOpen, setIsCreatePostModalOpen] = useState(false)
@@ -60,7 +60,9 @@ const Posts = () => {
   }
 
   const addNewPost = (post) => {
-    if (post) setPostsData([post, ...postsData])
+    if (fetchProfileId === localStorage.getItem('userId')) {
+      if (post) setPostsData([post, ...postsData])
+    }
   }
 
   const removePost = (postId) => {
@@ -109,7 +111,7 @@ const Posts = () => {
               </div>
             </Grid>
             <Grid item xs={12} sm={6} md={7}>
-              {(!isLoggedUserLoading && loggedUserProfile?.id === +localStorage.getItem('userId')) && <div className={classNames(styles.card, styles.mt10)}>
+              {(fetchProfileId === localStorage.getItem('userId')) && <div className={classNames(styles.card, styles.mt10)}>
                 <div onClick={triggerPostModal}>
                   <Stack width={'100%'} gap={2} direction={'row'}>
                     <Avatar src={loggedUserProfile?.avatarsUrl[0] ?? placeholderAvatar(loggedUserProfile?.gender, loggedUserProfile?.firstName, loggedUserProfile?.lastName)} sx={{ width: 40, height: 'auto' }} />
