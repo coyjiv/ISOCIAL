@@ -53,6 +53,7 @@ const AllFriends = () => {
   };
 
   const handleShowUser = (id) => {
+    console.log("id", id);
     navigate(`/profile/${id}`);
   };
 
@@ -131,8 +132,8 @@ const AllFriends = () => {
                 onDelete(id);
               }}
               // onAddFriend={(...args) => { onAddFriend(...args); onDelete(id) }}
-              onClick={() => handleShowUser(id)}
-              // onDontShowClick={(...args) => { onDontShowClick(...args); onDelete(id) }}
+              onClick={(e) => { e.stopPropagation(); handleShowUser(id) }}
+            // onDontShowClick={(...args) => { onDontShowClick(...args); onDelete(id) }}
             />
           ),
         )}

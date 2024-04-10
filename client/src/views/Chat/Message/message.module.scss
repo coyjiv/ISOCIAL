@@ -18,12 +18,21 @@
 }
 
 .messageText {
+  position: relative;
   margin: 5px;
   padding: 10px;
   border-radius: 20px;
+  padding-right: 65px;
   background-color: rgba(colors.$primaryButtonBackground, 0.7);
   color: colors.$white;
   font-family: 'Segoe UI', sans-serif;
+
+  > div {
+    position: absolute;
+    right: 12px;
+    bottom: 0;
+    display: flex;
+  }
 }
 
 .user {
@@ -32,11 +41,8 @@
 }
 
 .messageSentAt {
-  position: absolute;
-  left: -90px;
-  bottom: 6px;
   font-size: 12px;
-  color: colors.$black;
+  color: colors.$white;
 }
 
 .bot {

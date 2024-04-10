@@ -79,10 +79,18 @@ const SameBirthplace = () => {
                 loader={<div style={{ display: 'flex', width: '100%' }}><FriendCardSkeleton variant='horizontal' /></div>}
                 className={styles.infiniteWrapper}
             >
-                {friends?.map(({ id, firstName, lastName, avatarsUrl, birthPlace }) => (
+                {friends?.map(({ id, firstName, lastName, avatarsUrl, birthPlace, chatId, activityStatus }) => (
                     <FriendCard
                         variant={'horizontal'}
                         key={id}
+                        friend={{
+                            id,
+                            firstName,
+                            lastName,
+                            avatarsUrl,
+                            chatId,
+                            status: activityStatus,
+                        }}
                         id={id}
                         fullName={`${firstName} ${lastName}`}
                         images={avatarsUrl}

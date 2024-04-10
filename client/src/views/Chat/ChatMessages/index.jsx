@@ -39,6 +39,14 @@ const ChatMessages = ({ pendingChat = false }) => {
   };
 
   useEffect(() => {
+    if (!selectedChat) return;
+    const interval = setInterval(() => {
+      dispatch(fetchChatMessages({ chatId: selectedChat?.id, page: messages.page }));
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [dispatch, selectedChat?.id, messages.page, selectedChat]);
+
+  useEffect(() => {
     scrollToBottom();
   }, [messages.data]);
 

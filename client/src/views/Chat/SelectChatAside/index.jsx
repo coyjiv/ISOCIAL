@@ -40,6 +40,7 @@ const SelectChatAside = ({ chats, input, hasMore, fetchMoreData, filteredChats, 
                                 chatName={chat?.chatName}
                                 lastMessage={chat?.lastMessage}
                                 lastMessageDate={chat?.lastMessageDate}
+                                unreadMessages={chat?.unreadMessages}
                                 chatAvatar={userAvatar({ firstName: chat?.chatName.split(' ')[0], lastName: chat?.chatName.split(' ')[1], avatarsUrl: [chat?.avatarUrl] })}
                             />
                         ))}
@@ -59,6 +60,7 @@ const SelectChatAside = ({ chats, input, hasMore, fetchMoreData, filteredChats, 
                                 chatName={chat?.chatName}
                                 lastMessage={chat?.lastMessage}
                                 lastMessageDate={chat?.lastMessageDate}
+                                unreadMessages={chat?.unreadMessages}
                                 chatAvatar={userAvatar({ firstName: chat?.chatName.split(' ')[0], lastName: chat?.chatName.split(' ')[1], avatarsUrl: [chat?.avatarUrl] })}
                             />
                         ))}

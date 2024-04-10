@@ -11,8 +11,8 @@ const fetchChatMessages = createAsyncThunk(
   }
 )
 
-const fetchChats = createAsyncThunk('chat/fetchChats', async ({ page }) => {
-  const response = await instance.get(`chats?page=${page}&quantity=30`)
+const fetchChats = createAsyncThunk('chat/fetchChats', async ({ page, quantity=30 }) => {
+  const response = await instance.get(`chats?page=${page}&quantity=${quantity}`)
   return response.data
 })
 
@@ -46,6 +46,24 @@ const deleteChat = createAsyncThunk('chat/deleteChat', async ({ chatId }) => {
   return response.data
 })
 
+const updateChats = createAsyncThunk('chat/updateChats', async (chatIds) => {
+  const updatedChatsInfo = await Promise.all(
+    chatIds.map((chatId) => instance.get(`chats/${chatId}`))
+  )
+  return updatedChatsInfo.map((chat) => chat.data)
+})
+
+const readMessage = createAsyncThunk(
+  'chat/readMessage',
+  async ({ messageId }) => {
+    const response = await instance.post(`messages/read?messageId=${messageId}`)
+    if(response.status !== 200) {
+      throw new Error('Failed to read message')
+    }
+    return messageId
+  }
+)
+
 export {
   fetchChatMessages,
   fetchChats,
@@ -53,4 +71,6 @@ export {
   deleteMessage,
   deleteChat,
   fetchChatInfo,
+  updateChats,
+  readMessage,
 }

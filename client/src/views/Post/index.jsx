@@ -6,6 +6,7 @@ import PostComponent from '../../components/Post/Post';
 import { Container } from '@mui/system';
 import styles from './postview.module.scss'
 import { ArrowBack } from '@mui/icons-material';
+import { userAvatar } from '../../data/placeholders';
 
 const PostView = () => {
     const { id } = useParams()
@@ -22,7 +23,9 @@ const PostView = () => {
                     post && <PostComponent
                         postId={post?.id}
                         authorId={post?.authorId}
-                        avatarUrl={post?.authorAvatar}
+                        avatarUrl={userAvatar({
+                            avatarsUrl: [post?.authorAvatarUrl],
+                        }, post?.authorFullName?.split(' ')?.[0], post?.authorFullName?.split(' ')?.[1])}
                         username={post?.authorFullName}
                         creationDate={post?.creationDate}
                         textContent={post?.textContent}

@@ -27,4 +27,6 @@ public interface IMessageService {
   void readMessages(Long chatId);
 
   void delete(Long id) throws IllegalAccessException, EntityNotFoundException;
+
+  void readOneMessage(Long messageId);
 }

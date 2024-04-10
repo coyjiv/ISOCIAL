@@ -15,6 +15,7 @@ import com.coyjiv.isocial.domain.UserPreference;
 import com.coyjiv.isocial.dto.request.post.PostRequestDto;
 import com.coyjiv.isocial.dto.request.post.RePostRequestDto;
 import com.coyjiv.isocial.dto.request.post.UpdatePostRequestDto;
+import com.coyjiv.isocial.dto.request.postseen.PostSeenRequestDto;
 import com.coyjiv.isocial.dto.respone.favorite.FavoriteResponseDto;
 import com.coyjiv.isocial.dto.respone.page.PageWrapper;
 import com.coyjiv.isocial.dto.respone.post.PostResponseDto;
@@ -23,6 +24,7 @@ import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.exceptions.RequestValidationException;
 import com.coyjiv.isocial.service.favorite.IFavoriteService;
 import com.coyjiv.isocial.service.notifications.INotificationService;
+import com.coyjiv.isocial.service.postseen.IPostSeenService;
 import com.coyjiv.isocial.service.userpreference.IUserPreferenceService;
 import com.coyjiv.isocial.service.websocket.IWebsocketService;
 import com.coyjiv.isocial.service.subscriber.ListSubscriberService;
@@ -67,6 +69,7 @@ public class PostService implements IPostService {
   private final FavoriteRepository favoriteRepository;
   private final LikeRepository likeRepository;
   private final ListSubscriberService listSubscriberService;
+  private final IPostSeenService postSeenService;
 
   @Transactional(readOnly = true)
   @Override
@@ -284,6 +287,7 @@ public class PostService implements IPostService {
             .findByUserIdPostId(emailPasswordAuthProvider.getAuthenticationPrincipal(), post.getId()).isEmpty()
     ).toList());
 
+    newShuffledPosts.forEach(post -> postSeenService.create(new PostSeenRequestDto(post.getId())));
     Collections.shuffle(newShuffledPosts);
 
     System.out.println("shuffledPosts");

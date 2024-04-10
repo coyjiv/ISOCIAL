@@ -80,11 +80,19 @@ const SameEducation = () => {
                 loader={<div style={{ display: 'flex', width: '100%' }}><FriendCardSkeleton variant='horizontal' /></div>}
                 className={styles.infiniteWrapper}
             >
-                {friends?.map(({ id, firstName, lastName, avatarsUrl, studyPlace }) => (
+                {friends?.map(({ id, firstName, lastName, avatarsUrl, studyPlace, chatId, activityStatus }) => (
                     <FriendCard
                         variant={'horizontal'}
                         key={id}
                         id={id}
+                        friend={{
+                            id,
+                            firstName,
+                            lastName,
+                            avatarsUrl,
+                            chatId,
+                            status: activityStatus,
+                        }}
                         fullName={`${firstName} ${lastName}`}
                         images={avatarsUrl}
                         additionalInfo={`Studied at ${studyPlace}`}

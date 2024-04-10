@@ -6,7 +6,10 @@ import ToastMessage from "../components/MessageToast/MessageToast.jsx";
 import { addMessage, addWSMessage } from "../store/chatSlice.js";
 import { userAvatar } from "../data/placeholders.js";
 import { Avatar } from "@mui/material";
-import { fetchChats } from "../store/actions/chat.js";
+import {
+    fetchChats,
+    updateChats
+} from "../store/actions/chat.js";
 import { notificationApi } from "../store/services/notification.js";
 import { useGetSettingsQuery } from "../store/services/settingsService.js";
 import { instance } from "../api/index.js";
@@ -82,6 +85,8 @@ const withWebsocket = (WrappedComponent) => {
             } else if (!chats.data.find(chat => chat.id === body.chatId)) {
                 dispatch(fetchChats({ page: 0 }))
             }
+            dispatch(updateChats(chats.data.map(chat => chat.id)))
+            // dispatch(fetchChats({ page: 0, quantity: chats.data.length }))
             if (settings?.receiveNotifications) {
                 toast.info(<ToastMessage link={`/chats/${body.chatId}`} msg={body} type={"MESSAGE"} />,
                     {

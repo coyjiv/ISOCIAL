@@ -25,7 +25,7 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
   Optional<Message> findLastActiveById(@Param("chatId") Long chatId);
 
   @Query("SELECT m FROM Message m JOIN Chat c ON m.chatId = c.id JOIN c.users "
-         + "u WHERE u.id = :requestOwnerId AND CONCAT('%',LOWER(m.text),'%') LIKE CONCAT('%',LOWER(:searchTerm),'%') ")
+    + "u WHERE u.id = :requestOwnerId AND CONCAT('%',LOWER(m.text),'%') LIKE CONCAT('%',LOWER(:searchTerm),'%') ")
   Page<Message> search(@Param("searchTerm") String searchTerm, Pageable pageable, Long requestOwnerId);
 
   @Query("SELECT count(m) FROM Message m WHERE m.senderId != :userId AND m.status = 'SENT'")
@@ -36,9 +36,15 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
                                   @Param("chatId") Long chatId);
 
   @Query("UPDATE Message m SET m.status = 'SEEN' WHERE m.status = 'SENT' AND m.chatId = :chatId "
-         + "AND m.senderId != :userId")
+    + "AND m.senderId != :userId")
   @Modifying
   void readAllMessages(@Param("chatId") Long chatId,
                        @Param("userId") Long userId);
+
+  @Query("UPDATE Message m SET m.status = 'SEEN' WHERE m.id = :messageId AND m.status = 'SENT'"
+    + "AND m.senderId != :userId")
+  @Modifying
+  void readOneMessage(@Param("messageId") Long messageId,
+                      @Param("userId") Long userId);
 
 }

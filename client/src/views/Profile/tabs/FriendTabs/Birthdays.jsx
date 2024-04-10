@@ -38,9 +38,17 @@ const Birthdays = () => {
     }
     return (
         <div className={styles.infiniteWrapper}>
-            {data?.map(({ id, firstName, lastName, avatarsUrl, dateOfBirth }) => (
+            {data?.map(({ id, firstName, lastName, avatarsUrl, dateOfBirth, chatId, activityStatus }) => (
                 <FriendCard
                     variant={'horizontal'}
+                    friend={{
+                        id,
+                        firstName,
+                        lastName,
+                        avatarsUrl,
+                        chatId,
+                        status: activityStatus,
+                    }}
                     key={id}
                     id={id}
                     fullName={`${firstName} ${lastName}`}

@@ -147,6 +147,12 @@ public class MessageService implements IMessageService {
     messageRepository.readAllMessages(chatId, authProvider.getAuthenticationPrincipal());
   }
 
+  @Override
+  @Transactional
+  public void readOneMessage(Long messageId) {
+    messageRepository.readOneMessage(messageId, authProvider.getAuthenticationPrincipal());
+  }
+
 
   @Transactional
   @Override

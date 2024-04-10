@@ -4,7 +4,9 @@ import {
   fetchChatInfo,
   fetchChatMessages,
   fetchChats,
+  readMessage,
   sendMessage,
+  updateChats,
 } from './actions/chat'
 
 const chatSlice = createSlice({
@@ -17,6 +19,7 @@ const chatSlice = createSlice({
       error: null,
       status: 'idle',
       page: 0,
+      unread: 0,
     },
     messages: [],
     selectedChatMessages: {
@@ -118,25 +121,55 @@ const chatSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    // builder.addCase(fetchChatMessages.fulfilled, (state, action) => {
+    //   state.selectedChatMessages.isLoading = false
+    //   state.selectedChatMessages.hasNext = action.payload.hasNext
+
+    //   //check if already have messages with this id
+    //   const newMessages = action.payload.content.filter(
+    //     (message) =>
+    //       !state.selectedChatMessages.data.some(
+    //         (oldMessage) => oldMessage.id === message.id
+    //       )
+    //   )
+    //   state.selectedChatMessages.data = [
+    //     ...state.selectedChatMessages.data,
+    //     ...newMessages,
+    //   ]
+
+    //   state.selectedChatMessages.error = null
+    //   state.selectedChatMessages.status = 'completed'
+    // })
     builder.addCase(fetchChatMessages.fulfilled, (state, action) => {
-      state.selectedChatMessages.isLoading = false
-      state.selectedChatMessages.hasNext = action.payload.hasNext
-
-      //check if already have messages with this id
-      const newMessages = action.payload.content.filter(
-        (message) =>
-          !state.selectedChatMessages.data.some(
-            (oldMessage) => oldMessage.id === message.id
-          )
-      )
-      state.selectedChatMessages.data = [
-        ...state.selectedChatMessages.data,
-        ...newMessages,
-      ]
-
-      state.selectedChatMessages.error = null
-      state.selectedChatMessages.status = 'completed'
-    })
+      state.selectedChatMessages.isLoading = false;
+      state.selectedChatMessages.hasNext = action.payload.hasNext;
+    
+      // Initialize an array to hold updated data
+      let updatedData = [...state.selectedChatMessages.data];
+    
+      action.payload.content.forEach((newMessage) => {
+        const existingMessageIndex = updatedData.findIndex(
+          (oldMessage) => oldMessage.id === newMessage.id
+        );
+    
+        if (existingMessageIndex !== -1) {
+          // If the message exists, update it
+          updatedData[existingMessageIndex] = {
+            ...updatedData[existingMessageIndex],
+            ...newMessage,
+          };
+        } else {
+          // If the message does not exist, add it to the updated data array
+          updatedData.push(newMessage);
+        }
+      });
+    
+      // Update the state with the modified data
+      state.selectedChatMessages.data = updatedData;
+    
+      state.selectedChatMessages.error = null;
+      state.selectedChatMessages.status = 'completed';
+    });
     builder.addCase(fetchChatMessages.rejected, (state, action) => {
       state.selectedChatMessages.isLoading = false
       state.selectedChatMessages.hasNext = false
@@ -159,6 +192,7 @@ const chatSlice = createSlice({
       ].filter((v, i, a) => a.findIndex((t) => t.id === v.id) === i)
       state.chats.error = null
       state.chats.status = 'completed'
+      state.chats.unread = action.payload.unread
     })
     builder.addCase(fetchChats.rejected, (state, action) => {
       state.chats.isLoading = false
@@ -201,6 +235,19 @@ const chatSlice = createSlice({
         state.selectedChat = action.payload
       })
       .addCase(fetchChatInfo.rejected, () => {})
+      .addCase(updateChats.fulfilled, (state, action) => {
+        state.chats.data = action.payload
+      })
+      .addCase(updateChats.rejected, () => {})
+      .addCase(readMessage.fulfilled, (state, action) => {
+        state.selectedChatMessages.data = state.selectedChatMessages.data.map(
+          (message) =>
+            message.id === action.payload
+              ? { ...message, status: 'READ' }
+              : message
+        )
+      })
+        
   },
 })
 

@@ -92,7 +92,7 @@ const Posts = () => {
                 {profile?.dateOfBirth && <Typography marginTop={2}><BsFillCake2Fill style={{ marginRight: '5px' }} /> {yearsOld} years old</Typography>}
                 {/* <Typography marginTop={2}>Subscribers : {subscribersCount}</Typography> */}
               </div>
-              <div className={styles.card}>
+              {/* <div className={styles.card}>
                 <div>
                   <Typography fontWeight={900} fontSize={20}>Photos</Typography>
                   <Link to={'?tab=Photos'}><Typography>View all</Typography></Link>
@@ -101,7 +101,7 @@ const Posts = () => {
 
 
                 </div>
-              </div>
+              </div> */}
               <div className={styles.card}>
                 <div>
                   <Typography fontWeight={900} fontSize={20}>Friends</Typography>

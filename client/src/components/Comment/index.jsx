@@ -130,7 +130,7 @@ const CommentActions = ({ anchorEl, setAnchorEl, editComment, deleteComment }) =
                 'aria-labelledby': 'basic-button',
             }}
         >
-            <MenuItem onClick={editComment}>Edit comment</MenuItem>
+            {/* <MenuItem onClick={editComment}>Edit comment</MenuItem> */}
             <MenuItem onClick={deleteComment}>Delete comment</MenuItem>
         </Menu>
     )
