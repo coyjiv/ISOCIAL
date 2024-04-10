@@ -7,12 +7,11 @@ import com.coyjiv.isocial.dao.UserRepository;
 import com.coyjiv.isocial.domain.AbstractEntity;
 import com.coyjiv.isocial.domain.Chat;
 import com.coyjiv.isocial.domain.Message;
-import com.coyjiv.isocial.domain.MessageStatus;
 import com.coyjiv.isocial.domain.User;
 import com.coyjiv.isocial.dto.request.message.CreateMessageRequestDto;
 import com.coyjiv.isocial.dto.respone.chat.ActiveChatDto;
 import com.coyjiv.isocial.dto.respone.chat.ActiveChatListDto;
-import com.coyjiv.isocial.dto.respone.page.PageWrapper;
+import com.coyjiv.isocial.dto.respone.page.ChatPageWrapper;
 import com.coyjiv.isocial.exceptions.ChatAlreadyExistException;
 import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.exceptions.RequestValidationException;
@@ -29,7 +28,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -52,7 +50,7 @@ public class ChatService implements IChatService {
 
   @Transactional(readOnly = true)
   @Override
-  public PageWrapper<ActiveChatListDto> findAllActive(int page, int quantity) {
+  public ChatPageWrapper<ActiveChatListDto> findAllActive(int page, int quantity) {
     Long requestOwnerId = authProvider.getAuthenticationPrincipal();
 
     Sort sort = Sort.by(Sort.Direction.DESC, "lastModifiedDate");
@@ -65,19 +63,21 @@ public class ChatService implements IChatService {
 
     boolean hasNext = chats.hasNext();
 
-    return new PageWrapper<>(dtos, hasNext);
+    Long unread = messageRepository.countUnreadMessages(requestOwnerId);
+
+    return new ChatPageWrapper<>(dtos, hasNext, unread);
 
   }
 
   @Transactional(readOnly = true)
   @Override
-  public ActiveChatDto findActiveDtoById(Long id)
+  public ActiveChatListDto findActiveDtoById(Long id)
     throws IllegalAccessException, EntityNotFoundException {
     Long requestOwnerId = authProvider.getAuthenticationPrincipal();
     Chat chat = findActiveById(id);
 
     isRequestOwnerInChat(requestOwnerId, chat);
-    return activeChatDtoMapper.convertToDto(chat);
+    return activeChatListDtoMapper.convertToDto(chat);
 
   }
 

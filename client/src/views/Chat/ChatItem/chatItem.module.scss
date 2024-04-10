@@ -88,3 +88,18 @@
   color: #939090;
   margin-top: auto;
 }
+
+.unreadMessages {
+  position: absolute;
+  right: 50px;
+  bottom: 1.5rem;
+  background-color: colors.$error;
+  color: colors.$white;
+  padding: 2px 5px;
+  border-radius: 50%;
+  font-size: 12px;
+}
+
+.unreadLastMessage {
+  font-weight: 700;
+}

@@ -6,6 +6,8 @@ import com.coyjiv.isocial.dao.LikeRepository;
 import com.coyjiv.isocial.dao.FriendRepository;
 import com.coyjiv.isocial.dao.PostRepository;
 import com.coyjiv.isocial.dao.UserRepository;
+import com.coyjiv.isocial.dao.PostSeenRepository;
+import com.coyjiv.isocial.dao.FavoriteRepository;
 import com.coyjiv.isocial.domain.Friend;
 import com.coyjiv.isocial.domain.Post;
 import com.coyjiv.isocial.domain.PrivacySetting;
@@ -13,6 +15,7 @@ import com.coyjiv.isocial.domain.UserPreference;
 import com.coyjiv.isocial.dto.request.post.PostRequestDto;
 import com.coyjiv.isocial.dto.request.post.RePostRequestDto;
 import com.coyjiv.isocial.dto.request.post.UpdatePostRequestDto;
+import com.coyjiv.isocial.dto.request.postseen.PostSeenRequestDto;
 import com.coyjiv.isocial.dto.respone.favorite.FavoriteResponseDto;
 import com.coyjiv.isocial.dto.respone.page.PageWrapper;
 import com.coyjiv.isocial.dto.respone.post.PostResponseDto;
@@ -21,6 +24,7 @@ import com.coyjiv.isocial.exceptions.EntityNotFoundException;
 import com.coyjiv.isocial.exceptions.RequestValidationException;
 import com.coyjiv.isocial.service.favorite.IFavoriteService;
 import com.coyjiv.isocial.service.notifications.INotificationService;
+import com.coyjiv.isocial.service.postseen.IPostSeenService;
 import com.coyjiv.isocial.service.userpreference.IUserPreferenceService;
 import com.coyjiv.isocial.service.websocket.IWebsocketService;
 import com.coyjiv.isocial.service.subscriber.ListSubscriberService;
@@ -60,10 +64,12 @@ public class PostService implements IPostService {
   private final IWebsocketService websocketService;
   private final INotificationService notificationService;
   private final CommentRepository commentRepository;
+  private final PostSeenRepository postSeenRepository;
   private final IUserPreferenceService userPreferenceService;
-
+  private final FavoriteRepository favoriteRepository;
   private final LikeRepository likeRepository;
   private final ListSubscriberService listSubscriberService;
+  private final IPostSeenService postSeenService;
 
   @Transactional(readOnly = true)
   @Override
@@ -184,13 +190,9 @@ public class PostService implements IPostService {
       validateRequestOwner(post.getAuthorId());
       post.setActive(false);
       postRepository.save(post);
-      favoriteService.findActiveByPostId(id).forEach(entry -> {
-        try {
-          favoriteService.delete(entry.getId(), false);
-        } catch (IllegalAccessException | RequestValidationException e) {
-          Sentry.captureException(e);
-          throw new RuntimeException(e);
-        }
+      favoriteRepository.findAllActiveByPostId(id).forEach(entry -> {
+        entry.setActive(false);
+        favoriteRepository.save(entry);
       });
       commentRepository.findAllActiveByPostIdNonPageable(id).forEach(entry -> {
         entry.setActive(false);
@@ -209,13 +211,9 @@ public class PostService implements IPostService {
           en.setActive(false);
           commentRepository.save(en);
         });
-        favoriteService.findActiveByPostId(entry.getId()).forEach(en -> {
-          try {
-            favoriteService.delete(en.getId(), false);
-          } catch (IllegalAccessException | RequestValidationException e) {
-            Sentry.captureException(e);
-            throw new RuntimeException(e);
-          }
+        favoriteRepository.findAllActiveByPostId(entry.getId()).forEach(en -> {
+          en.setActive(false);
+          favoriteRepository.save(en);
         });
         likeRepository.findByEntityIdAndEntityTypeNonPageable(entry.getId(), POST).forEach(e -> {
           likeRepository.deleteByUserIdAndEntityIdAndEntityType(e.getUserId(), e.getEntityId(), POST);
@@ -284,13 +282,22 @@ public class PostService implements IPostService {
     Page<Post> p = postRepository.findRecommendations(ids, pageable);
 
     List<Post> shuffledPosts = new ArrayList<>(p.getContent());
-    Collections.shuffle(shuffledPosts);
+
+    List<Post> newShuffledPosts = new ArrayList<>(shuffledPosts.stream().filter(post -> postSeenRepository
+            .findByUserIdPostId(emailPasswordAuthProvider.getAuthenticationPrincipal(), post.getId()).isEmpty()
+    ).toList());
+
+    newShuffledPosts.forEach(post -> postSeenService.create(new PostSeenRequestDto(post.getId())));
+    Collections.shuffle(newShuffledPosts);
+
+    System.out.println("shuffledPosts");
+    newShuffledPosts.forEach(System.out::println);
 
     boolean hasNext = p.hasNext();
 
-    List<PostResponseDto> dtos = shuffledPosts.stream()
-      .map(postResponseMapper::convertToDto)
-      .collect(Collectors.toList());
+    List<PostResponseDto> dtos = newShuffledPosts.stream()
+            .map(postResponseMapper::convertToDto)
+            .collect(Collectors.toList());
 
     return new PageWrapper<>(dtos, hasNext);
   }

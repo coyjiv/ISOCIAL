@@ -178,7 +178,7 @@ CREATE TABLE notifications
     sender_avatar      VARCHAR(250) NOT NULL,
     sender_name        VARCHAR(250) NOT NULL,
     creation_date      TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    last_modified_date TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    last_modified_date TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
     is_active          BOOLEAN      NOT NULL DEFAULT TRUE
 );
 
@@ -189,7 +189,7 @@ CREATE TABLE post_seen
     user_id            BIGINT    NOT NULL,
     post_id            BIGINT    NOT NULL,
     creation_date      TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    last_modified_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    last_modified_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     is_active          BOOLEAN   NOT NULL DEFAULT TRUE
 );
 

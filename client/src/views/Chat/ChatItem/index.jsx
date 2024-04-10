@@ -20,6 +20,7 @@ const ChatItem = ({
   lastMessage,
   lastMessageDate,
   chatAvatar,
+  unreadMessages
 }) => {
   const pendingChat = useSelector((state) => state.chat.pendingChat);
   // const selectedChat = useSelector((state) => state.chat.selectedChat);
@@ -36,6 +37,11 @@ const ChatItem = ({
       [styles.chatItem]: true,
       [styles.chatItemActive]: isActive,
     });
+
+  const lastMessageStyles = classNames({
+    [styles.lastMessage]: true,
+    [styles.unreadLastMessage]: unreadMessages > 0,
+  });
 
   const navigate = useNavigate();
 
@@ -104,7 +110,10 @@ const ChatItem = ({
         <Avatar src={chatAvatar} alt="avatar" />
         <div className={styles.chatInfoWrapper}>
           <h3>{chatName}</h3>
-          {lastMessage && <p className={styles.lastMessage}>{lastMessage}</p>}
+          {lastMessage && <p className={lastMessageStyles}>{lastMessage}</p>}
+          {unreadMessages > 0 && (
+            <span className={styles.unreadMessages}>{unreadMessages}</span>
+          )}
         </div>
         <div className={styles.chatOptions}>
           <button className={styles.deleteButton} onClick={handleDeleteChat}>
@@ -125,6 +134,7 @@ ChatItem.propTypes = {
   lastMessage: PropTypes.string,
   lastMessageDate: PropTypes.string,
   chatAvatar: PropTypes.string,
+  unreadMessages: PropTypes.number,
 };
 
 export default ChatItem;

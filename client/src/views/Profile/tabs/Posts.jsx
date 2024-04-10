@@ -8,7 +8,7 @@ import { useGetProfileByIdQuery } from '../../../store/services/profileService';
 import { useParams } from 'react-router-dom'
 import styles from '../profile.module.scss'
 import CreatePostModal from '../../../components/modals/CreatePost';
-import { placeholderAvatar } from '../../../data/placeholders';
+import { placeholderAvatar, userAvatar } from '../../../data/placeholders';
 import { useGetPostsByUserQuery } from '../../../store/services/postService';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Post from '../../../components/Post/Post';
@@ -26,7 +26,7 @@ const Posts = () => {
 
   // eslint-disable-next-line no-unused-vars
   const { data: profile, isLoading } = useGetProfileByIdQuery(fetchProfileId);
-  const { data: loggedUserProfile, isLoading: isLoggedUserLoading } = useGetProfileByIdQuery(localStorage.getItem('userId'))
+  const { data: loggedUserProfile } = useGetProfileByIdQuery(localStorage.getItem('userId'))
   // const { data: subscribersCount } = useSubscribersCountQuery(fetchProfileId);
 
   const [isCreatePostModalOpen, setIsCreatePostModalOpen] = useState(false)
@@ -60,7 +60,9 @@ const Posts = () => {
   }
 
   const addNewPost = (post) => {
-    if (post) setPostsData([post, ...postsData])
+    if (fetchProfileId === localStorage.getItem('userId')) {
+      if (post) setPostsData([post, ...postsData])
+    }
   }
 
   const removePost = (postId) => {
@@ -90,7 +92,7 @@ const Posts = () => {
                 {profile?.dateOfBirth && <Typography marginTop={2}><BsFillCake2Fill style={{ marginRight: '5px' }} /> {yearsOld} years old</Typography>}
                 {/* <Typography marginTop={2}>Subscribers : {subscribersCount}</Typography> */}
               </div>
-              <div className={styles.card}>
+              {/* <div className={styles.card}>
                 <div>
                   <Typography fontWeight={900} fontSize={20}>Photos</Typography>
                   <Link to={'?tab=Photos'}><Typography>View all</Typography></Link>
@@ -99,7 +101,7 @@ const Posts = () => {
 
 
                 </div>
-              </div>
+              </div> */}
               <div className={styles.card}>
                 <div>
                   <Typography fontWeight={900} fontSize={20}>Friends</Typography>
@@ -109,7 +111,7 @@ const Posts = () => {
               </div>
             </Grid>
             <Grid item xs={12} sm={6} md={7}>
-              {(!isLoggedUserLoading && loggedUserProfile?.id === +localStorage.getItem('userId')) && <div className={classNames(styles.card, styles.mt10)}>
+              {(fetchProfileId === localStorage.getItem('userId')) && <div className={classNames(styles.card, styles.mt10)}>
                 <div onClick={triggerPostModal}>
                   <Stack width={'100%'} gap={2} direction={'row'}>
                     <Avatar src={loggedUserProfile?.avatarsUrl[0] ?? placeholderAvatar(loggedUserProfile?.gender, loggedUserProfile?.firstName, loggedUserProfile?.lastName)} sx={{ width: 40, height: 'auto' }} />
@@ -130,7 +132,7 @@ const Posts = () => {
                   {postsData?.map((post) => <Post key={post.id}
                     postId={post.id}
                     authorId={post.authorId}
-                    avatarUrl={post.authorAvatar}
+                    avatarUrl={userAvatar(profile)}
                     username={post.authorFullName}
                     creationDate={post.creationDate}
                     textContent={post.textContent}

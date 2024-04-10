@@ -59,7 +59,7 @@ const FriendsAllPage = () => {
   };
 
   return (
-    <Stack width="100%" direction="row" height="calc(100vh - 54px)">
+    <Stack width="100%" direction="row">
       <FriendsSubSidebar
         variant="friends"
         friends={friends}

@@ -66,46 +66,9 @@ VALUES ('Sophia', 'Lee', 'sophia.lee@example.com', 'Seattle', 'strongpassword456
         'Sophias bio information', 'MALE', FALSE, CURRENT_TIMESTAMP,
         '1995-04-01', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, false, null, null, 'OFFLINE', 'Seattle', 'Harvard');
 
--- INSERT INTO public.comments (commenter_id, post_id, text, creation_date, last_modified_date, is_active)
--- VALUES (1, 1, '11111111', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
---
--- INSERT INTO public.comments (commenter_id, post_id, text, creation_date, last_modified_date, is_active)
--- VALUES (2, 2, '2222222222', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, false);
---
--- INSERT INTO public.comments (commenter_id, post_id, text, creation_date, last_modified_date, is_active)
--- VALUES (3, 3, '3333333333', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
---
--- INSERT INTO public.comments (commenter_id, post_id, text, creation_date, last_modified_date, is_active)
--- VALUES (4, 4, '44444444', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, false);
---
--- INSERT INTO public.comments (commenter_id, post_id, text, creation_date, last_modified_date, is_active)
--- VALUES (5, 5, '55555555', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
-
-
 INSERT INTO public.roles (user_id, name)
 VALUES (6, 'ROLE_USER');
 
--- INSERT INTO public.comments (commenter_id, post_id, text, creation_date, last_modified_date, is_active, is_edited)
--- VALUES (1, 1, '11111111', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, false);
---
--- INSERT INTO public.comments (commenter_id, post_id, text, creation_date, last_modified_date, is_active, is_edited)
--- VALUES (2, 2, '2222222222', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, false, false);
---
--- INSERT INTO public.comments (commenter_id, post_id, text, creation_date, last_modified_date, is_active, is_edited)
--- VALUES (3, 3, '3333333333', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, false);
---
--- INSERT INTO public.comments (commenter_id, post_id, text, creation_date, last_modified_date, is_active, is_edited)
--- VALUES (4, 4, '44444444', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, false, false);
---
--- INSERT INTO public.comments (commenter_id, post_id, text, creation_date, last_modified_date, is_active, is_edited)
--- VALUES (5, 5, '55555555', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true, false);
---
--- -- Assuming PostgreSQL syntax, the corrected INSERT statement for posts with empty arrays
--- INSERT INTO public.posts (text_content, attachments, is_edited, user_id, creation_date, last_modified_date, is_active)
--- VALUES ('This is a post by user 1 with no attachments.', ARRAY [], FALSE, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE),
---        ('Another post by user 1, still no attachments here.', ARRAY [], FALSE, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, TRUE);
---
--- -- Posts for user_id 1 with image srcs in attachments
 INSERT INTO public.posts (text_content, attachments, is_edited, user_id, creation_date, last_modified_date, is_active)
 VALUES ('This is a post by user 1 with an image.',
         ARRAY ['https://images.unsplash.com/photo-1696176559416-ef8d7115e3ba?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'],
@@ -166,6 +129,29 @@ VALUES ('This is a post by user 1 with an image.',
         FALSE, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP,
         TRUE);
 --
+
+INSERT INTO public.comments (commenter_id, post_id, text, creation_date, last_modified_date, is_active)
+ VALUES (1, 1, '11111111', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
+
+ INSERT INTO public.comments (commenter_id, post_id, text, creation_date, last_modified_date, is_active)
+ VALUES (2, 2, '2222222222', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, false);
+
+ INSERT INTO public.comments (commenter_id, post_id, text, creation_date, last_modified_date, is_active)
+ VALUES (3, 3, '3333333333', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
+
+ INSERT INTO public.comments (commenter_id, post_id, text, creation_date, last_modified_date, is_active)
+ VALUES (4, 4, '44444444', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, false);
+
+ INSERT INTO public.comments (commenter_id, post_id, text, creation_date, last_modified_date, is_active)
+ VALUES (5, 5, '55555555', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, true);
+
+
+
+
+
+
+
+
 INSERT INTO public.likes (user_id, entity_id, entity_type, creation_date, last_modified_date)
 VALUES (1, 1, 'POST', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
        (2, 1, 'POST', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),

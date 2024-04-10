@@ -7,22 +7,24 @@ import { FriendsUserProfileSection } from "../FriendsUserProfileSection";
 import { useAvailableFriendRequestsQuery } from "../../../store/services/friendService.js";
 
 const FriendsRequestsPage = () => {
-  const [page, setPage] = useState(0)
+  const [page, setPage] = useState(0);
   const { data, isLoading, isSuccess } = useAvailableFriendRequestsQuery(page);
 
-  const [requests, setRequests] = useState([])
+  console.log(data);
+
+  const [requests, setRequests] = useState([]);
 
   useEffect(() => {
     if (isSuccess && data?.content) {
-      setRequests(prevData => {
+      setRequests((prevData) => {
         // Create a new map to ensure uniqueness based on the item's id.
         const dataMap = new Map();
 
         // Fill the map with the previous data.
-        prevData.forEach(item => dataMap.set(item.id, item));
+        prevData.forEach((item) => dataMap.set(item.id, item));
 
         // Add new items to the map, preventing duplicates.
-        data.content.forEach(item => {
+        data.content.forEach((item) => {
           if (!dataMap.has(item.id)) {
             dataMap.set(item.id, item);
           }
@@ -31,28 +33,24 @@ const FriendsRequestsPage = () => {
         // Return a new array created from the map's values.
         return Array.from(dataMap.values());
       });
-
     }
   }, [data, isSuccess]);
 
-
-
   const fetchMoreData = () => {
-    setPage(prevPage => prevPage + 1);
+    setPage((prevPage) => prevPage + 1);
   };
 
   const onRemove = (id) => {
-    setRequests(prevData => {
-      return prevData.filter(item => item.id !== id)
-    })
-  }
-
+    setRequests((prevData) => {
+      return prevData.filter((item) => item.id !== id);
+    });
+  };
 
   return (
-    <Stack width="100%" direction="row" height="calc(100vh - 54px)">
+    <Stack width="100%" direction="row">
       <FriendsSubSidebar
         variant="requests"
-        users={requests}
+        friends={requests}
         heading="Friend Requests"
         subTitle="Friend Requests"
         isLoading={isLoading}

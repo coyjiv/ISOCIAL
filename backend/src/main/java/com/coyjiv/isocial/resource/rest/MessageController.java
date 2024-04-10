@@ -28,33 +28,51 @@ public class MessageController {
   public ResponseEntity<?> findAllActiveByChatId(@RequestParam(name = "page") Integer page,
                                                  @RequestParam(name = "quantity") Integer quantity,
                                                  @RequestParam(name = "chatId") Long chatId)
-          throws EntityNotFoundException, IllegalAccessException {
+    throws EntityNotFoundException, IllegalAccessException {
     return ResponseEntity.ok(messageService.findAllActiveByChatId(page, quantity, chatId));
   }
 
   @GetMapping("/{id}")
   public ResponseEntity<?> findActiveById(@PathVariable(name = "id") Long id)
-          throws EntityNotFoundException, IllegalAccessException {
+    throws EntityNotFoundException, IllegalAccessException {
     return ResponseEntity.ok(messageService.findActiveById(id));
+  }
+
+  @GetMapping("/search")
+  public ResponseEntity<?> search(@RequestParam("term") String term,
+                                  @RequestParam("page") Integer page,
+                                  @RequestParam("size") Integer size) {
+    return ResponseEntity.ok(messageService.search(term, page, size));
+  }
+
+  @GetMapping("/unread")
+  public ResponseEntity<?> countUnread() {
+    return ResponseEntity.ok(messageService.countUnreadMessages());
+  }
+
+  @PostMapping("/read")
+  public ResponseEntity<?> seen(@RequestParam(name = "messageId") Long messageId) {
+    messageService.readOneMessage(messageId);
+    return ResponseEntity.ok().build();
   }
 
   @PostMapping
   public ResponseEntity<?> create(@RequestParam(name = "chatId") Long chatId,
                                   @RequestBody @Valid CreateMessageRequestDto createMessageRequestDto)
-          throws EntityNotFoundException, RequestValidationException, IllegalAccessException {
+    throws EntityNotFoundException, RequestValidationException, IllegalAccessException {
     return ResponseEntity.status(201).body(messageService.create(chatId, createMessageRequestDto));
   }
 
   @PatchMapping("/{id}")
   public ResponseEntity<?> update(@PathVariable(name = "id") Long id,
                                   @RequestBody @Valid UpdateMessageRequestDto updateMessageRequestDto)
-          throws EntityNotFoundException, IllegalAccessException {
+    throws EntityNotFoundException, IllegalAccessException {
     return ResponseEntity.ok(messageService.update(id, updateMessageRequestDto));
   }
 
   @DeleteMapping("/{id}")
   public ResponseEntity<?> delete(@PathVariable(name = "id") Long id)
-          throws EntityNotFoundException, IllegalAccessException {
+    throws EntityNotFoundException, IllegalAccessException {
     messageService.delete(id);
     return ResponseEntity.status(204).build();
   }

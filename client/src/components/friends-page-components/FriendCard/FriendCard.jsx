@@ -93,6 +93,7 @@ const FriendCard = ({
         direction="row"
         spacing={2}
         alignItems="center"
+        onClick={onClick}
       >
         <Avatar
           src={userAvatar(
@@ -123,7 +124,7 @@ const FriendCard = ({
         <CardActionsPopover
           name={fullName}
           onRemove={onDelete}
-          onMessage={() => goToMessageStep(friend)}
+          onMessage={(e) => { e.stopPropagation(); goToMessageStep(friend) }}
           boxProps={{ style: { marginLeft: "auto" } }}
         />
       </Stack>

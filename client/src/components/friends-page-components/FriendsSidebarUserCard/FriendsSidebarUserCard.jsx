@@ -16,6 +16,7 @@ const FriendsSidebarUserCard = ({
   onAddToFriends,
   onHideSuggestion,
   onDecline,
+  onClick,
   onRemove,
   onMessage,
 }) => {
@@ -38,7 +39,7 @@ const FriendsSidebarUserCard = ({
   };
 
   return (
-    <CardWrapper variant={variant}>
+    <CardWrapper variant={variant} onClick={onClick}>
       <Stack direction="row" gap="8px" alignItems="center">
         <Avatar src={userImage} alt={fullName} sx={{ width: 60, height: 60 }} />
         <CardContentWrapper variant={variant}>

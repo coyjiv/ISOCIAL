@@ -6,9 +6,13 @@ import ToastMessage from "../components/MessageToast/MessageToast.jsx";
 import { addMessage, addWSMessage } from "../store/chatSlice.js";
 import { userAvatar } from "../data/placeholders.js";
 import { Avatar } from "@mui/material";
-import { fetchChats } from "../store/actions/chat.js";
+import {
+    fetchChats,
+    updateChats
+} from "../store/actions/chat.js";
 import { notificationApi } from "../store/services/notification.js";
 import { useGetSettingsQuery } from "../store/services/settingsService.js";
+import { instance } from "../api/index.js";
 
 const extractUserInfo = (body) => {
     // Attempt to extract user information in a unified way across different body types
@@ -55,7 +59,6 @@ const withWebsocket = (WrappedComponent) => {
         const chats = useSelector(state => state.chat.chats);
 
         const { data: settings } = useGetSettingsQuery()
-
         useSubscription(`/user/${localStorage.getItem("userId")}/messages`, handleMessage)
         useSubscription(`/user/${localStorage.getItem("userId")}/friends`, handleFriend)
         useSubscription(`/user/${localStorage.getItem("userId")}/reposts`, handleRepost)
@@ -64,20 +67,26 @@ const withWebsocket = (WrappedComponent) => {
         useSubscription(`/user/${localStorage.getItem("userId")}/comments`, handleComment)
 
 
-
         async function handleMessage(msg) {
             const message = await msg.body;
             const body = JSON.parse(message);
             console.log("ws", body, avatar(body));
             dispatch(addMessage(body));
-            dispatch(notificationApi.util.prefetch('getNotification', { recieverId: localStorage.getItem('userId'), page: 0, quantity: 50 }, { force: true }))
+            dispatch(notificationApi.util.prefetch('getNotification', {
+                recieverId: localStorage.getItem('userId'),
+                page: 0,
+                quantity: 50
+            }, { force: true }))
 
             if (body?.chatId === selectedChat?.id) {
                 console.log("trying to add Websocket message");
                 dispatch(addWSMessage(body));
+                await instance.post(`/chats/${selectedChat.id}/read`, JSON.stringify({ chatId: selectedChat.id }));
             } else if (!chats.data.find(chat => chat.id === body.chatId)) {
                 dispatch(fetchChats({ page: 0 }))
             }
+            dispatch(updateChats(chats.data.map(chat => chat.id)))
+            // dispatch(fetchChats({ page: 0, quantity: chats.data.length }))
             if (settings?.receiveNotifications) {
                 toast.info(<ToastMessage link={`/chats/${body.chatId}`} msg={body} type={"MESSAGE"} />,
                     {
@@ -97,8 +106,13 @@ const withWebsocket = (WrappedComponent) => {
             const body = JSON.parse(message);
             console.log("ws", body);
 
-            dispatch(notificationApi.util.prefetch('getNotification', { recieverId: localStorage.getItem('userId'), page: 0, quantity: 50 }, { force: true }))
+            dispatch(notificationApi.util.prefetch('getNotification', {
+                recieverId: localStorage.getItem('userId'),
+                page: 0,
+                quantity: 50
+            }, { force: true }))
             dispatch(notificationApi.util.invalidateTags(['Notifications']))
+            dispatch(notificationApi.util.invalidateTags(['Friends']))
             if (settings?.receiveNotifications) {
                 toast.info(<ToastMessage link={`/friends/requests`} msg={body} type={"FRIEND"} />,
                     {
@@ -116,7 +130,11 @@ const withWebsocket = (WrappedComponent) => {
             const body = JSON.parse(message);
             console.log("ws", body, avatar(body));
 
-            dispatch(notificationApi.util.prefetch('getNotification', { recieverId: localStorage.getItem('userId'), page: 0, quantity: 50 }, { force: true }))
+            dispatch(notificationApi.util.prefetch('getNotification', {
+                recieverId: localStorage.getItem('userId'),
+                page: 0,
+                quantity: 50
+            }, { force: true }))
             dispatch(notificationApi.util.invalidateTags(['Notifications']))
             if (settings?.receiveNotifications && body.senderId != localStorage.getItem('userId')) {
                 toast.info(<ToastMessage link={`/post/${body.postId}`} msg={body} type={"REPOST"} />,
@@ -136,7 +154,11 @@ const withWebsocket = (WrappedComponent) => {
             const body = JSON.parse(message);
             console.log("ws", body, avatar(body));
 
-            dispatch(notificationApi.util.prefetch('getNotification', { recieverId: localStorage.getItem('userId'), page: 0, quantity: 50 }, { force: true }))
+            dispatch(notificationApi.util.prefetch('getNotification', {
+                recieverId: localStorage.getItem('userId'),
+                page: 0,
+                quantity: 50
+            }, { force: true }))
             dispatch(notificationApi.util.invalidateTags(['Notifications']))
             if (settings?.receiveNotifications) {
                 toast.info(<ToastMessage link={`/post/${body.postId}`} msg={body} type={"SUBSCRIPTION"} />,
@@ -155,7 +177,11 @@ const withWebsocket = (WrappedComponent) => {
             const body = JSON.parse(message);
             console.log("ws", body, avatar(body));
 
-            dispatch(notificationApi.util.prefetch('getNotification', { recieverId: localStorage.getItem('userId'), page: 0, quantity: 50 }, { force: true }))
+            dispatch(notificationApi.util.prefetch('getNotification', {
+                recieverId: localStorage.getItem('userId'),
+                page: 0,
+                quantity: 50
+            }, { force: true }))
             dispatch(notificationApi.util.invalidateTags(['Notifications']))
             if (settings?.receiveNotifications && body.senderId != localStorage.getItem('userId')) {
                 if (body.entityType === "POST") {
@@ -185,7 +211,11 @@ const withWebsocket = (WrappedComponent) => {
             const body = JSON.parse(message);
             console.log("ws", body, avatar(body));
 
-            dispatch(notificationApi.util.prefetch('getNotification', { recieverId: localStorage.getItem('userId'), page: 0, quantity: 50 }, { force: true }))
+            dispatch(notificationApi.util.prefetch('getNotification', {
+                recieverId: localStorage.getItem('userId'),
+                page: 0,
+                quantity: 50
+            }, { force: true }))
             dispatch(notificationApi.util.invalidateTags(['Notifications']))
             if (settings?.receiveNotifications && body.senderId != localStorage.getItem('userId')) {
                 toast.info(<ToastMessage link={`/post/${body.postId}`} msg={body} type={"COMMENT"} />,

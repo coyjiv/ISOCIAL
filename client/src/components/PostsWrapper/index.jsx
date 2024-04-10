@@ -5,6 +5,7 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import Post from '../Post/Post'
 import { PostSkeleton } from '../../views/Profile/skeletons/PostSkeleton'
 import styles from './postsWrapper.module.scss'
+import { userAvatar } from '../../data/placeholders'
 
 const PostsWrapper = ({ type }) => {
     const [page, setPage] = useState(0)
@@ -38,6 +39,8 @@ const PostsWrapper = ({ type }) => {
         setPage(prevPage => prevPage + 1);
     };
 
+    console.log(posts);
+
     return (
         <>
             {posts.length === 0 && operatedData?.content.length === 0 && operatedSuccess && <EmptyPosts type={type} />}
@@ -47,7 +50,7 @@ const PostsWrapper = ({ type }) => {
                 <PostSkeleton />
                 <PostSkeleton />
             </div>}
-            <InfiniteScroll
+            {posts.length > 0 && <InfiniteScroll
                 dataLength={posts.length}
                 next={fetchMoreData}
                 hasMore={operatedData?.hasNext}
@@ -58,7 +61,9 @@ const PostsWrapper = ({ type }) => {
                     <Post key={post.id}
                         postId={post.id}
                         authorId={post.authorId}
-                        avatarUrl={post.authorAvatar}
+                        avatarUrl={userAvatar({
+                            avatarsUrl: [post.authorAvatarUrl],
+                        }, post.authorFullName.split(' ')[0], post.authorFullName.split(' ')[1])}
                         username={post.authorFullName}
                         creationDate={post.creationDate}
                         textContent={post.textContent}
@@ -74,7 +79,7 @@ const PostsWrapper = ({ type }) => {
                         originalPost={post.originalPost}
                     />
                 ))}
-            </InfiniteScroll>
+            </InfiniteScroll>}
         </>
     )
 }

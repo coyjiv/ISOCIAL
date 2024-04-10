@@ -11,7 +11,7 @@ import {
 } from "../../../components/SidebarSearch/SidebarSearch.styled";
 import { SearchIcon } from "../../../components/MainSearch/MainSearch.styled";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchChats, sendMessage } from "../../../store/actions/chat";
+import { fetchChats, sendMessage, updateChats } from "../../../store/actions/chat";
 import PropTypes from "prop-types";
 import ChatHeader from "../ChatHeader";
 import ChatMessages from "../ChatMessages";
@@ -76,6 +76,14 @@ const ChatView = ({ id, hideCreateChat }) => {
       dispatch(fetchChats({ page: 0 }));
     }
   }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      dispatch(updateChats(chats.data.map(chat => chat.id)));
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [])
 
   return (
     <>

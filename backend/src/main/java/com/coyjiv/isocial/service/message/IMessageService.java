@@ -20,5 +20,13 @@ public interface IMessageService {
   MessageNotificationDto update(Long messageId, UpdateMessageRequestDto updateMessageRequestDto)
           throws IllegalAccessException, EntityNotFoundException;
 
+  PageWrapper<MessageNotificationDto> search(String term,int page,int size);
+
+  Long countUnreadMessages();
+
+  void readMessages(Long chatId);
+
   void delete(Long id) throws IllegalAccessException, EntityNotFoundException;
+
+  void readOneMessage(Long messageId);
 }
