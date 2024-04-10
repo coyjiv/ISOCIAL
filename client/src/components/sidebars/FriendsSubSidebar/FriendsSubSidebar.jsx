@@ -1,9 +1,9 @@
 import PropTypes from "prop-types";
 import { useState } from "react";
-import { useLocalStorage } from "usehooks-ts";
+import { useLocalStorage, useMediaQuery } from "usehooks-ts";
 import { useDispatch } from "react-redux";
 import { Stack, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { userAvatar } from "../../../data/placeholders.js";
 
 import { SubSidebarHeader } from "./SubSidebarHeader";
@@ -16,7 +16,7 @@ import {
   useRemoveFriendMutation,
   useSendFriendRequestMutation,
 } from "../../../store/services/friendService.js";
-import { LS_KEYS } from "../../../utils/constants";
+import { LS_KEYS, MQ } from "../../../utils/constants";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { clearSelectedChat, setPendingChat } from "../../../store/chatSlice.js";
 
@@ -32,13 +32,15 @@ const FriendsSubSidebar = ({
 }) => {
   const dispatch = useDispatch();
   const [searchValue, setSearchValue] = useState("");
-  // let [, setSearchParams] = useSearchParams();
+  let [, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
-  // const isMobile = useMediaQuery(MQ.TABLET);
+  const isMobile = useMediaQuery(MQ.TABLET);
   const [hiddenUsersId, setHiddenUsersId] = useLocalStorage(
     LS_KEYS.HIDDEN_USERS,
     [],
   );
+
+  console.log("hier ist sidebar");
 
   const [acceptFriendRequest] = useAcceptFriendRequestMutation();
   const [declineFriendRequest] = useDeclineFriendRequestMutation();
@@ -57,13 +59,13 @@ const FriendsSubSidebar = ({
 
   const handleChange = (value) => setSearchValue(value);
 
-  // const handleChooseUser = (id) => {
-  //   if (isMobile) {
-  //     navigate(`/profile/${id}`);
-  //   } else {
-  //     setSearchParams({ id });
-  //   }
-  // };
+  const handleChooseUser = (id) => {
+    if (isMobile) {
+      navigate(`/profile/${id}`);
+    } else {
+      setSearchParams({ id });
+    }
+  };
 
   const handleDeclineRequest = (id) => {
     declineFriendRequest({ userId: id });
@@ -93,10 +95,10 @@ const FriendsSubSidebar = ({
   const handleMessage = (friend) => {
     // e.stopPropagation();
     if (friend.chatId !== null) {
-      dispatch(clearSelectedChat())
+      dispatch(clearSelectedChat());
       navigate(`/chats/${friend.chatId}`);
     } else {
-      dispatch(clearSelectedChat())
+      dispatch(clearSelectedChat());
       dispatch(
         setPendingChat({
           receiverId: friend.id,
@@ -155,7 +157,7 @@ const FriendsSubSidebar = ({
                     variant={variant}
                     onConfirm={() => handleConfirmRequest(id)}
                     onDecline={() => handleDeclineRequest(id)}
-                    // onClick={() => handleChooseUser(id)}
+                    onClick={() => handleChooseUser(id)}
                     onRemove={(e) => handleRemoveFriend(e, id)}
                     onAddToFriends={() => handleAddToFriend(id)}
                     onHideSuggestion={() => handleHideSuggestion(id)}
@@ -181,8 +183,8 @@ const FriendsSubSidebar = ({
             next={fetchMoreData}
             hasMore={hasNext}
             scrollableTarget="scrollableDiv"
-          // loader={<div style={{ display: 'flex', width: '100%' }}><PostSkeleton /></div>}
-          // className={styles.infiniteWrapper}
+            // loader={<div style={{ display: 'flex', width: '100%' }}><PostSkeleton /></div>}
+            // className={styles.infiniteWrapper}
           >
             {friends.map(
               ({
@@ -205,7 +207,7 @@ const FriendsSubSidebar = ({
                   variant={variant}
                   onConfirm={() => handleConfirmRequest(id)}
                   onDecline={() => handleDeclineRequest(id)}
-                  // onClick={() => handleChooseUser(id)}
+                  onClick={() => handleChooseUser(id)}
                   onRemove={(e) => handleRemoveFriend(e, id)}
                   onAddToFriends={() => handleAddToFriend(id)}
                   onHideSuggestion={() => handleHideSuggestion(id)}
