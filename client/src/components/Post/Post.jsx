@@ -94,6 +94,15 @@ const Post = ({
     });
   };
 
+  const handleOptimisticLikeComment = (commentId) => {
+    const comment = optimisticRecentComments.find((c) => c.id === commentId);
+    const commentIndex = optimisticRecentComments.indexOf(comment);
+    const updatedComment = { ...comment, liked: !comment.liked, likesCount: comment.liked ? comment.likesCount - 1 : comment.likesCount + 1 };
+    const updatedComments = [...optimisticRecentComments];
+    updatedComments[commentIndex] = updatedComment;
+    setOptimisticRecentComments(updatedComments);
+  }
+
   const handleDeleteComment = async (res, commentId) => {
     setOptimisticCommentsCount(optimisticCommentsCount - 1);
     setOptimisticRecentComments(
@@ -257,6 +266,7 @@ const Post = ({
             <RecentComments
               onCommentDelete={handleDeleteComment}
               comments={optimisticRecentComments}
+              handleOptimisticLikeComment={handleOptimisticLikeComment}
             />
           )}
           <PostCommentInput handleComment={handleComment} />
@@ -288,10 +298,13 @@ const Post = ({
         postData={{ id: postId, textContent }}
       />
       <CommentsModal
-        open={commentPanelOpen}
-        onClose={() => setCommentPanelOpen(false)}
-        postId={postId}
-      />
+          open={commentPanelOpen}
+          onClose={() => setCommentPanelOpen(false)}
+          postId={postId}
+          commentsData={optimisticRecentComments}
+          setCommentsData={setOptimisticRecentComments}
+          handleComment={handleComment}
+          handleDeleteComment={handleDeleteComment}/>
     </>
   );
 };

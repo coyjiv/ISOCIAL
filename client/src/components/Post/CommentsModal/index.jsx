@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, useMediaQuery } from '@mui/material'
-import { useCreateCommentMutation, useGetCommentsByPostQuery } from '../../../store/services/commentService';
+// import { useCreateCommentMutation, useGetCommentsByPostQuery } from '../../../store/services/commentService';
 import Spinner from '../../Spinner';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import PropTypes from 'prop-types';
@@ -10,11 +10,12 @@ import { AutosizeTextareaSend } from '../../AutosizeTextareaSend';
 import { validationScheme } from './validationScheme';
 import BottomSheetWrapper from './BottomSheetWrapper';
 
-export const CommentsModal = ({ open, onClose, postId }) => {
+export const CommentsModal = ({ open, onClose, postId ,commentsData,setCommentsData,handleComment,handleDeleteComment}) => {
     const [page, setPage] = useState(0)
-    const { data: commentsQueryData, isLoading } = useGetCommentsByPostQuery({ id: postId, page, size: 10 });
-    const { content: comments, hasNext } = commentsQueryData ?? { content: [], hasNext: false }
-    const [commentsData, setCommentsData] = useState([])
+    const isLoading=false;
+    // const { data: commentsQueryData, isLoading } = useGetCommentsByPostQuery({ id: postId, page, size: 10 });
+    const { content: comments, hasNext } = commentsData ?? { content: [] }
+    // const [commentsData, setCommentsData] = useState([])
 
     useEffect(() => {
         if (comments && comments.length > 0) {
@@ -35,15 +36,15 @@ export const CommentsModal = ({ open, onClose, postId }) => {
         setPage(page + 1);
     };
 
-    const [postComment] = useCreateCommentMutation();
-    const handleComment = (values) => {
-        postComment({ postId, text: values.text });
-    }
+    // const [postComment] = useCreateCommentMutation();
+    // const handleComment = (values) => {
+    //     postComment({ postId, text: values.text });
+    // }
 
     const isMobile = useMediaQuery('(max-width:600px)');
 
     return (
-        isMobile ? <BottomSheetWrapper open={open} comments={commentsData} fetchData={fetchData} handleComment={handleComment} hasNext={hasNext} isLoading={isLoading} onModify={() => { }} postId={postId} onClose={onClose} /> :
+        isMobile ? <BottomSheetWrapper open={open} comments={commentsData} fetchData={fetchData} handleComment={handleComment} hasNext={hasNext} isLoading={isLoading} onModify={() => { }} postId={postId} onClose={onClose} handleDeleteComment={handleDeleteComment}/> :
             <Dialog
                 open={open}
                 onClose={onClose}
@@ -76,7 +77,7 @@ export const CommentsModal = ({ open, onClose, postId }) => {
                             edited={comment.edited}
                             liked={comment.liked}
                             authorPremium={comment.authorPremium}
-                            onCommentDelete={() => console.log('on comment delete')}
+                            onCommentDelete={handleDeleteComment}
                         />)}
                     </InfiniteScroll>
                         :
@@ -94,4 +95,8 @@ CommentsModal.propTypes = {
     open: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
     postId: PropTypes.number.isRequired,
+    commentsData: PropTypes.arrayOf(PropTypes.object).isRequired,
+    handleComment: PropTypes.func.isRequired,
+    setCommentsData: PropTypes.func.isRequired,
+    handleDeleteComment: PropTypes.func.isRequired,
 }
